@@ -1,0 +1,1767 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PhysChem Lab · 物理化学趣味实验室 | Ternence Dai</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#060a13;--panel:#0e1626;--panel2:#111c2e;--line:#1d2b45;--line2:#24354f;
+  --txt:#e2ecf8;--dim:#7d8fab;--dim2:#5a6d87;
+  --cy:#22d3ee;--pu:#a78bfa;--gr:#34d399;--or:#fbbf24;--rd:#f87171;--pk:#f472b6;
+}
+html,body{
+  width:100%;height:100%;overflow:hidden;
+  background:radial-gradient(1200px 800px at 10% -10%,#16233d 0%,transparent 60%),
+             radial-gradient(900px 700px at 105% 105%,#1a1430 0%,transparent 55%),
+             var(--bg);
+  color:var(--txt);
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+::-webkit-scrollbar{width:7px;height:7px}
+::-webkit-scrollbar-thumb{background:#1e2d47;border-radius:4px}
+::-webkit-scrollbar-thumb:hover{background:#2c4265}
+
+/* ============ 侧边栏 ============ */
+.sidebar{
+  position:fixed;left:0;top:0;bottom:0;width:260px;z-index:10;
+  background:linear-gradient(180deg,#0c1424 0%,#080d18 100%);
+  border-right:1px solid var(--line);
+  display:flex;flex-direction:column;overflow:hidden;
+}
+.brand{display:flex;gap:11px;align-items:center;padding:16px 15px;border-bottom:1px solid var(--line);flex-shrink:0}
+.logo{
+  width:40px;height:40px;border-radius:13px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--cy),var(--pu));
+  display:flex;align-items:center;justify-content:center;
+  font-size:21px;color:#05101f;font-weight:700;
+  box-shadow:0 0 26px rgba(34,211,238,.4);
+}
+.brand h1{font-size:14.5px;letter-spacing:.4px;font-weight:700;line-height:1.2}
+.brand p{font-size:10.5px;color:var(--dim);margin-top:3px}
+
+.search{padding:12px 14px 8px;flex-shrink:0}
+.search input{
+  width:100%;background:#0a1220;border:1px solid var(--line);border-radius:10px;
+  padding:9px 12px;color:var(--txt);font-size:12.5px;outline:none;transition:.2s;font-family:inherit;
+}
+.search input::placeholder{color:var(--dim2)}
+.search input:focus{border-color:var(--cy);box-shadow:0 0 0 3px rgba(34,211,238,.12)}
+
+.filters{display:flex;gap:6px;padding:0 14px 12px;flex-shrink:0}
+.filters button{
+  flex:1;background:#0a1220;border:1px solid var(--line);color:var(--dim);
+  border-radius:8px;padding:6px 0;font-size:11.5px;cursor:pointer;transition:.18s;font-family:inherit;
+}
+.filters button:hover{color:var(--txt);border-color:var(--line2)}
+.filters button.active{background:rgba(34,211,238,.14);border-color:var(--cy);color:var(--cy);font-weight:600}
+
+.exp-list{flex:1;overflow-y:auto;padding:2px 12px 12px;min-height:0}
+.exp-item{
+  padding:10px 11px;border-radius:10px;border:1px solid transparent;
+  cursor:pointer;margin-bottom:6px;transition:.18s;background:#0a1220;
+}
+.exp-item:hover{border-color:var(--line2);background:#101c2f}
+.exp-item.active{border-color:var(--cy);background:linear-gradient(90deg,rgba(34,211,238,.14),rgba(167,139,250,.05))}
+.exp-item .t{font-size:12.5px;font-weight:600;display:flex;align-items:center;gap:6px;line-height:1.3}
+.exp-item .d{font-size:10.5px;color:var(--dim);margin-top:4px;line-height:1.45}
+.tag{font-size:9px;padding:2px 6px;border-radius:4px;flex-shrink:0;background:#16233a;color:var(--dim);border:1px solid #22334f;font-weight:600}
+.tag.phy{color:#38bdf8;border-color:#1e4a6b;background:#0d2030}
+.tag.chem{color:var(--pk);border-color:#5b2244;background:#2a0f22}
+
+.side-foot{padding:11px 14px;border-top:1px solid var(--line);font-size:10px;color:var(--dim);line-height:1.75;flex-shrink:0}
+.side-foot b{color:var(--cy);font-weight:600}
+.side-foot .email{color:var(--pu);font-family:Menlo,Consolas,monospace;font-size:9.5px}
+
+/* ============ 主区域 ============ */
+.main{position:fixed;left:260px;right:0;top:0;bottom:0;overflow:hidden}
+.topbar{
+  position:absolute;left:0;right:0;top:0;height:66px;
+  display:flex;justify-content:space-between;align-items:center;gap:14px;
+  padding:0 20px;border-bottom:1px solid var(--line);
+  background:rgba(10,16,28,.7);z-index:3;
+}
+.topbar-left{min-width:0;flex:1}
+.topbar h2{font-size:15.5px;font-weight:700;letter-spacing:.3px;color:var(--cy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topbar p{font-size:11.5px;color:var(--dim);margin-top:4px;line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.actions{display:flex;gap:8px;flex-shrink:0}
+.btn{
+  background:#101c2f;border:1px solid var(--line);color:var(--txt);
+  padding:8px 13px;border-radius:9px;font-size:12px;cursor:pointer;
+  transition:.18s;white-space:nowrap;font-family:inherit;
+}
+.btn:hover{border-color:var(--cy);color:var(--cy)}
+.btn.on{border-color:var(--or);color:var(--or)}
+
+.stage-wrap{
+  position:absolute;left:20px;right:20px;top:78px;bottom:292px;
+  border-radius:14px;border:1px solid var(--line);
+  background:linear-gradient(180deg,#0a1220,#070d18);
+  overflow:hidden;
+}
+#stage{display:block;width:100%;height:100%}
+
+/* 底部三栏 */
+.bottom{position:absolute;left:20px;right:20px;bottom:12px;height:268px}
+.panel{
+  position:absolute;top:0;bottom:0;
+  background:linear-gradient(180deg,var(--panel2),var(--panel));
+  border:1px solid var(--line);border-radius:14px;
+  padding:13px 14px;overflow-y:auto;
+}
+.panel-p1{left:0;width:calc(32% - 8px)}
+.panel-p2{left:calc(32% + 4px);width:calc(32% - 8px)}
+.panel-p3{left:calc(64% + 8px);right:0}
+
+.panel h3{font-size:12px;margin-bottom:11px;color:var(--cy);display:flex;align-items:center;gap:7px;letter-spacing:.4px;font-weight:600}
+.badge{font-size:8.5px;padding:2px 6px;border-radius:5px;background:linear-gradient(135deg,var(--pu),var(--cy));color:#06101d;font-weight:800}
+
+.param{margin-bottom:14px}
+.param:last-child{margin-bottom:0}
+.param .row{display:flex;justify-content:space-between;align-items:center;font-size:11.5px;margin-bottom:7px;gap:8px}
+.param .row>span:first-child{color:#b9c8dd}
+.param .val{
+  color:var(--cy);font-weight:700;font-variant-numeric:tabular-nums;font-size:11px;text-align:right;
+  background:rgba(34,211,238,.08);padding:2px 8px;border-radius:6px;border:1px solid rgba(34,211,238,.15);
+}
+input[type=range]{
+  width:100%;-webkit-appearance:none;appearance:none;height:5px;border-radius:3px;
+  background:linear-gradient(90deg,rgba(34,211,238,.3),#1c2a42);outline:none;cursor:pointer;display:block;
+}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:15px;height:15px;border-radius:50%;
+  background:linear-gradient(135deg,var(--cy),var(--pu));
+  box-shadow:0 0 12px rgba(34,211,238,.7);cursor:pointer;border:2px solid #0a1220;
+}
+input[type=range]::-moz-range-thumb{
+  width:15px;height:15px;border:none;border-radius:50%;
+  background:linear-gradient(135deg,var(--cy),var(--pu));cursor:pointer;border:2px solid #0a1220;
+}
+
+.f-item{
+  font-family:Menlo,Consolas,monospace;font-size:11.2px;padding:7px 10px;border-radius:8px;
+  background:#0a1220;border-left:2px solid var(--pu);margin-bottom:6px;color:#c9b6ff;
+  white-space:nowrap;overflow-x:auto;
+}
+.readout{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px}
+.ro{background:#0a1220;border:1px solid #16233a;border-radius:9px;padding:8px 10px}
+.ro .k{font-size:9.5px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ro .v{font-size:13px;font-weight:700;color:var(--gr);font-variant-numeric:tabular-nums;margin-top:3px;font-family:Menlo,Consolas,monospace}
+
+.tutor-body{font-size:11.4px;line-height:1.8;color:#b9c8dd;white-space:pre-wrap;word-break:break-word}
+
+.toast{
+  position:fixed;left:50%;bottom:32px;transform:translate(-50%,20px);
+  background:rgba(14,22,38,.97);border:1px solid var(--cy);color:var(--cy);
+  padding:10px 20px;border-radius:11px;font-size:12.5px;
+  opacity:0;pointer-events:none;transition:.3s;z-index:99;
+  box-shadow:0 0 32px rgba(34,211,238,.35);
+}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* 存档抽屉 —— 用 transform 隐藏，更可靠 */
+.drawer{
+  position:fixed;top:0;right:0;width:360px;height:100vh;
+  background:linear-gradient(180deg,#0c1424,#080d18);
+  border-left:1px solid var(--line);z-index:50;
+  transition:transform .32s ease;
+  display:flex;flex-direction:column;
+  box-shadow:-12px 0 40px rgba(0,0,0,.5);
+  transform:translateX(100%);
+  pointer-events:none;
+}
+.drawer.open{transform:translateX(0);pointer-events:auto}
+.drawer-head{padding:16px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+.drawer-head h3{font-size:14px;color:var(--cy)}
+.drawer-close{background:none;border:none;color:var(--dim);font-size:20px;cursor:pointer;padding:4px 8px;border-radius:6px;line-height:1}
+.drawer-close:hover{color:var(--rd)}
+.drawer-body{flex:1;overflow-y:auto;padding:14px}
+.rec{background:#0a1220;border:1px solid var(--line);border-radius:10px;padding:11px 13px;margin-bottom:9px}
+.rec .rh{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;gap:8px}
+.rec .rn{font-size:12.5px;font-weight:600;color:var(--txt)}
+.rec .rt{font-size:10px;color:var(--dim2);font-family:Menlo,monospace;flex-shrink:0}
+.rec .rp{font-size:10.5px;color:var(--dim);line-height:1.6;font-family:Menlo,Consolas,monospace;word-break:break-all}
+.empty-tip{color:var(--dim2);font-size:12px;text-align:center;padding:40px 20px;line-height:1.8}
+
+@media(max-width:1180px){
+  .panel-p1{left:0;width:calc(50% - 6px)}
+  .panel-p2{left:calc(50% + 6px);width:calc(50% - 6px)}
+  .panel-p3{left:0;right:0;top:auto;bottom:-290px;height:280px}
+  .bottom{height:560px}
+  .stage-wrap{bottom:584px}
+}
+@media(max-width:900px){
+  .sidebar{position:relative;width:100%;height:auto;max-height:40vh;border-right:none;border-bottom:1px solid var(--line)}
+  .main{position:relative;left:0;top:0;right:0;bottom:0;height:60vh}
+  .bottom{position:relative;left:0;right:0;bottom:auto;height:auto;padding:0 20px 14px}
+  .panel-p1,.panel-p2,.panel-p3{position:relative;left:0;right:auto;width:100%;top:auto;bottom:auto;height:auto;max-height:260px;margin-bottom:10px}
+  .stage-wrap{bottom:292px}
+  .drawer{width:100%}
+}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="brand">
+    <div class="logo">⚛</div>
+    <div>
+      <h1>PhysChem Lab</h1>
+      <p>物理化学趣味实验室</p>
+    </div>
+  </div>
+  <div class="search">
+    <input id="search" placeholder="🔍 检索实验 / 标签 / 公式" autocomplete="off" spellcheck="false">
+  </div>
+  <div class="filters">
+    <button data-cat="全部" class="active">全部</button>
+    <button data-cat="物理">物理</button>
+    <button data-cat="化学">化学</button>
+  </div>
+  <div class="exp-list" id="expList"></div>
+  <div class="side-foot">
+    <div id="savedInfo">📁 实验档案数据库：0 条记录</div>
+    <div style="margin-top:7px">署名：<b>Ternence Dai</b></div>
+    <div>邮箱：<span class="email">18662613315@163.com</span></div>
+  </div>
+</aside>
+
+<main class="main">
+  <header class="topbar">
+    <div class="topbar-left">
+      <h2 id="expTitle">加载中…</h2>
+      <p id="expBrief">正在初始化实验室…</p>
+    </div>
+    <div class="actions">
+      <button class="btn" id="btnPause">⏸ 暂停</button>
+      <button class="btn" id="btnReset">↺ 重置</button>
+      <button class="btn" id="btnSave">💾 存档</button>
+      <button class="btn" id="btnDrawer">📂 档案</button>
+    </div>
+  </header>
+  <section class="stage-wrap" id="stageWrap">
+    <canvas id="stage"></canvas>
+  </section>
+  <section class="bottom">
+    <div class="panel panel-p1">
+      <h3>⚙️ 物理变量控制台</h3>
+      <div id="paramBox"></div>
+    </div>
+    <div class="panel panel-p2">
+      <h3>📐 公式与实时计算</h3>
+      <div id="formulaBox"></div>
+    </div>
+    <div class="panel panel-p3">
+      <h3>🤖 AI 导师 <span class="badge">LLM</span></h3>
+      <div id="tutorBox" class="tutor-body"></div>
+    </div>
+  </section>
+</main>
+
+<aside class="drawer" id="drawer">
+  <div class="drawer-head">
+    <h3>📂 实验档案数据库</h3>
+    <button class="drawer-close" id="drawerClose">✕</button>
+  </div>
+  <div class="drawer-body" id="drawerBody">
+    <div class="empty-tip">暂无存档记录<br>点击「💾 存档」保存当前实验参数</div>
+  </div>
+</aside>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* =========================================================
+   PhysChem Lab · 物理化学趣味实验室
+   Author : Ternence Dai  |  Email : 18662613315@163.com
+   ========================================================= */
+(function(){
+'use strict';
+
+var $ = function(s){ return document.querySelector(s); };
+var clamp = function(v,a,b){ return Math.max(a, Math.min(b, v)); };
+var fmt = function(v,n){
+  n = (n===undefined) ? 2 : n;
+  if(!isFinite(v)) return '—';
+  if(Math.abs(v)>=1e6 || (Math.abs(v)<1e-3 && v!==0)) return v.toExponential(2);
+  return Number(v).toFixed(n);
+};
+
+/* ================= 绘图工具 ================= */
+function drawSpring(ctx,x1,y1,x2,y2,coils,amp){
+  var dx=x2-x1, dy=y2-y1, len=Math.sqrt(dx*dx+dy*dy);
+  if(len<12) return;
+  var ux=dx/len, uy=dy/len, nx=-uy, ny=ux;
+  var lead=Math.min(18,len*0.13), n=coils*2, span=len-2*lead;
+  ctx.beginPath();
+  ctx.moveTo(x1,y1);
+  ctx.lineTo(x1+ux*lead, y1+uy*lead);
+  for(var i=1;i<n;i++){
+    var t=lead+span*i/n, s=(i%2?1:-1)*amp;
+    ctx.lineTo(x1+ux*t+nx*s, y1+uy*t+ny*s);
+  }
+  ctx.lineTo(x2-ux*lead, y2-uy*lead);
+  ctx.lineTo(x2,y2);
+  ctx.stroke();
+}
+function ptOnRect(s,x0,y0,x1,y1){
+  var w=x1-x0, h=y1-y0, P=2*(w+h);
+  var d=(((s%1)+1)%1)*P;
+  if(d<w) return [x0+d,y0];
+  d-=w; if(d<h) return [x1,y0+d];
+  d-=h; if(d<w) return [x1-d,y1];
+  d-=w; return [x0,y1-d];
+}
+function label(ctx,text,x,y,color,size,align){
+  size=size||11; align=align||'left';
+  ctx.save();
+  ctx.font = size+'px Menlo,Consolas,monospace';
+  ctx.fillStyle = color; ctx.textAlign = align; ctx.textBaseline = 'middle';
+  ctx.fillText(text,x,y);
+  ctx.restore();
+}
+function pill(ctx,text,x,y,bg,fg){
+  ctx.save();
+  ctx.font = '11px Menlo,Consolas,monospace';
+  var w = ctx.measureText(text).width + 20;
+  ctx.fillStyle = bg;
+  var r=9;
+  ctx.beginPath();
+  ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y);
+  ctx.quadraticCurveTo(x+w,y,x+w,y+r);
+  ctx.lineTo(x+w,y+23-r);
+  ctx.quadraticCurveTo(x+w,y+23,x+w-r,y+23);
+  ctx.lineTo(x+r,y+23);
+  ctx.quadraticCurveTo(x,y+23,x,y+23-r);
+  ctx.lineTo(x,y+r);
+  ctx.quadraticCurveTo(x,y,x+r,y);
+  ctx.closePath(); ctx.fill();
+  ctx.fillStyle = fg;
+  ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  ctx.fillText(text,x+10,y+11.5);
+  ctx.restore();
+}
+function roundRect(ctx,x,y,w,h,r){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);
+  ctx.lineTo(x+w-r,y); ctx.quadraticCurveTo(x+w,y,x+w,y+r);
+  ctx.lineTo(x+w,y+h-r); ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+  ctx.lineTo(x+r,y+h); ctx.quadraticCurveTo(x,y+h,x,y+h-r);
+  ctx.lineTo(x,y+r); ctx.quadraticCurveTo(x,y,x+r,y);
+  ctx.closePath();
+}
+
+/* =========================================================
+   实验数据库
+   ========================================================= */
+var EXP = [];
+
+/* ---------- 1. 抛体运动 ---------- */
+EXP.push({
+  id:'projectile', name:'抛体运动轨迹', cat:'物理',
+  tags:['力学','运动学','二维运动'],
+  brief:'把速度分解为水平匀速与竖直匀变速，是运动合成与分解的经典范例。',
+  resetOnChange:true,
+  params:[
+    {key:'v0',  label:'初速度 v₀',   min:5,  max:60, step:1,   value:32,  unit:'m/s'},
+    {key:'ang', label:'发射角 θ',     min:5,  max:85, step:1,   value:45,  unit:'°'},
+    {key:'g',   label:'重力加速度 g', min:1.6,max:20, step:0.1, value:9.8, unit:'m/s²'}
+  ],
+  formulas:[
+    'x(t) = v₀·cosθ · t',
+    'y(t) = v₀·sinθ · t − ½g t²',
+    '射程  R = v₀²·sin2θ / g',
+    '最大高度 H = v₀²·sin²θ / (2g)',
+    '飞行时间 T = 2v₀·sinθ / g'
+  ],
+  calc:function(p){
+    var r=p.ang*Math.PI/180;
+    var vx=p.v0*Math.cos(r), vy=p.v0*Math.sin(r);
+    var T=2*vy/p.g;
+    return {vx:vx,vy:vy,T:T,R:vx*T,H:vy*vy/(2*p.g)};
+  },
+  init:function(){ return {t:0}; },
+  step:function(p,dt,st){
+    var d=this.calc(p);
+    st.t+=dt;
+    if(st.t>d.T*1.55){ st.t=0; }
+  },
+  draw:function(ctx,W,H,p,st){
+    var d=this.calc(p);
+    var gy=H-52, ox=78;
+    var s=Math.min((W-ox-80)/Math.max(d.R,1e-3),(gy-58)/Math.max(d.H,1e-3));
+
+    ctx.strokeStyle='rgba(120,160,220,.07)'; ctx.lineWidth=1;
+    for(var x=ox;x<W-24;x+=44){ctx.beginPath();ctx.moveTo(x,24);ctx.lineTo(x,gy);ctx.stroke();}
+    for(var y=gy;y>24;y-=44){ctx.beginPath();ctx.moveTo(ox,y);ctx.lineTo(W-24,y);ctx.stroke();}
+
+    ctx.strokeStyle='rgba(34,211,238,.5)'; ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(ox,24);ctx.lineTo(ox,gy);ctx.lineTo(W-30,gy);ctx.stroke();
+
+    ctx.strokeStyle='#1f6f66'; ctx.lineWidth=3;
+    ctx.beginPath();ctx.moveTo(40,gy);ctx.lineTo(W-16,gy);ctx.stroke();
+
+    ctx.beginPath();
+    for(var i=0;i<=120;i++){
+      var t=d.T*i/120;
+      var X=ox+d.vx*t*s;
+      var Y=gy-(d.vy*t-0.5*p.g*t*t)*s;
+      i?ctx.lineTo(X,Y):ctx.moveTo(X,Y);
+    }
+    ctx.strokeStyle='rgba(167,139,250,.18)';ctx.lineWidth=6;ctx.stroke();
+    ctx.strokeStyle='rgba(167,139,250,.6)';ctx.lineWidth=2;
+    ctx.setLineDash([7,7]);ctx.stroke();ctx.setLineDash([]);
+
+    var apexX=ox+d.vx*(d.T/2)*s, apexY=gy-d.H*s;
+    ctx.strokeStyle='rgba(251,191,36,.3)';ctx.setLineDash([4,5]);ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(ox,apexY);ctx.lineTo(apexX,apexY);ctx.stroke();
+    ctx.setLineDash([]);
+    label(ctx,'H='+fmt(d.H)+'m',ox+8,apexY-11,'#fbbf24',11);
+    label(ctx,'R='+fmt(d.R)+'m',ox+d.R*s-4,gy+18,'#34d399',11,'right');
+
+    var tc=Math.min(st.t,d.T);
+    var Xc=ox+d.vx*tc*s;
+    var Yc=gy-(d.vy*tc-0.5*p.g*tc*tc)*s;
+
+    ctx.strokeStyle='rgba(251,191,36,.4)';ctx.lineWidth=2;
+    ctx.beginPath();
+    for(var j=0;j<=40;j++){
+      var tt=tc*j/40;
+      var tx=ox+d.vx*tt*s;
+      var ty=gy-(d.vy*tt-0.5*p.g*tt*tt)*s;
+      j?ctx.lineTo(tx,ty):ctx.moveTo(tx,ty);
+    }
+    ctx.stroke();
+
+    ctx.strokeStyle='rgba(52,211,153,.35)';ctx.setLineDash([3,4]);ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(Xc,Yc);ctx.lineTo(Xc,gy);ctx.stroke();
+    ctx.setLineDash([]);
+
+    var gr=ctx.createRadialGradient(Xc-3,Yc-3,1,Xc,Yc,18);
+    gr.addColorStop(0,'#fff');gr.addColorStop(.45,'#fbbf24');
+    gr.addColorStop(1,'rgba(251,191,36,0)');
+    ctx.fillStyle=gr;ctx.beginPath();ctx.arc(Xc,Yc,18,0,7);ctx.fill();
+    ctx.fillStyle='#fde68a';ctx.beginPath();ctx.arc(Xc,Yc,6,0,7);ctx.fill();
+
+    ctx.strokeStyle='rgba(34,211,238,.65)';ctx.lineWidth=2;
+    ctx.beginPath();ctx.arc(ox,gy,46,0,-p.ang*Math.PI/180,true);ctx.stroke();
+    label(ctx,p.ang+'°',ox+58,gy-24,'#22d3ee',12);
+
+    var vx=d.vx, vy=d.vy-p.g*tc;
+    ctx.strokeStyle='#f472b6';ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(Xc,Yc);ctx.lineTo(Xc+vx*1.6,Yc-vy*1.6);ctx.stroke();
+
+    pill(ctx,'v₀ = '+p.v0+' m/s',26,22,'rgba(34,211,238,.12)','#22d3ee');
+    pill(ctx,'θ = '+p.ang+'°',26,52,'rgba(251,191,36,.12)','#fbbf24');
+  },
+  readout:function(p){
+    var d=this.calc(p);
+    return [
+      {k:'水平分速度 vₓ', v:fmt(d.vx)+' m/s'},
+      {k:'竖直分速度 v_y', v:fmt(d.vy)+' m/s'},
+      {k:'飞行时间 T', v:fmt(d.T)+' s'},
+      {k:'射程 R', v:fmt(d.R)+' m'},
+      {k:'最大高度 H', v:fmt(d.H)+' m'},
+      {k:'重力加速度 g', v:fmt(p.g,1)+' m/s²'}
+    ];
+  },
+  tutor:function(p){
+    var d=this.calc(p);
+    var near45 = Math.abs(p.ang-45)<=3;
+    return '【模型解析】抛体运动 = 水平方向匀速直线运动 ⊕ 竖直方向匀变速直线运动。两个分运动互不干扰，这是"运动的独立性原理"最漂亮的展示。\n\n'+
+      '【当前参数】v₀ = '+p.v0+' m/s，θ = '+p.ang+'°，g = '+p.g+' m/s²\n\n'+
+      '【实时推演】\n'+
+      '· 水平分量 vₓ = v₀cosθ = '+fmt(d.vx)+' m/s\n'+
+      '· 竖直分量 v_y = v₀sinθ = '+fmt(d.vy)+' m/s\n'+
+      '· 飞行时间 T = 2v_y/g = '+fmt(d.T)+' s\n'+
+      '· 射程 R = vₓ·T = '+fmt(d.R)+' m\n'+
+      '· 最大高度 H = v_y²/(2g) = '+fmt(d.H)+' m\n\n'+
+      '【趣味结论】'+(near45
+        ? 'θ ≈ 45° 时 sin2θ 取到最大值 1，射程达到理论峰值——你正处在最优发射角上！'
+        : '把发射角调到 45° 试试，射程 R 会在那里达到峰值（因为 R ∝ sin2θ，90° 时取最大）。')+'\n\n'+
+      '【延伸思考】若把 g 改成 1.6 m/s²（月球表面），相同初速度下射程会变成地球的约 '+fmt(9.8/p.g,1)+' 倍。';
+  }
+});
+
+/* ---------- 2. 单摆 ---------- */
+EXP.push({
+  id:'pendulum', name:'单摆与简谐振动', cat:'物理',
+  tags:['力学','振动','周期'],
+  brief:'小角度下单摆做简谐振动，周期只与摆长和重力加速度有关，与摆球质量无关。',
+  resetOnChange:true,
+  params:[
+    {key:'L', label:'摆长 L',       min:0.3, max:2.0, step:0.05, value:1.0, unit:'m'},
+    {key:'g', label:'重力加速度 g', min:1.6, max:20,  step:0.1,  value:9.8, unit:'m/s²'},
+    {key:'b', label:'阻尼系数 b',   min:0,   max:0.6, step:0.02, value:0,   unit:''}
+  ],
+  formulas:[
+    'θ″ = −(g/L)·sinθ − b·θ′',
+    '小角度近似：sinθ ≈ θ',
+    '周期  T = 2π√(L/g)',
+    '频率  f = 1/T',
+    '角频率 ω = √(g/L)'
+  ],
+  init:function(){ return {th:0.52, w:0, t:0}; },
+  step:function(p,dt,st){
+    var n=8, h=dt/n;
+    for(var i=0;i<n;i++){
+      var a=-(p.g/p.L)*Math.sin(st.th) - p.b*st.w;
+      st.w+=a*h; st.th+=st.w*h;
+    }
+    st.t+=dt;
+  },
+  draw:function(ctx,W,H,p,st){
+    var px=W/2, py=64;
+    var scale=Math.min((H-py-74)/2.2, 236);
+    var len=p.L*scale;
+    var bx=px+len*Math.sin(st.th);
+    var by=py+len*Math.cos(st.th);
+
+    ctx.fillStyle='#1b2740';ctx.fillRect(px-90,py-22,180,14);
+    ctx.fillStyle='#24344f';ctx.fillRect(px-8,py-9,16,10);
+    ctx.fillStyle='rgba(34,211,238,.15)';ctx.fillRect(px-90,py-22,180,2);
+
+    ctx.strokeStyle='rgba(120,160,220,.22)';ctx.lineWidth=1;
+    ctx.setLineDash([4,7]);
+    ctx.beginPath();ctx.moveTo(px,py);ctx.lineTo(px,py+len+46);ctx.stroke();
+    ctx.setLineDash([]);
+
+    if(Math.abs(st.th)>0.01){
+      ctx.strokeStyle='rgba(34,211,238,.5)';ctx.lineWidth=1.6;
+      var a1=Math.PI/2, a2=Math.PI/2-st.th;
+      ctx.beginPath();ctx.arc(px,py,64,Math.min(a1,a2),Math.max(a1,a2));ctx.stroke();
+    }
+
+    ctx.strokeStyle='rgba(167,139,250,.16)';ctx.lineWidth=1.4;
+    ctx.beginPath();ctx.arc(px,py,len,Math.PI/2-0.6,Math.PI/2+0.6);ctx.stroke();
+
+    ctx.strokeStyle='#94a3b8';ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(px,py);ctx.lineTo(bx,by);ctx.stroke();
+
+    var gr=ctx.createRadialGradient(bx-5,by-5,1,bx,by,24);
+    gr.addColorStop(0,'#e0f2fe');gr.addColorStop(.42,'#22d3ee');
+    gr.addColorStop(1,'rgba(34,211,238,0)');
+    ctx.fillStyle=gr;ctx.beginPath();ctx.arc(bx,by,24,0,7);ctx.fill();
+    ctx.fillStyle='#a5f3fc';ctx.beginPath();ctx.arc(bx,by,9,0,7);ctx.fill();
+
+    var T=2*Math.PI*Math.sqrt(p.L/p.g);
+    pill(ctx,'T = '+fmt(T)+' s',26,26,'rgba(34,211,238,.12)','#22d3ee');
+    pill(ctx,'θ = '+fmt(st.th*180/Math.PI,1)+'°',26,56,'rgba(167,139,250,.12)','#a78bfa');
+
+    ctx.strokeStyle='rgba(52,211,153,.45)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(px+len*Math.sin(st.th)+30,py+len*Math.cos(st.th)+30);
+    ctx.lineTo(px+len*Math.sin(st.th)+30,py);ctx.stroke();
+    label(ctx,'L='+fmt(p.L,2)+'m',px+36,py+len*Math.cos(st.th)/2+18,'#34d399',11);
+  },
+  readout:function(p,st){
+    var T=2*Math.PI*Math.sqrt(p.L/p.g);
+    return [
+      {k:'周期 T', v:fmt(T)+' s'},
+      {k:'频率 f', v:fmt(1/T)+' Hz'},
+      {k:'角频率 ω', v:fmt(Math.sqrt(p.g/p.L))+' rad/s'},
+      {k:'当前摆角 θ', v:fmt(st.th*180/Math.PI,1)+'°'},
+      {k:'角速度 ω(t)', v:fmt(st.w)+' rad/s'},
+      {k:'摆长 L', v:fmt(p.L,2)+' m'}
+    ];
+  },
+  tutor:function(p,st){
+    var T=2*Math.PI*Math.sqrt(p.L/p.g);
+    return '【模型解析】单摆的回复力来自重力沿切向的分量 −mg·sinθ。当摆角很小时 sinθ ≈ θ，运动方程退化为 θ″ = −(g/L)θ，这正是简谐振动的标准形式。\n\n'+
+      '【当前参数】L = '+fmt(p.L,2)+' m，g = '+fmt(p.g,1)+' m/s²，阻尼 b = '+fmt(p.b,2)+'\n\n'+
+      '【实时推演】\n'+
+      '· 角频率 ω = √(g/L) = '+fmt(Math.sqrt(p.g/p.L))+' rad/s\n'+
+      '· 周期 T = 2π√(L/g) = '+fmt(T)+' s\n'+
+      '· 频率 f = 1/T = '+fmt(1/T)+' Hz\n'+
+      '· 当前摆角 θ = '+fmt(st.th*180/Math.PI,1)+'°\n\n'+
+      '【趣味结论】'+(p.b>0.05
+        ? '阻尼系数 b = '+fmt(p.b,2)+'，振幅正在按指数规律衰减——这就是阻尼振动，能量被持续耗散。'
+        : '把阻尼系数 b 调大一点，你会看到振幅按 e^(−bt/2) 的规律衰减，这就是真实的阻尼振动。')+'\n\n'+
+      '【延伸思考】周期公式里完全没有出现摆球质量——这是伽利略发现的"等时性"。';
+  }
+});
+
+/* ---------- 3. 弹簧振子 ---------- */
+EXP.push({
+  id:'spring', name:'弹簧振子与能量转化', cat:'物理',
+  tags:['力学','胡克定律','能量守恒'],
+  brief:'弹性回复力 F = −kx 驱动的简谐振动，动能与弹性势能此消彼长，总能量守恒。',
+  resetOnChange:false,
+  params:[
+    {key:'m', label:'质量 m',     min:0.2, max:3,  step:0.1, value:1.0, unit:'kg'},
+    {key:'k', label:'劲度系数 k', min:5,   max:80, step:1,   value:30,  unit:'N/m'}
+  ],
+  formulas:[
+    '胡克定律  F = −k·x',
+    'a = −(k/m)·x',
+    '角频率  ω = √(k/m)',
+    '周期    T = 2π√(m/k)',
+    'E = ½mv² + ½kx² = 常数'
+  ],
+  init:function(){ return {x:0.6, v:0, t:0}; },
+  step:function(p,dt,st){
+    var n=6, h=dt/n;
+    for(var i=0;i<n;i++){
+      var a=-(p.k/p.m)*st.x;
+      st.v+=a*h; st.x+=st.v*h;
+    }
+    st.t+=dt;
+  },
+  draw:function(ctx,W,H,p,st){
+    var cy=H*0.42;
+    var wallX=58;
+    var scalePx=Math.min(160,(W/2-130)/0.72);
+    var eqX=W/2+20;
+    var bw=72,bh=62;
+    var bx=eqX+st.x*scalePx;
+    var left=bx-bw/2;
+
+    ctx.strokeStyle='rgba(60,90,130,.4)';ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(40,cy+bh/2+16);ctx.lineTo(W-40,cy+bh/2+16);ctx.stroke();
+
+    ctx.fillStyle='#1b2740';ctx.fillRect(wallX-22,cy-90,22,180);
+    ctx.strokeStyle='#2c4265';ctx.lineWidth=1;
+    for(var y=cy-88;y<cy+90;y+=14){
+      ctx.beginPath();ctx.moveTo(wallX-22,y);ctx.lineTo(wallX-8,y+10);ctx.stroke();
+    }
+
+    ctx.strokeStyle='#64748b';ctx.lineWidth=2.6;
+    drawSpring(ctx,wallX,cy,left,cy,13,20);
+
+    var grd=ctx.createLinearGradient(left,cy-bh/2,left+bw,cy+bh/2);
+    grd.addColorStop(0,'#1e3a5f');grd.addColorStop(1,'#2a4d7a');
+    ctx.fillStyle=grd;
+    ctx.strokeStyle='#22d3ee';ctx.lineWidth=2;
+    roundRect(ctx,left,cy-bh/2,bw,bh,8);
+    ctx.fill();ctx.stroke();
+    ctx.fillStyle='rgba(34,211,238,.1)';
+    roundRect(ctx,left+4,cy-bh/2+4,bw-8,10,4);ctx.fill();
+
+    ctx.fillStyle='#a5f3fc';
+    ctx.font='bold 12px sans-serif';
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(p.m.toFixed(1)+' kg',bx,cy);
+
+    ctx.strokeStyle='rgba(167,139,250,.35)';ctx.setLineDash([5,6]);ctx.lineWidth=1.4;
+    ctx.beginPath();ctx.moveTo(eqX,cy-100);ctx.lineTo(eqX,cy+100);ctx.stroke();
+    ctx.setLineDash([]);
+    label(ctx,'平衡位置 O',eqX+6,cy-92,'rgba(167,139,250,.7)',10.5);
+
+    if(Math.abs(st.x)>0.02){
+      ctx.strokeStyle='#fbbf24';ctx.lineWidth=1.6;
+      ctx.beginPath();ctx.moveTo(eqX,cy+bh/2+30);ctx.lineTo(bx,cy+bh/2+30);ctx.stroke();
+      label(ctx,'x = '+fmt(st.x,2)+' m',(eqX+bx)/2,cy+bh/2+44,'#fbbf24',11,'center');
+    }
+
+    var E=0.5*p.k*st.x*st.x + 0.5*p.m*st.v*st.v;
+    var ek=0.5*p.m*st.v*st.v, ep=0.5*p.k*st.x*st.x;
+    var barW=Math.min(300,W-160), barX=(W-barW)/2, barY=H-58;
+    var rk=E>1e-9?ek/E:0, rp=E>1e-9?ep/E:0;
+
+    ctx.fillStyle='#0a1220';
+    roundRect(ctx,barX,barY,barW,16,8);ctx.fill();
+    if(rk>0){ ctx.fillStyle='rgba(52,211,153,.85)'; roundRect(ctx,barX,barY,barW*rk,16,8);ctx.fill(); }
+    if(rp>0){ ctx.fillStyle='rgba(251,191,36,.85)'; roundRect(ctx,barX+barW*rk,barY,barW*rp,16,8);ctx.fill(); }
+    ctx.strokeStyle='#1d2b45';ctx.lineWidth=1;
+    roundRect(ctx,barX,barY,barW,16,8);ctx.stroke();
+
+    label(ctx,'动能 Ek',barX,barY+30,'#34d399',10.5);
+    label(ctx,'弹性势能 Ep',barX+barW,barY+30,'#fbbf24',10.5,'right');
+    pill(ctx,'E_total = '+fmt(E,3)+' J',26,26,'rgba(34,211,238,.12)','#22d3ee');
+  },
+  readout:function(p,st){
+    var T=2*Math.PI*Math.sqrt(p.m/p.k);
+    return [
+      {k:'周期 T', v:fmt(T)+' s'},
+      {k:'角频率 ω', v:fmt(Math.sqrt(p.k/p.m))+' rad/s'},
+      {k:'位移 x', v:fmt(st.x)+' m'},
+      {k:'速度 v', v:fmt(st.v)+' m/s'},
+      {k:'动能 Ek', v:fmt(0.5*p.m*st.v*st.v,3)+' J'},
+      {k:'弹性势能 Ep', v:fmt(0.5*p.k*st.x*st.x,3)+' J'}
+    ];
+  },
+  tutor:function(p,st){
+    var T=2*Math.PI*Math.sqrt(p.m/p.k);
+    var ek=0.5*p.m*st.v*st.v, ep=0.5*p.k*st.x*st.x, E=ek+ep;
+    return '【模型解析】弹簧振子是简谐振动最纯粹的模型：回复力 F = −kx 与位移严格成正比且反向，由此得到加速度 a = −(k/m)x。\n\n'+
+      '【当前参数】m = '+fmt(p.m,1)+' kg，k = '+fmt(p.k,0)+' N/m\n\n'+
+      '【实时推演】\n'+
+      '· 角频率 ω = √(k/m) = '+fmt(Math.sqrt(p.k/p.m))+' rad/s\n'+
+      '· 周期 T = 2π√(m/k) = '+fmt(T)+' s\n'+
+      '· 当前位移 x = '+fmt(st.x)+' m\n'+
+      '· 当前速度 v = '+fmt(st.v)+' m/s\n'+
+      '· 动能 Ek = '+fmt(ek,3)+' J\n'+
+      '· 弹性势能 Ep = '+fmt(ep,3)+' J\n'+
+      '· 总机械能 E = '+fmt(E,3)+' J\n\n'+
+      '【趣味结论】'+(Math.abs(st.x)<0.05
+        ? '此刻物块正经过平衡位置，动能达到最大、弹性势能为零。'
+        : Math.abs(st.v)<0.05
+          ? '此刻物块到达最大位移处，速度为零，全部能量储存在弹簧的弹性势能里。'
+          : '能量正在动能与弹性势能之间来回流动，总量始终守恒。')+'\n\n'+
+      '【延伸思考】质量 m 翻倍，周期会变成 √2 倍；劲度系数 k 翻四倍，周期减半。';
+  }
+});
+
+/* ---------- 4. 欧姆定律 ---------- */
+EXP.push({
+  id:'circuit', name:'欧姆定律电路', cat:'物理',
+  tags:['电学','电流','功率'],
+  brief:'电压驱动电荷定向移动形成电流，电阻阻碍电流，三者由 I = U/R 严格约束。',
+  resetOnChange:false,
+  params:[
+    {key:'U', label:'电源电压 U', min:1, max:24, step:0.5, value:12, unit:'V'},
+    {key:'R', label:'电阻 R',     min:1, max:60, step:1,   value:12, unit:'Ω'}
+  ],
+  formulas:[
+    '欧姆定律  I = U / R',
+    '电功率    P = U·I = I²R = U²/R',
+    '串联分压  U₁:U₂ = R₁:R₂',
+    '焦耳定律  Q = I²R·t'
+  ],
+  init:function(){ return {s:0, t:0}; },
+  step:function(p,dt,st){
+    var I=p.U/p.R;
+    var speed=Math.min(0.55, I*0.035);
+    st.s=(st.s+speed*dt)%1;
+    st.t+=dt;
+  },
+  draw:function(ctx,W,H,p,st){
+    var x0=W*0.16, x1=W*0.84;
+    var y0=78, y1=H-88;
+    var I=p.U/p.R;
+    var cy=(y0+y1)/2;
+
+    ctx.strokeStyle='#3b5a80';ctx.lineWidth=4;ctx.lineJoin='round';
+    ctx.beginPath();
+    ctx.moveTo(x0,y0);ctx.lineTo(x1,y0);ctx.lineTo(x1,y1);ctx.lineTo(x0,y1);ctx.lineTo(x0,y0);
+    ctx.stroke();
+    ctx.strokeStyle='rgba(34,211,238,.12)';ctx.lineWidth=8;
+    ctx.beginPath();
+    ctx.moveTo(x0,y0);ctx.lineTo(x1,y0);ctx.lineTo(x1,y1);ctx.lineTo(x0,y1);ctx.lineTo(x0,y0);
+    ctx.stroke();
+
+    ctx.strokeStyle='#0e1626';ctx.lineWidth=8;
+    ctx.beginPath();ctx.moveTo(x0,cy-22);ctx.lineTo(x0,cy+22);ctx.stroke();
+
+    ctx.strokeStyle='#fbbf24';ctx.lineWidth=4;ctx.lineCap='round';
+    ctx.beginPath();ctx.moveTo(x0-18,cy-11);ctx.lineTo(x0+18,cy-11);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(x0-10,cy+9);ctx.lineTo(x0+10,cy+9);ctx.stroke();
+
+    label(ctx,'+',x0-26,cy-14,'#fbbf24',15);
+    label(ctx,'−',x0-26,cy+12,'#fbbf24',15);
+
+    var rw=104,rh=34;
+    ctx.fillStyle='#0e1626';
+    roundRect(ctx,W/2-rw/2,y0-rh/2,rw,rh,6);ctx.fill();
+    ctx.strokeStyle='#a78bfa';ctx.lineWidth=2.4;
+    roundRect(ctx,W/2-rw/2,y0-rh/2,rw,rh,6);ctx.stroke();
+    ctx.fillStyle='#c4b5fd';
+    ctx.font='bold 13px Menlo,Consolas,monospace';
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(p.R.toFixed(0)+' Ω',W/2,y0);
+
+    var ap=ptOnRect(0.06,x0,y0,x1,y1);
+    ctx.fillStyle='#f472b6';
+    ctx.beginPath();
+    ctx.moveTo(ap[0]+13,ap[1]);
+    ctx.lineTo(ap[0]-5,ap[1]-7);
+    ctx.lineTo(ap[0]-5,ap[1]+7);
+    ctx.closePath();ctx.fill();
+    label(ctx,'I',ap[0]+20,ap[1]-16,'#f472b6',13);
+
+    var N=64;
+    for(var i=0;i<N;i++){
+      var ss=(st.s+i/N)%1;
+      var p2=ptOnRect(ss,x0,y0,x1,y1);
+      var ex=p2[0], ey=p2[1];
+      var g=ctx.createRadialGradient(ex,ey,0,ex,ey,7);
+      g.addColorStop(0,'rgba(56,189,248,1)');
+      g.addColorStop(1,'rgba(56,189,248,0)');
+      ctx.fillStyle=g;
+      ctx.beginPath();ctx.arc(ex,ey,7,0,7);ctx.fill();
+      ctx.fillStyle='#7dd3fc';
+      ctx.beginPath();ctx.arc(ex,ey,2.4,0,7);ctx.fill();
+    }
+
+    pill(ctx,'I = '+fmt(I,3)+' A',26,22,'rgba(244,114,182,.14)','#f472b6');
+    pill(ctx,'P = '+fmt(p.U*I,2)+' W',26,52,'rgba(52,211,153,.14)','#34d399');
+    pill(ctx,'U = '+fmt(p.U,1)+' V',26,82,'rgba(251,191,36,.14)','#fbbf24');
+
+    var cx=x1-70, cyy=y1-72, rr=38;
+    ctx.strokeStyle='rgba(52,211,153,.2)';ctx.lineWidth=8;
+    ctx.beginPath();ctx.arc(cx,cyy,rr,-Math.PI/2,Math.PI*1.5);ctx.stroke();
+    var frac=clamp((p.U*I)/576,0,1);
+    ctx.strokeStyle='#34d399';ctx.lineWidth=8;ctx.lineCap='round';
+    ctx.beginPath();ctx.arc(cx,cyy,rr,-Math.PI/2,-Math.PI/2+frac*Math.PI*2);ctx.stroke();
+    ctx.fillStyle='#34d399';ctx.font='bold 13px sans-serif';
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(fmt(p.U*I,1),cx,cyy-6);
+    ctx.font='10px sans-serif';ctx.fillStyle='#7d8fab';
+    ctx.fillText('W',cx,cyy+12);
+  },
+  readout:function(p){
+    var I=p.U/p.R;
+    return [
+      {k:'电流 I', v:fmt(I,3)+' A'},
+      {k:'电功率 P', v:fmt(p.U*I,2)+' W'},
+      {k:'1 分钟发热量', v:fmt(I*I*p.R*60,1)+' J'},
+      {k:'电阻 R', v:fmt(p.R,0)+' Ω'},
+      {k:'电压 U', v:fmt(p.U,1)+' V'},
+      {k:'每秒通过电荷', v:fmt(I,3)+' C'}
+    ];
+  },
+  tutor:function(p){
+    var I=p.U/p.R, P=p.U*I;
+    return '【模型解析】欧姆定律描述的是导体中电流与电压的正比关系，比例系数就是电阻的倒数（电导）。\n\n'+
+      '【当前参数】U = '+fmt(p.U,1)+' V，R = '+fmt(p.R,0)+' Ω\n\n'+
+      '【实时推演】\n'+
+      '· 电流 I = U/R = '+fmt(I,3)+' A\n'+
+      '· 电功率 P = U·I = '+fmt(P,2)+' W\n'+
+      '· 60 s 内电阻发热 Q = I²Rt = '+fmt(I*I*p.R*60,1)+' J\n\n'+
+      '【趣味结论】'+(p.R<5
+        ? '电阻已经很小了，电流很大、发热惊人。现实中这会让导线迅速升温，这就是短路起火的原因。'
+        : p.R>40
+          ? '电阻很大，电流被显著限制，电路几乎处于"阻滞"状态。'
+          : '试试把电压翻倍：电流也翻倍，但功率变成 4 倍——因为 P = U²/R 是平方关系。')+'\n\n'+
+      '【延伸思考】电子在导线中的漂移速度其实只有约 0.1 mm/s，但电场建立的速度接近光速。';
+  }
+});
+
+/* ---------- 5. 斜面运动 ---------- */
+EXP.push({
+  id:'incline', name:'斜面滑动与摩擦力', cat:'物理',
+  tags:['力学','摩擦','牛顿第二定律'],
+  brief:'重力分解、法向支持力与摩擦力共同决定物体在斜面上的运动状态。',
+  resetOnChange:true,
+  params:[
+    {key:'theta', label:'斜面倾角 θ', min:8, max:60, step:1,   value:30, unit:'°'},
+    {key:'mu',    label:'动摩擦因数 μ', min:0, max:0.8, step:0.02, value:0.2, unit:''},
+    {key:'m',     label:'物体质量 m', min:1, max:10, step:0.5, value:3,   unit:'kg'}
+  ],
+  formulas:[
+    '沿面方向：ma = mg·sinθ − μ·mg·cosθ',
+    '加速度    a = g(sinθ − μ·cosθ)',
+    '临界条件  tanθ = μ  （恰好不下滑）',
+    '摩擦力    f = μ·m·g·cosθ'
+  ],
+  init:function(){ return {s:4, v:0, hold:0, t:0}; },
+  step:function(p,dt,st){
+    var th=p.theta*Math.PI/180;
+    var a=9.8*(Math.sin(th)-p.mu*Math.cos(th));
+    if(a>0.01){
+      st.v+=a*dt;
+      st.s-=st.v*dt;
+      if(st.s<=0.32){
+        st.s=0.32; st.v=0; st.hold+=dt;
+        if(st.hold>1.4){ st.s=4; st.v=0; st.hold=0; }
+      }
+    }
+    st.t+=dt;
+  },
+  draw:function(ctx,W,H,p,st){
+    var th=p.theta*Math.PI/180;
+    var gy=H-72, ox=112;
+    var maxH=gy-80;
+    var Lpx=Math.min(430, W-ox-170, maxH/Math.max(Math.sin(th),0.18));
+    var PPM=Lpx/4;
+    var topX=ox+Lpx*Math.cos(th), topY=gy-Lpx*Math.sin(th);
+
+    ctx.strokeStyle='#1f6f66';ctx.lineWidth=3;
+    ctx.beginPath();ctx.moveTo(40,gy);ctx.lineTo(W-20,gy);ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(ox,gy);ctx.lineTo(topX,topY);ctx.lineTo(topX,gy);ctx.closePath();
+    var gg=ctx.createLinearGradient(ox,gy,topX,topY);
+    gg.addColorStop(0,'rgba(30,58,95,.75)');
+    gg.addColorStop(1,'rgba(20,38,66,.55)');
+    ctx.fillStyle=gg;ctx.fill();
+    ctx.strokeStyle='#3b5a80';ctx.lineWidth=2;ctx.stroke();
+
+    ctx.strokeStyle='#22d3ee';ctx.lineWidth=2;
+    ctx.beginPath();ctx.arc(ox,gy,62,-th,0);ctx.stroke();
+    label(ctx,p.theta+'°',ox+74,gy-16,'#22d3ee',12);
+
+    var bx=ox+st.s*Math.cos(th)*PPM;
+    var by=gy-st.s*Math.sin(th)*PPM;
+    var bw=46,bh=38;
+
+    ctx.save();
+    ctx.translate(bx,by);
+    ctx.rotate(-th);
+    var bg=ctx.createLinearGradient(-bw/2,-bh,bw/2,0);
+    bg.addColorStop(0,'#7c2d12');bg.addColorStop(1,'#b45309');
+    ctx.fillStyle=bg;
+    ctx.strokeStyle='#fbbf24';ctx.lineWidth=2;
+    roundRect(ctx,-bw/2,-bh,bw,bh,6);
+    ctx.fill();ctx.stroke();
+    ctx.restore();
+
+    var a=9.8*(Math.sin(th)-p.mu*Math.cos(th));
+    if(a>0.01){
+      var ex=bx-42*Math.cos(th), ey=by+42*Math.sin(th);
+      ctx.strokeStyle='#f472b6';ctx.lineWidth=2.4;
+      ctx.beginPath();ctx.moveTo(bx,by);ctx.lineTo(ex,ey);ctx.stroke();
+      var ang=Math.atan2(ey-by,ex-bx);
+      ctx.fillStyle='#f472b6';
+      ctx.beginPath();
+      ctx.moveTo(ex,ey);
+      ctx.lineTo(ex-11*Math.cos(ang-0.4),ey-11*Math.sin(ang-0.4));
+      ctx.lineTo(ex-11*Math.cos(ang+0.4),ey-11*Math.sin(ang+0.4));
+      ctx.closePath();ctx.fill();
+      label(ctx,'a = '+fmt(a,2)+' m/s²',ex-6,ey+22,'#f472b6',11.5,'right');
+    }
+
+    var stat = a>0.01 ? (st.v>0.05?'加速下滑':'即将下滑') : '保持静止';
+    var col  = a>0.01 ? '#f472b6' : '#34d399';
+    pill(ctx,'状态：'+stat,26,22,'rgba(255,255,255,.05)',col);
+    pill(ctx,'tanθ = '+fmt(Math.tan(th),3)+'   μ = '+fmt(p.mu,2),26,52,'rgba(255,255,255,.05)', Math.tan(th)>p.mu?'#f472b6':'#34d399');
+
+    if(st.v>0.02){ pill(ctx,'v = '+fmt(st.v,2)+' m/s',26,82,'rgba(34,211,238,.12)','#22d3ee'); }
+  },
+  readout:function(p,st){
+    var th=p.theta*Math.PI/180;
+    var a=9.8*(Math.sin(th)-p.mu*Math.cos(th));
+    return [
+      {k:'加速度 a', v:fmt(Math.max(a,0),2)+' m/s²'},
+      {k:'当前速度 v', v:fmt(st.v,2)+' m/s'},
+      {k:'沿面位移', v:fmt(4-st.s,2)+' m'},
+      {k:'重力分量 mg·sinθ', v:fmt(p.m*9.8*Math.sin(th),1)+' N'},
+      {k:'摩擦力 f', v:fmt(p.mu*p.m*9.8*Math.cos(th),1)+' N'},
+      {k:'临界角 arctanμ', v:fmt(Math.atan(p.mu)*180/Math.PI,1)+'°'}
+    ];
+  },
+  tutor:function(p,st){
+    var th=p.theta*Math.PI/180;
+    var a=9.8*(Math.sin(th)-p.mu*Math.cos(th));
+    var crit=Math.atan(p.mu)*180/Math.PI;
+    return '【模型解析】斜面问题的核心是"力的正交分解"：把重力拆成沿斜面下滑的 mg·sinθ 和垂直压向斜面的 mg·cosθ。\n\n'+
+      '【当前参数】θ = '+p.theta+'°，μ = '+fmt(p.mu,2)+'，m = '+fmt(p.m,1)+' kg\n\n'+
+      '【实时推演】\n'+
+      '· 下滑分量 mg·sinθ = '+fmt(p.m*9.8*Math.sin(th),1)+' N\n'+
+      '· 法向支持力 N = mg·cosθ = '+fmt(p.m*9.8*Math.cos(th),1)+' N\n'+
+      '· 摩擦力 f = μN = '+fmt(p.mu*p.m*9.8*Math.cos(th),1)+' N\n'+
+      '· 净加速度 a = '+fmt(Math.max(a,0),2)+' m/s²\n'+
+      '· 临界滑动角 arctan(μ) = '+fmt(crit,1)+'°\n\n'+
+      '【趣味结论】'+(a>0.01
+        ? '因为 '+p.theta+'° > '+fmt(crit,1)+'°，重力沿面分量超过最大静摩擦，物块开始加速下滑。'
+        : '因为 '+p.theta+'° < '+fmt(crit,1)+'°，摩擦力足以平衡下滑分量，物块稳稳停住——这就是"自锁"现象。')+'\n\n'+
+      '【延伸思考】注意加速度与质量 m 完全无关！因为重力和摩擦力都正比于 m。';
+  }
+});
+
+/* ---------- 6. 理想气体 ---------- */
+EXP.push({
+  id:'gas', name:'理想气体分子运动', cat:'化学',
+  tags:['气体','热力学','统计'],
+  brief:'分子无规则热运动撞击器壁产生压强，宏观状态由 PV = nRT 严格联系。',
+  resetOnChange:false,
+  params:[
+    {key:'T', label:'热力学温度 T', min:100, max:900, step:10, value:300, unit:'K'},
+    {key:'V', label:'体积 V',       min:2,   max:20,  step:0.5, value:10, unit:'L'},
+    {key:'n', label:'物质的量 n',   min:0.2, max:2,   step:0.1, value:1,  unit:'mol'}
+  ],
+  formulas:[
+    '理想气体状态方程  PV = nRT',
+    'R = 8.314 J/(mol·K)',
+    '平均平动动能  Ēk = (3/2)kT',
+    '方均根速率  v_rms = √(3RT/M)',
+    '波义耳定律  P₁V₁ = P₂V₂ (T恒定)'
+  ],
+  init:function(){
+    var ps=[];
+    for(var i=0;i<80;i++){
+      var a=Math.random()*Math.PI*2;
+      ps.push({x:Math.random(), y:Math.random(), vx:Math.cos(a), vy:Math.sin(a)});
+    }
+    return {ps:ps, t:0};
+  },
+  step:function(p,dt,st){
+    var spd=0.30*Math.sqrt(p.T/300);
+    for(var i=0;i<st.ps.length;i++){
+      var pt=st.ps[i];
+      pt.x+=pt.vx*spd*dt; pt.y+=pt.vy*spd*dt;
+      if(pt.x<0){pt.x=-pt.x;pt.vx*=-1;}
+      if(pt.x>1){pt.x=2-pt.x;pt.vx*=-1;}
+      if(pt.y<0){pt.y=-pt.y;pt.vy*=-1;}
+      if(pt.y>1){pt.y=2-pt.y;pt.vy*=-1;}
+    }
+    st.t+=dt;
+  },
+  draw:function(ctx,W,H,p,st){
+    var bh=Math.min(H-170,290);
+    var bw=clamp(100+(W-340)*(p.V-2)/18, 100, Math.max(120,W-280));
+    var bx0=(W-bw)/2, by0=(H-bh)/2+16;
+
+    ctx.fillStyle='rgba(12,22,40,.85)';
+    roundRect(ctx,bx0,by0,bw,bh,10);ctx.fill();
+    ctx.strokeStyle='rgba(34,211,238,.55)';ctx.lineWidth=2.5;
+    roundRect(ctx,bx0,by0,bw,bh,10);ctx.stroke();
+
+    ctx.strokeStyle='rgba(34,211,238,.14)';ctx.lineWidth=1;
+    for(var i=1;i<5;i++){
+      var yy=by0+bh*i/5;
+      ctx.beginPath();ctx.moveTo(bx0,yy);ctx.lineTo(bx0+8,yy);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(bx0+bw-8,yy);ctx.lineTo(bx0+bw,yy);ctx.stroke();
+    }
+
+    var hue=210-clamp((p.T-100)/800,0,1)*210;
+    var r=3.1;
+    for(var j=0;j<st.ps.length;j++){
+      var pt=st.ps[j];
+      var x=bx0+pt.x*bw, y=by0+pt.y*bh;
+      var g=ctx.createRadialGradient(x,y,0,x,y,r*3.4);
+      g.addColorStop(0,'hsla('+hue+',90%,72%,1)');
+      g.addColorStop(1,'hsla('+hue+',90%,60%,0)');
+      ctx.fillStyle=g;
+      ctx.beginPath();ctx.arc(x,y,r*3.4,0,7);ctx.fill();
+      ctx.fillStyle='hsl('+hue+',95%,82%)';
+      ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fill();
+    }
+
+    var P=p.n*8.314*p.T/p.V;
+    var pressN=clamp(P/500,0,1);
+    var arrowLen=16+pressN*34;
+    ctx.strokeStyle='rgba(244,114,182,.75)';ctx.lineWidth=2.2;
+    for(var k=0;k<4;k++){
+      var y2=by0+bh*(0.2+k*0.2);
+      ctx.beginPath();
+      ctx.moveTo(bx0-8,y2);ctx.lineTo(bx0-8-arrowLen,y2);
+      ctx.moveTo(bx0+bw+8,y2);ctx.lineTo(bx0+bw+8+arrowLen,y2);
+      ctx.stroke();
+      ctx.fillStyle='rgba(244,114,182,.75)';
+      ctx.beginPath();
+      ctx.moveTo(bx0-8-arrowLen,y2);ctx.lineTo(bx0-8-arrowLen+8,y2-5);ctx.lineTo(bx0-8-arrowLen+8,y2+5);
+      ctx.closePath();ctx.fill();
+      ctx.beginPath();
+      ctx.moveTo(bx0+bw+8+arrowLen,y2);ctx.lineTo(bx0+bw+8+arrowLen-8,y2-5);ctx.lineTo(bx0+bw+8+arrowLen-8,y2+5);
+      ctx.closePath();ctx.fill();
+    }
+
+    var tx=bx0+bw+70, ty0=by0+30, ty1=by0+bh-30;
+    ctx.strokeStyle='rgba(255,255,255,.12)';ctx.lineWidth=8;ctx.lineCap='round';
+    ctx.beginPath();ctx.moveTo(tx,ty0);ctx.lineTo(tx,ty1);ctx.stroke();
+    var frac=clamp((p.T-100)/800,0,1);
+    var tg=ctx.createLinearGradient(tx,ty1,tx,ty0);
+    tg.addColorStop(0,'#38bdf8');tg.addColorStop(1,'#f87171');
+    ctx.strokeStyle=tg;
+    ctx.beginPath();ctx.moveTo(tx,ty1);ctx.lineTo(tx,ty1-(ty1-ty0)*frac);ctx.stroke();
+    label(ctx,p.T+' K',tx+14,ty0+8,'#f87171',11);
+    label(ctx,'100 K',tx+14,ty1+8,'#38bdf8',10);
+
+    pill(ctx,'P = '+fmt(P,1)+' kPa',26,22,'rgba(244,114,182,.12)','#f472b6');
+    pill(ctx,'PV = '+fmt(P*p.V,0)+' kPa·L',26,52,'rgba(34,211,238,.12)','#22d3ee');
+    pill(ctx,'nRT = '+fmt(p.n*8.314*p.T,0)+' J',26,82,'rgba(52,211,153,.12)','#34d399');
+
+    label(ctx,'V = '+fmt(p.V,1)+' L',bx0+bw/2,by0+bh+26,'#22d3ee',12,'center');
+  },
+  readout:function(p){
+    var P=p.n*8.314*p.T/p.V;
+    var vRms=Math.sqrt(3*8.314*p.T/0.028);
+    return [
+      {k:'压强 P', v:fmt(P,1)+' kPa'},
+      {k:'PV 乘积', v:fmt(P*p.V,0)+' kPa·L'},
+      {k:'nRT', v:fmt(p.n*8.314*p.T,0)+' J'},
+      {k:'分子数密度', v:fmt(p.n*6.022e23/(p.V*1e-3)/1e25,2)+'×10²⁵ /m³'},
+      {k:'方均根速率', v:fmt(vRms,0)+' m/s'},
+      {k:'平均平动动能', v:fmt(1.5*1.381e-23*p.T*1e21,2)+'×10⁻²¹ J'}
+    ];
+  },
+  tutor:function(p){
+    var P=p.n*8.314*p.T/p.V;
+    var vRms=Math.sqrt(3*8.314*p.T/0.028);
+    return '【模型解析】理想气体把分子看作无体积、无相互作用的弹性小球。压强来自海量分子对器壁的持续撞击。\n\n'+
+      '【当前参数】T = '+p.T+' K，V = '+fmt(p.V,1)+' L，n = '+fmt(p.n,1)+' mol\n\n'+
+      '【实时推演】\n'+
+      '· 压强 P = nRT/V = '+fmt(P,1)+' kPa\n'+
+      '· PV 乘积 = '+fmt(P*p.V,0)+' kPa·L\n'+
+      '· nRT = '+fmt(p.n*8.314*p.T,0)+' J\n'+
+      '· 方均根速率 v_rms = '+fmt(vRms,0)+' m/s\n'+
+      '· 平均平动动能 Ēk = '+fmt(1.5*1.381e-23*p.T*1e21,2)+'×10⁻²¹ J\n\n'+
+      '【趣味结论】'+(p.T>600
+        ? '温度很高，分子像一群狂躁的蜂群——方均根速率已经接近甚至超过声速。'
+        : p.T<200
+          ? '温度很低，分子运动明显迟缓。再降下去就会逼近液化点，理想气体模型将失效。'
+          : '注意：无论升温还是压缩体积，P·V/(n·T) 始终保持 8.314 —— 这就是理想气体常数 R 的物理意义。')+'\n\n'+
+      '【延伸思考】改变体积时，只要温度不变，P 与 V 严格成反比（波义耳定律）。';
+  }
+});
+
+/* ---------- 7. 酸碱滴定 ---------- */
+EXP.push({
+  id:'titration', name:'酸碱滴定曲线', cat:'化学',
+  tags:['分析化学','pH','当量点'],
+  brief:'强酸强碱滴定过程中 pH 的突变规律，是定量分析的核心工具。',
+  resetOnChange:true,
+  params:[
+    {key:'ca', label:'酸的浓度 c(酸)', min:0.01, max:0.5, step:0.01, value:0.10, unit:'mol/L'},
+    {key:'va', label:'酸的体积 V(酸)', min:10,   max:50,  step:1,    value:20,   unit:'mL'},
+    {key:'cb', label:'碱的浓度 c(碱)', min:0.01, max:1.0, step:0.01, value:0.10, unit:'mol/L'}
+  ],
+  formulas:[
+    '当量点体积  V_eq = c(酸)·V(酸) / c(碱)',
+    '滴定前 pH = −lg c(酸)',
+    '当量点前  [H⁺] = (n酸 − n碱)/V总',
+    '当量点后  pOH = −lg[(n碱 − n酸)/V总]',
+    '当量点 pH = 7.00 （强酸强碱）'
+  ],
+  init:function(){ return {Vb:0, t:0}; },
+  step:function(p,dt,st){
+    var Veq=p.ca*p.va/p.cb;
+    var Vmax=Veq*1.9;
+    st.Vb+=Vmax/9*dt;
+    if(st.Vb>Vmax) st.Vb=0;
+    st.t+=dt;
+  },
+  pHAt:function(Vb,p){
+    var nA=p.ca*p.va/1000;
+    var nB=p.cb*Vb/1000;
+    var Vt=(p.va+Vb)/1000;
+    var diff=nA-nB;
+    if(Math.abs(diff)<1e-12) return 7;
+    if(diff>0) return clamp(-Math.log10(diff/Vt),0,14);
+    return clamp(14-(-Math.log10(-diff/Vt)),0,14);
+  },
+  pHColor:function(ph){
+    if(ph<3)    return '#ef4444';
+    if(ph<5)    return '#f97316';
+    if(ph<6.5)  return '#facc15';
+    if(ph<7.5)  return '#4ade80';
+    if(ph<9)    return '#38bdf8';
+    if(ph<11)   return '#818cf8';
+    return '#c084fc';
+  },
+  draw:function(ctx,W,H,p,st){
+    var self=this;
+    var Veq=p.ca*p.va/p.cb;
+    var Vmax=Veq*1.9;
+    var gx0=66, gx1=Math.max(W-260,220);
+    var gy0=54, gy1=H-66;
+
+    var V2x=function(v){return gx0+(v/Vmax)*(gx1-gx0);};
+    var pH2y=function(ph){return gy1-(ph/14)*(gy1-gy0);};
+
+    ctx.strokeStyle='rgba(120,160,220,.09)';ctx.lineWidth=1;
+    for(var ph=0;ph<=14;ph+=2){
+      var y=pH2y(ph);
+      ctx.beginPath();ctx.moveTo(gx0,y);ctx.lineTo(gx1,y);ctx.stroke();
+      label(ctx,String(ph),gx0-10,y,'#5a6d87',10,'right');
+    }
+    for(var i=0;i<=5;i++){
+      var v=Vmax*i/5, x=V2x(v);
+      ctx.beginPath();ctx.moveTo(x,gy0);ctx.lineTo(x,gy1);ctx.stroke();
+      label(ctx,fmt(v,1),x,gy1+14,'#5a6d87',10,'center');
+    }
+
+    ctx.strokeStyle='rgba(34,211,238,.45)';ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(gx0,gy0);ctx.lineTo(gx0,gy1);ctx.lineTo(gx1,gy1);ctx.stroke();
+    label(ctx,'pH',gx0-6,gy0-16,'#22d3ee',11.5);
+    label(ctx,'V(碱) / mL',gx1,gy1+30,'#22d3ee',11.5,'right');
+
+    ctx.beginPath();
+    var N=600;
+    for(var j=0;j<=N;j++){
+      var vv=Vmax*j/N;
+      var xx=V2x(vv), yy=pH2y(self.pHAt(vv,p));
+      j?ctx.lineTo(xx,yy):ctx.moveTo(xx,yy);
+    }
+    ctx.strokeStyle='rgba(167,139,250,.85)';ctx.lineWidth=2.4;ctx.stroke();
+
+    var ex=V2x(Veq), ey=pH2y(7);
+    ctx.strokeStyle='rgba(251,191,36,.55)';ctx.setLineDash([5,5]);ctx.lineWidth=1.4;
+    ctx.beginPath();ctx.moveTo(ex,gy1);ctx.lineTo(ex,ey);ctx.lineTo(gx0,ey);ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle='#fbbf24';
+    ctx.beginPath();ctx.arc(ex,ey,5,0,7);ctx.fill();
+    label(ctx,'当量点',ex+8,ey-14,'#fbbf24',11);
+
+    var cx=V2x(st.Vb), cy=pH2y(self.pHAt(st.Vb,p));
+    ctx.strokeStyle='rgba(52,211,153,.4)';ctx.setLineDash([3,4]);ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(cx,gy1);ctx.lineTo(cx,cy);ctx.lineTo(gx0,cy);ctx.stroke();
+    ctx.setLineDash([]);
+
+    var cg=ctx.createRadialGradient(cx-3,cy-3,1,cx,cy,15);
+    cg.addColorStop(0,'#fff');cg.addColorStop(.4,'#34d399');
+    cg.addColorStop(1,'rgba(52,211,153,0)');
+    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(cx,cy,15,0,7);ctx.fill();
+    ctx.fillStyle='#a7f3d0';ctx.beginPath();ctx.arc(cx,cy,5.5,0,7);ctx.fill();
+
+    var bx=W-215, by=gy0+40, bw=120, bh=Math.min(gy1-by-40,180);
+    var ph2=self.pHAt(st.Vb,p);
+    var col=self.pHColor(ph2);
+
+    ctx.strokeStyle='rgba(160,190,225,.4)';ctx.lineWidth=2;
+    ctx.beginPath();
+    ctx.moveTo(bx,by);ctx.lineTo(bx,by+bh);ctx.lineTo(bx+bw,by+bh);ctx.lineTo(bx+bw,by);
+    ctx.stroke();
+
+    var fillFrac=clamp((p.va+st.Vb)/(p.va+Vmax),0.12,1);
+    var lh=bh*fillFrac;
+    var lg=ctx.createLinearGradient(bx,by+bh-lh,bx,by+bh);
+    lg.addColorStop(0,col+'aa');lg.addColorStop(1,col+'55');
+    ctx.fillStyle=lg;
+    ctx.fillRect(bx+2,by+bh-lh,bw-4,lh);
+
+    ctx.strokeStyle=col;ctx.lineWidth=2;
+    ctx.beginPath();
+    ctx.moveTo(bx+2,by+bh-lh);ctx.lineTo(bx+bw-2,by+bh-lh);ctx.stroke();
+
+    var dx=bx+bw/2;
+    ctx.strokeStyle='rgba(160,190,225,.4)';ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(dx-9,by-56);ctx.lineTo(dx-9,by-16);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(dx+9,by-56);ctx.lineTo(dx+9,by-16);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(dx-9,by-16);ctx.lineTo(dx,by-6);ctx.lineTo(dx+9,by-16);ctx.stroke();
+
+    var dropPhase=(st.t*2.6)%1;
+    if(dropPhase<0.72){
+      var dy=by-6+dropPhase/0.72*14;
+      ctx.fillStyle='rgba(56,189,248,.9)';
+      ctx.beginPath();ctx.arc(dx,dy,3.4,0,7);ctx.fill();
+    }
+
+    label(ctx,'滴定管',dx,by-64,'#5a6d87',10,'center');
+    label(ctx,'pH = '+fmt(ph2,2),bx+bw/2,by+bh+18,col,13,'center');
+
+    pill(ctx,'V_eq = '+fmt(Veq,2)+' mL',26,20,'rgba(251,191,36,.12)','#fbbf24');
+    pill(ctx,'当前 V = '+fmt(st.Vb,2)+' mL',26,50,'rgba(52,211,153,.12)','#34d399');
+  },
+  readout:function(p,st){
+    var Veq=p.ca*p.va/p.cb;
+    var ph=this.pHAt(st.Vb,p);
+    var nA=p.ca*p.va/1000, nB=p.cb*st.Vb/1000;
+    return [
+      {k:'当量点体积 V_eq', v:fmt(Veq,2)+' mL'},
+      {k:'当前加入碱体积', v:fmt(st.Vb,2)+' mL'},
+      {k:'当前 pH', v:fmt(ph,2)},
+      {k:'酸总物质的量', v:fmt(nA*1000,3)+' mmol'},
+      {k:'已加入碱量', v:fmt(nB*1000,3)+' mmol'},
+      {k:'滴定进度', v:fmt(clamp(st.Vb/Veq*100,0,200),1)+' %'}
+    ];
+  },
+  tutor:function(p,st){
+    var Veq=p.ca*p.va/p.cb;
+    var ph=this.pHAt(st.Vb,p);
+    var ratio=st.Vb/Veq;
+    var stage;
+    if(ratio<0.9) stage='滴定初期——溶液中酸大量过量，pH 上升非常缓慢，曲线几乎是水平的。';
+    else if(ratio<0.999) stage='接近当量点——剩余酸量急剧减少，pH 开始"爬坡"。';
+    else if(ratio<1.001) stage='位于当量点附近——酸与碱恰好完全中和，强酸强碱体系 pH ≈ 7.00。';
+    else stage='超过当量点——碱开始过量，pH 迅速跃升到碱性平台区。';
+
+    return '【模型解析】滴定曲线记录的是"加入滴定剂的体积"与"溶液 pH"的对应关系。\n\n'+
+      '【当前参数】c(酸) = '+fmt(p.ca,2)+' mol/L，V(酸) = '+p.va+' mL，c(碱) = '+fmt(p.cb,2)+' mol/L\n\n'+
+      '【实时推演】\n'+
+      '· 当量点体积 V_eq = '+fmt(Veq,2)+' mL\n'+
+      '· 当前已加入 V = '+fmt(st.Vb,2)+' mL（进度 '+fmt(clamp(ratio*100,0,200),1)+'%）\n'+
+      '· 当前 pH = '+fmt(ph,2)+'\n\n'+
+      '【阶段性结论】'+stage+'\n\n'+
+      '【延伸思考】如果把强酸换成弱酸（如醋酸），当量点 pH 会大于 7，且曲线在当量点前会出现一个"缓冲平台"。';
+  }
+});
+
+/* ---------- 8. 反应速率 ---------- */
+EXP.push({
+  id:'rate', name:'化学反应速率与活化能', cat:'化学',
+  tags:['动力学','阿伦尼乌斯','催化剂'],
+  brief:'温度、浓度与催化剂如何影响反应速率——阿伦尼乌斯方程给出定量答案。',
+  resetOnChange:false,
+  params:[
+    {key:'T',   label:'温度 T', min:20, max:90, step:1, value:25, unit:'°C'},
+    {key:'c',   label:'反应物浓度 c', min:0.1, max:2, step:0.05, value:1, unit:'mol/L'},
+    {key:'cat', label:'催化剂', min:0, max:1, step:1, value:0, unit:'', fmt:function(v){return v?'有（降低活化能）':'无';}}
+  ],
+  formulas:[
+    '反应速率  v = k·c(A)',
+    '阿伦尼乌斯方程  k = A·e^(−Ea/RT)',
+    '无催化剂 Ea = 70 kJ/mol',
+    '有催化剂 Ea = 40 kJ/mol',
+    '温度每升高 10 K，速率约提高 2~4 倍'
+  ],
+  init:function(){
+    var ps=[];
+    for(var i=0;i<50;i++){
+      var a=Math.random()*Math.PI*2;
+      ps.push({x:0.08+Math.random()*0.84, y:0.08+Math.random()*0.84,
+               vx:Math.cos(a), vy:Math.sin(a), r:2.6+Math.random()*1.8});
+    }
+    return {ps:ps, flashes:[], count:0, t:0};
+  },
+  step:function(p,dt,st){
+    var spd=0.26*Math.sqrt((p.T+273.15)/298);
+    for(var i=0;i<st.ps.length;i++){
+      var pt=st.ps[i];
+      pt.x+=pt.vx*spd*dt; pt.y+=pt.vy*spd*dt;
+      if(pt.x<0.06){pt.x=0.06;pt.vx*=-1;}
+      if(pt.x>0.94){pt.x=0.94;pt.vx*=-1;}
+      if(pt.y<0.06){pt.y=0.06;pt.vy*=-1;}
+      if(pt.y>0.94){pt.y=0.94;pt.vy*=-1;}
+    }
+    var Tk=p.T+273.15;
+    var Ea=(p.cat?40:70)*1000;
+    var k=Math.exp(-Ea/(8.314*Tk));
+    var visual=clamp((Math.log10(k*p.c*1e10)+3)/6,0,1);
+    if(Math.random()<visual*1.6*dt*10 && st.flashes.length<26){
+      var a=Math.random()*Math.PI*2, r=Math.random()*0.35;
+      st.flashes.push({x:0.5+Math.cos(a)*r, y:0.5+Math.sin(a)*r, life:1});
+      st.count++;
+    }
+    for(var j=st.flashes.length-1;j>=0;j--){
+      st.flashes[j].life-=dt*1.5;
+      if(st.flashes[j].life<=0) st.flashes.splice(j,1);
+    }
+    st.t+=dt;
+  },
+  draw:function(ctx,W,H,p,st){
+    var bh=Math.min(H-170,286);
+    var bw=Math.min(W-220,520);
+    var bx0=(W-bw)/2-40, by0=(H-bh)/2+14;
+
+    ctx.fillStyle='rgba(12,22,40,.85)';
+    roundRect(ctx,bx0,by0,bw,bh,10);ctx.fill();
+    ctx.strokeStyle='rgba(167,139,250,.5)';ctx.lineWidth=2.5;
+    roundRect(ctx,bx0,by0,bw,bh,10);ctx.stroke();
+
+    var hue=p.cat?280:200;
+    for(var i=0;i<st.ps.length;i++){
+      var pt=st.ps[i];
+      var x=bx0+pt.x*bw, y=by0+pt.y*bh;
+      var g=ctx.createRadialGradient(x,y,0,x,y,pt.r*3.2);
+      g.addColorStop(0,'hsla('+hue+',90%,72%,.95)');
+      g.addColorStop(1,'hsla('+hue+',90%,60%,0)');
+      ctx.fillStyle=g;
+      ctx.beginPath();ctx.arc(x,y,pt.r*3.2,0,7);ctx.fill();
+      ctx.fillStyle='hsl('+hue+',95%,84%)';
+      ctx.beginPath();ctx.arc(x,y,pt.r,0,7);ctx.fill();
+    }
+
+    for(var j=0;j<st.flashes.length;j++){
+      var f=st.flashes[j];
+      var fx=bx0+f.x*bw, fy=by0+f.y*bh;
+      var fg=ctx.createRadialGradient(fx,fy,0,fx,fy,30*f.life);
+      fg.addColorStop(0,'rgba(52,211,153,'+f.life+')');
+      fg.addColorStop(1,'rgba(52,211,153,0)');
+      ctx.fillStyle=fg;
+      ctx.beginPath();ctx.arc(fx,fy,30*f.life,0,7);ctx.fill();
+    }
+
+    var tx=bx0+bw+56, ty0=by0+26, ty1=by0+bh-26;
+    ctx.strokeStyle='rgba(255,255,255,.12)';ctx.lineWidth=8;ctx.lineCap='round';
+    ctx.beginPath();ctx.moveTo(tx,ty0);ctx.lineTo(tx,ty1);ctx.stroke();
+    var frac=clamp((p.T-20)/70,0,1);
+    var tg=ctx.createLinearGradient(tx,ty1,tx,ty0);
+    tg.addColorStop(0,'#38bdf8');tg.addColorStop(1,'#f87171');
+    ctx.strokeStyle=tg;ctx.lineWidth=8;
+    ctx.beginPath();ctx.moveTo(tx,ty1);ctx.lineTo(tx,ty1-(ty1-ty0)*frac);ctx.stroke();
+    label(ctx,p.T+'°C',tx+15,ty0+6,'#f87171',11);
+    label(ctx,'20°C',tx+15,ty1+6,'#38bdf8',10);
+
+    var Tk=p.T+273.15;
+    var Ea=(p.cat?40:70)*1000;
+    var k=Math.exp(-Ea/(8.314*Tk));
+    var rate=k*p.c*1e10;
+    pill(ctx,'相对速率 = '+(rate<0.01?fmt(rate,4):fmt(rate,2)),26,20,'rgba(52,211,153,.12)','#34d399');
+    pill(ctx,'Ea = '+(p.cat?40:70)+' kJ/mol',26,50,'rgba(244,114,182,.12)','#f472b6');
+    pill(ctx,'碰撞事件 '+st.count+' 次',26,80,'rgba(34,211,238,.12)','#22d3ee');
+  },
+  readout:function(p,st){
+    var Tk=p.T+273.15;
+    var Ea=(p.cat?40:70)*1000;
+    var k=Math.exp(-Ea/(8.314*Tk));
+    var rate=k*p.c*1e10;
+    return [
+      {k:'活化能 Ea', v:(p.cat?40:70)+' kJ/mol'},
+      {k:'温度（绝对）', v:fmt(Tk,1)+' K'},
+      {k:'反应速率常数 k', v:k.toExponential(2)},
+      {k:'反应速率 v', v:rate<0.01?fmt(rate,4):fmt(rate,2)},
+      {k:'碰撞次数', v:String(st.count)},
+      {k:'催化剂状态', v:p.cat?'已加入':'未加入'}
+    ];
+  },
+  tutor:function(p,st){
+    var Tk=p.T+273.15;
+    var Ea=(p.cat?40:70)*1000;
+    var k=Math.exp(-Ea/(8.314*Tk));
+    var rate=k*p.c*1e10;
+    return '【模型解析】阿伦尼乌斯方程 k = A·e^(−Ea/RT) 告诉我们：只有能量超过活化能 Ea 的分子碰撞才能引发反应。\n\n'+
+      '【当前参数】T = '+p.T+'°C（'+fmt(Tk,1)+' K），c = '+fmt(p.c,2)+' mol/L，催化剂：'+(p.cat?'有':'无')+'\n\n'+
+      '【实时推演】\n'+
+      '· 活化能 Ea = '+(p.cat?40:70)+' kJ/mol\n'+
+      '· 速率常数 k = '+k.toExponential(3)+'\n'+
+      '· 相对反应速率 v = '+(rate<0.01?fmt(rate,4):fmt(rate,2))+'\n'+
+      '· 累计碰撞事件 = '+st.count+' 次\n\n'+
+      '【趣味结论】'+(p.cat
+        ? '催化剂把活化能从 70 kJ/mol 降到了 40 kJ/mol——仅仅 30 kJ/mol 的差距，就让反应速率提升了好几个数量级。'
+        : p.T>60
+          ? '温度已经升到 '+p.T+'°C，分子动能分布曲线大幅右移，越过能垒的分子比例显著增加。'
+          : '试着把催化剂打开，或者把温度提高 20°C，观察反应闪光的频率变化。')+'\n\n'+
+      '【延伸思考】经验规律：多数反应温度每升高 10 K，速率大约提高 2~4 倍。';
+  }
+});
+
+/* =========================================================
+   引擎核心
+   ========================================================= */
+var canvas, ctx, wrapEl;
+var W=800, H=500;
+var cur=null, P={}, ST={};
+var paused=false;
+var savedRecords = [];
+var typingTimer = null;
+var started = false;
+var lastTS = 0, lastRO = 0;
+
+/* ---------- 画布尺寸 ---------- */
+function resizeCanvas(){
+  if(!wrapEl || !canvas || !ctx) return false;
+  var r = wrapEl.getBoundingClientRect();
+  if(r.width<20 || r.height<20) return false;
+  var dpr = Math.min(window.devicePixelRatio||1, 2);
+  W = Math.floor(r.width);
+  H = Math.floor(r.height);
+  canvas.width = Math.floor(W*dpr);
+  canvas.height = Math.floor(H*dpr);
+  canvas.style.width = W+'px';
+  canvas.style.height = H+'px';
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  return true;
+}
+
+/* ---------- 渲染实验列表 ---------- */
+var filterCat='全部', searchQ='';
+
+function renderList(){
+  var box = $('#expList');
+  if(!box) return;
+  box.innerHTML = '';
+  var list = EXP.filter(function(e){
+    if(filterCat!=='全部' && e.cat!==filterCat) return false;
+    if(searchQ){
+      var s = (e.name+e.brief+e.tags.join('')+e.formulas.join('')).toLowerCase();
+      if(s.indexOf(searchQ.toLowerCase())===-1) return false;
+    }
+    return true;
+  });
+  if(!list.length){
+    box.innerHTML = '<div style="color:#5a6d87;font-size:12px;padding:16px;text-align:center">未找到匹配的实验</div>';
+    return;
+  }
+  list.forEach(function(e){
+    var d = document.createElement('div');
+    d.className = 'exp-item'+(cur && cur.id===e.id ? ' active' : '');
+    d.innerHTML = '<div class="t"><span class="tag '+(e.cat==='物理'?'phy':'chem')+'">'+e.cat+'</span>'+e.name+'</div>'+
+                  '<div class="d">'+e.brief+'</div>';
+    d.onclick = function(){ selectExp(e.id); };
+    box.appendChild(d);
+  });
+}
+
+/* ---------- 切换实验 ---------- */
+function selectExp(id){
+  cur = null;
+  for(var i=0;i<EXP.length;i++){ if(EXP[i].id===id){ cur=EXP[i]; break; } }
+  if(!cur) return;
+  P = {};
+  cur.params.forEach(function(pr){ P[pr.key]=pr.value; });
+  ST = cur.init ? cur.init(P) : {};
+  paused = false;
+  var bp = $('#btnPause');
+  if(bp){ bp.textContent = '⏸ 暂停'; bp.classList.remove('on'); }
+  var t1 = $('#expTitle'); if(t1) t1.textContent = cur.name;
+  var t2 = $('#expBrief'); if(t2) t2.textContent = cur.brief;
+  buildParams();
+  buildPanel();
+  renderList();
+  refreshTutor(true);
+  setTimeout(resizeCanvas, 30);
+  setTimeout(resizeCanvas, 200);
+}
+
+/* ---------- 参数面板 ---------- */
+function buildParams(){
+  var box = $('#paramBox');
+  if(!box) return;
+  box.innerHTML = '';
+  cur.params.forEach(function(pr){
+    var wrap = document.createElement('div');
+    wrap.className = 'param';
+    var valTxt = pr.fmt ? pr.fmt(P[pr.key]) : (P[pr.key]+' '+(pr.unit||''));
+    wrap.innerHTML = '<div class="row"><span>'+pr.label+'</span>'+
+      '<span class="val" id="v_'+pr.key+'">'+valTxt+'</span></div>'+
+      '<input type="range" min="'+pr.min+'" max="'+pr.max+'" step="'+pr.step+'" value="'+P[pr.key]+'">';
+    box.appendChild(wrap);
+    var input = wrap.querySelector('input');
+    input.addEventListener('input', function(ev){
+      P[pr.key] = parseFloat(ev.target.value);
+      var el = document.getElementById('v_'+pr.key);
+      if(el) el.textContent = pr.fmt ? pr.fmt(P[pr.key]) : (P[pr.key]+' '+(pr.unit||''));
+      onParamChange();
+    });
+  });
+}
+
+var paramTimer = null;
+function onParamChange(){
+  if(cur.resetOnChange) ST = cur.init ? cur.init(P) : {};
+  updateReadout();
+  clearTimeout(paramTimer);
+  paramTimer = setTimeout(function(){ refreshTutor(false); }, 260);
+}
+
+/* ---------- 公式与读数面板 ---------- */
+function buildPanel(){
+  var fb = $('#formulaBox');
+  if(!fb) return;
+  var html = '';
+  (cur.formulas||[]).forEach(function(f){ html += '<div class="f-item">'+f+'</div>'; });
+  var ro = cur.readout ? cur.readout(P,ST) : [];
+  if(ro.length){
+    html += '<div class="readout">';
+    ro.forEach(function(r,i){
+      html += '<div class="ro"><div class="k">'+r.k+'</div><div class="v" id="ro_'+i+'">'+r.v+'</div></div>';
+    });
+    html += '</div>';
+  }
+  fb.innerHTML = html;
+}
+function updateReadout(){
+  if(!cur || !cur.readout) return;
+  var ro = cur.readout(P,ST);
+  ro.forEach(function(r,i){
+    var el = document.getElementById('ro_'+i);
+    if(el) el.textContent = r.v;
+  });
+}
+
+/* ---------- AI 导师 ---------- */
+function typeText(el, text){
+  clearInterval(typingTimer);
+  el.textContent = '';
+  var i = 0;
+  var step = Math.max(2, Math.ceil(text.length/240));
+  typingTimer = setInterval(function(){
+    i += step;
+    if(i >= text.length){
+      el.textContent = text;
+      clearInterval(typingTimer);
+    }else{
+      el.textContent = text.slice(0, i);
+    }
+  }, 14);
+}
+function refreshTutor(immediate){
+  if(!cur) return;
+  var el = $('#tutorBox');
+  if(!el) return;
+  var text;
+  try{
+    text = cur.tutor ? cur.tutor(P, ST) : '暂无解析。';
+  }catch(err){
+    text = '解析生成中……';
+  }
+  if(immediate){
+    clearInterval(typingTimer);
+    el.textContent = text;
+  }else{
+    typeText(el, text);
+  }
+}
+
+/* ---------- 主循环 ---------- */
+function loop(ts){
+  if(!started) return;
+  requestAnimationFrame(loop);
+  if(!lastTS) lastTS = ts;
+  var dt = (ts - lastTS)/1000;
+  lastTS = ts;
+  dt = clamp(dt, 0, 0.05);
+  if(!cur || !ctx) return;
+
+  if(!paused && cur.step){
+    try{ cur.step(P, dt, ST); }catch(e){}
+  }
+
+  ctx.clearRect(0, 0, W, H);
+  try{ cur.draw(ctx, W, H, P, ST); }catch(e){}
+
+  ctx.save();
+  ctx.font = '11px Menlo,Consolas,monospace';
+  ctx.fillStyle = 'rgba(125,143,171,.55)';
+  ctx.textAlign = 'right';
+  ctx.textBaseline = 'bottom';
+  ctx.fillText('PhysChem Lab · Ternence Dai', W-16, H-12);
+  ctx.restore();
+
+  if(ts - lastRO > 110){ lastRO = ts; updateReadout(); }
+}
+
+/* ---------- 启动流程：轮询直到画布就绪 ---------- */
+function bootstrap(){
+  canvas = document.getElementById('stage');
+  ctx = canvas ? canvas.getContext('2d') : null;
+  wrapEl = document.getElementById('stageWrap');
+
+  if(!canvas || !ctx || !wrapEl){
+    // DOM 还没准备好，再等一帧
+    requestAnimationFrame(bootstrap);
+    return;
+  }
+
+  var ok = resizeCanvas();
+  if(!ok){
+    // 尺寸还没出来，再等一帧
+    requestAnimationFrame(bootstrap);
+    return;
+  }
+
+  // 就绪，开始渲染
+  try{
+    renderList();
+    updateSavedInfo();
+    renderDrawer();
+    selectExp('projectile');
+
+    // 二次校准
+    setTimeout(resizeCanvas, 50);
+    setTimeout(resizeCanvas, 250);
+    setTimeout(resizeCanvas, 600);
+
+    started = true;
+    requestAnimationFrame(loop);
+  }catch(err){
+    console.error('启动失败：', err);
+  }
+}
+
+/* ---------- 按钮交互 ---------- */
+function bindUI(){
+  var bp = $('#btnPause');
+  if(bp) bp.onclick = function(){
+    paused = !paused;
+    this.textContent = paused ? '▶ 继续' : '⏸ 暂停';
+    this.classList.toggle('on', paused);
+  };
+  var br = $('#btnReset');
+  if(br) br.onclick = function(){
+    ST = cur && cur.init ? cur.init(P) : {};
+    paused = false;
+    var b = $('#btnPause');
+    if(b){ b.textContent = '⏸ 暂停'; b.classList.remove('on'); }
+    refreshTutor(true);
+    toast('实验已重置 ↺');
+  };
+  var bs = $('#btnSave');
+  if(bs) bs.onclick = function(){
+    if(!cur) return;
+    savedRecords.unshift({
+      name: cur.name,
+      time: new Date().toLocaleString('zh-CN', {hour12:false}),
+      params: JSON.parse(JSON.stringify(P))
+    });
+    if(savedRecords.length > 30) savedRecords.pop();
+    updateSavedInfo();
+    renderDrawer();
+    toast('已保存到实验档案数据库 ✓');
+  };
+  var bd = $('#btnDrawer');
+  if(bd) bd.onclick = function(){
+    var drawer = $('#drawer');
+    if(drawer) drawer.classList.toggle('open');
+    renderDrawer();
+  };
+  var dc = $('#drawerClose');
+  if(dc) dc.onclick = function(){
+    var drawer = $('#drawer');
+    if(drawer) drawer.classList.remove('open');
+  };
+
+  // 搜索
+  var searchEl = $('#search');
+  if(searchEl) searchEl.addEventListener('input', function(e){
+    searchQ = e.target.value.trim();
+    renderList();
+  });
+
+  // 分类
+  document.querySelectorAll('.filters button').forEach(function(b){
+    b.onclick = function(){
+      document.querySelectorAll('.filters button').forEach(function(x){ x.classList.remove('active'); });
+      b.classList.add('active');
+      filterCat = b.dataset.cat;
+      renderList();
+    };
+  });
+
+  // 键盘
+  document.addEventListener('keydown', function(e){
+    if(e.code==='Space' && e.target.tagName!=='INPUT'){
+      e.preventDefault();
+      var b = $('#btnPause'); if(b) b.click();
+    }
+    if(e.code==='Escape'){
+      var d = $('#drawer'); if(d) d.classList.remove('open');
+    }
+  });
+
+  // 窗口尺寸
+  var resizeTimer = null;
+  window.addEventListener('resize', function(){
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(resizeCanvas, 60);
+  });
+}
+
+function updateSavedInfo(){
+  var el = $('#savedInfo');
+  if(el) el.textContent = '📁 实验档案数据库：'+savedRecords.length+' 条记录';
+}
+function renderDrawer(){
+  var body = $('#drawerBody');
+  if(!body) return;
+  if(!savedRecords.length){
+    body.innerHTML = '<div class="empty-tip">暂无存档记录<br>点击「💾 存档」保存当前实验参数</div>';
+    return;
+  }
+  body.innerHTML = '';
+  savedRecords.forEach(function(r,idx){
+    var d = document.createElement('div');
+    d.className = 'rec';
+    var parts = [];
+    for(var k in r.params){
+      if(r.params.hasOwnProperty(k)){
+        var v = r.params[k];
+        parts.push(k+'='+(typeof v==='number'?+v.toFixed(3):v));
+      }
+    }
+    d.innerHTML = '<div class="rh"><span class="rn">'+(idx+1)+'. '+r.name+'</span>'+
+                  '<span class="rt">'+r.time+'</span></div>'+
+                  '<div class="rp">'+parts.join('  ')+'</div>';
+    body.appendChild(d);
+  });
+}
+
+/* ---------- toast ---------- */
+var toastTimer = null;
+function toast(msg){
+  var t = $('#toast');
+  if(!t) return;
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ t.classList.remove('show'); }, 1800);
+}
+
+/* ---------- 入口 ---------- */
+if(document.readyState === 'loading'){
+  document.addEventListener('DOMContentLoaded', function(){
+    bindUI();
+    bootstrap();
+  });
+}else{
+  bindUI();
+  bootstrap();
+}
+
+})();
+</script>
+</body>
+</html>
