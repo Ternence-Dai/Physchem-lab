@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   idealGasPressure, arrheniusRateConstant,
-  projectileMotion, pendulumPeriod, ohmsLaw, inclinedPlaneAcceleration
+  projectileMotion, pendulumPeriod, ohmsLaw, inclinedPlaneAcceleration, springOscillator
 } from "../src/domain/index.js";
 
 test("ideal gas law returns SI pressure",()=>{
@@ -38,4 +38,18 @@ test("inclined plane acceleration includes friction threshold",()=>{
  assert.ok(Math.abs(inclinedPlaneAcceleration({angleDeg:30,frictionCoefficient:Math.tan(Math.PI/6)}))<1e-12);
  assert.equal(inclinedPlaneAcceleration({angleDeg:30,frictionCoefficient:1}),0,'static friction above the sliding threshold must prevent downhill motion rather than accelerate uphill');
  assert.throws(()=>inclinedPlaneAcceleration({angleDeg:30,frictionCoefficient:-0.1}),RangeError);
+});
+
+test("spring oscillator shares acceleration, period and energy calculations",()=>{
+ const a=springOscillator({massKg:1,springConstantNPerM:4,displacementM:0.5,velocityMPerS:0});
+ assert.equal(a.acceleration,-2);
+ assert.ok(Math.abs(a.angularFrequency-2)<1e-12);
+ assert.ok(Math.abs(a.period-Math.PI)<1e-12);
+ assert.equal(a.kineticEnergy,0);
+ assert.equal(a.elasticPotentialEnergy,0.5);
+ assert.equal(a.totalEnergy,0.5);
+ const b=springOscillator({massKg:1,springConstantNPerM:4,displacementM:0,velocityMPerS:1});
+ assert.equal(b.totalEnergy,a.totalEnergy,'kinetic and elastic potential energy must conserve the same oscillator energy');
+ assert.throws(()=>springOscillator({massKg:0,springConstantNPerM:4,displacementM:0,velocityMPerS:1}),RangeError);
+ assert.throws(()=>springOscillator({massKg:1,springConstantNPerM:4,displacementM:Infinity,velocityMPerS:1}),TypeError);
 });
