@@ -113,12 +113,12 @@ assert.doesNotMatch(inclineBlock, /9\.8\*\(Math\.sin\(th\)-p\.mu\*Math\.cos\(th\
 console.log('Physics/chemistry model smoke checks passed: ' + checked + ' models.');
 
 const springBlock = catalogue.slice(catalogue.indexOf("id:'p3'"), catalogue.indexOf("id:'p4'"));
-assert.ok((springBlock.match(/PHYS_DOMAIN\\.springOscillator/g)||[]).length >= 4,
+assert.ok(springBlock.split('PHYS_DOMAIN.springOscillator').length - 1 >= 4,
   'spring oscillator animation, energy display, readout and tutor must share the domain solver');
-assert.doesNotMatch(springBlock, /2\\*Math\\.PI\\*Math\\.sqrt\\(p\\.m\\/p\\.k\\)|0\\.5\\*p\\.m\\*st\\.v\\*st\\.v/,
+assert.ok(!springBlock.includes('2*Math.PI*Math.sqrt(p.m/p.k)') && !springBlock.includes('0.5*p.m*st.v*st.v'),
   'spring oscillator period and energy must not be duplicated in the catalogue');
 const gasBlock = catalogue.slice(catalogue.indexOf("id:'p6'"), catalogue.indexOf("id:'p7'"));
-assert.ok((gasBlock.match(/PHYS_DOMAIN\\.idealGasPressure/g)||[]).length >= 3,
+assert.ok(gasBlock.split('PHYS_DOMAIN.idealGasPressure').length - 1 >= 3,
   'ideal-gas animation, readout and tutor must use the shared SI pressure calculation');
-assert.doesNotMatch(gasBlock, /p\\.n\\*8\\.314\\*p\\.T/,
+assert.ok(!gasBlock.includes('p.n*8.314*p.T'),
   'ideal-gas experiment must not duplicate an approximate gas constant in nRT calculations');
