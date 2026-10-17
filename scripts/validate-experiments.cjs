@@ -39,6 +39,12 @@ for (const name of ['M','C1','C2','C3','C4','C5','C6']) {
         const point=model.pos(params,t,800,500);
         assert.ok(Number.isFinite(point.x)&&Number.isFinite(point.y),model.id+': invalid trajectory point');
       }
+    } else if (typeof model.speed === 'function' && typeof model.hue === 'function') {
+      const speed=model.speed(params), hue=model.hue(params);
+      assert.ok(Number.isFinite(speed)&&speed>=0,model.id+': invalid particle speed');
+      assert.ok(Number.isFinite(hue),model.id+': invalid particle hue');
+      if (typeof model.ro === 'function') assert.ok(Array.isArray(model.ro(params)),model.id+': readout must return rows');
+      if (typeof model.tt === 'function') assert.equal(typeof model.tt(params),'string',model.id+': tutor must return text');
     } else {
       throw new Error(model.id + ': no recognized model evaluator');
     }
