@@ -18,6 +18,8 @@ jobs:
           node-version: 22
       - name: Validate blackbody spectrum numerics
         run: node scripts/validate-blackbody.cjs
+      - name: Smoke-test experiment models
+        run: node scripts/validate-experiments.cjs
       - name: Parse embedded JavaScript
         run: |
           node <<'NODE'
