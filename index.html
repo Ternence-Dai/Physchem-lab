@@ -633,12 +633,12 @@ var C1=[
  tt:function(p){var dx=p.lam*1e-9*p.D/(p.d*1e-3);return'【模型】双缝干涉：光程差 kλ 处亮，(k+½)λ 处暗。\n\n【推演】\n· Δx=λD/d='+F(dx*1000,3)+' mm\n· 波长='+p.lam+' nm\n\n【结论】这是光具有波动性的判决性实验——1801年托马斯·杨用它推翻了光的微粒说。';}},
 
 {id:'o3',name:'单缝衍射',cat:'物理',tags:['光学','衍射'],br:'光通过单缝后偏离直线传播，中央主极大最亮。',
- p:[P('lam','波长 λ',400,750,10,550,'nm'),P('a','缝宽 a',0.05,0.5,0.01,0.1,'mm')],
- f:['暗纹 a·sinθ=kλ','中央宽度 Δx=2λD/a','I=I₀(sinβ/β)²'],
+ p:[P('lam','波长 λ',400,750,10,550,'nm'),P('a','缝宽 a',0.05,0.5,0.01,0.1,'mm'),P('D','屏距离 D',0.5,3,0.1,1.5,'m')],
+ f:['暗纹 a·sinθ=kλ','小角度近似：中央宽度 Δx≈2λD/a','I=I₀(sinβ/β)²，β≈πax/(λD)'],
  xR:[-15,15],yR:[0,1.1],xT:10,yT:5,xL:'屏上位置 (mm)',yL:'相对光强',col:'#22d3ee',
- fn:function(p,x){var b=Math.PI*p.a*1e-3*x*1e-3/(p.lam*1e-9);if(Math.abs(b)<1e-9)return 1;var s=Math.sin(b)/b;return s*s;},
- ro:function(p){var dx=2*p.lam*1e-9/(p.a*1e-3);return[{k:'中央明纹宽度',v:F(dx*1000,2)+' mm'},{k:'波长 λ',v:p.lam+' nm'},{k:'缝宽 a',v:p.a+' mm'},{k:'第一暗纹',v:F(p.lam*1e-9/(p.a*1e-3)*1000,2)+' mm'},{k:'a/λ',v:F(p.a*1e-3/(p.lam*1e-9),0)},{k:'衍射角',v:F(Math.asin(p.lam*1e-9/(p.a*1e-3))*180/Math.PI,2)+'°'}];},
- tt:function(p){var dx=2*p.lam*1e-9/(p.a*1e-3);return'【模型】单缝衍射：I=(sinβ/β)²，中央主极大最亮。\n\n【推演】\n· 中央明纹宽=2λD/a='+F(dx*1000,2)+' mm\n· 第一暗纹=λD/a='+F(p.lam*1e-9/(p.a*1e-3)*1000,2)+' mm\n\n【结论】缝越窄，衍射越明显——光"绕弯"的波动性。';}},
+ fn:function(p,x){var b=Math.PI*p.a*1e-3*x*1e-3/(p.lam*1e-9*p.D);if(Math.abs(b)<1e-9)return 1;var s=Math.sin(b)/b;return s*s;},
+ ro:function(p){var dx=2*p.lam*1e-9*p.D/(p.a*1e-3);var first=p.lam*1e-9*p.D/(p.a*1e-3);var ratio=p.lam*1e-9/(p.a*1e-3);return[{k:'中央明纹宽度（小角度近似）',v:F(dx*1000,2)+' mm'},{k:'波长 λ',v:p.lam+' nm'},{k:'缝宽 a',v:p.a+' mm'},{k:'屏距离 D',v:p.D+' m'},{k:'第一暗纹位置（小角度近似）',v:F(first*1000,2)+' mm'},{k:'第一暗纹角度',v:F(Math.asin(Math.min(1,ratio))*180/Math.PI,2)+'°'}];},
+ tt:function(p){var dx=2*p.lam*1e-9*p.D/(p.a*1e-3);var first=p.lam*1e-9*p.D/(p.a*1e-3);var ratio=p.lam*1e-9/(p.a*1e-3);return'【模型】单缝衍射：I=(sinβ/β)²，β≈πax/(λD)（小角度近似）。\n\n【推演】\n· 中央明纹宽≈2λD/a='+F(dx*1000,2)+' mm\n· 第一暗纹位置≈λD/a='+F(first*1000,2)+' mm\n· 第一暗纹角度='+F(Math.asin(Math.min(1,ratio))*180/Math.PI,2)+'°\n\n【结论】缝越窄或屏距离越远，衍射条纹越宽。';}},
 
 {id:'o4',name:'黑体辐射(维恩位移)',cat:'物理',tags:['热力学','量子'],br:'黑体辐射谱峰值波长与温度成反比——量子力学诞生的导火索。',
  p:[P('T','温度 T',1000,8000,100,5000,'K')],
