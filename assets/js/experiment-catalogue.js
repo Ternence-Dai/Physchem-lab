@@ -154,8 +154,8 @@ EXP.push({id:'p6',name:'理想气体分子运动',cat:'化学',tags:['气体','�
     pl(c,'nRT='+F(p.n*8.314*p.T,0)+' J',26,82,'rgba(52,211,153,.12)','#34d399');
     lb(c,'V='+F(p.V,1)+' L',bx+bw/2,by+bh+26,'#22d3ee',12,'center');
   },
-  readout:function(p){var P=p.n*8.314*p.T/p.V;var vR=Math.sqrt(3*8.314*p.T/0.028);return[{k:'压强 P',v:F(P,1)+' kPa'},{k:'PV 乘积',v:F(P*p.V,0)+' kPa·L'},{k:'nRT',v:F(p.n*8.314*p.T,0)+' J'},{k:'方均根速率',v:F(vR,0)+' m/s'},{k:'平均动能',v:F(1.5*1.381e-23*p.T*1e21,2)+'×10⁻²¹ J'},{k:'分子数密度',v:F(p.n*6.022e23/(p.V*1e-3)/1e25,2)+'×10²⁵/m³'}];},
-  tutor:function(p){var P=p.n*8.314*p.T/p.V;var vR=Math.sqrt(3*8.314*p.T/0.028);
+  readout:function(p){var P=window.PHYS_DOMAIN.idealGasPressure({amountMol:p.n,temperatureK:p.T,volumeM3:p.V/1000})/1000;var vR=Math.sqrt(3*8.314*p.T/0.028);return[{k:'压强 P',v:F(P,1)+' kPa'},{k:'PV 乘积',v:F(P*p.V,0)+' kPa·L'},{k:'nRT',v:F(p.n*8.314*p.T,0)+' J'},{k:'方均根速率',v:F(vR,0)+' m/s'},{k:'平均动能',v:F(1.5*1.381e-23*p.T*1e21,2)+'×10⁻²¹ J'},{k:'分子数密度',v:F(p.n*6.022e23/(p.V*1e-3)/1e25,2)+'×10²⁵/m³'}];},
+  tutor:function(p){var P=window.PHYS_DOMAIN.idealGasPressure({amountMol:p.n,temperatureK:p.T,volumeM3:p.V/1000})/1000;var vR=Math.sqrt(3*8.314*p.T/0.028);
     return '【模型】理想气体：分子无体积、无相互作用。压强来自分子撞击器壁。\n\n【参数】T='+p.T+' K, V='+F(p.V,1)+' L, n='+F(p.n,1)+' mol\n\n【推演】\n· P=nRT/V='+F(P,1)+' kPa\n· PV='+F(P*p.V,0)+' kPa·L\n· nRT='+F(p.n*8.314*p.T,0)+' J\n· v_rms='+F(vR,0)+' m/s\n\n【结论】'+(p.T>600?'高温，分子运动剧烈。':p.T<200?'低温，分子迟缓。':'P·V/(n·T) 始终=8.314，这就是 R 的物理意义。')+'\n\n【延伸】波义耳定律：T不变 P∝1/V。';}
 });
 
@@ -216,7 +216,7 @@ EXP.push({id:'p8',name:'化学反应速率与活化能',cat:'化学',tags:['动�
     for(var i=0;i<st.ps.length;i++){var pt=st.ps[i];pt.x+=pt.vx*sp*dt;pt.y+=pt.vy*sp*dt;
       if(pt.x<0.06){pt.x=0.06;pt.vx*=-1;}if(pt.x>0.94){pt.x=0.94;pt.vx*=-1;}
       if(pt.y<0.06){pt.y=0.06;pt.vy*=-1;}if(pt.y>0.94){pt.y=0.94;pt.vy*=-1;}}
-    var Tk=p.T+273.15;var Ea=(p.cat?40:70)*1000;var k=Math.exp(-Ea/(8.314*Tk));
+    var Tk=p.T+273.15;var Ea=(p.cat?40:70)*1000;var k=window.PHYS_DOMAIN.arrheniusRateConstant({preExponentialFactor:1,activationEnergyJPerMol:Ea,temperatureK:Tk});
     var vis=C((Math.log10(k*p.c*1e10)+3)/6,0,1);
     if(Math.random()<vis*1.6*dt*10&&st.flashes.length<26){var a=Math.random()*Math.PI*2,r=Math.random()*0.35;
       st.flashes.push({x:0.5+Math.cos(a)*r,y:0.5+Math.sin(a)*r,life:1});st.count++;}
@@ -233,14 +233,14 @@ EXP.push({id:'p8',name:'化学反应速率与活化能',cat:'化学',tags:['动�
     for(var j=0;j<st.flashes.length;j++){var f=st.flashes[j];var fx=bx+f.x*bw,fy=by+f.y*bh;
       var fg=c.createRadialGradient(fx,fy,0,fx,fy,30*f.life);fg.addColorStop(0,'rgba(52,211,153,'+f.life+')');fg.addColorStop(1,'rgba(52,211,153,0)');
       c.fillStyle=fg;c.beginPath();c.arc(fx,fy,30*f.life,0,7);c.fill();}
-    var Tk=p.T+273.15;var Ea=(p.cat?40:70)*1000;var k=Math.exp(-Ea/(8.314*Tk));var rt=k*p.c*1e10;
+    var Tk=p.T+273.15;var Ea=(p.cat?40:70)*1000;var k=window.PHYS_DOMAIN.arrheniusRateConstant({preExponentialFactor:1,activationEnergyJPerMol:Ea,temperatureK:Tk});var rt=k*p.c*1e10;
     pl(c,'相对速率='+(rt<0.01?F(rt,4):F(rt,2)),26,20,'rgba(52,211,153,.12)','#34d399');
     pl(c,'Ea='+(p.cat?40:70)+' kJ/mol',26,50,'rgba(244,114,182,.12)','#f472b6');
     pl(c,'碰撞 '+st.count+' 次',26,80,'rgba(34,211,238,.12)','#22d3ee');
   },
-  readout:function(p,st){var Tk=p.T+273.15;var Ea=(p.cat?40:70)*1000;var k=Math.exp(-Ea/(8.314*Tk));var rt=k*p.c*1e10;
+  readout:function(p,st){var Tk=p.T+273.15;var Ea=(p.cat?40:70)*1000;var k=window.PHYS_DOMAIN.arrheniusRateConstant({preExponentialFactor:1,activationEnergyJPerMol:Ea,temperatureK:Tk});var rt=k*p.c*1e10;
     return[{k:'活化能 Ea',v:(p.cat?40:70)+' kJ/mol'},{k:'温度（绝对）',v:F(Tk,1)+' K'},{k:'速率常数 k',v:k.toExponential(2)},{k:'反应速率 v',v:rt<0.01?F(rt,4):F(rt,2)},{k:'碰撞次数',v:String(st.count)},{k:'催化剂',v:p.cat?'有':'无'}];},
-  tutor:function(p,st){var Tk=p.T+273.15;var Ea=(p.cat?40:70)*1000;var k=Math.exp(-Ea/(8.314*Tk));var rt=k*p.c*1e10;
+  tutor:function(p,st){var Tk=p.T+273.15;var Ea=(p.cat?40:70)*1000;var k=window.PHYS_DOMAIN.arrheniusRateConstant({preExponentialFactor:1,activationEnergyJPerMol:Ea,temperatureK:Tk});var rt=k*p.c*1e10;
     return '【模型】k=A·e^(−Ea/RT)：只有能量超过 Ea 的分子碰撞才能引发反应。\n\n【参数】T='+p.T+'°C ('+F(Tk,1)+' K), c='+F(p.c,2)+' mol/L, 催化剂：'+(p.cat?'有':'无')+'\n\n【推演】\n· Ea='+(p.cat?40:70)+' kJ/mol\n· k='+k.toExponential(3)+'\n· v='+(rt<0.01?F(rt,4):F(rt,2))+'\n· 累计碰撞='+st.count+'\n\n【结论】'+(p.cat?'催化剂把 Ea 从 70 降到 40 kJ/mol，速率提升多个数量级。':p.T>60?'高温下越过能垒的分子比例显著增加。':'试着打开催化剂或提高温度，观察反应闪光频率变化。')+'\n\n【延伸】温度每升高 10 K，速率约提高 2~4 倍。';}
 });
 
