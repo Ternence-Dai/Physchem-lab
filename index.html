@@ -1537,6 +1537,11 @@ try{
   if(!Array.isArray(restored))throw new TypeError('实验存档格式不是数组');
   saves=restored.slice(0,30);
 }catch(e){storageRecoveryRequired=true;console.warn('实验存档读取失败，已暂停覆盖写入；请先恢复或导出原始存档',e);}
+function persistExperimentSaves(nextSaves){
+  if(storageRecoveryRequired)return false;
+  try{localStorage.setItem(SAVE_KEY,JSON.stringify(nextSaves));saves=nextSaves;return true;}
+  catch(e){storageRecoveryRequired=true;console.warn('实验存档写入失败，已启用恢复保护',e);return false;}
+}
 var typer=null;
 var started=false;
 var last=0,lastRO=0;
@@ -1664,11 +1669,9 @@ function bindUI(){
     var b=E('bp');if(b){b.textContent='⏸ 暂停';b.className='bt';}refreshTutor(true);toast('实验已重置 ↺');};
   var bs=E('bs');if(bs)bs.onclick=function(){if(!cur)return;
     if(storageRecoveryRequired){toast('存档恢复保护已启用：为避免覆盖旧数据，本次保存已暂停');return;}
-    var previousSaves=saves.slice();
-    saves.unshift({name:cur.name,time:new Date().toLocaleString('zh-CN',{hour12:false}),params:JSON.parse(JSON.stringify(P))});
-    if(saves.length>30)saves.pop();
-    try{localStorage.setItem(SAVE_KEY,JSON.stringify(saves));toast('实验档案已保存到本机 ✓');}
-    catch(e){saves=previousSaves;storageRecoveryRequired=true;toast('浏览器存储写入失败，已暂停后续保存以保护原有档案');}
+    var nextSaves=[{name:cur.name,time:new Date().toLocaleString('zh-CN',{hour12:false}),params:JSON.parse(JSON.stringify(P))}].concat(saves).slice(0,30);
+    if(persistExperimentSaves(nextSaves))toast('实验档案已保存到本机 ✓');
+    else toast('存档写入失败或恢复保护已启用；原有档案未被覆盖');
     updateSI();renderD();};
   var bd=E('bd');if(bd)bd.onclick=function(){var d=E('dr');if(d)d.className=d.className.indexOf('on')>=0?'dr':'dr on';renderD();};
   var dc=E('dx');if(dc)dc.onclick=function(){var d=E('dr');if(d)d.className='dr';};
