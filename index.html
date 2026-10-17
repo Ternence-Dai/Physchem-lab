@@ -88,6 +88,9 @@ button:focus:not(:focus-visible),a:focus:not(:focus-visible){outline:none}
 img,svg,canvas,video{max-width:100%}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 @media print{*{box-shadow:none!important;text-shadow:none!important}body{overflow:visible!important;height:auto!important;min-height:0!important;background:#fff!important;color:#111!important}.sidebar,.bottomnav,.bottomnav,.tabbar,.toast,.toast-container,.modal-backdrop{display:none!important}.main,.main-content,.content,.view{overflow:visible!important;height:auto!important;min-height:0!important;margin:0!important;width:100%!important;color:#111!important;background:#fff!important}}
+
+/* PhysChem Lab product redesign v1 */
+.physchem-intro{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:13px 18px;margin:10px 16px 12px;border:1px solid rgba(34,211,238,.2);border-radius:14px;background:radial-gradient(circle at 90% 0,rgba(167,139,250,.13),transparent 30%),linear-gradient(110deg,#101f32,#101a2c 70%,#17192f)}.physchem-intro .eyebrow{font-size:9px;letter-spacing:1.6px;color:#67e8f9;font-weight:800}.physchem-intro h2{font-size:17px;color:#e7f8ff;margin:3px 0}.physchem-intro p{font-size:10.5px;color:#91a9c3;line-height:1.55}.physchem-intro .physchem-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}.physchem-intro .physchem-tags span{font-size:9px;color:#b8eff7;border:1px solid rgba(34,211,238,.2);background:rgba(34,211,238,.06);padding:4px 8px;border-radius:99px}.physchem-intro .atom{flex:0 0 54px;width:54px;height:54px;border-radius:16px;display:grid;place-items:center;background:rgba(34,211,238,.1);border:1px solid rgba(34,211,238,.22);font-size:25px;color:#67e8f9}@media(max-width:650px){.physchem-intro{margin:8px;padding:11px}.physchem-intro .atom{display:none}}
 </style>
 </head>
 <body>
@@ -103,6 +106,7 @@ img,svg,canvas,video{max-width:100%}
   <header class="tb"><div class="tbl"><h2 id="et">加载中…</h2><p id="eb2">正在初始化实验室…</p></div>
     <div class="ac"><button class="bt" id="bp">⏸ 暂停</button><button class="bt" id="br2">↺ 重置</button><button class="bt" id="bs">💾 存档</button><button class="bt" id="bd">📂 档案</button></div>
   </header>
+  <section class="physchem-intro"><div><div class="eyebrow">PHYSICAL CHEMISTRY · INTERACTIVE LAB</div><h2>物理化学交互实验工作台</h2><p>选择实验、调节变量、观察模拟现象并核对公式结果。模拟曲线用于教学探索，不等同于真实实验测量。</p><div class="physchem-tags"><span>交互模拟</span><span>变量控制</span><span>公式计算</span><span>实验档案</span></div></div><div class="atom">⚛</div></section>
   <section class="sw" id="sw"><canvas id="cv"></canvas></section>
   <section class="bt2">
     <div class="pnl p1"><h3>⚙️ 物理变量控制台</h3><div id="pb"></div></div>
