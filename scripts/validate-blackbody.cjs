@@ -3,7 +3,7 @@ const fs = require('node:fs');
 const html = fs.readFileSync('index.html', 'utf8');
 const section = html.slice(html.indexOf("id:'o4'"));
 if (!section) throw new Error('Blackbody experiment o4 not found');
-const match = section.match(/fn:function\\(p,x\\)\\{[\\s\\S]*?\\n \\},/);
+const match = section.match(/fn:function\(p,x\)\{[\s\S]*?\n \},/);
 if (!match) throw new Error('Blackbody spectrum function not found');
 const fn = new Function('return (' + match[0].slice(3, -1) + ')')();
 const assert = require('node:assert/strict');
