@@ -51,6 +51,7 @@ for (const name of ['M','C1','C2','C3','C4','C5','C6']) {
     checked++;
   }
 }
+assert.equal(checked, 100, 'the catalogue advertises 100 experiments and must contain exactly 100 validated models');
 assert.ok(html.includes('var esc=function(v)'),
   'experiment renderer must define an HTML escaping helper');
 for (const token of [
