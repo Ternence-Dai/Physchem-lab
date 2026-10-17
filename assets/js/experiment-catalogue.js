@@ -5,7 +5,7 @@
 EXP.push({id:'p1',name:'抛体运动轨迹',cat:'物理',tags:['力学','运动学'],brief:'把速度分解为水平匀速与竖直匀变速，运动合成与分解的经典范例。',resetOnChange:true,
   params:[P('v0','初速度 v₀',5,60,1,32,'m/s'),P('ang','发射角 θ',5,85,1,45,'°'),P('g','重力加速度 g',1.6,20,0.1,9.8,'m/s²')],
   formulas:['x = v₀·cosθ·t','y = v₀·sinθ·t − ½g·t²','R = v₀²·sin2θ/g','H = v₀²·sin²θ/(2g)','T = 2v₀·sinθ/g'],
-  calc:function(p){var r=p.ang*Math.PI/180;var vx=p.v0*Math.cos(r),vy=p.v0*Math.sin(r);var T=2*vy/p.g;return{vx:vx,vy:vy,T:T,R:vx*T,H:vy*vy/(2*p.g)};},
+  calc:function(p){var d=window.PHYS_DOMAIN.projectileMotion({initialSpeed:p.v0,angleDeg:p.ang,gravity:p.g});return{vx:d.horizontalVelocity,vy:d.verticalVelocity,T:d.flightTime,R:d.range,H:d.maxHeight};},
   init:function(){return{t:0};},step:function(p,dt,st){var d=this.calc(p);st.t+=dt;if(st.t>d.T*1.55)st.t=0;},
   draw:function(c,W,H,p,st){var d=this.calc(p);var gy=H-52,ox=78;var s=Math.min((W-ox-80)/Math.max(d.R,1e-3),(gy-58)/Math.max(d.H,1e-3));
     c.strokeStyle='rgba(120,160,220,.07)';c.lineWidth=1;for(var x=ox;x<W-24;x+=44){c.beginPath();c.moveTo(x,24);c.lineTo(x,gy);c.stroke();}
@@ -41,7 +41,7 @@ EXP.push({id:'p2',name:'单摆与简谐振动',cat:'物理',tags:['力学','振�
     c.strokeStyle='#94a3b8';c.lineWidth=2;c.beginPath();c.moveTo(px,py);c.lineTo(bx,by);c.stroke();
     var gr=c.createRadialGradient(bx-5,by-5,1,bx,by,24);gr.addColorStop(0,'#e0f2fe');gr.addColorStop(.42,'#22d3ee');gr.addColorStop(1,'rgba(34,211,238,0)');
     c.fillStyle=gr;c.beginPath();c.arc(bx,by,24,0,7);c.fill();c.fillStyle='#a5f3fc';c.beginPath();c.arc(bx,by,9,0,7);c.fill();
-    var T=2*Math.PI*Math.sqrt(p.L/p.g);
+    var T=window.PHYS_DOMAIN.pendulumPeriod({lengthM:p.L,gravity:p.g});
     pl(c,'T='+F(T)+' s',26,26,'rgba(34,211,238,.12)','#22d3ee');pl(c,'θ='+F(st.th*180/Math.PI,1)+'°',26,56,'rgba(167,139,250,.12)','#a78bfa');
   },
   readout:function(p,st){var T=2*Math.PI*Math.sqrt(p.L/p.g);return[{k:'周期 T',v:F(T)+' s'},{k:'频率 f',v:F(1/T)+' Hz'},{k:'角频率 ω',v:F(Math.sqrt(p.g/p.L))+' rad/s'},{k:'当前摆角',v:F(st.th*180/Math.PI,1)+'°'},{k:'角速度',v:F(st.w)+' rad/s'},{k:'摆长 L',v:F(p.L,2)+' m'}];},
@@ -82,7 +82,7 @@ EXP.push({id:'p4',name:'欧姆定律电路',cat:'物理',tags:['电学','电流'
   params:[P('U','电源电压 U',1,24,0.5,12,'V'),P('R','电阻 R',1,60,1,12,'Ω')],
   formulas:['I=U/R','P=U·I=I²R=U²/R','Q=I²R·t'],
   init:function(){return{s:0,t:0};},
-  step:function(p,dt,st){var I=p.U/p.R;var sp=Math.min(0.55,I*0.035);st.s=(st.s+sp*dt)%1;st.t+=dt;},
+  step:function(p,dt,st){var I=window.PHYS_DOMAIN.ohmsLaw({voltageV:p.U,resistanceOhm:p.R}).currentA;var sp=Math.min(0.55,I*0.035);st.s=(st.s+sp*dt)%1;st.t+=dt;},
   draw:function(c,W,H,p,st){var x0=W*0.16,x1=W*0.84,y0=78,y1=H-88,I=p.U/p.R,cy=(y0+y1)/2;
     c.strokeStyle='#3b5a80';c.lineWidth=4;c.lineJoin='round';c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y0);c.lineTo(x1,y1);c.lineTo(x0,y1);c.lineTo(x0,y0);c.stroke();
     c.strokeStyle='#fbbf24';c.lineWidth=4;c.lineCap='round';c.beginPath();c.moveTo(x0-18,cy-11);c.lineTo(x0+18,cy-11);c.stroke();c.beginPath();c.moveTo(x0-10,cy+9);c.lineTo(x0+10,cy+9);c.stroke();
@@ -103,7 +103,7 @@ EXP.push({id:'p5',name:'斜面滑动与摩擦力',cat:'物理',tags:['力学','�
   params:[P('theta','斜面倾角 θ',8,60,1,30,'°'),P('mu','动摩擦因数 μ',0,0.8,0.02,0.2,''),P('m','物体质量 m',1,10,0.5,3,'kg')],
   formulas:['ma=mg·sinθ−μ·mg·cosθ','a=g(sinθ−μ·cosθ)','临界 tanθ=μ','f=μ·m·g·cosθ'],
   init:function(){return{s:4,v:0,hold:0,t:0};},
-  step:function(p,dt,st){var th=p.theta*Math.PI/180;var a=9.8*(Math.sin(th)-p.mu*Math.cos(th));
+  step:function(p,dt,st){var th=p.theta*Math.PI/180;var a=window.PHYS_DOMAIN.inclinedPlaneAcceleration({angleDeg:p.theta,frictionCoefficient:p.mu,gravity:9.8});
     if(a>0.01){st.v+=a*dt;st.s-=st.v*dt;if(st.s<=0.32){st.s=0.32;st.v=0;st.hold+=dt;if(st.hold>1.4){st.s=4;st.v=0;st.hold=0;}}}
     st.t+=dt;},
   draw:function(c,W,H,p,st){var th=p.theta*Math.PI/180;var gy=H-72,ox=112;
