@@ -36,5 +36,6 @@ test("Ohm's law returns current, power and per-minute heat",()=>{
 });
 test("inclined plane acceleration includes friction threshold",()=>{
  assert.ok(Math.abs(inclinedPlaneAcceleration({angleDeg:30,frictionCoefficient:Math.tan(Math.PI/6)}))<1e-12);
+ assert.equal(inclinedPlaneAcceleration({angleDeg:30,frictionCoefficient:1}),0,'static friction above the sliding threshold must prevent downhill motion rather than accelerate uphill');
  assert.throws(()=>inclinedPlaneAcceleration({angleDeg:30,frictionCoefficient:-0.1}),RangeError);
 });
