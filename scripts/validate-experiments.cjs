@@ -52,6 +52,20 @@ for (const name of ['M','C1','C2','C3','C4','C5','C6']) {
   }
 }
 assert.equal(checked, 100, 'the catalogue advertises 100 experiments and must contain exactly 100 validated models');
+const addedModels = loadArray('C5');
+const vanthoff = addedModels.find(model => model.id === 'k36');
+const langmuir = addedModels.find(model => model.id === 'k37');
+const gibbs = addedModels.find(model => model.id === 'k38');
+assert.ok(vanthoff && langmuir && gibbs, 'the three added models must be present');
+const vhParams = Object.fromEntries(vanthoff.p.map(item => [item.key,item.value]));
+assert.equal(vanthoff.fn(vhParams, vhParams.Tref), vhParams.Kref,
+  'van\'t Hoff model must reproduce the reference equilibrium constant at Tref');
+const langmuirParams = {qmax:4,K:2,C:0.5};
+assert.equal(langmuir.fn(langmuirParams, 0.5), 2,
+  'Langmuir model must reach half of qmax when K*C equals 1');
+assert.equal(gibbs.fn({dH:10,dS:100}, 300), -20,
+  'Gibbs free energy model must use ΔG=ΔH−TΔS with consistent units');
+
 assert.ok(html.includes('var esc=function(v)'),
   'experiment renderer must define an HTML escaping helper');
 for (const token of [
