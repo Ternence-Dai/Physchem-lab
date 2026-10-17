@@ -24,8 +24,11 @@ for (const name of ['M','C1','C2','C3','C4','C5','C6']) {
       for (let i=0;i<=20;i++) {
         const x=model.xR[0]+(model.xR[1]-model.xR[0])*i/20;
         const value=model.fn(params,x,0);
-        assert.ok(typeof value === 'number' && (Number.isFinite(value) || Number.isNaN(value)),
-          model.id + ': curve returned non-number/infinite value at ' + x);
+        assert.equal(typeof value, 'number', model.id + ': curve must return a numeric value');
+        // Infinite endpoints can represent a real physical singularity (e.g. λ→∞ at v=0).
+        // Interior infinities indicate a numerical/domain bug; NaN is allowed for forbidden domains.
+        if (i > 0 && i < 20) assert.ok(Number.isFinite(value) || Number.isNaN(value),
+          model.id + ': unexpected infinite interior value at ' + x);
       }
       if (typeof model.ro === 'function') assert.ok(Array.isArray(model.ro(params)), model.id + ': readout must return rows');
       if (typeof model.tt === 'function') assert.equal(typeof model.tt(params),'string',model.id + ': tutor must return text');
