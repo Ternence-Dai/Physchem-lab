@@ -51,4 +51,12 @@ for (const name of ['M','C1','C2','C3','C4','C5','C6']) {
     checked++;
   }
 }
+assert.match(html, /var esc=function\\(v\\)/,
+  'experiment renderer must define an HTML escaping helper');
+for (const token of [
+  'esc(ex.cat)', 'esc(ex.name)', 'esc(ex.brief)', 'esc(pr.label)', 'esc(vt)',
+  "parts.push(esc(k)+'='+esc(", 'esc(s.name)', 'esc(s.time)'
+]) assert.ok(html.includes(token), 'experiment and saved-session content must be escaped: ' + token);
+assert.doesNotMatch(html, /\\+ex\\.(?:cat|name|brief)\\+|\\+s\\.(?:name|time)\\+/,
+  'untrusted catalog and saved-session strings must not be concatenated into HTML');
 console.log('Physics/chemistry model smoke checks passed: ' + checked + ' models.');
