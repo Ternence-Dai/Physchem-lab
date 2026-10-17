@@ -54,7 +54,7 @@ EXP.push({id:'p3',name:'弹簧振子与能量转化',cat:'物理',tags:['力学'
   params:[P('m','质量 m',0.2,3,0.1,1,'kg'),P('k','劲度系数 k',5,80,1,30,'N/m')],
   formulas:['F=−k·x','a=−(k/m)·x','ω=√(k/m)','T=2π√(m/k)','E=½mv²+½kx²=常数'],
   init:function(){return{x:0.6,v:0,t:0};},
-  step:function(p,dt,st){var n=6,h=dt/n;for(var i=0;i<n;i++){var a=-(p.k/p.m)*st.x;st.v+=a*h;st.x+=st.v*h;}st.t+=dt;},
+  step:function(p,dt,st){var n=6,h=dt/n;for(var i=0;i<n;i++){var a=window.PHYS_DOMAIN.springOscillator({massKg:p.m,springConstantNPerM:p.k,displacementM:st.x,velocityMPerS:st.v}).acceleration;st.v+=a*h;st.x+=st.v*h;}st.t+=dt;},
   draw:function(c,W,H,p,st){var cy=H*0.42,wx=58;var sc=Math.min(160,(W/2-130)/0.72);var eqX=W/2+20,bw=72,bh=62;
     var bx=eqX+st.x*sc,left=bx-bw/2;
     c.fillStyle='#1b2740';c.fillRect(wx-22,cy-90,22,180);
@@ -63,7 +63,7 @@ EXP.push({id:'p3',name:'弹簧振子与能量转化',cat:'物理',tags:['力学'
     c.fillStyle=grd;c.strokeStyle='#22d3ee';c.lineWidth=2;rr(c,left,cy-bh/2,bw,bh,8);c.fill();c.stroke();
     c.fillStyle='#a5f3fc';c.font='bold 12px sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText(p.m.toFixed(1)+' kg',bx,cy);
     c.strokeStyle='rgba(167,139,250,.35)';c.setLineDash([5,6]);c.lineWidth=1.4;c.beginPath();c.moveTo(eqX,cy-100);c.lineTo(eqX,cy+100);c.stroke();c.setLineDash([]);
-    var E=0.5*p.k*st.x*st.x+0.5*p.m*st.v*st.v,ek=0.5*p.m*st.v*st.v,ep=0.5*p.k*st.x*st.x;
+    var energy=window.PHYS_DOMAIN.springOscillator({massKg:p.m,springConstantNPerM:p.k,displacementM:st.x,velocityMPerS:st.v}),E=energy.totalEnergy,ek=energy.kineticEnergy,ep=energy.elasticPotentialEnergy;
     var bw2=Math.min(300,W-160),bx2=(W-bw2)/2,by2=H-58;var rk=E>1e-9?ek/E:0,rp=E>1e-9?ep/E:0;
     c.fillStyle='#0a1220';rr(c,bx2,by2,bw2,16,8);c.fill();
     if(rk>0){c.fillStyle='rgba(52,211,153,.85)';rr(c,bx2,by2,bw2*rk,16,8);c.fill();}
@@ -72,9 +72,9 @@ EXP.push({id:'p3',name:'弹簧振子与能量转化',cat:'物理',tags:['力学'
     lb(c,'动能 Ek',bx2,by2+30,'#34d399',10.5);lb(c,'弹性势能 Ep',bx2+bw2,by2+30,'#fbbf24',10.5,'right');
     pl(c,'E='+F(E,3)+' J',26,26,'rgba(34,211,238,.12)','#22d3ee');
   },
-  readout:function(p,st){var T=2*Math.PI*Math.sqrt(p.m/p.k);return[{k:'周期 T',v:F(T)+' s'},{k:'角频率 ω',v:F(Math.sqrt(p.k/p.m))+' rad/s'},{k:'位移 x',v:F(st.x)+' m'},{k:'速度 v',v:F(st.v)+' m/s'},{k:'动能 Ek',v:F(0.5*p.m*st.v*st.v,3)+' J'},{k:'弹性势能 Ep',v:F(0.5*p.k*st.x*st.x,3)+' J'}];},
-  tutor:function(p,st){var T=2*Math.PI*Math.sqrt(p.m/p.k);var ek=0.5*p.m*st.v*st.v,ep=0.5*p.k*st.x*st.x;
-    return '【模型】F=−kx，a=−(k/m)x。\n\n【参数】m='+F(p.m,1)+' kg, k='+F(p.k,0)+' N/m\n\n【推演】\n· ω=√(k/m)='+F(Math.sqrt(p.k/p.m))+' rad/s\n· T='+F(T)+' s\n· x='+F(st.x)+' m, v='+F(st.v)+' m/s\n· Ek='+F(ek,3)+' J, Ep='+F(ep,3)+' J, E='+F(ek+ep,3)+' J\n\n【结论】'+(Math.abs(st.x)<0.05?'经过平衡位置：动能最大。':Math.abs(st.v)<0.05?'到达最大位移：全部能量为弹性势能。':'能量守恒流动中。');}
+  readout:function(p,st){var d=window.PHYS_DOMAIN.springOscillator({massKg:p.m,springConstantNPerM:p.k,displacementM:st.x,velocityMPerS:st.v});return[{k:'周期 T',v:F(d.period)+' s'},{k:'角频率 ω',v:F(d.angularFrequency)+' rad/s'},{k:'位移 x',v:F(st.x)+' m'},{k:'速度 v',v:F(st.v)+' m/s'},{k:'动能 Ek',v:F(d.kineticEnergy,3)+' J'},{k:'弹性势能 Ep',v:F(d.elasticPotentialEnergy,3)+' J'}];},
+  tutor:function(p,st){var d=window.PHYS_DOMAIN.springOscillator({massKg:p.m,springConstantNPerM:p.k,displacementM:st.x,velocityMPerS:st.v});var T=d.period,ek=d.kineticEnergy,ep=d.elasticPotentialEnergy;
+    return '【模型】F=−kx，a=−(k/m)x。\n\n【参数】m='+F(p.m,1)+' kg, k='+F(p.k,0)+' N/m\n\n【推演】\n· ω=√(k/m)='+F(d.angularFrequency)+' rad/s\n· T='+F(T)+' s\n· x='+F(st.x)+' m, v='+F(st.v)+' m/s\n· Ek='+F(ek,3)+' J, Ep='+F(ep,3)+' J, E='+F(ek+ep,3)+' J\n\n【结论】'+(Math.abs(st.x)<0.05?'经过平衡位置：动能最大。':Math.abs(st.v)<0.05?'到达最大位移：全部能量为弹性势能。':'能量守恒流动中。');}
 });
 
 /* 4. 欧姆定律 */
@@ -148,15 +148,15 @@ EXP.push({id:'p6',name:'理想气体分子运动',cat:'化学',tags:['气体','�
     for(var j=0;j<st.ps.length;j++){var pt=st.ps[j];var x=bx+pt.x*bw,y=by+pt.y*bh;
       var gr=c.createRadialGradient(x,y,0,x,y,r*3.4);gr.addColorStop(0,'hsla('+hue+',90%,72%,1)');gr.addColorStop(1,'hsla('+hue+',90%,60%,0)');
       c.fillStyle=gr;c.beginPath();c.arc(x,y,r*3.4,0,7);c.fill();c.fillStyle='hsl('+hue+',95%,82%)';c.beginPath();c.arc(x,y,r,0,7);c.fill();}
-    var P=p.n*8.314*p.T/p.V;
+    var P=window.PHYS_DOMAIN.idealGasPressure({amountMol:p.n,temperatureK:p.T,volumeM3:p.V/1000})/1000;
     pl(c,'P='+F(P,1)+' kPa',26,22,'rgba(244,114,182,.12)','#f472b6');
     pl(c,'PV='+F(P*p.V,0)+' kPa·L',26,52,'rgba(34,211,238,.12)','#22d3ee');
-    pl(c,'nRT='+F(p.n*8.314*p.T,0)+' J',26,82,'rgba(52,211,153,.12)','#34d399');
+    pl(c,'nRT='+F(P*p.V,0)+' J',26,82,'rgba(52,211,153,.12)','#34d399');
     lb(c,'V='+F(p.V,1)+' L',bx+bw/2,by+bh+26,'#22d3ee',12,'center');
   },
-  readout:function(p){var P=window.PHYS_DOMAIN.idealGasPressure({amountMol:p.n,temperatureK:p.T,volumeM3:p.V/1000})/1000;var vR=Math.sqrt(3*8.314*p.T/0.028);return[{k:'压强 P',v:F(P,1)+' kPa'},{k:'PV 乘积',v:F(P*p.V,0)+' kPa·L'},{k:'nRT',v:F(p.n*8.314*p.T,0)+' J'},{k:'方均根速率',v:F(vR,0)+' m/s'},{k:'平均动能',v:F(1.5*1.381e-23*p.T*1e21,2)+'×10⁻²¹ J'},{k:'分子数密度',v:F(p.n*6.022e23/(p.V*1e-3)/1e25,2)+'×10²⁵/m³'}];},
+  readout:function(p){var P=window.PHYS_DOMAIN.idealGasPressure({amountMol:p.n,temperatureK:p.T,volumeM3:p.V/1000})/1000;var vR=Math.sqrt(3*8.314*p.T/0.028);return[{k:'压强 P',v:F(P,1)+' kPa'},{k:'PV 乘积',v:F(P*p.V,0)+' kPa·L'},{k:'nRT',v:F(P*p.V,0)+' J'},{k:'方均根速率',v:F(vR,0)+' m/s'},{k:'平均动能',v:F(1.5*1.381e-23*p.T*1e21,2)+'×10⁻²¹ J'},{k:'分子数密度',v:F(p.n*6.022e23/(p.V*1e-3)/1e25,2)+'×10²⁵/m³'}];},
   tutor:function(p){var P=window.PHYS_DOMAIN.idealGasPressure({amountMol:p.n,temperatureK:p.T,volumeM3:p.V/1000})/1000;var vR=Math.sqrt(3*8.314*p.T/0.028);
-    return '【模型】理想气体：分子无体积、无相互作用。压强来自分子撞击器壁。\n\n【参数】T='+p.T+' K, V='+F(p.V,1)+' L, n='+F(p.n,1)+' mol\n\n【推演】\n· P=nRT/V='+F(P,1)+' kPa\n· PV='+F(P*p.V,0)+' kPa·L\n· nRT='+F(p.n*8.314*p.T,0)+' J\n· v_rms='+F(vR,0)+' m/s\n\n【结论】'+(p.T>600?'高温，分子运动剧烈。':p.T<200?'低温，分子迟缓。':'P·V/(n·T) 始终=8.314，这就是 R 的物理意义。')+'\n\n【延伸】波义耳定律：T不变 P∝1/V。';}
+    return '【模型】理想气体：分子无体积、无相互作用。压强来自分子撞击器壁。\n\n【参数】T='+p.T+' K, V='+F(p.V,1)+' L, n='+F(p.n,1)+' mol\n\n【推演】\n· P=nRT/V='+F(P,1)+' kPa\n· PV='+F(P*p.V,0)+' kPa·L\n· nRT='+F(P*p.V,0)+' J\n· v_rms='+F(vR,0)+' m/s\n\n【结论】'+(p.T>600?'高温，分子运动剧烈。':p.T<200?'低温，分子迟缓。':'P·V/(n·T) 始终=8.314，这就是 R 的物理意义。')+'\n\n【延伸】波义耳定律：T不变 P∝1/V。';}
 });
 
 /* 7. 酸碱滴定 */
