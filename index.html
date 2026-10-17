@@ -1480,7 +1480,12 @@ var cv,ctx,sw;
 var W=800,H=500;
 var cur=null,P={},ST={};
 var paused=false;
+var SAVE_KEY='physchem_lab_saved_experiments_v1';
 var saves=[];
+try{
+  var restored=JSON.parse(localStorage.getItem(SAVE_KEY)||'[]');
+  if(Array.isArray(restored))saves=restored.slice(0,30);
+}catch(e){console.warn('实验存档读取失败，将使用空存档列表',e);}
 var typer=null;
 var started=false;
 var last=0,lastRO=0;
@@ -1608,7 +1613,10 @@ function bindUI(){
     var b=E('bp');if(b){b.textContent='⏸ 暂停';b.className='bt';}refreshTutor(true);toast('实验已重置 ↺');};
   var bs=E('bs');if(bs)bs.onclick=function(){if(!cur)return;
     saves.unshift({name:cur.name,time:new Date().toLocaleString('zh-CN',{hour12:false}),params:JSON.parse(JSON.stringify(P))});
-    if(saves.length>30)saves.pop();updateSI();renderD();toast('已保存到实验档案 ✓');};
+    if(saves.length>30)saves.pop();
+    try{localStorage.setItem(SAVE_KEY,JSON.stringify(saves));toast('实验档案已保存到本机 ✓');}
+    catch(e){toast('浏览器存储不可用：本条仅保留在当前会话');}
+    updateSI();renderD();};
   var bd=E('bd');if(bd)bd.onclick=function(){var d=E('dr');if(d)d.className=d.className.indexOf('on')>=0?'dr':'dr on';renderD();};
   var dc=E('dx');if(dc)dc.onclick=function(){var d=E('dr');if(d)d.className='dr';};
   var sE=E('search');if(sE)sE.oninput=function(e){sQ=e.target.value.trim();renderList();};
