@@ -16,6 +16,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+      - name: Validate blackbody spectrum numerics
+        run: node scripts/validate-blackbody.cjs
       - name: Parse embedded JavaScript
         run: |
           node <<'NODE'
