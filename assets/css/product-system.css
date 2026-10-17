@@ -17,3 +17,13 @@ img,svg,canvas{max-width:100%}:where(.main,.mn,.view){min-width:0}
 @media(max-width:760px){:where(.main,.mn){min-width:0;width:100%}:where(.topbar,.tb){position:sticky;top:0;z-index:20}:where(.card,.panel,.stat-card,.metric-card){border-radius:14px}:where(button,.btn,.bt){min-height:38px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 @media print{:where(.sidebar,.sb,.topbar,.tb,.tabbar,button){display:none!important}body{background:#fff!important;color:#111!important}:where(.card,.panel,.stat-card,.metric-card){box-shadow:none!important;break-inside:avoid}}
+
+
+/* V2 application-specific visual layer */
+body .sb{background:linear-gradient(180deg,#0d1b2c,#08111d);border-right-color:rgba(34,197,94,.17);box-shadow:10px 0 32px rgba(0,0,0,.22)}
+body .mn{min-width:0;background:radial-gradient(ellipse at 90% 0%,rgba(6,182,212,.055),transparent 45%)}
+body .tb{background:rgba(8,17,29,.88);border-bottom-color:rgba(34,197,94,.15);backdrop-filter:blur(18px)}
+body .it{border-radius:11px;border-color:transparent;transition:background .16s,border-color .16s,transform .16s}
+body .it.on{border-color:rgba(34,211,238,.38);box-shadow:inset 3px 0 #22d3ee,0 8px 22px rgba(0,0,0,.16)}
+body .bt{border-radius:10px;transition:transform .16s,background .16s,border-color .16s}
+body .card{border-radius:18px;border-color:rgba(148,163,184,.16);box-shadow:0 14px 38px rgba(0,0,0,.2)}
