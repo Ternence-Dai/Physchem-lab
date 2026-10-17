@@ -120,6 +120,7 @@ img,svg,canvas,video{max-width:100%}
 (function(){
 'use strict';
 var E=function(i){return document.getElementById(i);};
+var esc=function(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});};
 var C=function(v,a,b){return v<a?a:(v>b?b:v);};
 var F=function(v,n){n=(n===undefined)?2:n;if(!isFinite(v))return'—';if(Math.abs(v)>=1e6||(Math.abs(v)<1e-3&&v!==0))return v.toExponential(2);return Number(v).toFixed(n);};
 var SE=function(m){var b=E('eb3');if(!b)return;b.textContent='⚠ '+m;b.style.display='block';clearTimeout(SE.t);SE.t=setTimeout(function(){b.style.display='none';},6000);};
@@ -1541,7 +1542,7 @@ function renderList(){
   for(var j=0;j<list.length;j++){
     var ex=list[j];var d=document.createElement('div');
     d.className='it'+(cur&&cur.id===ex.id?' on':'');
-    d.innerHTML='<div class="t"><span class="tg '+(ex.cat==='物理'?'p':'c')+'">'+ex.cat+'</span>'+ex.name+'</div><div class="d">'+ex.brief+'</div>';
+    d.innerHTML='<div class="t"><span class="tg '+(ex.cat==='物理'?'p':'c')+'">'+esc(ex.cat)+'</span>'+esc(ex.name)+'</div><div class="d">'+esc(ex.brief)+'</div>';
     (function(id){d.onclick=function(){selectExp(id);};})(ex.id);
     box.appendChild(d);
   }
@@ -1566,7 +1567,7 @@ function buildParams(){
   for(var i=0;i<cur.params.length;i++){
     var pr=cur.params[i];var w=document.createElement('div');w.className='pm';
     var vt=pr.fmt?pr.fmt(P[pr.key]):(P[pr.key]+' '+(pr.unit||''));
-    w.innerHTML='<div class="r"><span>'+pr.label+'</span><span class="v" id="v_'+pr.key+'">'+vt+'</span></div><input type="range" min="'+pr.min+'" max="'+pr.max+'" step="'+pr.step+'" value="'+P[pr.key]+'">';
+    w.innerHTML='<div class="r"><span>'+esc(pr.label)+'</span><span class="v" id="v_'+esc(pr.key)+'">'+esc(vt)+'</span></div><input type="range" min="'+pr.min+'" max="'+pr.max+'" step="'+pr.step+'" value="'+P[pr.key]+'">';
     box.appendChild(w);
     var inp=w.querySelector('input');
     (function(p2,el2){el2.oninput=function(ev){P[p2.key]=parseFloat(ev.target.value);
@@ -1660,8 +1661,8 @@ function renderD(){
   if(!saves.length){b.innerHTML='<div class="ep">暂无存档记录<br>点击「💾 存档」保存当前实验参数</div>';return;}
   b.innerHTML='';for(var i=0;i<saves.length;i++){var s=saves[i];
     var d=document.createElement('div');d.className='rc';
-    var parts=[];for(var k in s.params)if(s.params.hasOwnProperty(k))parts.push(k+'='+(typeof s.params[k]==='number'?+s.params[k].toFixed(3):s.params[k]));
-    d.innerHTML='<div class="rh"><span class="rn">'+(i+1)+'. '+s.name+'</span><span class="rt">'+s.time+'</span></div><div class="rp">'+parts.join('  ')+'</div>';
+    var parts=[];for(var k in s.params)if(s.params.hasOwnProperty(k))parts.push(esc(k)+'='+esc(typeof s.params[k]==='number'?+s.params[k].toFixed(3):s.params[k]));
+    d.innerHTML='<div class="rh"><span class="rn">'+(i+1)+'. '+esc(s.name)+'</span><span class="rt">'+esc(s.time)+'</span></div><div class="rp">'+parts.join('  ')+'</div>';
     b.appendChild(d);}
 }
 var tT=null;
