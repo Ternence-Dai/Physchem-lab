@@ -20,6 +20,8 @@ jobs:
         run: node scripts/validate-blackbody.cjs
       - name: Smoke-test experiment models
         run: node scripts/validate-experiments.cjs
+      - name: Validate experiment HTML escaping
+        run: node scripts/validate-experiments.cjs
       - name: Parse embedded JavaScript
         run: |
           node <<'NODE'
