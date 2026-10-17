@@ -52,6 +52,7 @@ for (const name of ['M','C1','C2','C3','C4','C5','C6']) {
   }
 }
 assert.equal(checked, 100, 'the catalogue advertises 100 experiments and must contain exactly 100 validated models');
+assert.ok(html.includes('公式助教') && html.includes('LOCAL') && !html.includes('LLM'), 'the offline formula tutor must not be presented as a live LLM');
 const addedModels = loadArray('C5');
 const vanthoff = addedModels.find(model => model.id === 'k36');
 const langmuir = addedModels.find(model => model.id === 'k37');
