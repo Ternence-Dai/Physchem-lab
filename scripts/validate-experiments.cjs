@@ -88,4 +88,8 @@ for (const token of [
 ]) assert.ok(html.includes(token), 'experiment and saved-session content must be escaped: ' + token);
 assert.doesNotMatch(html, /\\+ex\\.(?:cat|name|brief)\\+|\\+s\\.(?:name|time)\\+/,
   'untrusted catalog and saved-session strings must not be concatenated into HTML');
+
+assert.match(html, /id:'p2'[\s\S]*?init:function\(\)\{return\{th:0\.17,w:0,t:0\}\}/,
+  'pendulum animation must start near 10 degrees so its displayed small-angle period formula remains a good approximation');
+
 console.log('Physics/chemistry model smoke checks passed: ' + checked + ' models.');
