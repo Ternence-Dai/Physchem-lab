@@ -644,10 +644,19 @@ var C1=[
  p:[P('T','温度 T',1000,8000,100,5000,'K')],
  f:['λ_max·T=2.898×10⁻³ m·K','普朗克公式 B(λ,T)','M=σT⁴'],
  xR:[0,3000],yR:[0,1.1],xT:10,yT:5,xL:'波长 (nm)',yL:'相对辐射强度',col:'#f87171',
- fn:function(p,x){var l=x*1e-9,T=p.T;var h=6.626e-34,c=3e8,k=1.381e-23;
-   var B=2*h*c*c/Math.pow(l,5)/(Math.exp(h*c/(l*k*T))-1);
-   var lm=2.898e-3/T;var Bm=2*h*c*c/Math.pow(lm,5)/(Math.exp(h*c/(lm*k*T))-1);
-   return B/Bm;},
+ fn:function(p,x){
+   // Wavelength is plotted in nm. The x-axis includes 0, where Planck's
+   // wavelength-form spectral radiance is undefined; its limiting value is 0.
+   if(!Number.isFinite(x)||x<=0||!Number.isFinite(p.T)||p.T<=0)return 0;
+   var l=x*1e-9,T=p.T,lm=2.897771955e-3/T;
+   var c2=1.438776877e-2; // h*c/k, m·K
+   var z=c2/(l*T),zm=c2/(lm*T);
+   function logExpm1(v){return v>50?v+Math.log1p(-Math.exp(-v)):Math.log(Math.expm1(v));}
+   // Evaluate log(B_lambda/B_lambda_peak) to avoid exp overflow and 0/0.
+   var logRatio=5*Math.log(lm/l)+logExpm1(zm)-logExpm1(z);
+   if(!Number.isFinite(logRatio))return logRatio===-Infinity?0:1;
+   return Math.exp(Math.max(-745,Math.min(700,logRatio)));
+ },
  mk:[{x:580,l:'λ_max',c:'#fbbf24'}],
  ro:function(p){var lm=2.898e-3/p.T*1e9;return[{k:'峰值波长',v:F(lm,0)+' nm'},{k:'温度 T',v:p.T+' K'},{k:'辐射出射度',v:F(5.67e-8*Math.pow(p.T,4)/1e6,2)+' MW/m²'},{k:'峰值频率',v:F(3e8/(lm*1e-9)/1e14,2)+'×10¹⁴ Hz'},{k:'光子能量',v:F(6.626e-34*3e8/(lm*1e-9)/1.602e-19,2)+' eV'},{k:'颜色',v:p.T>6000?'蓝白色':p.T>4000?'白色':p.T>3000?'暖白':'橙红'}];},
  tt:function(p){var lm=2.898e-3/p.T*1e9;return'【模型】黑体辐射谱是经典物理无法解释的难题，普朗克提出"能量量子化"假设才解决。\n\n【推演】\n· λ_max='+F(lm,0)+' nm\n· M=σT⁴='+F(5.67e-8*Math.pow(p.T,4)/1e6,2)+' MW/m²\n\n【结论】温度越高，峰值波长越短，颜色越蓝——铁块加热"红→黄→白"的原因。';}},
