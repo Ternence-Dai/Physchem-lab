@@ -2,7 +2,7 @@
 const fs = require('node:fs');
 const vm = require('node:vm');
 const assert = require('node:assert/strict');
-const html = fs.readFileSync('index.html', 'utf8') + '\n' + fs.readFileSync('assets/js/legacy-app.js', 'utf8');
+const html = fs.readFileSync('index.html', 'utf8') + '\n' + fs.readFileSync('assets/js/experiment-catalogue.js', 'utf8') + '\n' + fs.readFileSync('assets/js/legacy-app.js', 'utf8');
 const start = html.indexOf("var SAVE_KEY='physchem_lab_saved_experiments_v1';");
 const end = html.indexOf('\nvar typer=null;', start);
 assert.ok(start >= 0 && end > start, 'experiment archive persistence section must exist');
