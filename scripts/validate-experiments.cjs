@@ -51,7 +51,7 @@ for (const name of ['M','C1','C2','C3','C4','C5','C6']) {
     checked++;
   }
 }
-assert.match(html, /var esc=function\\(v\\)/,
+assert.ok(html.includes('var esc=function(v)'),
   'experiment renderer must define an HTML escaping helper');
 for (const token of [
   'esc(ex.cat)', 'esc(ex.name)', 'esc(ex.brief)', 'esc(pr.label)', 'esc(vt)',
