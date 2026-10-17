@@ -1404,21 +1404,21 @@ var C5=[
  xR:[250,600],yR:[0,100000],xT:7,yT:5,xL:'温度 T (K)',yL:'平衡常数 K',col:'#34d399',
  fn:function(p,x){return p.Kref*Math.exp(-p.dH*1000/8.314*(1/x-1/p.Tref));},
  ro:function(p){var k=p.Kref*Math.exp(-p.dH*1000/8.314*(1/p.T-1/p.Tref));return[{k:'当前平衡常数 K₂',v:k.toExponential(4)},{k:'参考 K₁',v:p.Kref},{k:'ΔH',v:p.dH+' kJ/mol'},{k:'T₂',v:p.T+' K'},{k:'ln(K₂/K₁)',v:F(Math.log(k/p.Kref),4)},{k:'升温效应',v:p.dH>0?'吸热反应：K 增大':p.dH<0?'放热反应：K 减小':'ΔH≈0：K 近似不变'}];},
- tt:function(p){var k=p.Kref*Math.exp(-p.dH*1000/8.314*(1/p.T-1/p.Tref));return'【模型】范特霍夫方程描述平衡常数的温度依赖。\\n\\n【推演】\\n· K₂='+k.toExponential(4)+'\\n· ΔH='+p.dH+' kJ/mol\\n· 温度由 '+p.Tref+' K 变为 '+p.T+' K\\n\\n【结论】'+(p.dH>0?'吸热反应升温有利于正向平衡。':p.dH<0?'放热反应升温使平衡常数减小。':'焓变为零时，近似模型中 K 不随温度变化。')+'\\n\\n【适用条件】假设研究温区内反应焓变近似恒定。';}},
+ tt:function(p){var k=p.Kref*Math.exp(-p.dH*1000/8.314*(1/p.T-1/p.Tref));return'【模型】范特霍夫方程描述平衡常数的温度依赖。\n\n【推演】\n· K₂='+k.toExponential(4)+'\n· ΔH='+p.dH+' kJ/mol\n· 温度由 '+p.Tref+' K 变为 '+p.T+' K\n\n【结论】'+(p.dH>0?'吸热反应升温有利于正向平衡。':p.dH<0?'放热反应升温使平衡常数减小。':'焓变为零时，近似模型中 K 不随温度变化。')+'\n\n【适用条件】假设研究温区内反应焓变近似恒定。';}},
 {id:'k37',name:'朗缪尔单分子层吸附',cat:'化学',tags:['表面化学','吸附'],br:'吸附位点逐渐饱和，吸附量随平衡浓度呈现饱和曲线。',
  p:[P('qmax','最大吸附量 qₘₐₓ',1,10,0.1,5,'mmol/g'),P('K','吸附平衡常数 K',0.01,10,0.01,0.5,'L/mmol'),P('C','平衡浓度 C',0.01,100,0.1,10,'mmol/L')],
  f:['q=qₘₐₓ·K·C/(1+K·C)','θ=K·C/(1+K·C)','高浓度时吸附位点趋于饱和'],
  xR:[0,100],yR:[0,10],xT:10,yT:5,xL:'平衡浓度 C (mmol/L)',yL:'吸附量 q (mmol/g)',col:'#f472b6',
  fn:function(p,x){return p.qmax*p.K*x/(1+p.K*x);},
  ro:function(p){var theta=p.K*p.C/(1+p.K*p.C);return[{k:'平衡吸附量 q',v:F(p.qmax*theta,4)+' mmol/g'},{k:'表面覆盖率 θ',v:F(theta*100,2)+'%'},{k:'最大吸附量 qₘₐₓ',v:p.qmax+' mmol/g'},{k:'K',v:p.K+' L/mmol'},{k:'C',v:p.C+' mmol/L'},{k:'剩余空位比例',v:F((1-theta)*100,2)+'%'}];},
- tt:function(p){var theta=p.K*p.C/(1+p.K*p.C);return'【模型】朗缪尔等温吸附：q=qₘₐₓKC/(1+KC)。\\n\\n【推演】\\n· q='+F(p.qmax*theta,4)+' mmol/g\\n· 表面覆盖率 θ='+F(theta*100,2)+'%\\n\\n【结论】浓度升高时吸附量逐渐接近单层饱和值 qₘₐₓ。模型假设吸附位点等价、相互独立且只形成单分子层。';}},
+ tt:function(p){var theta=p.K*p.C/(1+p.K*p.C);return'【模型】朗缪尔等温吸附：q=qₘₐₓKC/(1+KC)。\n\n【推演】\n· q='+F(p.qmax*theta,4)+' mmol/g\n· 表面覆盖率 θ='+F(theta*100,2)+'%\n\n【结论】浓度升高时吸附量逐渐接近单层饱和值 qₘₐₓ。模型假设吸附位点等价、相互独立且只形成单分子层。';}},
 {id:'k38',name:'吉布斯自由能与自发性',cat:'化学',tags:['热力学','自发过程'],br:'在焓变和熵变近似恒定时，ΔG=ΔH−TΔS 判断过程的热力学方向。',
  p:[P('dH','焓变 ΔH',-100,100,1,-40,'kJ/mol'),P('dS','熵变 ΔS',-300,300,1,-100,'J/(mol·K)'),P('T','温度 T',200,1000,1,298,'K')],
  f:['ΔG=ΔH−TΔS','ΔG<0：正向过程热力学有利','ΔG=0：平衡条件'],
  xR:[200,1000],yR:[-200,200],xT:8,yT:8,xL:'温度 T (K)',yL:'吉布斯自由能 ΔG (kJ/mol)',col:'#a78bfa',
  fn:function(p,x){return p.dH-x*p.dS/1000;},
  ro:function(p){var g=p.dH-p.T*p.dS/1000;var te=p.dS!==0?p.dH*1000/p.dS:NaN;return[{k:'ΔG',v:F(g,3)+' kJ/mol'},{k:'ΔH',v:p.dH+' kJ/mol'},{k:'ΔS',v:p.dS+' J/(mol·K)'},{k:'T',v:p.T+' K'},{k:'热力学判断',v:g<0?'正向有利':g>0?'逆向有利':'处于平衡边界'},{k:'ΔG=0 临界温度',v:Number.isFinite(te)&&te>0?F(te,2)+' K':'不存在正温度临界点'}];},
- tt:function(p){var g=p.dH-p.T*p.dS/1000;return'【模型】ΔG=ΔH−TΔS，假设焓变和熵变在研究温区内近似恒定。\\n\\n【推演】\\n· ΔG='+F(g,3)+' kJ/mol\\n· ΔH='+p.dH+' kJ/mol\\n· TΔS='+F(p.T*p.dS/1000,3)+' kJ/mol\\n\\n【结论】'+(g<0?'ΔG<0，正向过程在热力学上有利。':g>0?'ΔG>0，逆向过程在热力学上有利。':'ΔG=0，达到平衡条件。')+' 动力学快慢仍取决于活化能。';}}
+ tt:function(p){var g=p.dH-p.T*p.dS/1000;return'【模型】ΔG=ΔH−TΔS，假设焓变和熵变在研究温区内近似恒定。\n\n【推演】\n· ΔG='+F(g,3)+' kJ/mol\n· ΔH='+p.dH+' kJ/mol\n· TΔS='+F(p.T*p.dS/1000,3)+' kJ/mol\n\n【结论】'+(g<0?'ΔG<0，正向过程在热力学上有利。':g>0?'ΔG>0，逆向过程在热力学上有利。':'ΔG=0，达到平衡条件。')+' 动力学快慢仍取决于活化能。';}}
 
 ];
 for(var i=0;i<C5.length;i++){EXP.push(mkCurve(C5[i]));}
