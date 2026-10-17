@@ -31,7 +31,7 @@ EXP.push({id:'p1',name:'抛体运动轨迹',cat:'物理',tags:['力学','运动�
 EXP.push({id:'p2',name:'单摆与简谐振动',cat:'物理',tags:['力学','振动'],brief:'小角度下单摆做简谐振动，周期只与摆长和重力加速度有关。',resetOnChange:true,
   params:[P('L','摆长 L',0.3,2,0.05,1,'m'),P('g','重力加速度 g',1.6,20,0.1,9.8,'m/s²'),P('b','阻尼系数 b',0,0.6,0.02,0,'')],
   formulas:['θ″=−(g/L)·sinθ−b·θ′','小角度近似 sinθ≈θ','T=2π√(L/g)','ω=√(g/L)'],
-  init:function(){return{th:0.52,w:0,t:0};},
+  init:function(){return{th:0.17,w:0,t:0};},
   step:function(p,dt,st){var n=8,h=dt/n;for(var i=0;i<n;i++){var a=-(p.g/p.L)*Math.sin(st.th)-p.b*st.w;st.w+=a*h;st.th+=st.w*h;}st.t+=dt;},
   draw:function(c,W,H,p,st){var px=W/2,py=64;var sc=Math.min((H-py-74)/2.2,236);var L=p.L*sc;
     var bx=px+L*Math.sin(st.th),by=py+L*Math.cos(st.th);
