@@ -1,6 +1,6 @@
 'use strict';
 const fs = require('node:fs');
-const html = fs.readFileSync('index.html', 'utf8') + '\n' + fs.readFileSync('assets/js/legacy-app.js', 'utf8');
+const html = fs.readFileSync('index.html', 'utf8') + '\n' + fs.readFileSync('assets/js/experiment-catalogue.js', 'utf8') + '\n' + fs.readFileSync('assets/js/legacy-app.js', 'utf8');
 const section = html.slice(html.indexOf("id:'o4'"));
 if (!section) throw new Error('Blackbody experiment o4 not found');
 const match = section.match(/fn:function\(p,x\)\{[\s\S]*?\n \},/);
