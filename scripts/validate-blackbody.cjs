@@ -16,4 +16,8 @@ for (const wavelength of [1, 10, 100, 580, 1000, 3000]) {
 const peak = fn({T:5000}, 579.55);
 assert.ok(peak > 0.999 && peak < 1.01, `expected near-unity peak, got ${peak}`);
 assert.equal(fn({T:0}, 500), 0, 'non-positive temperature must be rejected');
+assert.match(html, /var N=300,hasPrev=false/,
+  'curve renderer must reset path continuity around invalid samples');
+assert.match(html, /if\(!Number\.isFinite\(yv\)\)\{hasPrev=false;continue;\}/,
+  'invalid curve values must break the plotted path');
 console.log('Blackbody spectrum regression checks passed.');
