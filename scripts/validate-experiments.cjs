@@ -3,6 +3,7 @@ const fs = require('node:fs');
 const vm = require('node:vm');
 const assert = require('node:assert/strict');
 const html = fs.readFileSync('index.html', 'utf8') + '\n' + fs.readFileSync('assets/js/experiment-catalogue.js', 'utf8') + '\n' + fs.readFileSync('assets/js/legacy-app.js', 'utf8');
+const catalogue = fs.readFileSync('assets/js/experiment-catalogue.js', 'utf8');
 const P = (key,label,min,max,step,value,unit) => ({key,label,min,max,step,value,unit:unit||''});
 const F = (value,digits=2) => Number(value).toFixed(digits);
 function loadArray(name) {
