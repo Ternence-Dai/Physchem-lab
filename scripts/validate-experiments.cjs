@@ -24,7 +24,7 @@ for (const name of ['M','C1','C2','C3','C4','C5','C6']) {
       for (let i=0;i<=20;i++) {
         const x=model.xR[0]+(model.xR[1]-model.xR[0])*i/20;
         const value=model.fn(params,x,0);
-        assert.ok(typeof value === 'number' && !Number.isInfinite(value),
+        assert.ok(typeof value === 'number' && (Number.isFinite(value) || Number.isNaN(value)),
           model.id + ': curve returned non-number/infinite value at ' + x);
       }
       if (typeof model.ro === 'function') assert.ok(Array.isArray(model.ro(params)), model.id + ': readout must return rows');
