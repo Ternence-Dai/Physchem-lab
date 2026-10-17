@@ -33,5 +33,5 @@ export function inclinedPlaneAcceleration({angleDeg,frictionCoefficient,gravity=
   for (const [name,value] of Object.entries({angleDeg,frictionCoefficient,gravity})) if (!Number.isFinite(value)) throw new TypeError(`${name} must be finite`);
   if (angleDeg < 0 || angleDeg >= 90 || frictionCoefficient < 0 || gravity <= 0) throw new RangeError("inclined-plane parameters are outside their physical domain");
   const angle=angleDeg*Math.PI/180;
-  return gravity*(Math.sin(angle)-frictionCoefficient*Math.cos(angle));
+  return Math.max(0,gravity*(Math.sin(angle)-frictionCoefficient*Math.cos(angle)));
 }
