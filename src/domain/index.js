@@ -35,3 +35,22 @@ export function inclinedPlaneAcceleration({angleDeg,frictionCoefficient,gravity=
   const angle=angleDeg*Math.PI/180;
   return Math.max(0,gravity*(Math.sin(angle)-frictionCoefficient*Math.cos(angle)));
 }
+
+
+export function springOscillator({massKg,springConstantNPerM,displacementM,velocityMPerS}) {
+  for (const [name,value] of Object.entries({massKg,springConstantNPerM,displacementM,velocityMPerS})) {
+    if (!Number.isFinite(value)) throw new TypeError(`${name} must be finite`);
+  }
+  if (massKg <= 0 || springConstantNPerM <= 0) throw new RangeError("mass and spring constant must be positive");
+  const angularFrequency=Math.sqrt(springConstantNPerM/massKg);
+  const kineticEnergy=0.5*massKg*velocityMPerS*velocityMPerS;
+  const elasticPotentialEnergy=0.5*springConstantNPerM*displacementM*displacementM;
+  return Object.freeze({
+    acceleration:-(springConstantNPerM/massKg)*displacementM,
+    angularFrequency,
+    period:2*Math.PI/angularFrequency,
+    kineticEnergy,
+    elasticPotentialEnergy,
+    totalEnergy:kineticEnergy+elasticPotentialEnergy
+  });
+}
