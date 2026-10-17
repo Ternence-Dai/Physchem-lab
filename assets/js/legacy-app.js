@@ -279,6 +279,6 @@ function renderD(){
 var tT=null;
 function toast(m){var t=E('ts');if(!t)return;t.textContent=m;t.className='ts on';clearTimeout(tT);tT=setTimeout(function(){t.className='ts';},1800);}
 
-function main(){bindUI();boot();}
+async function main(){try{window.PHYS_DOMAIN=await import('../../src/domain/index.js');}catch(e){console.error('科学计算核心加载失败',e);toast('科学计算核心加载失败，请刷新或检查部署');return;}bindUI();boot();}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',main);else main();
 })();
