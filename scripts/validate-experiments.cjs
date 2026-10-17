@@ -92,4 +92,21 @@ assert.doesNotMatch(html, /\\+ex\\.(?:cat|name|brief)\\+|\\+s\\.(?:name|time)\\+
 assert.match(html, /id:'p2'[\s\S]*?init:function\(\)\{return\{th:0\.17,w:0,t:0\};\}/,
   'pendulum animation must start near 10 degrees so its displayed small-angle period formula remains a good approximation');
 
+
+const pendulumBlock = catalogue.slice(catalogue.indexOf("id:'p2'"), catalogue.indexOf("id:'p3'"));
+assert.match(pendulumBlock, /readout:function\(p,st\)\{var T=window\.PHYS_DOMAIN\.pendulumPeriod/,
+  'pendulum readout must use the shared domain formula');
+assert.match(pendulumBlock, /tutor:function\(p,st\)\{var T=window\.PHYS_DOMAIN\.pendulumPeriod/,
+  'pendulum tutor must use the shared domain formula');
+const ohmBlock = catalogue.slice(catalogue.indexOf("id:'p4'"), catalogue.indexOf("id:'p5'"));
+assert.ok((ohmBlock.match(/PHYS_DOMAIN\.ohmsLaw/g)||[]).length >= 4,
+  'Ohm experiment animation, drawing, readout and tutor must share the domain solver');
+assert.doesNotMatch(ohmBlock, /I=p\.U\/p\.R|var I=p\.U\/p\.R/,
+  'Ohm experiment must not duplicate its current calculation outside the domain core');
+const inclineBlock = catalogue.slice(catalogue.indexOf("id:'p5'"), catalogue.indexOf("id:'p6'"));
+assert.ok((inclineBlock.match(/PHYS_DOMAIN\.inclinedPlaneAcceleration/g)||[]).length >= 4,
+  'inclined-plane animation, drawing, readout and tutor must share the domain solver');
+assert.doesNotMatch(inclineBlock, /9\.8\*\(Math\.sin\(th\)-p\.mu\*Math\.cos\(th\)\)/,
+  'inclined-plane experiment must not duplicate the acceleration formula');
+
 console.log('Physics/chemistry model smoke checks passed: ' + checked + ' models.');
