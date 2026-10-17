@@ -14,10 +14,22 @@ function loadArray(name) {
   return vm.runInNewContext('(' + source + ')', {P,F,Math,Number,isFinite});
 }
 let checked = 0;
+const experimentIds = new Set();
 for (const name of ['M','C1','C2','C3','C4','C5','C6']) {
   const models = loadArray(name);
   assert.ok(models.length > 0, name + ' must contain models');
   for (const model of models) {
+    assert.ok(model.id && model.name, 'every experiment must have an id and name');
+    assert.ok(!experimentIds.has(model.id), 'duplicate experiment id: ' + model.id);
+    experimentIds.add(model.id);
+    const parameterKeys = new Set();
+    for (const parameter of model.p || []) {
+      assert.ok(parameter.key && !parameterKeys.has(parameter.key), model.id + ': parameter keys must be unique');
+      parameterKeys.add(parameter.key);
+      assert.ok(Number.isFinite(parameter.min) && Number.isFinite(parameter.max) &&
+        Number.isFinite(parameter.value) && parameter.min <= parameter.value &&
+        parameter.value <= parameter.max, model.id + ': parameter defaults must be within finite bounds');
+    }
     const params = Object.fromEntries((model.p||[]).map(item => [item.key,item.value]));
     if (typeof model.fn === 'function') {
       assert.ok(Array.isArray(model.xR) && model.xR.length === 2, model.id + ': missing x range');
@@ -52,6 +64,7 @@ for (const name of ['M','C1','C2','C3','C4','C5','C6']) {
   }
 }
 assert.equal(checked, 100, 'the catalogue advertises 100 experiments and must contain exactly 100 validated models');
+assert.equal(experimentIds.size, 100, 'all 100 experiments must have unique identifiers');
 assert.ok(html.includes('公式助教') && html.includes('LOCAL') && !html.includes('LLM'), 'the offline formula tutor must not be presented as a live LLM');
 const addedModels = loadArray('C5');
 const vanthoff = addedModels.find(model => model.id === 'k36');
