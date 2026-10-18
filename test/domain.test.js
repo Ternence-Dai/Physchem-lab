@@ -53,3 +53,11 @@ test("spring oscillator shares acceleration, period and energy calculations",()=
  assert.throws(()=>springOscillator({massKg:0,springConstantNPerM:4,displacementM:0,velocityMPerS:1}),RangeError);
  assert.throws(()=>springOscillator({massKg:1,springConstantNPerM:4,displacementM:Infinity,velocityMPerS:1}),TypeError);
 });
+
+test("rejects finite inputs whose calculated results overflow",()=>{
+ assert.throws(()=>idealGasPressure({amountMol:1e308,temperatureK:300,volumeM3:1}),RangeError);
+ assert.throws(()=>pendulumPeriod({lengthM:1e308,gravity:1e-308}),RangeError);
+ assert.throws(()=>ohmsLaw({voltageV:1e308,resistanceOhm:1e-308}),RangeError);
+ assert.throws(()=>springOscillator({massKg:1,springConstantNPerM:1,displacementM:1e308,velocityMPerS:0}),RangeError);
+ assert.throws(()=>projectileMotion({initialSpeed:1e308,angleDeg:45,gravity:9.8}),RangeError);
+});
