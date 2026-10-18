@@ -27,3 +27,310 @@ body .it{border-radius:11px;border-color:transparent;transition:background .16s,
 body .it.on{border-color:rgba(34,211,238,.38);box-shadow:inset 3px 0 #22d3ee,0 8px 22px rgba(0,0,0,.16)}
 body .bt{border-radius:10px;transition:transform .16s,background .16s,border-color .16s}
 body .card{border-radius:18px;border-color:rgba(148,163,184,.16);box-shadow:0 14px 38px rgba(0,0,0,.2)}
+
+
+/* V3 · PhysChem Lab interactive engineering workspace */
+:root{
+  --pc-bg:#edf4f7;
+  --pc-ink:#19374a;
+  --pc-muted:#688293;
+  --pc-line:#d8e6ec;
+  --pc-teal:#127e85;
+  --pc-cyan:#2aa8b4;
+  --pc-green:#22866d;
+  --pc-purple:#7966ac;
+  --pc-card:#fff;
+}
+html{scroll-behavior:smooth}
+body{
+  width:100%;height:100vh;overflow:hidden;
+  background:#edf4f7!important;color:var(--pc-ink);
+  font-family:Inter,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+.sb{
+  width:292px;
+  background:linear-gradient(180deg,#15384c 0%,#102d40 58%,#0d2537 100%);
+  border-right:1px solid #2b5264;
+  box-shadow:9px 0 28px rgba(15,47,65,.09);
+}
+.br{
+  min-height:74px;padding:17px 17px;
+  background:rgba(255,255,255,.025);
+  border-bottom-color:rgba(219,241,246,.14);
+}
+.lg{
+  width:43px;height:43px;border-radius:14px;
+  color:#f1ffff;background:linear-gradient(145deg,#167e9d,#43aaa1);
+  box-shadow:0 8px 22px rgba(37,156,161,.2);
+}
+.br h1{font-size:15px;letter-spacing:.2px;color:#f2fbff}
+.br p{font-size:10px;color:#9ab6c3;letter-spacing:.25px}
+.sc{padding:14px 15px 9px}
+.sc input{
+  min-height:39px;background:#0f2a3b;
+  border:1px solid rgba(166,204,216,.2);border-radius:10px;
+  color:#e9f7fa;padding:10px 12px;font-size:12px;
+}
+.sc input:focus{border-color:#5cb4bc;box-shadow:0 0 0 3px rgba(68,168,174,.14)}
+.sc input::placeholder{color:#86a4b2}
+.fl{padding:0 15px 10px;gap:7px}
+.fl button{
+  min-height:33px;border:1px solid rgba(166,204,216,.2);
+  background:#102b3d;color:#a9c1cb;border-radius:9px;font-size:10.5px;
+}
+.fl button.on{
+  color:#ecffff;background:rgba(51,159,166,.22);
+  border-color:rgba(100,205,199,.45);
+}
+.cnt{padding:0 16px 10px;color:#91aab6;font-size:10px}
+.cnt b{color:#78d1cb}
+.lst{padding:3px 10px 14px}
+.it{
+  padding:10px 11px;margin-bottom:6px;
+  border:1px solid transparent;border-radius:11px;background:rgba(255,255,255,.035);
+  transition:background .16s,border-color .16s,transform .16s;
+}
+.it:hover{border-color:rgba(114,197,205,.27);background:rgba(255,255,255,.07);transform:translateX(2px)}
+.it.on{
+  background:linear-gradient(100deg,rgba(42,153,163,.26),rgba(48,117,151,.09));
+  border-color:rgba(104,204,207,.4);
+  box-shadow:inset 3px 0 #66c9c4,0 6px 15px rgba(0,0,0,.08);
+}
+.it .t{font-size:11.5px;color:#f0f8fb}
+.it .d{font-size:9.5px;color:#a3bbc6;line-height:1.55}
+.tg{font-size:8px;background:#234154;border-color:#35596c;color:#bad0da}
+.tg.p{background:#123d50;border-color:#286c81;color:#80d6e9}
+.tg.c{background:#342b4e;border-color:#62517e;color:#d4bfff}
+.ft{
+  padding:13px 15px 15px;
+  background:rgba(0,0,0,.1);
+  border-top-color:rgba(219,241,246,.13);
+  color:#92acb9;font-size:9.5px;
+}
+.ft b{color:#a9e1df}
+.ft .em{color:#b9b2e9}
+.mn{
+  position:fixed;left:292px;right:0;top:0;bottom:0;
+  min-width:0;overflow-y:auto;overflow-x:hidden;
+  background:
+    radial-gradient(900px 500px at 100% -10%,rgba(40,160,168,.055),transparent 60%),
+    #edf4f7;
+}
+.tb{
+  position:sticky;left:auto;right:auto;top:0;z-index:25;
+  height:auto;min-height:70px;
+  padding:10px clamp(16px,2.2vw,30px);
+  background:rgba(255,255,255,.97);
+  border-bottom:1px solid var(--pc-line);
+  box-shadow:0 3px 14px rgba(22,65,82,.045);
+  gap:14px;
+}
+.tbl{flex:1;min-width:0}
+.tb h2{font-size:16px;color:#1d4355;font-weight:780;letter-spacing:-.15px}
+.tb p{font-size:10.5px;color:#7b929e;line-height:1.5}
+.ac{gap:7px;flex-shrink:0}
+.bt{
+  min-height:35px;padding:7px 11px;border-radius:9px;
+  background:#f5fafb;border:1px solid #d8e7eb;
+  color:#496a78;font-size:10.5px;
+}
+.bt:hover{border-color:#9fcbd0;color:#167d85;background:#edf8f7}
+.bt.on{border-color:#e4c98a;background:#fff8e9;color:#9e721e}
+.mobile-menu{
+  display:none;
+  width:36px;height:36px;min-width:36px;
+  align-items:center;justify-content:center;
+  padding:0;font-size:17px;
+  background:#eff7f7;border-color:#d3e7e6;color:#287982;
+}
+.physchem-intro{
+  margin:18px clamp(16px,2.2vw,30px) 16px;
+  min-height:132px;padding:22px clamp(20px,2.7vw,35px);
+  border:1px solid #d4e7e9;border-radius:18px;
+  background:
+    radial-gradient(circle at 88% 5%,rgba(48,167,164,.13),transparent 25%),
+    linear-gradient(112deg,#fff 0%,#f0f8fa 58%,#eff8f5 100%);
+  box-shadow:0 8px 24px rgba(24,79,94,.045);
+}
+.physchem-intro .eyebrow{font-size:9.5px;color:#147f87;letter-spacing:1.8px;font-weight:850}
+.physchem-intro h2{font-size:clamp(20px,2vw,26px);font-weight:820;letter-spacing:-.5px;color:#193f52;margin:5px 0}
+.physchem-intro p{max-width:780px;font-size:11.5px;line-height:1.8;color:#5d7987}
+.physchem-intro .physchem-tags{gap:7px;margin-top:11px}
+.physchem-intro .physchem-tags span{
+  padding:5px 10px;border-radius:99px;
+  border:1px solid #d4e7e8;background:#fff;color:#3c7278;font-size:9.5px;
+}
+.physchem-intro .atom{
+  flex-basis:78px;width:78px;height:78px;border-radius:22px;
+  color:#eaffff;background:linear-gradient(145deg,#176f82,#38a19d);
+  border:1px solid rgba(255,255,255,.4);
+  box-shadow:0 12px 26px rgba(24,130,140,.17);
+}
+.sw{
+  position:relative;left:auto;right:auto;top:auto;bottom:auto;
+  height:clamp(340px,45vh,560px);
+  margin:0 clamp(16px,2.2vw,30px) 16px;
+  border:1px solid #1a3d56;border-radius:17px;
+  background:
+    radial-gradient(circle at 50% 0%,rgba(31,102,131,.18),transparent 55%),
+    linear-gradient(180deg,#0b1929,#07111e);
+  box-shadow:0 12px 30px rgba(16,42,59,.13);
+}
+#cv{width:100%;height:100%;display:block}
+.bt2{
+  position:relative;left:auto;right:auto;bottom:auto;
+  height:auto;
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:13px;
+  margin:0 clamp(16px,2.2vw,30px) 22px;
+}
+.bt2 .pnl,.bt2 .p1,.bt2 .p2,.bt2 .p3{
+  position:relative;top:auto;bottom:auto;left:auto;right:auto;
+  width:auto;height:260px;min-width:0;
+  padding:15px 15px;
+  border:1px solid #d9e7eb;border-radius:15px;
+  background:linear-gradient(180deg,#fff,#f8fbfc);
+  box-shadow:0 7px 21px rgba(21,66,83,.045);
+  overflow-y:auto;
+}
+.pnl h3{font-size:11.5px;color:#246b78;margin-bottom:13px}
+.bd{background:linear-gradient(135deg,#a89ae3,#77c9c6);color:#123944;border-radius:99px;padding:2px 7px}
+.pm{margin-bottom:13px}
+.pm .r{font-size:10.5px}
+.pm .r>span:first-child{color:#526f7c}
+.pm .v{
+  color:#127e85;background:#edf8f7;border-color:#d1e9e6;
+  font-size:10px;border-radius:7px;
+}
+input[type=range]{
+  background:linear-gradient(90deg,#75c5c2 0%,#2f9ca5 45%,#e3edef 100%);
+}
+input[type=range]::-webkit-slider-thumb{
+  background:linear-gradient(135deg,#fff,#2999a2);
+  box-shadow:0 0 0 4px rgba(36,149,154,.13),0 2px 6px rgba(19,81,93,.18);
+  border:2px solid #fff;
+}
+input[type=range]::-moz-range-thumb{background:linear-gradient(135deg,#fff,#2999a2);border:2px solid #fff}
+.fi{
+  white-space:normal;overflow-wrap:anywhere;
+  background:#f0f5fa;border:1px solid #dfe9f0;border-left:3px solid #8f83c3;
+  border-radius:8px;color:#64558f;padding:8px 9px;font-size:10px;
+}
+.ro{gap:7px}
+.r{
+  background:#f5fafb;border:1px solid #e2ecee;border-radius:9px;padding:9px;
+}
+.r .k{color:#708892;font-size:9px}
+.r .v{color:#187d68;font-size:11px;overflow-wrap:anywhere}
+.tt{font-size:10.5px;line-height:1.85;color:#4d6876;white-space:pre-wrap;word-break:break-word}
+.dr{
+  width:390px;max-width:94vw;
+  background:linear-gradient(180deg,#fff,#f3f8fa);
+  border-left:1px solid #d7e5e9;
+  box-shadow:-15px 0 38px rgba(18,53,68,.16);
+}
+.dh{padding:17px 19px;border-bottom:1px solid #dce8eb}
+.dh h3{color:#1b6572;font-size:13px}
+.dc{color:#68838e;border-radius:8px}
+.dc:hover{background:#edf6f6;color:#126e79}
+.archive-tools{background:#f8fbfc;border-bottom-color:#e0eaed}
+.archive-tools .bt,.archive-tools .archive-import{
+  color:#2a6b75;background:#eff7f7;border-color:#cfe2e3;border-radius:9px;
+}
+.archive-recovery-status{color:#80601e;background:#fff8e9;border-color:#ead8ad}
+.db{padding:14px}
+.rc{background:#fff;border:1px solid #dce8eb;border-radius:11px;box-shadow:0 3px 9px rgba(25,65,80,.03)}
+.rc .rn{color:#244b5b}
+.rc .rt{color:#7b929c}
+.rc .rp{color:#607986}
+.ep{color:#788f99;text-align:center;line-height:1.8;padding:26px 10px}
+.ts{
+  bottom:calc(20px + env(safe-area-inset-bottom));
+  background:rgba(20,54,68,.96);border-color:#53acae;color:#d8fbfa;
+  box-shadow:0 10px 24px rgba(11,36,49,.2);
+}
+.eb{
+  background:#fff8ea!important;color:#825d22!important;
+  border:1px solid #ead8b3!important;border-radius:10px!important;
+}
+.sidebar-backdrop{display:none}
+@media(max-width:1180px){
+  .sb{width:270px}
+  .mn{left:270px}
+  .bt2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .bt2 .p3{grid-column:1/-1}
+}
+@media(max-width:900px){
+  body{height:auto;min-height:100vh;overflow:auto}
+  .sb{
+    position:fixed;left:0;top:0;bottom:0;
+    width:min(86vw,320px);max-width:320px;
+    z-index:31;transform:translateX(-105%);
+    transition:transform .24s ease;
+    box-shadow:16px 0 38px rgba(0,0,0,.22);
+  }
+  .sb.open{transform:translateX(0)}
+  .sidebar-backdrop{
+    display:block;position:fixed;inset:0;z-index:30;
+    background:rgba(5,17,29,.4);backdrop-filter:blur(2px);
+    opacity:0;pointer-events:none;transition:opacity .2s;
+  }
+  .sidebar-backdrop.show{opacity:1;pointer-events:auto}
+  .mn{
+    position:relative;left:auto;right:auto;top:auto;bottom:auto;
+    min-height:100vh;overflow:visible;
+    background:#edf4f7;
+  }
+  .tb{
+    position:sticky;top:0;z-index:25;
+    min-height:62px;padding:9px 12px;gap:9px;
+    flex-wrap:wrap;
+  }
+  .mobile-menu{display:inline-flex;flex:0 0 36px}
+  .tbl{flex:1;min-width:130px}
+  .tb h2{font-size:14px}
+  .tb p{font-size:9.5px}
+  .ac{gap:5px}
+  .ac .bt{padding:6px 8px;font-size:9.5px}
+  .physchem-intro{margin:12px 13px 13px;padding:17px 16px;min-height:0}
+  .physchem-intro .atom{display:none}
+  .sw{height:clamp(310px,48vh,480px);margin:0 13px 13px;border-radius:14px}
+  .bt2{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0 13px 18px}
+  .bt2 .pnl,.bt2 .p1,.bt2 .p2,.bt2 .p3{height:250px;padding:13px}
+  .bt2 .p3{grid-column:1/-1;height:auto;min-height:190px}
+  .dr{width:min(430px,94vw);max-width:94vw}
+}
+@media(max-width:560px){
+  .tb{padding:8px 10px}
+  .tbl{min-width:0}
+  .tb h2{font-size:13px}
+  .tb p{max-width:190px;white-space:normal}
+  .ac{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:100%;padding-left:45px}
+  .ac .bt{min-width:0;justify-content:center}
+  .sw{height:360px;margin:0 10px 11px}
+  .physchem-intro{margin:10px 10px 12px;padding:15px}
+  .physchem-intro h2{font-size:19px}
+  .physchem-intro p{font-size:10.5px}
+  .bt2{grid-template-columns:1fr;margin:0 10px 16px;gap:10px}
+  .bt2 .pnl,.bt2 .p1,.bt2 .p2,.bt2 .p3{grid-column:auto;height:auto;max-height:none;min-height:210px;overflow:visible}
+  .ro{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .dr{width:100%;max-width:100%;height:100dvh}
+  .ts{max-width:calc(100vw - 28px);white-space:normal;text-align:center}
+}
+@media(max-width:380px){
+  .sw{height:320px}
+  .ac{padding-left:40px}
+  .ac .bt{font-size:8.5px;padding:6px 4px}
+  .physchem-intro .physchem-tags span{font-size:8px;padding:4px 7px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+@media print{
+  .sb,.tb,.mobile-menu,.sidebar-backdrop,.dr,.ts{display:none!important}
+  body,.mn,.sw,.bt2{position:static!important;width:100%!important;height:auto!important;overflow:visible!important;background:#fff!important;color:#111!important}
+  .sw{height:440px!important;border:1px solid #ccc!important}
+  .bt2{display:grid!important;grid-template-columns:repeat(3,1fr)!important;margin:12px 0!important}
+  .bt2 .pnl,.bt2 .p1,.bt2 .p2,.bt2 .p3{height:auto!important;color:#111!important;box-shadow:none!important;break-inside:avoid}
+}
