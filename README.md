@@ -25,8 +25,8 @@ Every model documents assumptions, units, numerical method, and domain limits. C
 
 ## Delivery status
 
-The modernization work is being applied directly to `main`. The current baseline includes a domain-core module, automated domain tests, standalone-app validation, and a GitHub Pages deployment workflow. These checks passing confirms the current baseline is buildable; it does **not** mean the full product rebuild is complete.
+The modernization work is being applied directly to `main`. The verified slice has a 100-experiment catalogue smoke check and a shared numerical core for ideal-gas pressure and molecular properties, Arrhenius kinetics, projectile motion, pendulum period, Ohm's law, inclined-plane motion, and spring oscillation. The catalogue routes key experiment readouts and tutor explanations through shared functions; regression tests cover physical-domain boundaries and extreme floating-point cases. Ideal-gas particle animations now disclose that their speed scale is illustrative rather than a real molecular trajectory. CI, tests, build, and Pages deployment pass.
 
-Remaining delivery work includes validating the existing application workflows and data, extracting maintainable modules from the legacy entry point, adding migration-safe persistence and import/export checks, and documenting verified domain rules. Existing user data and the legacy application must be preserved while these changes are introduced.
+Remaining delivery work includes reference datasets and citations for every experiment, more UI-to-domain integration across the full catalogue, explicit numerical error reporting, experiment notebooks and export, and browser-level testing. Simulated values and visual animations must not be presented as measured laboratory data.
 
 See [the rebuild plan](docs/REBUILD_PLAN.md) and [domain equations, units, and validity boundaries](docs/DOMAIN_CORE.md).
