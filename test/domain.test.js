@@ -42,4 +42,14 @@ test("spring oscillator shares acceleration, period and energy calculations",()=
 test("spring oscillator frequency avoids overflowing a ratio before its square root",()=>{ const result=springOscillator({massKg:1e-200,springConstantNPerM:1e200,displacementM:0,velocityMPerS:0}); assert.ok(Number.isFinite(result.angularFrequency)); assert.ok(Math.abs(result.angularFrequency/1e200-1)<1e-12); assert.ok(Number.isFinite(result.period)); assert.equal(result.acceleration,0); });
 test("spring acceleration avoids intermediate ratio overflow when the final result is finite",()=>{ const result=springOscillator({massKg:1e-200,springConstantNPerM:1e200,displacementM:1e-200,velocityMPerS:0}); assert.ok(Number.isFinite(result.acceleration)); assert.ok(Math.abs(result.acceleration/(-1e200)-1)<1e-12); });
 test("spring acceleration avoids intermediate ratio underflow when the final result is finite",()=>{ const result=springOscillator({massKg:1e200,springConstantNPerM:1e-200,displacementM:1e200,velocityMPerS:0}); assert.ok(Number.isFinite(result.acceleration)); assert.ok(Math.abs(result.acceleration/(-1e-200)-1)<1e-12); });
+test("spring kinetic and elastic energy survive early half-scale underflow",()=>{
+ const value=1e308;
+ const result=springOscillator({massKg:Number.MIN_VALUE,springConstantNPerM:Number.MIN_VALUE,displacementM:value,velocityMPerS:value});
+ const expected=Math.exp(Math.log(Number.MIN_VALUE)+2*Math.log(value)-Math.LN2);
+ assert.ok(Number.isFinite(result.kineticEnergy) && result.kineticEnergy>0);
+ assert.ok(Number.isFinite(result.elasticPotentialEnergy) && result.elasticPotentialEnergy>0);
+ assert.ok(Math.abs(result.kineticEnergy/expected-1)<1e-12);
+ assert.ok(Math.abs(result.elasticPotentialEnergy/expected-1)<1e-12);
+ assert.ok(Math.abs(result.totalEnergy/(2*expected)-1)<1e-12);
+});
 test("rejects finite inputs whose calculated results overflow",()=>{ assert.throws(()=>idealGasPressure({amountMol:1e308,temperatureK:300,volumeM3:1}),RangeError); assert.throws(()=>pendulumPeriod({lengthM:1e308,gravity:1e-308}),RangeError); assert.throws(()=>ohmsLaw({voltageV:1e308,resistanceOhm:1e-308}),RangeError); assert.throws(()=>springOscillator({massKg:1,springConstantNPerM:1,displacementM:1e308,velocityMPerS:0}),RangeError); assert.throws(()=>projectileMotion({initialSpeed:1e308,angleDeg:45,gravity:9.8}),RangeError); });
