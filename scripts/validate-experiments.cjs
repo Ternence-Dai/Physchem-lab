@@ -131,6 +131,8 @@ assert.ok(!gasBlock.includes('p.n*8.314*p.T'),
   'ideal-gas experiment must not duplicate an approximate gas constant in nRT calculations');
 assert.ok(gasBlock.split('PHYS_DOMAIN.idealGasParticleProperties').length - 1 >= 2,
   'ideal-gas readout and tutor must share molecular speed, kinetic-energy and number-density calculations');
+assert.ok(gasBlock.includes("平均平动动能（单分子）") && gasBlock.includes("单分子平均平动动能"),
+  'ideal-gas kinetic energy must be explicitly labelled per molecule');
 assert.ok(gasBlock.includes("动画速度按温度趋势视觉缩放") &&
   gasBlock.includes("不按真实 m/s 比例播放"),
   'ideal-gas animation must disclose that particle speed is schematic rather than a real-time molecular velocity');
