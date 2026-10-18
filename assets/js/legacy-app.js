@@ -111,16 +111,38 @@ var paused=false;
 var SAVE_KEY='physchem_lab_saved_experiments_v1';
 var saves=[];
 var storageRecoveryRequired=false;
+function isValidExperimentSave(item){
+  if(!item||typeof item!=='object'||Array.isArray(item))return false;
+  if(typeof item.name!=='string'||!item.name.trim()||item.name.length>160)return false;
+  if(typeof item.time!=='string'||!item.time.trim()||item.time.length>80)return false;
+  if(!item.params||typeof item.params!=='object'||Array.isArray(item.params))return false;
+  var keys=Object.keys(item.params);
+  if(keys.length<1||keys.length>30)return false;
+  return keys.every(function(key){
+    return /^[A-Za-z][A-Za-z0-9_]*$/.test(key)&&Number.isFinite(item.params[key]);
+  });
+}
+function isValidExperimentSaveList(value){
+  return Array.isArray(value)&&value.length<=30&&value.every(isValidExperimentSave);
+}
 try{
   var rawSaved=localStorage.getItem(SAVE_KEY);
   var restored=JSON.parse(rawSaved||'[]');
-  if(!Array.isArray(restored))throw new TypeError('实验存档格式不是数组');
-  saves=restored.slice(0,30);
+  if(!isValidExperimentSaveList(restored))throw new TypeError('实验存档内容或结构无效');
+  saves=restored;
 }catch(e){storageRecoveryRequired=true;console.warn('实验存档读取失败，已暂停覆盖写入；请先恢复或导出原始存档',e);}
 function persistExperimentSaves(nextSaves){
   if(storageRecoveryRequired)return false;
-  try{localStorage.setItem(SAVE_KEY,JSON.stringify(nextSaves));saves=nextSaves;return true;}
-  catch(e){storageRecoveryRequired=true;console.warn('实验存档写入失败，已启用恢复保护',e);return false;}
+  if(!isValidExperimentSaveList(nextSaves)){
+    console.warn('拒绝写入结构无效的实验存档；原有存档保持不变');
+    return false;
+  }
+  try{
+    var serialized=JSON.stringify(nextSaves);
+    localStorage.setItem(SAVE_KEY,serialized);
+    saves=JSON.parse(serialized);
+    return true;
+  }catch(e){storageRecoveryRequired=true;console.warn('实验存档写入失败，已启用恢复保护',e);return false;}
 }
 var typer=null;
 var started=false;
