@@ -131,7 +131,7 @@ EXP.push({id:'p5',name:'斜面滑动与摩擦力',cat:'物理',tags:['力学','�
 });
 
 /* 6. 理想气体 */
-EXP.push({id:'p6',name:'理想气体分子运动',cat:'化学',tags:['气体','热力学'],brief:'用粒子运动示意气体热运动；压强由理想气体状态方程计算，并非逐次模拟分子碰撞。',resetOnChange:false,
+EXP.push({id:'p6',name:'理想气体分子运动',cat:'化学',tags:['气体','热力学'],brief:'用粒子运动示意气体热运动；动画速度按温度趋势视觉缩放，不代表真实分子速度；压强由理想气体状态方程计算，并非逐次模拟分子碰撞。',resetOnChange:false,
   params:[P('T','热力学温度 T',100,900,10,300,'K'),P('V','体积 V',2,20,0.5,10,'L'),P('n','物质的量 n',0.2,2,0.1,1,'mol')],
   formulas:['PV=nRT','R=8.314462618 J/(mol·K)','Ēk=(3/2)kBT','v_rms=√(3RT/M)'],
   init:function(){var ps=[];for(var i=0;i<80;i++){var a=Math.random()*Math.PI*2;ps.push({x:Math.random(),y:Math.random(),vx:Math.cos(a),vy:Math.sin(a)});}return{ps:ps,t:0};},
@@ -169,7 +169,7 @@ EXP.push({id:'p6',name:'理想气体分子运动',cat:'化学',tags:['气体','�
   tutor:function(p){
     var P=window.PHYS_DOMAIN.idealGasPressure({amountMol:p.n,temperatureK:p.T,volumeM3:p.V/1000})/1000;
     var gas=window.PHYS_DOMAIN.idealGasParticleProperties({amountMol:p.n,temperatureK:p.T,volumeM3:p.V/1000,molarMassKgPerMol:0.02897});
-    return '【模型】理想气体：分子体积可忽略、分子间作用可忽略。微观上压强源于分子撞击器壁；本动画不逐次计算碰撞冲量，压强数值由 PV=nRT 状态方程计算。\n\n【参数】T='+p.T+' K, V='+F(p.V,1)+' L, n='+F(p.n,1)+' mol\n\n【推演】\n· P=nRT/V='+F(P,1)+' kPa\n· PV='+F(P*p.V,0)+' kPa·L\n· nRT='+F(P*p.V,0)+' J\n· 空气近似 v_rms='+F(gas.rmsSpeed,0)+' m/s（取摩尔质量 M=0.02897 kg/mol）\n· 平均平动动能='+F(gas.averageKineticEnergyJ*1e21,2)+'×10⁻²¹ J\n· 分子数密度='+F(gas.numberDensityPerM3/1e25,2)+'×10²⁵/m³\n\n【结论】'+(p.T>600?'高温，分子运动剧烈。':p.T<200?'低温，分子迟缓。':'P·V/(n·T) 始终=8.314462618，这就是 R 的物理意义。')+'\n\n【延伸】波义耳定律：T不变 P∝1/V。';
+    return '【模型】理想气体：分子体积可忽略、分子间作用可忽略。微观上压强源于分子撞击器壁；本动画粒子速度按温度趋势进行视觉缩放，不按真实 m/s 比例播放，也不逐次计算碰撞冲量；压强数值由 PV=nRT 状态方程计算。\n\n【参数】T='+p.T+' K, V='+F(p.V,1)+' L, n='+F(p.n,1)+' mol\n\n【推演】\n· P=nRT/V='+F(P,1)+' kPa\n· PV='+F(P*p.V,0)+' kPa·L\n· nRT='+F(P*p.V,0)+' J\n· 空气近似 v_rms='+F(gas.rmsSpeed,0)+' m/s（取摩尔质量 M=0.02897 kg/mol）\n· 平均平动动能='+F(gas.averageKineticEnergyJ*1e21,2)+'×10⁻²¹ J\n· 分子数密度='+F(gas.numberDensityPerM3/1e25,2)+'×10²⁵/m³\n\n【结论】'+(p.T>600?'高温，分子运动剧烈。':p.T<200?'低温，分子迟缓。':'P·V/(n·T) 始终=8.314462618，这就是 R 的物理意义。')+'\n\n【延伸】波义耳定律：T不变 P∝1/V。';
   }
 });
 
