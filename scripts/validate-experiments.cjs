@@ -2,7 +2,9 @@
 const fs = require('node:fs');
 const vm = require('node:vm');
 const assert = require('node:assert/strict');
-const html = fs.readFileSync('index.html', 'utf8') + '\n' + fs.readFileSync('assets/js/experiment-catalogue.js', 'utf8') + '\n' + fs.readFileSync('assets/js/legacy-app.js', 'utf8');
+const pageHtml = fs.readFileSync('index.html', 'utf8');
+const app = fs.readFileSync('assets/js/legacy-app.js', 'utf8');
+const html = pageHtml + '\n' + fs.readFileSync('assets/js/experiment-catalogue.js', 'utf8') + '\n' + app;
 const catalogue = fs.readFileSync('assets/js/experiment-catalogue.js', 'utf8');
 const productCss = fs.readFileSync('assets/css/product-system.css', 'utf8');
 assert.ok(html.includes('product-system.css?v=20261018-v3'),
