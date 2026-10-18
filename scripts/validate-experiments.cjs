@@ -104,6 +104,11 @@ assert.ok((ohmBlock.match(/PHYS_DOMAIN\.ohmsLaw/g)||[]).length >= 4,
   'Ohm experiment animation, drawing, readout and tutor must share the domain solver');
 assert.doesNotMatch(ohmBlock, /I=p\.U\/p\.R|var I=p\.U\/p\.R/,
   'Ohm experiment must not duplicate its current calculation outside the domain core');
+assert.ok(ohmBlock.includes("electrical.powerW") && ohmBlock.includes("electrical.heatJPerMinute"),
+  'Ohm drawing, readout and tutor must display power and heat from the shared domain result');
+assert.doesNotMatch(ohmBlock, /I\\*I\\*p\\.R\\*60|p\\.U\\*I/,
+  'Ohm UI must not recompute power or Joule heat outside the shared domain solver');
+
 const inclineBlock = catalogue.slice(catalogue.indexOf("id:'p5'"), catalogue.indexOf("id:'p6'"));
 assert.ok((inclineBlock.match(/PHYS_DOMAIN\.inclinedPlaneAcceleration/g)||[]).length >= 4,
   'inclined-plane animation, drawing, readout and tutor must share the domain solver');
