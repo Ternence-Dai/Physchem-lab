@@ -1,4 +1,7 @@
 export const GAS_CONSTANT = 8.31446261815324;
+export const AVOGADRO_CONSTANT = 6.02214076e23;
+export const BOLTZMANN_CONSTANT = GAS_CONSTANT / AVOGADRO_CONSTANT;
+
 
 function finiteResult(value, label) {
   const values = typeof value === "number" ? [value] : Object.values(value);
@@ -33,6 +36,28 @@ export function idealGasPressure({ amountMol, temperatureK, volumeM3 }) {
   // amount/volume underflow does not erase a representable final pressure.
   return finiteResult(Math.exp(Math.log(amountMol) - Math.log(volumeM3) + Math.log(GAS_CONSTANT) + Math.log(temperatureK)), "ideal gas pressure");
 }
+export function idealGasParticleProperties({ amountMol, temperatureK, volumeM3, molarMassKgPerMol }) {
+  for (const [name, value] of Object.entries({ amountMol, temperatureK, volumeM3, molarMassKgPerMol })) {
+    if (!Number.isFinite(value)) throw new TypeError(`${name} must be finite`);
+  }
+  if (amountMol < 0 || temperatureK <= 0 || volumeM3 <= 0 || molarMassKgPerMol <= 0) {
+    throw new RangeError("amount must be non-negative; temperature, volume and molar mass must be positive");
+  }
+  // Log-space products avoid losing representable outputs to intermediate
+  // overflow/underflow when finite inputs span very different magnitudes.
+  const rmsSpeed = Math.exp(0.5 * (Math.log(3) + Math.log(GAS_CONSTANT) +
+    Math.log(temperatureK) - Math.log(molarMassKgPerMol)));
+  const averageKineticEnergyJ = Math.exp(Math.log(1.5) +
+    Math.log(BOLTZMANN_CONSTANT) + Math.log(temperatureK));
+  const numberDensityPerM3 = amountMol === 0 ? 0
+    : Math.exp(Math.log(amountMol) + Math.log(AVOGADRO_CONSTANT) - Math.log(volumeM3));
+  return Object.freeze(finiteResult({
+    rmsSpeed,
+    averageKineticEnergyJ,
+    numberDensityPerM3
+  }, "ideal-gas particle properties"));
+}
+
 export function arrheniusRateConstant({ preExponentialFactor, activationEnergyJPerMol, temperatureK }) {
   for (const [name,value] of Object.entries({preExponentialFactor,activationEnergyJPerMol,temperatureK})) if (!Number.isFinite(value)) throw new TypeError(`${name} must be finite`);
   if (preExponentialFactor < 0 || activationEnergyJPerMol < 0 || temperatureK <= 0) throw new RangeError("Arrhenius parameters are outside their physical domain");
