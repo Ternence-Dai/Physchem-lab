@@ -46,7 +46,7 @@ function load(storage) {
   assert.notEqual(api.saves, next, 'saved archive must be a defensive copy');
 }
 {
-  const original = '[{"name":"old"}]';
+  const original = '[{"name":"old","time":"2026-10-18 08:00:00","params":{"v0":32}}]';
   const storage = { getItem: () => original, setItem() { throw new Error('quota exceeded'); } };
   const api = load(storage);
   assert.equal(api.persistExperimentSaves([{name:'new'}]), false, 'quota failure must report failure');
