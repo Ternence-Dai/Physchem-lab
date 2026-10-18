@@ -52,7 +52,12 @@ export function ohmsLaw({voltageV,resistanceOhm}) {
   for (const [name,value] of Object.entries({voltageV,resistanceOhm})) if (!Number.isFinite(value)) throw new TypeError(`${name} must be finite`);
   if (resistanceOhm <= 0) throw new RangeError("resistance must be positive");
   const currentA=voltageV/resistanceOhm;
-  return Object.freeze(finiteResult({currentA,powerW:voltageV*currentA,heatJPerMinute:currentA*currentA*resistanceOhm*60}, "Ohm's law result"));
+  const powerW=voltageV*currentA;
+  // Joule heating is electrical power integrated over one minute. Reuse the
+  // validated power result instead of squaring current first, which can
+  // overflow even when multiplying I² by a tiny resistance would be finite.
+  const heatJPerMinute=powerW*60;
+  return Object.freeze(finiteResult({currentA,powerW,heatJPerMinute}, "Ohm's law result"));
 }
 export function inclinedPlaneAcceleration({angleDeg,frictionCoefficient,gravity=9.8}) {
   for (const [name,value] of Object.entries({angleDeg,frictionCoefficient,gravity})) if (!Number.isFinite(value)) throw new TypeError(`${name} must be finite`);
