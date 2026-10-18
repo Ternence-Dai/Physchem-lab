@@ -129,3 +129,11 @@ assert.ok(gasBlock.split('PHYS_DOMAIN.idealGasPressure').length - 1 >= 3,
   'ideal-gas animation, readout and tutor must use the shared SI pressure calculation');
 assert.ok(!gasBlock.includes('p.n*8.314*p.T'),
   'ideal-gas experiment must not duplicate an approximate gas constant in nRT calculations');
+assert.ok(gasBlock.split('PHYS_DOMAIN.idealGasParticleProperties').length - 1 >= 2,
+  'ideal-gas readout and tutor must share molecular speed, kinetic-energy and number-density calculations');
+for (const duplicate of ['3*8.314', '1.381e-23', '6.022e23']) {
+  assert.ok(!gasBlock.includes(duplicate),
+    'ideal-gas particle metrics must use shared domain constants rather than duplicate ' + duplicate);
+}
+assert.ok(gasBlock.includes('BOLTZMANN') === false,
+  'particle constants should remain encapsulated in the domain solver');
