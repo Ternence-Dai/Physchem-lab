@@ -6,6 +6,10 @@ const html = fs.readFileSync('index.html', 'utf8') + '\n' + fs.readFileSync('ass
 const start = html.indexOf("var SAVE_KEY='physchem_lab_saved_experiments_v1';");
 const end = html.indexOf('\nvar typer=null;', start);
 assert.ok(start >= 0 && end > start, 'experiment archive persistence section must exist');
+assert.match(html, /ARCHIVE_MODEL_VERSION='physchem-engine-v2'/, 'new PhysChem archives must carry an explicit model version');
+assert.match(html, /experimentId:String\(cur\.id\|\|''\)/, 'new PhysChem archives must record the selected experiment identity');
+assert.match(html, /旧版模型/, 'archive UI must identify archives created before model metadata existed');
+
 const source = html.slice(start, end);
 function load(storage) {
   const sandbox = { localStorage: storage, console: { warn() {} }, JSON };
@@ -129,4 +133,17 @@ console.log('Physchem archive recovery checks passed (corrupt JSON, invalid shap
   assert.equal(writes,0,'invalid save attempts must not touch local storage');
   assert.equal(api.locked,false,'a rejected new save is not proof that existing storage is corrupt');
   assert.equal(api.saves.length,0,'rejected saves must not mutate in-memory archive state');
+}
+
+
+{
+  let writes=0;
+  const storage={getItem:()=> '[]',setItem(key,value){writes++;}};
+  const api=load(storage);
+  assert.equal(api.persistExperimentSaves([
+    {name:'versioned',experimentId:'p1',modelVersion:'physchem-engine-v2',time:'2026-10-18',params:{v0:32}}
+  ]),true,'versioned experiment archive metadata must be accepted');
+  assert.equal(writes,1);
+  assert.equal(api.saves[0].experimentId,'p1');
+  assert.equal(api.saves[0].modelVersion,'physchem-engine-v2');
 }
