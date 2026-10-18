@@ -106,7 +106,7 @@ assert.doesNotMatch(ohmBlock, /I=p\.U\/p\.R|var I=p\.U\/p\.R/,
   'Ohm experiment must not duplicate its current calculation outside the domain core');
 assert.ok(ohmBlock.includes("electrical.powerW") && ohmBlock.includes("electrical.heatJPerMinute"),
   'Ohm drawing, readout and tutor must display power and heat from the shared domain result');
-assert.doesNotMatch(ohmBlock, /I\\*I\\*p\\.R\\*60|p\\.U\\*I/,
+assert.doesNotMatch(ohmBlock, /I\*I\*p\.R\*60|p\.U\*I/,
   'Ohm UI must not recompute power or Joule heat outside the shared domain solver');
 assert.ok(ohmBlock.includes("电荷流率") && ohmBlock.includes("C/s"),
   'Ohm readout must express current as charge flow per second, not charge in coulombs');
