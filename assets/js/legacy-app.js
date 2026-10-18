@@ -109,6 +109,7 @@ var W=800,H=500;
 var cur=null,P={},ST={};
 var paused=false;
 var SAVE_KEY='physchem_lab_saved_experiments_v1';
+var ARCHIVE_MODEL_VERSION='physchem-engine-v2';
 var saves=[];
 var storageRecoveryRequired=false;
 var archiveRawValue=null;
@@ -117,6 +118,8 @@ function isValidExperimentSave(item){
   if(!item||typeof item!=='object'||Array.isArray(item))return false;
   if(typeof item.name!=='string'||!item.name.trim()||item.name.length>160)return false;
   if(typeof item.time!=='string'||!item.time.trim()||item.time.length>80)return false;
+  if(item.experimentId!==undefined && (typeof item.experimentId!=='string'||!item.experimentId.trim()||item.experimentId.length>80))return false;
+  if(item.modelVersion!==undefined && (typeof item.modelVersion!=='string'||!item.modelVersion.trim()||item.modelVersion.length>80))return false;
   if(!item.params||typeof item.params!=='object'||Array.isArray(item.params))return false;
   var keys=Object.keys(item.params);
   if(keys.length<1||keys.length>30)return false;
@@ -384,7 +387,7 @@ function bindUI(){
     var b=E('bp');if(b){b.textContent='⏸ 暂停';b.className='bt';}refreshTutor(true);toast('实验已重置 ↺');};
   var bs=E('bs');if(bs)bs.onclick=function(){if(!cur)return;
     if(storageRecoveryRequired){toast('存档恢复保护已启用：为避免覆盖旧数据，本次保存已暂停');return;}
-    var nextSaves=[{name:cur.name,time:new Date().toLocaleString('zh-CN',{hour12:false}),params:JSON.parse(JSON.stringify(P))}].concat(saves).slice(0,30);
+    var nextSaves=[{name:cur.name,experimentId:String(cur.id||''),modelVersion:ARCHIVE_MODEL_VERSION,time:new Date().toLocaleString('zh-CN',{hour12:false}),params:JSON.parse(JSON.stringify(P))}].concat(saves).slice(0,30);
     if(persistExperimentSaves(nextSaves))toast('实验档案已保存到本机 ✓');
     else toast('存档写入失败或恢复保护已启用；原有档案未被覆盖');
     updateSI();renderD();syncArchiveRecoveryUI();};
@@ -408,7 +411,8 @@ function renderD(){
   b.innerHTML='';for(var i=0;i<saves.length;i++){var s=saves[i];
     var d=document.createElement('div');d.className='rc';
     var parts=[];for(var k in s.params)if(s.params.hasOwnProperty(k))parts.push(esc(k)+'='+esc(typeof s.params[k]==='number'?+s.params[k].toFixed(3):s.params[k]));
-    d.innerHTML='<div class="rh"><span class="rn">'+(i+1)+'. '+esc(s.name)+'</span><span class="rt">'+esc(s.time)+'</span></div><div class="rp">'+parts.join('  ')+'</div>';
+    var meta=(s.experimentId?'实验ID '+esc(s.experimentId):'旧版存档 · 未记录实验ID')+' · '+(s.modelVersion?esc(s.modelVersion):'旧版模型');
+    d.innerHTML='<div class="rh"><span class="rn">'+(i+1)+'. '+esc(s.name)+'</span><span class="rt">'+esc(s.time)+'</span></div><div class="rp">'+meta+'<br>'+parts.join('  ')+'</div>';
     b.appendChild(d);}
 }
 var tT=null;
