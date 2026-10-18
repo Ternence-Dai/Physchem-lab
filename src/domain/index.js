@@ -31,7 +31,7 @@ export function pendulumPeriod({lengthM,gravity}) {
 }
 export function ohmsLaw({voltageV,resistanceOhm}) {
   for (const [name,value] of Object.entries({voltageV,resistanceOhm})) if (!Number.isFinite(value)) throw new TypeError(`${name} must be finite`);
-  if (voltageV < 0 || resistanceOhm <= 0) throw new RangeError("voltage must be non-negative and resistance positive");
+  if (resistanceOhm <= 0) throw new RangeError("resistance must be positive");
   const currentA=voltageV/resistanceOhm;
   return Object.freeze(finiteResult({currentA,powerW:voltageV*currentA,heatJPerMinute:currentA*currentA*resistanceOhm*60}, "Ohm's law result"));
 }
