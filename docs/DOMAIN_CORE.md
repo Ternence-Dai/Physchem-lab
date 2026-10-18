@@ -40,3 +40,8 @@ These checks establish software consistency and selected numerical properties; t
 - [Cantera](https://github.com/Cantera/cantera) is a reference for thermodynamic and kinetic model organization, explicit physical state, and reproducible scientific computation. Its chemistry models are not automatically interchangeable with the simplified teaching experiments in this project.
 - [Astropy](https://github.com/astropy/astropy) and [SciPy](https://github.com/scipy/scipy) provide useful examples of unit-aware scientific data handling and numerical-method discipline. Any solver adopted here must expose assumptions, convergence or error information, and a benchmark case.
 - Passing the local numerical regression suite establishes software behavior for the included cases; it does not establish experimental validation or make the illustrative particle animation a molecular-dynamics trajectory.
+
+
+## Inclined-plane boundary conditions
+
+The ideal inclined-plane acceleration model accepts angles from 0° through 90°. At exactly 90°, the normal force and friction contribution are exactly zero, so the implementation returns gravitational acceleration directly instead of relying on the floating-point approximation of cos(π/2). Angles above 90° are outside this model's defined domain.
