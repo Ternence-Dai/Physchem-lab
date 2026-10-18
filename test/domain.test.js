@@ -20,6 +20,12 @@ test("Arrhenius prefactor recovers a representable rate after exponential underf
  assert.ok(Number.isFinite(rate) && rate>0);
  assert.ok(Math.abs(rate/Math.exp(Math.log(1e308)-exponent)-1)<1e-12);
 });
+test("Arrhenius exponent avoids underflow before division by a tiny temperature",()=>{
+ const rate=arrheniusRateConstant({preExponentialFactor:1,activationEnergyJPerMol:Number.MIN_VALUE,temperatureK:Number.MIN_VALUE});
+ const expected=Math.exp(-1/8.31446261815324);
+ assert.ok(Number.isFinite(rate) && rate>0);
+ assert.ok(Math.abs(rate/expected-1)<1e-12);
+});
 test("projectile motion decomposes velocity and returns trajectory invariants",()=>{ const p=projectileMotion({initialSpeed:20,angleDeg:45,gravity:9.8}); assert.ok(Math.abs(p.range-20*20/9.8)<1e-10); assert.ok(Math.abs(p.horizontalVelocity-p.verticalVelocity)<1e-10); assert.throws(()=>projectileMotion({initialSpeed:20,angleDeg:100,gravity:9.8}),RangeError); });
 test("pendulum period scales with square root of length",()=>{ const a=pendulumPeriod({lengthM:1,gravity:9.8}), b=pendulumPeriod({lengthM:4,gravity:9.8}); assert.ok(Math.abs(b/a-2)<1e-12); assert.throws(()=>pendulumPeriod({lengthM:0,gravity:9.8}),RangeError); });
 test("pendulum period avoids overflowing a ratio before taking its square root",()=>{ const period=pendulumPeriod({lengthM:1e200,gravity:1e-200}); assert.ok(Number.isFinite(period)); assert.ok(Math.abs(period/(2*Math.PI*1e200)-1)<1e-12); });
