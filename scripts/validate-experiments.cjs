@@ -108,6 +108,8 @@ assert.ok(ohmBlock.includes("electrical.powerW") && ohmBlock.includes("electrica
   'Ohm drawing, readout and tutor must display power and heat from the shared domain result');
 assert.doesNotMatch(ohmBlock, /I\\*I\\*p\\.R\\*60|p\\.U\\*I/,
   'Ohm UI must not recompute power or Joule heat outside the shared domain solver');
+assert.ok(ohmBlock.includes("电荷流率") && ohmBlock.includes("C/s"),
+  'Ohm readout must express current as charge flow per second, not charge in coulombs');
 
 const inclineBlock = catalogue.slice(catalogue.indexOf("id:'p5'"), catalogue.indexOf("id:'p6'"));
 assert.ok((inclineBlock.match(/PHYS_DOMAIN\.inclinedPlaneAcceleration/g)||[]).length >= 4,
