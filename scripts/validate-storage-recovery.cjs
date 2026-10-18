@@ -49,7 +49,7 @@ function load(storage) {
   const original = '[{"name":"old","time":"2026-10-18 08:00:00","params":{"v0":32}}]';
   const storage = { getItem: () => original, setItem() { throw new Error('quota exceeded'); } };
   const api = load(storage);
-  assert.equal(api.persistExperimentSaves([{name:'new'}]), false, 'quota failure must report failure');
+  assert.equal(api.persistExperimentSaves([{name:'new',time:'2026-10-18 08:01:00',params:{v0:45}}]), false, 'quota failure must report failure');
   assert.equal(api.locked, true, 'write failure must activate recovery lock');
   assert.equal(api.saves[0].name, 'old', 'in-memory archive must roll back to the previously loaded records');
 }
