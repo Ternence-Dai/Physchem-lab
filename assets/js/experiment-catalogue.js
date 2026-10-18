@@ -83,7 +83,7 @@ EXP.push({id:'p4',name:'欧姆定律电路',cat:'物理',tags:['电学','电流'
   formulas:['I=U/R','P=U·I=I²R=U²/R','Q=I²R·t'],
   init:function(){return{s:0,t:0};},
   step:function(p,dt,st){var I=window.PHYS_DOMAIN.ohmsLaw({voltageV:p.U,resistanceOhm:p.R}).currentA;var sp=Math.min(0.55,I*0.035);st.s=(st.s+sp*dt)%1;st.t+=dt;},
-  draw:function(c,W,H,p,st){var x0=W*0.16,x1=W*0.84,y0=78,y1=H-88,I=window.PHYS_DOMAIN.ohmsLaw({voltageV:p.U,resistanceOhm:p.R}).currentA,cy=(y0+y1)/2;
+  draw:function(c,W,H,p,st){var x0=W*0.16,x1=W*0.84,y0=78,y1=H-88,electrical=window.PHYS_DOMAIN.ohmsLaw({voltageV:p.U,resistanceOhm:p.R}),I=electrical.currentA,cy=(y0+y1)/2;
     c.strokeStyle='#3b5a80';c.lineWidth=4;c.lineJoin='round';c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y0);c.lineTo(x1,y1);c.lineTo(x0,y1);c.lineTo(x0,y0);c.stroke();
     c.strokeStyle='#fbbf24';c.lineWidth=4;c.lineCap='round';c.beginPath();c.moveTo(x0-18,cy-11);c.lineTo(x0+18,cy-11);c.stroke();c.beginPath();c.moveTo(x0-10,cy+9);c.lineTo(x0+10,cy+9);c.stroke();
     var rw=104,rh=34;c.fillStyle='#0e1626';rr(c,W/2-rw/2,y0-rh/2,rw,rh,6);c.fill();
@@ -92,10 +92,10 @@ EXP.push({id:'p4',name:'欧姆定律电路',cat:'物理',tags:['电学','电流'
     for(var i=0;i<64;i++){var ss=(st.s+i/64)%1;var p2=ptR(ss,x0,y0,x1,y1);
       var gr=c.createRadialGradient(p2[0],p2[1],0,p2[0],p2[1],7);gr.addColorStop(0,'rgba(56,189,248,1)');gr.addColorStop(1,'rgba(56,189,248,0)');
       c.fillStyle=gr;c.beginPath();c.arc(p2[0],p2[1],7,0,7);c.fill();c.fillStyle='#7dd3fc';c.beginPath();c.arc(p2[0],p2[1],2.4,0,7);c.fill();}
-    pl(c,'I='+F(I,3)+' A',26,22,'rgba(244,114,182,.14)','#f472b6');pl(c,'P='+F(p.U*I,2)+' W',26,52,'rgba(52,211,153,.14)','#34d399');pl(c,'U='+F(p.U,1)+' V',26,82,'rgba(251,191,36,.14)','#fbbf24');
+    pl(c,'I='+F(I,3)+' A',26,22,'rgba(244,114,182,.14)','#f472b6');pl(c,'P='+F(electrical.powerW,2)+' W',26,52,'rgba(52,211,153,.14)','#34d399');pl(c,'U='+F(p.U,1)+' V',26,82,'rgba(251,191,36,.14)','#fbbf24');
   },
-  readout:function(p){var I=window.PHYS_DOMAIN.ohmsLaw({voltageV:p.U,resistanceOhm:p.R}).currentA;return[{k:'电流 I',v:F(I,3)+' A'},{k:'电功率 P',v:F(p.U*I,2)+' W'},{k:'1分钟发热',v:F(I*I*p.R*60,1)+' J'},{k:'电阻 R',v:F(p.R,0)+' Ω'},{k:'电压 U',v:F(p.U,1)+' V'},{k:'每秒电荷',v:F(I,3)+' C'}];},
-  tutor:function(p){var I=window.PHYS_DOMAIN.ohmsLaw({voltageV:p.U,resistanceOhm:p.R}).currentA;return '【模型】I=U/R，P=UI。\n\n【参数】U='+F(p.U,1)+' V, R='+F(p.R,0)+' Ω\n\n【推演】\n· I=U/R='+F(I,3)+' A\n· P='+F(p.U*I,2)+' W\n· Q=I²Rt='+F(I*I*p.R*60,1)+' J (60s)\n\n【结论】'+(p.R<5?'电阻很小，电流大，发热惊人——这就是短路。':p.R>40?'电阻大，电流被限制。':'电压翻倍→电流翻倍→功率4倍。');}
+  readout:function(p){var electrical=window.PHYS_DOMAIN.ohmsLaw({voltageV:p.U,resistanceOhm:p.R});return[{k:'电流 I',v:F(electrical.currentA,3)+' A'},{k:'电功率 P',v:F(electrical.powerW,2)+' W'},{k:'1分钟发热',v:F(electrical.heatJPerMinute,1)+' J'},{k:'电阻 R',v:F(p.R,0)+' Ω'},{k:'电压 U',v:F(p.U,1)+' V'},{k:'每秒电荷',v:F(electrical.currentA,3)+' C'}];},
+  tutor:function(p){var electrical=window.PHYS_DOMAIN.ohmsLaw({voltageV:p.U,resistanceOhm:p.R});return '【模型】I=U/R，P=UI。\n\n【参数】U='+F(p.U,1)+' V, R='+F(p.R,0)+' Ω\n\n【推演】\n· I=U/R='+F(electrical.currentA,3)+' A\n· P='+F(electrical.powerW,2)+' W\n· Q=Pt='+F(electrical.heatJPerMinute,1)+' J (60s)\n\n【结论】'+(p.R<5?'电阻很小，电流大，发热惊人——这就是短路。':p.R>40?'电阻大，电流被限制。':'电压翻倍→电流翻倍→功率4倍。');}
 });
 
 /* 5. 斜面运动 */
