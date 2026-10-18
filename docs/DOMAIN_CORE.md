@@ -34,3 +34,9 @@ This document describes the shared numerical functions in `src/domain/index.js`.
 The domain tests in `test/domain.test.js` cover reference cases, ideal-gas molecular properties, physical-domain rejection, finite-result checks, and numerical edge cases. `scripts/validate-experiments.cjs` checks that the catalogue calls the shared solver for pressure and molecular properties and displays the correct unit and result fields.
 
 These checks establish software consistency and selected numerical properties; they do not independently validate every model against laboratory measurements or a full scientific reference dataset.
+
+## Open-source scientific-computing references
+
+- [Cantera](https://github.com/Cantera/cantera) is a reference for thermodynamic and kinetic model organization, explicit physical state, and reproducible scientific computation. Its chemistry models are not automatically interchangeable with the simplified teaching experiments in this project.
+- [Astropy](https://github.com/astropy/astropy) and [SciPy](https://github.com/scipy/scipy) provide useful examples of unit-aware scientific data handling and numerical-method discipline. Any solver adopted here must expose assumptions, convergence or error information, and a benchmark case.
+- Passing the local numerical regression suite establishes software behavior for the included cases; it does not establish experimental validation or make the illustrative particle animation a molecular-dynamics trajectory.
