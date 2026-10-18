@@ -7,8 +7,19 @@ import {
 
 test("ideal gas law returns SI pressure",()=>{ const p=idealGasPressure({amountMol:1,temperatureK:273.15,volumeM3:0.022414}); assert.ok(Math.abs(p-101325)<1200); });
 test("ideal gas calculation avoids avoidable intermediate overflow",()=>{ const pressure=idealGasPressure({amountMol:1e308,temperatureK:1e100,volumeM3:1e308}); assert.ok(Number.isFinite(pressure)); assert.ok(Math.abs(pressure/(8.31446261815324e100)-1)<1e-12); });
+test("ideal gas calculation recovers a representable result after ratio underflow",()=>{
+ const pressure=idealGasPressure({amountMol:1e-200,temperatureK:1e200,volumeM3:1e200});
+ assert.ok(Number.isFinite(pressure) && pressure>0);
+ assert.ok(Math.abs(pressure/(8.31446261815324e-200)-1)<1e-12);
+});
 test("rejects non-positive absolute temperature and volume",()=>{ assert.throws(()=>idealGasPressure({amountMol:1,temperatureK:0,volumeM3:1}),RangeError); assert.throws(()=>idealGasPressure({amountMol:1,temperatureK:300,volumeM3:0}),RangeError); });
 test("Arrhenius rate increases with temperature for positive activation energy",()=>{ const a=arrheniusRateConstant({preExponentialFactor:1e7,activationEnergyJPerMol:50000,temperatureK:300}); const b=arrheniusRateConstant({preExponentialFactor:1e7,activationEnergyJPerMol:50000,temperatureK:350}); assert.ok(b>a); });
+test("Arrhenius prefactor recovers a representable rate after exponential underflow",()=>{
+ const temperatureK=300, exponent=746;
+ const rate=arrheniusRateConstant({preExponentialFactor:1e308,activationEnergyJPerMol:exponent*8.31446261815324*temperatureK,temperatureK});
+ assert.ok(Number.isFinite(rate) && rate>0);
+ assert.ok(Math.abs(rate/Math.exp(Math.log(1e308)-exponent)-1)<1e-12);
+});
 test("projectile motion decomposes velocity and returns trajectory invariants",()=>{ const p=projectileMotion({initialSpeed:20,angleDeg:45,gravity:9.8}); assert.ok(Math.abs(p.range-20*20/9.8)<1e-10); assert.ok(Math.abs(p.horizontalVelocity-p.verticalVelocity)<1e-10); assert.throws(()=>projectileMotion({initialSpeed:20,angleDeg:100,gravity:9.8}),RangeError); });
 test("pendulum period scales with square root of length",()=>{ const a=pendulumPeriod({lengthM:1,gravity:9.8}), b=pendulumPeriod({lengthM:4,gravity:9.8}); assert.ok(Math.abs(b/a-2)<1e-12); assert.throws(()=>pendulumPeriod({lengthM:0,gravity:9.8}),RangeError); });
 test("pendulum period avoids overflowing a ratio before taking its square root",()=>{ const period=pendulumPeriod({lengthM:1e200,gravity:1e-200}); assert.ok(Number.isFinite(period)); assert.ok(Math.abs(period/(2*Math.PI*1e200)-1)<1e-12); });
