@@ -9,7 +9,7 @@ assert.ok(start >= 0 && end > start, 'experiment archive persistence section mus
 const source = html.slice(start, end);
 function load(storage) {
   const sandbox = { localStorage: storage, console: { warn() {} }, JSON };
-  vm.runInNewContext(source + '\nthis.api={get saves(){return saves;},get locked(){return storageRecoveryRequired;},persistExperimentSaves,isValidExperimentSave,isValidExperimentSaveList};', sandbox);
+  vm.runInNewContext(source + '\nthis.api={get saves(){return saves;},get locked(){return storageRecoveryRequired;},persistExperimentSaves,isValidExperimentSave,isValidExperimentSaveList,buildExperimentArchiveBackup,restoreExperimentArchive};', sandbox);
   return sandbox.api;
 }
 {
@@ -53,6 +53,56 @@ function load(storage) {
   assert.equal(api.locked, true, 'write failure must activate recovery lock');
   assert.equal(api.saves[0].name, 'old', 'in-memory archive must roll back to the previously loaded records');
 }
+
+{
+  const original = '[broken-cache-bytes';
+  let persisted = null;
+  const storage = { getItem: () => original, setItem: (key,value) => {persisted={key,value};} };
+  const api = load(storage);
+  const backup = api.buildExperimentArchiveBackup();
+  assert.equal(backup.format,'physchem-lab-archive-recovery',
+    'a damaged archive must export a recovery envelope rather than fallback data');
+  assert.equal(backup.storageKey,'physchem_lab_saved_experiments_v1');
+  assert.equal(backup.rawValue,original,'recovery export must preserve the exact original raw bytes');
+  assert.equal(api.restoreExperimentArchive([{name:'recovered',time:'2026-10-18',params:{v0:34}}]),true,
+    'a valid explicit backup must restore a locked archive');
+  assert.equal(api.locked,false,'successful archive restore must release the recovery lock');
+  assert.equal(api.saves[0].name,'recovered');
+  assert.equal(JSON.parse(persisted.value)[0].name,'recovered');
+}
+{
+  const original='[broken-cache-bytes';
+  const storage={getItem:()=>original,setItem(){throw new Error('quota exceeded');}};
+  const api=load(storage);
+  const before=api.buildExperimentArchiveBackup();
+  assert.equal(api.restoreExperimentArchive([{name:'replacement',time:'2026-10-18',params:{v0:35}}]),false,
+    'storage failure must not report a successful archive restore');
+  assert.equal(api.locked,true,'failed archive restore must retain recovery lock');
+  assert.equal(api.buildExperimentArchiveBackup().rawValue,before.rawValue,
+    'failed archive restore must retain exact original bytes');
+}
+{
+  let saved=null;
+  const storage={getItem:()=>null,setItem:(key,value)=>{saved={key,value};}};
+  const api=load(storage);
+  const backup=api.buildExperimentArchiveBackup();
+  assert.ok(Array.isArray(backup),'healthy archive export must be a portable JSON array');
+  assert.equal(api.restoreExperimentArchive({name:'invalid'}),false,
+    'invalid backup objects must not overwrite the current archive');
+  const envelope={format:'physchem-lab-archive-recovery',version:1,
+    storageKey:'physchem_lab_saved_experiments_v1',rawValue:'[{"name":"from-envelope","time":"2026-10-18","params":{"v0":40}}]'};
+  assert.equal(api.restoreExperimentArchive(envelope),true,
+    'a valid recovery envelope must restore its embedded raw archive');
+  assert.equal(JSON.parse(saved.value)[0].name,'from-envelope');
+}
+{
+  const storage={getItem(){throw new Error('storage unavailable');},setItem(){throw new Error('still unavailable');}};
+  const api=load(storage);
+  const backup=api.buildExperimentArchiveBackup();
+  assert.equal(backup.readFailed,true,'unreadable storage must be disclosed in the recovery package');
+  assert.equal(backup.rawValue,null,'the app must not invent raw content when storage cannot be read');
+}
+
 console.log('Physchem archive recovery checks passed (corrupt JSON, invalid shape, unavailable storage, valid save, quota failure).');
 
 {
