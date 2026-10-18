@@ -131,6 +131,9 @@ assert.ok(!gasBlock.includes('p.n*8.314*p.T'),
   'ideal-gas experiment must not duplicate an approximate gas constant in nRT calculations');
 assert.ok(gasBlock.split('PHYS_DOMAIN.idealGasParticleProperties').length - 1 >= 2,
   'ideal-gas readout and tutor must share molecular speed, kinetic-energy and number-density calculations');
+assert.ok(gasBlock.includes("动画速度按温度趋势视觉缩放") &&
+  gasBlock.includes("不按真实 m/s 比例播放"),
+  'ideal-gas animation must disclose that particle speed is schematic rather than a real-time molecular velocity');
 for (const duplicate of ['3*8.314', '1.381e-23', '6.022e23']) {
   assert.ok(!gasBlock.includes(duplicate),
     'ideal-gas particle metrics must use shared domain constants rather than duplicate ' + duplicate);
