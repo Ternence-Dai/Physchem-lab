@@ -29,9 +29,13 @@ test("pendulum period scales with square root of length",()=>{
  assert.ok(Math.abs(b/a-2)<1e-12);
  assert.throws(()=>pendulumPeriod({lengthM:0,gravity:9.8}),RangeError);
 });
-test("Ohm's law returns current, power and per-minute heat",()=>{
+test("Ohm's law preserves voltage polarity and returns dissipated power and heat",()=>{
  const r=ohmsLaw({voltageV:12,resistanceOhm:6});
  assert.equal(r.currentA,2); assert.equal(r.powerW,24); assert.equal(r.heatJPerMinute,1440);
+ const reversed=ohmsLaw({voltageV:-12,resistanceOhm:6});
+ assert.equal(reversed.currentA,-2);
+ assert.equal(reversed.powerW,24);
+ assert.equal(reversed.heatJPerMinute,1440);
  assert.throws(()=>ohmsLaw({voltageV:12,resistanceOhm:0}),RangeError);
 });
 test("inclined plane acceleration includes friction threshold",()=>{
