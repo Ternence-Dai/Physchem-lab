@@ -72,6 +72,7 @@ test("spring oscillator frequency avoids overflowing a ratio before its square r
  assert.ok(Number.isFinite(result.angularFrequency));
  assert.ok(Math.abs(result.angularFrequency/1e200-1)<1e-12);
  assert.ok(Number.isFinite(result.period));
+ assert.equal(result.acceleration,0,'zero displacement must produce zero acceleration even when the frequency ratio is extreme');
 });
 test("rejects finite inputs whose calculated results overflow",()=>{
  assert.throws(()=>idealGasPressure({amountMol:1e308,temperatureK:300,volumeM3:1}),RangeError);
