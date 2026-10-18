@@ -156,7 +156,7 @@ EXP.push({id:'p6',name:'理想气体分子运动',cat:'化学',tags:['气体','�
   },
   readout:function(p){var P=window.PHYS_DOMAIN.idealGasPressure({amountMol:p.n,temperatureK:p.T,volumeM3:p.V/1000})/1000;var vR=Math.sqrt(3*8.314*p.T/0.02897);return[{k:'压强 P',v:F(P,1)+' kPa'},{k:'PV 乘积',v:F(P*p.V,0)+' kPa·L'},{k:'nRT',v:F(P*p.V,0)+' J'},{k:'空气近似方均根速率',v:F(vR,0)+' m/s'},{k:'平均动能',v:F(1.5*1.381e-23*p.T*1e21,2)+'×10⁻²¹ J'},{k:'分子数密度',v:F(p.n*6.022e23/(p.V*1e-3)/1e25,2)+'×10²⁵/m³'}];},
   tutor:function(p){var P=window.PHYS_DOMAIN.idealGasPressure({amountMol:p.n,temperatureK:p.T,volumeM3:p.V/1000})/1000;var vR=Math.sqrt(3*8.314*p.T/0.02897);
-    return '【模型】理想气体：分子无体积、无相互作用。压强来自分子撞击器壁。\n\n【参数】T='+p.T+' K, V='+F(p.V,1)+' L, n='+F(p.n,1)+' mol\n\n【推演】\n· P=nRT/V='+F(P,1)+' kPa\n· PV='+F(P*p.V,0)+' kPa·L\n· nRT='+F(P*p.V,0)+' J\n· 空气近似 v_rms='+F(vR,0)+' m/s（取摩尔质量 M=0.02897 kg/mol）\n\n【结论】'+(p.T>600?'高温，分子运动剧烈。':p.T<200?'低温，分子迟缓。':'P·V/(n·T) 始终=8.314，这就是 R 的物理意义。')+'\n\n【延伸】波义耳定律：T不变 P∝1/V。';}
+    return '【模型】理想气体：分子体积可忽略、分子间作用可忽略。微观上压强源于分子撞击器壁；本动画不逐次计算碰撞冲量，压强数值由 PV=nRT 状态方程计算。\n\n【参数】T='+p.T+' K, V='+F(p.V,1)+' L, n='+F(p.n,1)+' mol\n\n【推演】\n· P=nRT/V='+F(P,1)+' kPa\n· PV='+F(P*p.V,0)+' kPa·L\n· nRT='+F(P*p.V,0)+' J\n· 空气近似 v_rms='+F(vR,0)+' m/s（取摩尔质量 M=0.02897 kg/mol）\n\n【结论】'+(p.T>600?'高温，分子运动剧烈。':p.T<200?'低温，分子迟缓。':'P·V/(n·T) 始终=8.314，这就是 R 的物理意义。')+'\n\n【延伸】波义耳定律：T不变 P∝1/V。';}
 });
 
 /* 7. 酸碱滴定 */
