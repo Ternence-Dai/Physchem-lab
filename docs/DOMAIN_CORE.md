@@ -7,19 +7,19 @@ This document describes the shared numerical functions in `src/domain/index.js`.
 - Every required numeric input must be finite.
 - Physical-domain checks reject negative quantities where the model requires a non-negative or positive value.
 - Derived outputs are checked too. A `RangeError` means the requested result is outside JavaScript's finite-number range; callers should display a clear validation message rather than silently clamp it.
-- Numerical-stability branches are intended to avoid avoidable intermediate overflow or underflow. They do not make the physical model valid outside its stated assumptions.
+- Numerical-stability branches avoid some intermediate overflow or underflow cases. They do not make a physical model valid outside its stated assumptions.
 
 ## Equations
 
 | Function | Inputs | Outputs | Model boundary |
 |---|---|---|---|
-| `idealGasPressure` | amount (n): mol; temperature (T): K; volume (V): m³ | pressure (P): Pa | Uses (P=nRT/V), with (R=8.31446261815324 mathrm{J,mol^{-1},K^{-1}}). Assumes ideal-gas behaviour. |
-| `arrheniusRateConstant` | prefactor (A): units of the desired rate constant; activation energy (E_a): J/mol; temperature (T): K | (k): same units as (A) | Uses (k=Ae^{-E_a/(RT)}). The caller is responsible for choosing a prefactor whose units match the reaction-rate definition. |
-| `projectileMotion` | initial speed: m/s; launch angle: degrees; gravity: m/s² | velocity components: m/s; flight time: s; range and maximum height: m | Ideal projectile launched and landing at the same elevation, with constant gravity and no air resistance. |
-| `pendulumPeriod` | length: m; gravity: m/s² | period: s | Small-angle simple-pendulum approximation (T=2pisqrt{L/g}). Large amplitudes require an amplitude correction. |
-| `ohmsLaw` | voltage: V; resistance: Ω | current: A; power: W; one-minute heat energy: J | Uses (I=U/R), (P=UI), and (Q_{60s}=60P). The heat value is for a constant operating point over 60 seconds. |
-| `inclinedPlaneAcceleration` | incline angle: degrees; friction coefficient: dimensionless; gravity: m/s² | acceleration down the plane: m/s² | Uses (a=g(\sin\theta-\mu\cos\theta)) and returns zero below the sliding threshold. It treats the supplied coefficient as the threshold and sliding coefficient; real static and kinetic coefficients can differ. |
-| `springOscillator` | mass: kg; spring constant: N/m; displacement: m; velocity: m/s | acceleration: m/s²; angular frequency: rad/s; period: s; kinetic, elastic, total energy: J | Ideal linear spring and undamped motion. Uses (a=-kx/m), (omega=\sqrt{k/m}), and (E=\frac12mv^2+\frac12kx^2). |
+| `idealGasPressure` | Amount n: mol; temperature T: K; volume V: m³ | Pressure P: Pa | P = nRT/V, with R = 8.31446261815324 J/(mol·K). Assumes ideal-gas behaviour. |
+| `arrheniusRateConstant` | Prefactor A: units of the desired rate constant; activation energy Ea: J/mol; temperature T: K | k: same units as A | k = A × exp(-Ea/(R×T)). The caller is responsible for choosing a prefactor whose units match the reaction-rate definition. |
+| `projectileMotion` | Initial speed: m/s; launch angle: degrees; gravity: m/s² | Velocity components: m/s; flight time: s; range and maximum height: m | Ideal projectile launched and landing at the same elevation, with constant gravity and no air resistance. |
+| `pendulumPeriod` | Length: m; gravity: m/s² | Period: s | Small-angle simple-pendulum approximation: T = 2π × sqrt(L/g). Large amplitudes require an amplitude correction. |
+| `ohmsLaw` | Voltage: V; resistance: Ω | Current: A; power: W; one-minute heat energy: J | I = U/R; P = U×I; Q over 60 s = 60×P. The heat value assumes a constant operating point over 60 seconds. |
+| `inclinedPlaneAcceleration` | Incline angle: degrees; friction coefficient: dimensionless; gravity: m/s² | Acceleration down the plane: m/s² | a = g × (sin θ - μ cos θ), clamped to zero below the sliding threshold. It treats the supplied coefficient as both threshold and sliding coefficient; real static and kinetic coefficients can differ. |
+| `springOscillator` | Mass: kg; spring constant: N/m; displacement: m; velocity: m/s | Acceleration: m/s²; angular frequency: rad/s; period: s; kinetic, elastic, and total energy: J | Ideal linear spring and undamped motion. a = -k×x/m; ω = sqrt(k/m); E = 0.5×m×v² + 0.5×k×x². |
 
 ## UI integration requirements
 
