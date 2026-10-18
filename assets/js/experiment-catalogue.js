@@ -94,7 +94,7 @@ EXP.push({id:'p4',name:'欧姆定律电路',cat:'物理',tags:['电学','电流'
       c.fillStyle=gr;c.beginPath();c.arc(p2[0],p2[1],7,0,7);c.fill();c.fillStyle='#7dd3fc';c.beginPath();c.arc(p2[0],p2[1],2.4,0,7);c.fill();}
     pl(c,'I='+F(I,3)+' A',26,22,'rgba(244,114,182,.14)','#f472b6');pl(c,'P='+F(electrical.powerW,2)+' W',26,52,'rgba(52,211,153,.14)','#34d399');pl(c,'U='+F(p.U,1)+' V',26,82,'rgba(251,191,36,.14)','#fbbf24');
   },
-  readout:function(p){var electrical=window.PHYS_DOMAIN.ohmsLaw({voltageV:p.U,resistanceOhm:p.R});return[{k:'电流 I',v:F(electrical.currentA,3)+' A'},{k:'电功率 P',v:F(electrical.powerW,2)+' W'},{k:'1分钟发热',v:F(electrical.heatJPerMinute,1)+' J'},{k:'电阻 R',v:F(p.R,0)+' Ω'},{k:'电压 U',v:F(p.U,1)+' V'},{k:'每秒电荷',v:F(electrical.currentA,3)+' C'}];},
+  readout:function(p){var electrical=window.PHYS_DOMAIN.ohmsLaw({voltageV:p.U,resistanceOhm:p.R});return[{k:'电流 I',v:F(electrical.currentA,3)+' A'},{k:'电功率 P',v:F(electrical.powerW,2)+' W'},{k:'1分钟发热',v:F(electrical.heatJPerMinute,1)+' J'},{k:'电阻 R',v:F(p.R,0)+' Ω'},{k:'电压 U',v:F(p.U,1)+' V'},{k:'电荷流率',v:F(electrical.currentA,3)+' C/s'}];},
   tutor:function(p){var electrical=window.PHYS_DOMAIN.ohmsLaw({voltageV:p.U,resistanceOhm:p.R});return '【模型】I=U/R，P=UI。\n\n【参数】U='+F(p.U,1)+' V, R='+F(p.R,0)+' Ω\n\n【推演】\n· I=U/R='+F(electrical.currentA,3)+' A\n· P='+F(electrical.powerW,2)+' W\n· Q=Pt='+F(electrical.heatJPerMinute,1)+' J (60s)\n\n【结论】'+(p.R<5?'电阻很小，电流大，发热惊人——这就是短路。':p.R>40?'电阻大，电流被限制。':'电压翻倍→电流翻倍→功率4倍。');}
 });
 
