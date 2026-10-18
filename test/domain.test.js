@@ -34,6 +34,11 @@ test("pendulum period scales with square root of length",()=>{
  assert.ok(Math.abs(b/a-2)<1e-12);
  assert.throws(()=>pendulumPeriod({lengthM:0,gravity:9.8}),RangeError);
 });
+test("pendulum period avoids overflowing a ratio before taking its square root",()=>{
+ const period=pendulumPeriod({lengthM:1e200,gravity:1e-200});
+ assert.ok(Number.isFinite(period));
+ assert.ok(Math.abs(period/(2*Math.PI*1e200)-1)<1e-12);
+});
 test("Ohm's law preserves voltage polarity and returns dissipated power and heat",()=>{
  const r=ohmsLaw({voltageV:12,resistanceOhm:6});
  assert.equal(r.currentA,2); assert.equal(r.powerW,24); assert.equal(r.heatJPerMinute,1440);
@@ -62,7 +67,12 @@ test("spring oscillator shares acceleration, period and energy calculations",()=
  assert.throws(()=>springOscillator({massKg:0,springConstantNPerM:4,displacementM:0,velocityMPerS:1}),RangeError);
  assert.throws(()=>springOscillator({massKg:1,springConstantNPerM:4,displacementM:Infinity,velocityMPerS:1}),TypeError);
 });
-
+test("spring oscillator frequency avoids overflowing a ratio before its square root",()=>{
+ const result=springOscillator({massKg:1e-200,springConstantNPerM:1e200,displacementM:0,velocityMPerS:0});
+ assert.ok(Number.isFinite(result.angularFrequency));
+ assert.ok(Math.abs(result.angularFrequency/1e200-1)<1e-12);
+ assert.ok(Number.isFinite(result.period));
+});
 test("rejects finite inputs whose calculated results overflow",()=>{
  assert.throws(()=>idealGasPressure({amountMol:1e308,temperatureK:300,volumeM3:1}),RangeError);
  assert.throws(()=>pendulumPeriod({lengthM:1e308,gravity:1e-308}),RangeError);
