@@ -19,12 +19,19 @@ function multiplyRatioStable(numerator, denominator, multiplier) {
 export function idealGasPressure({ amountMol, temperatureK, volumeM3 }) {
   for (const [name,value] of Object.entries({amountMol,temperatureK,volumeM3})) if (!Number.isFinite(value)) throw new TypeError(`${name} must be finite`);
   if (amountMol < 0 || temperatureK <= 0 || volumeM3 <= 0) throw new RangeError("amount must be non-negative; temperature and volume must be positive");
-  return finiteResult((amountMol / volumeM3) * GAS_CONSTANT * temperatureK, "ideal gas pressure");
+  if (amountMol === 0) return 0;
+  // Evaluate the positive product/quotient in log space so an intermediate
+  // amount/volume underflow does not erase a representable final pressure.
+  return finiteResult(Math.exp(Math.log(amountMol) - Math.log(volumeM3) + Math.log(GAS_CONSTANT) + Math.log(temperatureK)), "ideal gas pressure");
 }
 export function arrheniusRateConstant({ preExponentialFactor, activationEnergyJPerMol, temperatureK }) {
   for (const [name,value] of Object.entries({preExponentialFactor,activationEnergyJPerMol,temperatureK})) if (!Number.isFinite(value)) throw new TypeError(`${name} must be finite`);
   if (preExponentialFactor < 0 || activationEnergyJPerMol < 0 || temperatureK <= 0) throw new RangeError("Arrhenius parameters are outside their physical domain");
-  return finiteResult(preExponentialFactor * Math.exp(-activationEnergyJPerMol / (GAS_CONSTANT * temperatureK)), "Arrhenius rate constant");
+  if (preExponentialFactor === 0) return 0;
+  // Divide sequentially to avoid overflowing R*T, and combine the Arrhenius
+  // exponential with its prefactor before exp() to avoid premature underflow.
+  const exponent = (activationEnergyJPerMol / GAS_CONSTANT) / temperatureK;
+  return finiteResult(Math.exp(Math.log(preExponentialFactor) - exponent), "Arrhenius rate constant");
 }
 
 
