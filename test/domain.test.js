@@ -60,7 +60,16 @@ test("Arrhenius exponent avoids underflow before division by a tiny temperature"
  assert.ok(Number.isFinite(rate) && rate>0);
  assert.ok(Math.abs(rate/expected-1)<1e-12);
 });
-test("projectile motion decomposes velocity and returns trajectory invariants",()=>{ const p=projectileMotion({initialSpeed:20,angleDeg:45,gravity:9.8}); assert.ok(Math.abs(p.range-20*20/9.8)<1e-10); assert.ok(Math.abs(p.horizontalVelocity-p.verticalVelocity)<1e-10); assert.throws(()=>projectileMotion({initialSpeed:20,angleDeg:100,gravity:9.8}),RangeError); });
+test("projectile motion decomposes velocity and returns trajectory invariants",()=>{
+ const p=projectileMotion({initialSpeed:20,angleDeg:45,gravity:9.8});
+ assert.ok(Math.abs(p.range-20*20/9.8)<1e-10);
+ assert.ok(Math.abs(p.horizontalVelocity-p.verticalVelocity)<1e-10);
+ const vertical=projectileMotion({initialSpeed:20,angleDeg:90,gravity:9.8});
+ assert.equal(vertical.horizontalVelocity,0);
+ assert.equal(vertical.range,0);
+ assert.ok(Math.abs(vertical.maxHeight-20*20/(2*9.8))<1e-12);
+ assert.throws(()=>projectileMotion({initialSpeed:20,angleDeg:100,gravity:9.8}),RangeError);
+});
 test("pendulum period scales with square root of length",()=>{ const a=pendulumPeriod({lengthM:1,gravity:9.8}), b=pendulumPeriod({lengthM:4,gravity:9.8}); assert.ok(Math.abs(b/a-2)<1e-12); assert.throws(()=>pendulumPeriod({lengthM:0,gravity:9.8}),RangeError); });
 test("pendulum period avoids overflowing a ratio before taking its square root",()=>{ const period=pendulumPeriod({lengthM:1e200,gravity:1e-200}); assert.ok(Number.isFinite(period)); assert.ok(Math.abs(period/(2*Math.PI*1e200)-1)<1e-12); });
 test("Ohm's law preserves voltage polarity and returns dissipated power and heat",()=>{ const r=ohmsLaw({voltageV:12,resistanceOhm:6}); assert.equal(r.currentA,2); assert.equal(r.powerW,24); assert.equal(r.heatJPerMinute,1440); const reversed=ohmsLaw({voltageV:-12,resistanceOhm:6}); assert.equal(reversed.currentA,-2); assert.equal(reversed.powerW,24); assert.equal(reversed.heatJPerMinute,1440); assert.throws(()=>ohmsLaw({voltageV:12,resistanceOhm:0}),RangeError); });
@@ -85,5 +94,12 @@ test("spring kinetic and elastic energy survive early half-scale underflow",()=>
  assert.ok(Math.abs(result.kineticEnergy/expected-1)<1e-12);
  assert.ok(Math.abs(result.elasticPotentialEnergy/expected-1)<1e-12);
  assert.ok(Math.abs(result.totalEnergy/(2*expected)-1)<1e-12);
+});
+test("projectile trajectory recovers representable results after intermediate square overflow",()=>{
+ const result=projectileMotion({initialSpeed:1e200,angleDeg:90,gravity:1e200});
+ assert.equal(result.horizontalVelocity,0);
+ assert.equal(result.range,0);
+ assert.ok(Math.abs(result.flightTime-2)<1e-12);
+ assert.ok(Math.abs(result.maxHeight/5e199-1)<1e-12);
 });
 test("rejects finite inputs whose calculated results overflow",()=>{ assert.throws(()=>idealGasPressure({amountMol:1e308,temperatureK:300,volumeM3:1}),RangeError); assert.throws(()=>pendulumPeriod({lengthM:1e308,gravity:1e-308}),RangeError); assert.throws(()=>ohmsLaw({voltageV:1e308,resistanceOhm:1e-308}),RangeError); assert.throws(()=>springOscillator({massKg:1,springConstantNPerM:1,displacementM:1e308,velocityMPerS:0}),RangeError); assert.throws(()=>projectileMotion({initialSpeed:1e308,angleDeg:45,gravity:9.8}),RangeError); });
