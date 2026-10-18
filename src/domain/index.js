@@ -5,6 +5,9 @@ function finiteResult(value, label) {
   if (values.some((item) => !Number.isFinite(item))) throw new RangeError(`${label} exceeds the finite numeric range`);
   return value;
 }
+function sqrtPositiveRatio(numerator, denominator) {
+  return Math.sqrt(numerator) / Math.sqrt(denominator);
+}
 export function idealGasPressure({ amountMol, temperatureK, volumeM3 }) {
   for (const [name,value] of Object.entries({amountMol,temperatureK,volumeM3})) if (!Number.isFinite(value)) throw new TypeError(`${name} must be finite`);
   if (amountMol < 0 || temperatureK <= 0 || volumeM3 <= 0) throw new RangeError("amount must be non-negative; temperature and volume must be positive");
@@ -27,7 +30,7 @@ export function projectileMotion({initialSpeed,angleDeg,gravity}) {
 export function pendulumPeriod({lengthM,gravity}) {
   for (const [name,value] of Object.entries({lengthM,gravity})) if (!Number.isFinite(value)) throw new TypeError(`${name} must be finite`);
   if (lengthM <= 0 || gravity <= 0) throw new RangeError("pendulum length and gravity must be positive");
-  return finiteResult(2*Math.PI*Math.sqrt(lengthM/gravity), "pendulum period");
+  return finiteResult(2*Math.PI*sqrtPositiveRatio(lengthM,gravity), "pendulum period");
 }
 export function ohmsLaw({voltageV,resistanceOhm}) {
   for (const [name,value] of Object.entries({voltageV,resistanceOhm})) if (!Number.isFinite(value)) throw new TypeError(`${name} must be finite`);
@@ -48,7 +51,7 @@ export function springOscillator({massKg,springConstantNPerM,displacementM,veloc
     if (!Number.isFinite(value)) throw new TypeError(`${name} must be finite`);
   }
   if (massKg <= 0 || springConstantNPerM <= 0) throw new RangeError("mass and spring constant must be positive");
-  const angularFrequency=Math.sqrt(springConstantNPerM/massKg);
+  const angularFrequency=sqrtPositiveRatio(springConstantNPerM,massKg);
   const kineticEnergy=0.5*massKg*velocityMPerS*velocityMPerS;
   const elasticPotentialEnergy=0.5*springConstantNPerM*displacementM*displacementM;
   return Object.freeze(finiteResult({
