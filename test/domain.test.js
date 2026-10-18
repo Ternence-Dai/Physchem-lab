@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {
-  idealGasPressure, arrheniusRateConstant,
+  idealGasPressure, idealGasParticleProperties, arrheniusRateConstant,
   projectileMotion, pendulumPeriod, ohmsLaw, inclinedPlaneAcceleration, springOscillator
 } from "../src/domain/index.js";
 
@@ -11,6 +11,26 @@ test("ideal gas calculation recovers a representable result after ratio underflo
  const pressure=idealGasPressure({amountMol:1e-200,temperatureK:1e200,volumeM3:1e200});
  assert.ok(Number.isFinite(pressure) && pressure>0);
  assert.ok(Math.abs(pressure/(8.31446261815324e-200)-1)<1e-12);
+});
+test("ideal-gas particle properties use consistent SI constants and units",()=>{
+ const result=idealGasParticleProperties({
+  amountMol:1,temperatureK:300,volumeM3:0.01,molarMassKgPerMol:0.02897
+ });
+ assert.ok(result.rmsSpeed>500 && result.rmsSpeed<515,
+  "room-temperature air RMS speed must be about 508 m/s");
+ assert.ok(result.averageKineticEnergyJ>6.1e-21 && result.averageKineticEnergyJ<6.3e-21,
+  "mean translational kinetic energy must be about 6.2e-21 J per molecule");
+ assert.ok(Math.abs(result.numberDensityPerM3/6.02214076e25-1)<1e-12,
+  "one mole in ten litres must contain about 6.022e25 molecules per cubic metre");
+ assert.ok(Object.isFrozen(result));
+});
+test("ideal-gas particle properties preserve zero amount and reject invalid physical inputs",()=>{
+ const empty=idealGasParticleProperties({amountMol:0,temperatureK:300,volumeM3:0.01,molarMassKgPerMol:0.02897});
+ assert.equal(empty.numberDensityPerM3,0);
+ assert.throws(()=>idealGasParticleProperties({amountMol:-1,temperatureK:300,volumeM3:0.01,molarMassKgPerMol:0.02897}),RangeError);
+ assert.throws(()=>idealGasParticleProperties({amountMol:1,temperatureK:0,volumeM3:0.01,molarMassKgPerMol:0.02897}),RangeError);
+ assert.throws(()=>idealGasParticleProperties({amountMol:1,temperatureK:300,volumeM3:0.01,molarMassKgPerMol:0}),RangeError);
+ assert.throws(()=>idealGasParticleProperties({amountMol:1,temperatureK:300,volumeM3:0.01,molarMassKgPerMol:NaN}),TypeError);
 });
 test("rejects non-positive absolute temperature and volume",()=>{ assert.throws(()=>idealGasPressure({amountMol:1,temperatureK:0,volumeM3:1}),RangeError); assert.throws(()=>idealGasPressure({amountMol:1,temperatureK:300,volumeM3:0}),RangeError); });
 test("Arrhenius rate increases with temperature for positive activation energy",()=>{ const a=arrheniusRateConstant({preExponentialFactor:1e7,activationEnergyJPerMol:50000,temperatureK:300}); const b=arrheniusRateConstant({preExponentialFactor:1e7,activationEnergyJPerMol:50000,temperatureK:350}); assert.ok(b>a); });
