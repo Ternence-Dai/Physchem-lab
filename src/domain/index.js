@@ -8,7 +8,7 @@ function finiteResult(value, label) {
 export function idealGasPressure({ amountMol, temperatureK, volumeM3 }) {
   for (const [name,value] of Object.entries({amountMol,temperatureK,volumeM3})) if (!Number.isFinite(value)) throw new TypeError(`${name} must be finite`);
   if (amountMol < 0 || temperatureK <= 0 || volumeM3 <= 0) throw new RangeError("amount must be non-negative; temperature and volume must be positive");
-  return finiteResult(amountMol * GAS_CONSTANT * temperatureK / volumeM3, "ideal gas pressure");
+  return finiteResult((amountMol / volumeM3) * GAS_CONSTANT * temperatureK, "ideal gas pressure");
 }
 export function arrheniusRateConstant({ preExponentialFactor, activationEnergyJPerMol, temperatureK }) {
   for (const [name,value] of Object.entries({preExponentialFactor,activationEnergyJPerMol,temperatureK})) if (!Number.isFinite(value)) throw new TypeError(`${name} must be finite`);
