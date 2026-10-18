@@ -111,6 +111,8 @@ var paused=false;
 var SAVE_KEY='physchem_lab_saved_experiments_v1';
 var saves=[];
 var storageRecoveryRequired=false;
+var archiveRawValue=null;
+var archiveReadFailed=false;
 function isValidExperimentSave(item){
   if(!item||typeof item!=='object'||Array.isArray(item))return false;
   if(typeof item.name!=='string'||!item.name.trim()||item.name.length>160)return false;
@@ -125,12 +127,25 @@ function isValidExperimentSave(item){
 function isValidExperimentSaveList(value){
   return Array.isArray(value)&&value.length<=30&&value.every(isValidExperimentSave);
 }
+var rawSaved=null;
 try{
-  var rawSaved=localStorage.getItem(SAVE_KEY);
-  var restored=JSON.parse(rawSaved||'[]');
-  if(!isValidExperimentSaveList(restored))throw new TypeError('实验存档内容或结构无效');
-  saves=restored;
-}catch(e){storageRecoveryRequired=true;console.warn('实验存档读取失败，已暂停覆盖写入；请先恢复或导出原始存档',e);}
+  rawSaved=localStorage.getItem(SAVE_KEY);
+  archiveRawValue=rawSaved;
+}catch(readError){
+  archiveReadFailed=true;
+  storageRecoveryRequired=true;
+  console.warn('无法读取实验档案缓存，已暂停覆盖写入；请导出恢复记录或导入有效备份',readError);
+}
+if(!archiveReadFailed){
+  try{
+    var restored=JSON.parse(rawSaved||'[]');
+    if(!isValidExperimentSaveList(restored))throw new TypeError('实验存档内容或结构无效');
+    saves=restored;
+  }catch(e){
+    storageRecoveryRequired=true;
+    console.warn('实验存档读取失败，已暂停覆盖写入；请导出原始存档或导入有效备份',e);
+  }
+}
 function persistExperimentSaves(nextSaves){
   if(storageRecoveryRequired)return false;
   if(!isValidExperimentSaveList(nextSaves)){
@@ -141,8 +156,101 @@ function persistExperimentSaves(nextSaves){
     var serialized=JSON.stringify(nextSaves);
     localStorage.setItem(SAVE_KEY,serialized);
     saves=JSON.parse(serialized);
+    archiveRawValue=serialized;
+    archiveReadFailed=false;
     return true;
-  }catch(e){storageRecoveryRequired=true;console.warn('实验存档写入失败，已启用恢复保护',e);return false;}
+  }catch(e){
+    storageRecoveryRequired=true;
+    console.warn('实验存档写入失败，已启用恢复保护',e);
+    return false;
+  }
+}
+function buildExperimentArchiveBackup(){
+  if(storageRecoveryRequired){
+    return {
+      format:'physchem-lab-archive-recovery',
+      version:1,
+      storageKey:SAVE_KEY,
+      exportedAt:new Date().toISOString(),
+      readFailed:archiveReadFailed,
+      rawValue:archiveRawValue
+    };
+  }
+  return JSON.parse(JSON.stringify(saves));
+}
+function restoreExperimentArchive(input){
+  var candidate=input;
+  if(candidate&&!Array.isArray(candidate)&&candidate.format==='physchem-lab-archive-recovery'){
+    if(candidate.version!==1||candidate.storageKey!==SAVE_KEY||typeof candidate.rawValue!=='string')return false;
+    try{candidate=JSON.parse(candidate.rawValue);}catch(e){return false;}
+  }
+  if(!isValidExperimentSaveList(candidate))return false;
+  try{
+    var serialized=JSON.stringify(candidate);
+    localStorage.setItem(SAVE_KEY,serialized);
+    saves=JSON.parse(serialized);
+    archiveRawValue=serialized;
+    archiveReadFailed=false;
+    storageRecoveryRequired=false;
+    return true;
+  }catch(e){
+    storageRecoveryRequired=true;
+    console.warn('实验档案恢复写入失败，恢复保护仍保持启用',e);
+    return false;
+  }
+}
+function exportExperimentArchive(){
+  var payload=buildExperimentArchiveBackup();
+  var blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+  var url=URL.createObjectURL(blob);
+  var link=document.createElement('a');
+  link.href=url;
+  link.download=storageRecoveryRequired
+    ? 'PhysChem_原始存档恢复包_'+new Date().toISOString().slice(0,10)+'.json'
+    : 'PhysChem_实验档案备份_'+new Date().toISOString().slice(0,10)+'.json';
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+  toast(storageRecoveryRequired?'已导出原始存档恢复包；请妥善保管并检查内容。':'实验档案备份已导出');
+}
+function syncArchiveRecoveryUI(){
+  var status=E('archiveRecoveryStatus');
+  if(status){
+    status.hidden=!storageRecoveryRequired;
+    status.textContent=storageRecoveryRequired
+      ? '存档缓存异常或不可读取：自动写入已锁定。可先导出原始恢复包，再导入有效备份。'
+      : '';
+  }
+  var exportButton=E('archiveExport');
+  if(exportButton)exportButton.textContent=storageRecoveryRequired?'导出原始恢复包':'导出档案备份';
+}
+function importExperimentArchiveFile(input){
+  var file=input&&input.files&&input.files[0];
+  if(!file)return;
+  if(file.size>1024*1024){
+    toast('档案备份超过 1 MB，已拒绝导入');
+    input.value='';
+    return;
+  }
+  var reader=new FileReader();
+  reader.onload=function(event){
+    try{
+      var parsed=JSON.parse(event.target.result);
+      if(!restoreExperimentArchive(parsed))throw new Error('档案结构无效或浏览器存储仍不可写');
+      syncArchiveRecoveryUI();
+      updateSI();
+      renderD();
+      toast('实验档案已验证并恢复 ✓');
+    }catch(error){
+      toast('档案恢复失败：'+error.message+'；原有存档保持不变');
+    }finally{input.value='';}
+  };
+  reader.onerror=function(){
+    toast('无法读取档案文件；原有存档保持不变');
+    input.value='';
+  };
+  reader.readAsText(file);
 }
 var typer=null;
 var started=false;
@@ -266,6 +374,11 @@ function boot(){
 }
 
 function bindUI(){
+  var archiveExport=E('archiveExport');
+  if(archiveExport)archiveExport.onclick=exportExperimentArchive;
+  var archiveImport=E('archiveImport');
+  if(archiveImport)archiveImport.onchange=function(){importExperimentArchiveFile(this);};
+  syncArchiveRecoveryUI();
   var bp=E('bp');if(bp)bp.onclick=function(){paused=!paused;this.textContent=paused?'▶ 继续':'⏸ 暂停';this.className=paused?'bt on':'bt';};
   var br=E('br2');if(br)br.onclick=function(){ST=cur&&cur.init?cur.init(P):{};paused=false;
     var b=E('bp');if(b){b.textContent='⏸ 暂停';b.className='bt';}refreshTutor(true);toast('实验已重置 ↺');};
@@ -274,7 +387,7 @@ function bindUI(){
     var nextSaves=[{name:cur.name,time:new Date().toLocaleString('zh-CN',{hour12:false}),params:JSON.parse(JSON.stringify(P))}].concat(saves).slice(0,30);
     if(persistExperimentSaves(nextSaves))toast('实验档案已保存到本机 ✓');
     else toast('存档写入失败或恢复保护已启用；原有档案未被覆盖');
-    updateSI();renderD();};
+    updateSI();renderD();syncArchiveRecoveryUI();};
   var bd=E('bd');if(bd)bd.onclick=function(){var d=E('dr');if(d)d.className=d.className.indexOf('on')>=0?'dr':'dr on';renderD();};
   var dc=E('dx');if(dc)dc.onclick=function(){var d=E('dr');if(d)d.className='dr';};
   var sE=E('search');if(sE)sE.oninput=function(e){sQ=e.target.value.trim();renderList();};
