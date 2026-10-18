@@ -2,13 +2,14 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PhysChem Lab · 100个物理化学趣味实验 | Ternence Dai</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#15384c">
+<title>PhysChem Lab · 交互式物理化学实验工作台</title>
 <link rel="stylesheet" href="./assets/css/legacy-app.css">
-  <link rel="stylesheet" href="./assets/css/product-system.css?v=20261017">
+  <link rel="stylesheet" href="./assets/css/product-system.css?v=20261018-v3">
 </head>
 <body>
-<aside class="sb">
+<aside class="sb" id="experimentSidebar">
   <div class="br"><div class="lg">⚛</div><div><h1>PhysChem Lab</h1><p>100个物理化学趣味实验</p></div></div>
   <div class="sc"><input id="search" placeholder="🔍 检索实验 / 标签 / 公式" autocomplete="off"></div>
   <div class="fl"><button data-c="全部" class="on">全部</button><button data-c="物理">物理</button><button data-c="化学">化学</button></div>
@@ -16,8 +17,9 @@
   <div class="lst" id="lst"></div>
   <div class="ft"><div id="si">📁 存档：0 条</div><div style="margin-top:6px">署名：<b>Ternence Dai</b></div><div>邮箱：<span class="em">18662613315@163.com</span></div></div>
 </aside>
+<div class="sidebar-backdrop" id="sidebarBackdrop"></div>
 <main class="mn">
-  <header class="tb"><div class="tbl"><h2 id="et">加载中…</h2><p id="eb2">正在初始化实验室…</p></div>
+  <header class="tb"><button class="bt mobile-menu" type="button" id="mobileMenu" aria-label="打开实验目录" aria-controls="experimentSidebar" aria-expanded="false">☰</button><div class="tbl"><h2 id="et">加载中…</h2><p id="eb2">正在初始化实验室…</p></div>
     <div class="ac"><button class="bt" id="bp">⏸ 暂停</button><button class="bt" id="br2">↺ 重置</button><button class="bt" id="bs">💾 存档</button><button class="bt" id="bd">📂 档案</button></div>
   </header>
   <section class="physchem-intro"><div><div class="eyebrow">PHYSICAL CHEMISTRY · INTERACTIVE LAB</div><h2>物理化学交互实验工作台</h2><p>选择实验、调节变量、观察模拟现象并核对公式结果。模拟曲线用于教学探索，不等同于真实实验测量。</p><div class="physchem-tags"><span>交互模拟</span><span>变量控制</span><span>公式计算</span><span>实验档案</span></div></div><div class="atom">⚛</div></section>
