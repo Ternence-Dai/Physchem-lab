@@ -14,6 +14,7 @@ This document describes the shared numerical functions in `src/domain/index.js`.
 | Function | Inputs | Outputs | Model boundary |
 |---|---|---|---|
 | `idealGasPressure` | Amount n: mol; temperature T: K; volume V: m³ | Pressure P: Pa | P = nRT/V, with R = 8.31446261815324 J/(mol·K). Assumes ideal-gas behaviour. |
+| `idealGasParticleProperties` | Amount n: mol; temperature T: K; volume V: m³; molar mass M: kg/mol | RMS molecular speed: m/s; mean translational kinetic energy: J/molecule; number density: molecules/m³ | Uses v_rms = sqrt(3RT/M), mean kinetic energy = 1.5 k_B T, and number density = n N_A/V. R, N_A and k_B are shared constants; the experiment uses dry-air molar mass 0.02897 kg/mol. |
 | `arrheniusRateConstant` | Prefactor A: units of the desired rate constant; activation energy Ea: J/mol; temperature T: K | k: same units as A | k = A × exp(-Ea/(R×T)). The caller is responsible for choosing a prefactor whose units match the reaction-rate definition. |
 | `projectileMotion` | Initial speed: m/s; launch angle: degrees; gravity: m/s² | Velocity components: m/s; flight time: s; range and maximum height: m | Ideal projectile launched and landing at the same elevation, with constant gravity and no air resistance. |
 | `pendulumPeriod` | Length: m; gravity: m/s² | Period: s | Small-angle simple-pendulum approximation: T = 2π × sqrt(L/g). Large amplitudes require an amplitude correction. |
@@ -30,6 +31,6 @@ This document describes the shared numerical functions in `src/domain/index.js`.
 
 ## Verification
 
-The domain tests in `test/domain.test.js` cover reference cases, physical-domain rejection, finite-result checks, and numerical edge cases. `scripts/validate-experiments.cjs` checks that the catalogue calls the shared solver and displays the correct unit and result fields.
+The domain tests in `test/domain.test.js` cover reference cases, ideal-gas molecular properties, physical-domain rejection, finite-result checks, and numerical edge cases. `scripts/validate-experiments.cjs` checks that the catalogue calls the shared solver for pressure and molecular properties and displays the correct unit and result fields.
 
 These checks establish software consistency and selected numerical properties; they do not independently validate every model against laboratory measurements or a full scientific reference dataset.
