@@ -60,7 +60,7 @@ export function springOscillator({massKg,springConstantNPerM,displacementM,veloc
   }
   if (massKg <= 0 || springConstantNPerM <= 0) throw new RangeError("mass and spring constant must be positive");
   const angularFrequency=sqrtPositiveRatio(springConstantNPerM,massKg);
-  const acceleration=-multiplyRatioStable(springConstantNPerM,massKg,displacementM);
+  const acceleration=displacementM === 0 ? 0 : -multiplyRatioStable(springConstantNPerM,massKg,displacementM);
   const kineticEnergy=0.5*massKg*velocityMPerS*velocityMPerS;
   const elasticPotentialEnergy=0.5*springConstantNPerM*displacementM*displacementM;
   return Object.freeze(finiteResult({
