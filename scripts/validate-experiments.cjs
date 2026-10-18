@@ -4,6 +4,27 @@ const vm = require('node:vm');
 const assert = require('node:assert/strict');
 const html = fs.readFileSync('index.html', 'utf8') + '\n' + fs.readFileSync('assets/js/experiment-catalogue.js', 'utf8') + '\n' + fs.readFileSync('assets/js/legacy-app.js', 'utf8');
 const catalogue = fs.readFileSync('assets/js/experiment-catalogue.js', 'utf8');
+const productCss = fs.readFileSync('assets/css/product-system.css', 'utf8');
+assert.ok(html.includes('product-system.css?v=20261018-v3'),
+  'PhysChem Lab must load the V3 interactive engineering workspace stylesheet');
+assert.ok(productCss.includes('PhysChem Lab interactive engineering workspace'),
+  'PhysChem Lab V3 visual layer must be present');
+for (const selector of [
+  '.sb{', '.mn{', '.tb{', '.physchem-intro{', '.sw{', '.bt2{',
+  '.bt2 .pnl', '.sidebar-backdrop', '.dr{', '.mobile-menu'
+]) assert.ok(productCss.includes(selector),
+  'PhysChem Lab V3 must style the key engineering surface: ' + selector);
+assert.ok(productCss.includes('@media(max-width:900px)') &&
+          productCss.includes('@media(max-width:560px)'),
+  'PhysChem Lab must provide tablet and phone layouts');
+assert.ok(productCss.includes('prefers-reduced-motion:reduce'),
+  'PhysChem Lab must respect reduced-motion preferences');
+assert.ok(html.includes('id="mobileMenu"') &&
+          html.includes('id="experimentSidebar"') &&
+          html.includes('id="sidebarBackdrop"'),
+  'mobile experiment navigation controls must be mounted in the page');
+assert.ok(html.includes('product-system.css?v=20261018-v3'));
+
 const P = (key,label,min,max,step,value,unit) => ({key,label,min,max,step,value,unit:unit||''});
 const F = (value,digits=2) => Number(value).toFixed(digits);
 function loadArray(name) {
@@ -14,6 +35,23 @@ function loadArray(name) {
   const source = html.slice(start + ('var ' + name + '=').length, end + 2);
   return vm.runInNewContext('(' + source + ')', {P,F,Math,Number,isFinite});
 }
+
+const sidebarFunction = app.indexOf('function setExperimentSidebarOpen(open)');
+const selectFunction = app.indexOf('function selectExp(id)');
+const bindFunction = app.indexOf('function bindUI()');
+assert.ok(sidebarFunction >= 0 && selectFunction > sidebarFunction && bindFunction > selectFunction,
+  'responsive experiment drawer helpers and event bindings must exist');
+const mobileWiring = app.slice(sidebarFunction, bindFunction);
+assert.ok(mobileWiring.includes("sidebar.classList.toggle('open',!!open)") &&
+          mobileWiring.includes("backdrop.classList.toggle('show',!!open)") &&
+          mobileWiring.includes("button.setAttribute('aria-expanded',open?'true':'false')"),
+  'the mobile experiment drawer must synchronize its open state and accessibility attribute');
+assert.ok(app.slice(selectFunction, bindFunction).includes('setExperimentSidebarOpen(false)'),
+  'selecting an experiment must close the mobile drawer');
+assert.ok(app.slice(bindFunction).includes("mobileMenu.onclick") &&
+          app.slice(bindFunction).includes("sidebarBackdrop.onclick"),
+  'the mobile menu button and backdrop must have working handlers');
+
 let checked = 0;
 const experimentIds = new Set();
 for (const name of ['M','C1','C2','C3','C4','C5','C6']) {
