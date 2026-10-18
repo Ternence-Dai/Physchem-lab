@@ -16,6 +16,15 @@ function multiplyRatioStable(numerator, denominator, multiplier) {
   const magnitude = Math.exp(Math.log(numerator) - Math.log(denominator) + Math.log(Math.abs(multiplier)));
   return Math.sign(multiplier) * magnitude;
 }
+function halfScaledSquare(scale, value) {
+  const magnitude = Math.abs(value);
+  if (scale === 0 || magnitude === 0) return 0;
+  // Order the three positive factors so an early half-scale underflow or
+  // scale*value overflow cannot destroy an otherwise finite ½·scale·value².
+  return magnitude >= 1
+    ? (scale * (magnitude * 0.5)) * magnitude
+    : (scale * magnitude) * (magnitude * 0.5);
+}
 export function idealGasPressure({ amountMol, temperatureK, volumeM3 }) {
   for (const [name,value] of Object.entries({amountMol,temperatureK,volumeM3})) if (!Number.isFinite(value)) throw new TypeError(`${name} must be finite`);
   if (amountMol < 0 || temperatureK <= 0 || volumeM3 <= 0) throw new RangeError("amount must be non-negative; temperature and volume must be positive");
@@ -74,8 +83,8 @@ export function springOscillator({massKg,springConstantNPerM,displacementM,veloc
   if (massKg <= 0 || springConstantNPerM <= 0) throw new RangeError("mass and spring constant must be positive");
   const angularFrequency=sqrtPositiveRatio(springConstantNPerM,massKg);
   const acceleration=displacementM === 0 ? 0 : -multiplyRatioStable(springConstantNPerM,massKg,displacementM);
-  const kineticEnergy=0.5*massKg*velocityMPerS*velocityMPerS;
-  const elasticPotentialEnergy=0.5*springConstantNPerM*displacementM*displacementM;
+  const kineticEnergy=halfScaledSquare(massKg,velocityMPerS);
+  const elasticPotentialEnergy=halfScaledSquare(springConstantNPerM,displacementM);
   return Object.freeze(finiteResult({
     acceleration,
     angularFrequency,
