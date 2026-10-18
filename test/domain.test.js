@@ -32,6 +32,20 @@ test("ideal-gas particle properties preserve zero amount and reject invalid phys
  assert.throws(()=>idealGasParticleProperties({amountMol:1,temperatureK:300,volumeM3:0.01,molarMassKgPerMol:0}),RangeError);
  assert.throws(()=>idealGasParticleProperties({amountMol:1,temperatureK:300,volumeM3:0.01,molarMassKgPerMol:NaN}),TypeError);
 });
+test("ideal-gas particle properties retain representable outputs across extreme finite scales",()=>{
+ const tiny=idealGasParticleProperties({
+  amountMol:Number.MIN_VALUE,temperatureK:300,volumeM3:1e23,molarMassKgPerMol:0.02897
+ });
+ assert.ok(tiny.numberDensityPerM3>0,
+  "log-space number density must recover a representable result after amount/volume underflow");
+ const extreme=idealGasParticleProperties({
+  amountMol:1,temperatureK:1e308,volumeM3:1e308,molarMassKgPerMol:1e308
+ });
+ assert.ok(Number.isFinite(extreme.rmsSpeed) && extreme.rmsSpeed>0,
+  "RMS speed must not overflow at the intermediate 3RT product");
+ assert.ok(Number.isFinite(extreme.averageKineticEnergyJ));
+ assert.ok(Number.isFinite(extreme.numberDensityPerM3));
+});
 test("rejects non-positive absolute temperature and volume",()=>{ assert.throws(()=>idealGasPressure({amountMol:1,temperatureK:0,volumeM3:1}),RangeError); assert.throws(()=>idealGasPressure({amountMol:1,temperatureK:300,volumeM3:0}),RangeError); });
 test("Arrhenius rate increases with temperature for positive activation energy",()=>{ const a=arrheniusRateConstant({preExponentialFactor:1e7,activationEnergyJPerMol:50000,temperatureK:300}); const b=arrheniusRateConstant({preExponentialFactor:1e7,activationEnergyJPerMol:50000,temperatureK:350}); assert.ok(b>a); });
 test("Arrhenius prefactor recovers a representable rate after exponential underflow",()=>{
