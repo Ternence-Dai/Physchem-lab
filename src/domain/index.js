@@ -73,9 +73,18 @@ export function arrheniusRateConstant({ preExponentialFactor, activationEnergyJP
 export function projectileMotion({initialSpeed,angleDeg,gravity}) {
   for (const [name,value] of Object.entries({initialSpeed,angleDeg,gravity})) if (!Number.isFinite(value)) throw new TypeError(`${name} must be finite`);
   if (initialSpeed < 0 || angleDeg < 0 || angleDeg > 90 || gravity <= 0) throw new RangeError("projectile parameters are outside their physical domain");
-  const angle=angleDeg*Math.PI/180, vx=initialSpeed*Math.cos(angle), vy=initialSpeed*Math.sin(angle);
-  const flightTime=2*vy/gravity;
-  return Object.freeze(finiteResult({horizontalVelocity:vx,verticalVelocity:vy,flightTime,range:vx*flightTime,maxHeight:vy*vy/(2*gravity)}, "projectile motion"));
+  const angle=angleDeg*Math.PI/180;
+  // Preserve exact endpoint physics: cos(90°) is not exactly zero in IEEE-754.
+  const vx=angleDeg===90 ? 0 : angleDeg===0 ? initialSpeed : initialSpeed*Math.cos(angle);
+  const vy=angleDeg===0 ? 0 : angleDeg===90 ? initialSpeed : initialSpeed*Math.sin(angle);
+  // Log-space ratios avoid overflowing 2·vy or vy² before division when the
+  // resulting flight time and maximum height are still representable.
+  const flightTime=vy===0 ? 0 : Math.exp(Math.log(2)+Math.log(vy)-Math.log(gravity));
+  const maxHeight=vy===0 ? 0 : Math.exp(2*Math.log(vy)-Math.log(2)-Math.log(gravity));
+  return Object.freeze(finiteResult({
+    horizontalVelocity:vx,verticalVelocity:vy,flightTime,
+    range:vx===0 ? 0 : vx*flightTime,maxHeight
+  }, "projectile motion"));
 }
 export function pendulumPeriod({lengthM,gravity}) {
   for (const [name,value] of Object.entries({lengthM,gravity})) if (!Number.isFinite(value)) throw new TypeError(`${name} must be finite`);
