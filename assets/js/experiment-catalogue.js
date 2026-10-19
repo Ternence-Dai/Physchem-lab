@@ -688,7 +688,7 @@ var C3=[
 
 {id:'ch5',name:'亨利定律气体溶解度',cat:'化学',tags:['溶液','气体'],br:'气体溶解度与分压成正比，c=kH·P。',
  p:[P('kH','亨利常数 kH',0.0001,0.1,0.0001,0.034,'mol/(L·atm)'),P('P','分压 P',0.1,10,0.1,1,'atm')],
- f:['c=kH·P','P=kc·c','稀溶液中成立'],
+ f:['c=kH·P','P=c/kH','稀溶液中成立'],
  xR:[0.1,10],yR:[0,0.5],xT:10,yT:5,xL:'分压 P (atm)',yL:'溶解度 c (mol/L)',col:'#22d3ee',
  fn:function(p,x){return p.kH*x;},
  ro:function(p){return[{k:'溶解度 c',v:F(p.kH*p.P,4)+' mol/L'},{k:'亨利常数 kH',v:p.kH+' mol/(L·atm)'},{k:'分压 P',v:p.P+' atm'},{k:'分压 P (kPa)',v:F(p.P*101.325,1)+' kPa'},{k:'浓度 (g/L,CO₂)',v:F(p.kH*p.P*44,4)+' g/L'},{k:'影响因素',v:'温度↑溶解度↓'}];},
