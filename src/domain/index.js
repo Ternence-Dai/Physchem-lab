@@ -70,10 +70,18 @@ export function strongAcidStrongBasePH({acidConcentrationMolPerL,acidVolumeMl,ba
   // mol/L × mL gives mmol. The signed excess strong-acid concentration
   // is [H+] - [OH-] after neutralization. Retain water autoionization:
   // [H+][OH-] = Kw = 1e-14 at 25 °C.
-  const acidMmol=acidConcentrationMolPerL*acidVolumeMl;
-  const baseMmol=baseConcentrationMolPerL*baseVolumeMl;
-  const totalVolumeMl=acidVolumeMl+baseVolumeMl;
-  const netAcidConcentration=(acidMmol-baseMmol)/totalVolumeMl;
+  // Compute the volume-weighted excess concentration without forming
+  // concentration×volume products or summing raw volumes first. Those
+  // intermediates can overflow even when the final mixed concentration is
+  // finite (for example, equal very-large acid/base inputs at equivalence).
+  const volumeScale=Math.max(acidVolumeMl,baseVolumeMl);
+  const acidVolumeFraction=(acidVolumeMl/volumeScale)/
+    (acidVolumeMl/volumeScale+baseVolumeMl/volumeScale);
+  const baseVolumeFraction=(baseVolumeMl/volumeScale)/
+    (acidVolumeMl/volumeScale+baseVolumeMl/volumeScale);
+  const netAcidConcentration=
+    acidConcentrationMolPerL*acidVolumeFraction-
+    baseConcentrationMolPerL*baseVolumeFraction;
   if (!Number.isFinite(netAcidConcentration)) {
     throw new RangeError("net acid concentration exceeds the finite numeric range");
   }
