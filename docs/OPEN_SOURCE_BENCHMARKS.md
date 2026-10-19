@@ -50,3 +50,21 @@
 - 使用 Math.hypot 和共轭形式，减少极稀碱溶液求根时的数值抵消。
 - 新增回归测试：1e-10 mol/L 强酸仍略呈酸性、等量中和仍为 pH 7、极稀强碱仍略呈碱性。
 - 适用边界仍须明确：浓度在此处近似活度；高离子强度浓溶液需要活度系数等更完整模型。PhET 的教学模型文档用于核对变量与假设，并不意味着将其旧版 pH 0–14 视觉范围套用到所有溶液。
+
+
+## 7. 扩展开源对标：科学模型、实验流程与交互模拟
+
+> 覆盖说明：这里同时参考科学模型模拟和教学流程模拟。二者的精度目标不同：桌面教学模拟不能视为研究级计算化学或真实实验的替代物。
+
+| 上游项目 | 可核查入口 | 可迁移模式 | 状态/边界 |
+|---|---|---|---|
+| [PhET Acid-Base Solutions](https://github.com/phetsims/acid-base-solutions) | [模型说明](https://github.com/phetsims/acid-base-solutions/blob/main/doc/model.md) | 浓度、Ka/Kb、Kw、离子浓度、pH 的模型变量显式化；把公式假设写成可学习内容 | 独立仓库已归档/整合，仅作模型说明参考；不可照搬其 UI 范围作为浓溶液通用边界 |
+| [PhET pH Scale Basics](https://github.com/phetsims/ph-scale-basics) | [仓库状态说明](https://github.com/phetsims/ph-scale-basics) | 把微观粒子、浓度变化和 pH 显示联系起来，支持面向学习者的概念反馈 | 仓库 README 已声明不再维护并整合；只参考历史教学交互，不作为当前活跃依赖 |
+| [VirtualChemLab](https://github.com/qilaidev/virtual-chem-lab) | [功能/架构 README](https://github.com/qilaidev/virtual-chem-lab/blob/main/README.md) | YAML 实验模板、步骤引导、输入校验、曲线与学习记录、安全提示 | Python/PySide6 桌面应用，不是浏览器组件；项目明确不是研究级计算化学引擎 |
+| [ChemCollective Virtual Labs](https://chemcollective.org/vlabs) | [虚拟实验教学入口](https://chemcollective.org/vlabs) | 任务情境、试剂/操作步骤、观察结果和学习活动编排 | 教学实验平台，不能替代有明确边界条件的数值物理模型 |
+
+### 对本项目的实现映射
+- 首页工作流连接实验目录、变量控制、公式助教和参数存档；四步共享同一个当前实验状态，避免按钮各自维护第二份状态。
+- 每个模型继续补齐输入/输出单位、适用区间、数值基准和近似假设；曲线绘制不得改变科学状态。
+- 将“教学动画”“方程计算”“实验测量”分开展示。没有真实采集设备时，任何实时动画都不能标注为现场测量。
+- 对旧实验模型逐个审查边界值、极限和量纲，并优先把共用方程移入 src/domain 后再接入 UI。
