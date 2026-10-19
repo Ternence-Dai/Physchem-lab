@@ -7,8 +7,8 @@ const app = fs.readFileSync('assets/js/legacy-app.js', 'utf8');
 const html = pageHtml + '\n' + fs.readFileSync('assets/js/experiment-catalogue.js', 'utf8') + '\n' + app;
 const catalogue = fs.readFileSync('assets/js/experiment-catalogue.js', 'utf8');
 const productCss = fs.readFileSync('assets/css/product-system.css', 'utf8');
-assert.ok(html.includes('product-system.css?v=20261018-v3'),
-  'PhysChem Lab must load the V3 interactive engineering workspace stylesheet');
+assert.ok(html.includes('product-system.css?v=20261019-v6'),
+  'PhysChem Lab must load the V6 interactive engineering workspace stylesheet');
 assert.ok(productCss.includes('PhysChem Lab interactive engineering workspace'),
   'PhysChem Lab V3 visual layer must be present');
 for (const selector of [
@@ -25,7 +25,7 @@ assert.ok(html.includes('id="mobileMenu"') &&
           html.includes('id="experimentSidebar"') &&
           html.includes('id="sidebarBackdrop"'),
   'mobile experiment navigation controls must be mounted in the page');
-assert.ok(html.includes('product-system.css?v=20261018-v3'));
+assert.ok(html.includes('product-system.css?v=20261019-v6'));
 
 const P = (key,label,min,max,step,value,unit) => ({key,label,min,max,step,value,unit:unit||''});
 const F = (value,digits=2) => Number(value).toFixed(digits);
