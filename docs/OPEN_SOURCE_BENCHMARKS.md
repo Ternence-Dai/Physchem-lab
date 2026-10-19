@@ -42,3 +42,11 @@
 - [PhET Acid-Base Solutions](https://github.com/phetsims/acid-base-solutions)
 - [PhET 模型说明](https://github.com/phetsims/acid-base-solutions/blob/main/doc/model.md)
 - [PhET 交互式模拟网站](https://phet.colorado.edu/)
+
+
+## 6. 2026-10-19 实施补充：极稀强酸/强碱的水自电离边界
+
+- 对照 PhET 模型说明中的水自电离常数 Kw，本项目 strongAcidStrongBasePH 不再只用“过量酸/碱浓度”直接取对数；现在求解 [H+] - [OH-] = C_excess 与 [H+][OH-] = Kw，在 25 °C 使用 Kw = 10^-14。
+- 使用 Math.hypot 和共轭形式，减少极稀碱溶液求根时的数值抵消。
+- 新增回归测试：1e-10 mol/L 强酸仍略呈酸性、等量中和仍为 pH 7、极稀强碱仍略呈碱性。
+- 适用边界仍须明确：浓度在此处近似活度；高离子强度浓溶液需要活度系数等更完整模型。PhET 的教学模型文档用于核对变量与假设，并不意味着将其旧版 pH 0–14 视觉范围套用到所有溶液。
