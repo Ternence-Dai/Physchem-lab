@@ -125,9 +125,9 @@ EXP.push({id:'p5',name:'斜面滑动与摩擦力',cat:'物理',tags:['力学','�
     pl(c,'状态：'+stat,26,22,'rgba(255,255,255,.05)',col);
     pl(c,'tanθ='+F(Math.tan(th),3)+'  μ='+F(p.mu,2),26,52,'rgba(255,255,255,.05)',Math.tan(th)>p.mu?'#f472b6':'#34d399');
   },
-  readout:function(p,st){var th=p.theta*Math.PI/180;var a=window.PHYS_DOMAIN.inclinedPlaneAcceleration({angleDeg:p.theta,frictionCoefficient:p.mu,gravity:9.8});return[{k:'加速度 a',v:F(Math.max(a,0),2)+' m/s²'},{k:'当前速度 v',v:F(st.v,2)+' m/s'},{k:'沿面位移',v:F(4-st.s,2)+' m'},{k:'重力分量',v:F(p.m*9.8*Math.sin(th),1)+' N'},{k:'摩擦力 f',v:F(p.mu*p.m*9.8*Math.cos(th),1)+' N'},{k:'临界角 arctanμ',v:F(Math.atan(p.mu)*180/Math.PI,1)+'°'}];},
-  tutor:function(p,st){var th=p.theta*Math.PI/180;var a=window.PHYS_DOMAIN.inclinedPlaneAcceleration({angleDeg:p.theta,frictionCoefficient:p.mu,gravity:9.8});var cr=Math.atan(p.mu)*180/Math.PI;
-    return '【模型】力的正交分解：重力拆成 mg·sinθ（下滑）和 mg·cosθ（压面）。\n\n【参数】θ='+p.theta+'°, μ='+F(p.mu,2)+', m='+F(p.m,1)+' kg\n\n【推演】\n· mg·sinθ='+F(p.m*9.8*Math.sin(th),1)+' N\n· N='+F(p.m*9.8*Math.cos(th),1)+' N\n· f=μN='+F(p.mu*p.m*9.8*Math.cos(th),1)+' N\n· a='+F(Math.max(a,0),2)+' m/s²\n· 临界角='+F(cr,1)+'°\n\n【结论】'+(a>0.01?'θ>临界角，加速下滑。':'θ<临界角，自锁。')+'\n\n【延伸】加速度与质量无关！';}
+  readout:function(p,st){var forces=window.PHYS_DOMAIN.inclinedPlaneForces({angleDeg:p.theta,frictionCoefficient:p.mu,massKg:p.m,gravity:9.8});return[{k:'加速度 a',v:F(forces.acceleration,2)+' m/s²'},{k:'当前速度 v',v:F(st.v,2)+' m/s'},{k:'沿面位移',v:F(4-st.s,2)+' m'},{k:'重力分量',v:F(forces.parallelGravity,1)+' N'},{k:forces.slipping?'动摩擦力 fₖ':'静摩擦力 fₛ',v:F(forces.frictionForce,1)+' N'},{k:'法向支持力 N',v:F(forces.normalForce,1)+' N'},{k:'状态',v:forces.slipping?'正在滑动':'静止（静摩擦平衡）'},{k:'临界角 arctanμ',v:F(Math.atan(p.mu)*180/Math.PI,1)+'°'}];},
+  tutor:function(p,st){var forces=window.PHYS_DOMAIN.inclinedPlaneForces({angleDeg:p.theta,frictionCoefficient:p.mu,massKg:p.m,gravity:9.8});var cr=Math.atan(p.mu)*180/Math.PI;
+    return '【模型】先比较 mg·sinθ 与 μN：未达到滑动阈值时，静摩擦力自动平衡沿斜面分力；开始滑动后，简化模型采用 fₖ=μN。\n\n【参数】θ='+p.theta+'°, μ='+F(p.mu,2)+', m='+F(p.m,1)+' kg\n\n【推演】\n· mg·sinθ='+F(forces.parallelGravity,1)+' N\n· N='+F(forces.normalForce,1)+' N\n· '+(forces.slipping?'动':'静')+'摩擦力='+F(forces.frictionForce,1)+' N\n· a='+F(forces.acceleration,2)+' m/s²\n· 临界角='+F(cr,1)+'°\n\n【结论】'+(forces.slipping?'θ>临界角，物体开始滑动。':'θ≤临界角，静摩擦力平衡重力沿面分力。')+'\n\n【说明】本实验将静、动摩擦系数简化为同一个 μ。';}
 });
 
 /* 6. 理想气体 */
