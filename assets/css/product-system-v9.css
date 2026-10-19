@@ -163,3 +163,21 @@ body[data-workspace] :where(.eyebrow,.kicker){
   body[data-workspace] :where(.hyhub-intro h2,.study-intro h2,.physchem-intro h2,.product-intro h2,.ekpo-intro h2){font-size:clamp(22px,6vw,30px)}
   body[data-workspace] :where(.card,.panel,.stat-card,.metric-card,.dashboard-card,.module-card,.chart-card){border-radius:14px}
 }
+ 
+/* V9.1 — recoverable experiment archive actions */
+body[data-workspace="physchem"] .archive-action-row{
+  display:flex;justify-content:flex-end;margin-top:10px
+}
+body[data-workspace="physchem"] .w9-archive-load{
+  border:1px solid rgba(80,126,174,.28);border-radius:8px;
+  padding:7px 11px;background:linear-gradient(130deg,#f1f7ff,#eaf2fc);
+  color:#315f8d;font-size:10px;font-weight:800;cursor:pointer;
+  transition:transform .18s ease,box-shadow .18s ease,background .18s ease
+}
+body[data-workspace="physchem"] .w9-archive-load:hover{
+  transform:translateY(-1px);background:#e2efff;
+  box-shadow:0 5px 14px rgba(53,105,160,.12)
+}
+@media(prefers-reduced-motion:reduce){
+  body[data-workspace="physchem"] .w9-archive-load{transition:none}
+}
