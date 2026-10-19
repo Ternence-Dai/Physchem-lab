@@ -173,6 +173,12 @@ assert.ok(springBlock.includes('var a0=window.PHYS_DOMAIN.springOscillator') &&
   springBlock.includes('st.x+=st.v*h+0.5*a0*h*h;var a1=window.PHYS_DOMAIN.springOscillator') &&
   springBlock.includes('st.v+=0.5*(a0+a1)*h;'),
   'spring oscillator animation must use velocity-Verlet integration to reduce numerical energy drift');
+const titrationBlock = catalogue.slice(catalogue.indexOf("id:'p7'"), catalogue.indexOf("id:'p8'"));
+assert.ok(titrationBlock.includes('PHYS_DOMAIN.strongAcidStrongBasePH'),
+  'strong acid/base titration curve must use the shared domain pH model');
+assert.ok(titrationBlock.includes('不包含弱酸/弱碱的 Ka/Kb 平衡') &&
+  titrationBlock.includes('不能直接套用本曲线'),
+  'titration tutor must disclose the strong-acid/strong-base model boundary');
 const gasBlock = catalogue.slice(catalogue.indexOf("id:'p6'"), catalogue.indexOf("id:'p7'"));
 assert.ok(gasBlock.split('PHYS_DOMAIN.idealGasPressure').length - 1 >= 3,
   'ideal-gas animation, readout and tutor must use the shared SI pressure calculation');
