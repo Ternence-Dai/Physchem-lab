@@ -424,16 +424,85 @@ function bindUI(){
 }
 
 function updateSI(){var x=E('si');if(x)x.textContent='📁 存档：'+saves.length+' 条';}
+function restoreSavedExperiment(index){
+  if(!Number.isSafeInteger(index)||index<0||index>=saves.length){
+    toast('未找到对应的实验档案记录');return false;
+  }
+  var saved=saves[index];
+  var target=null;
+  for(var i=0;i<EXP.length;i++){
+    if(saved.experimentId!==undefined && String(EXP[i].id)===String(saved.experimentId)){
+      target=EXP[i];break;
+    }
+  }
+  if(!target && saved.experimentId===undefined){
+    for(var j=0;j<EXP.length;j++){
+      if(EXP[j].name===saved.name){target=EXP[j];break;}
+    }
+  }
+  if(!target){
+    toast('该档案对应的实验模型不存在；原档案保持不变');return false;
+  }
+  if(saved.modelVersion && saved.modelVersion!==ARCHIVE_MODEL_VERSION){
+    toast('该档案使用不同版本的实验模型，已阻止自动套用');return false;
+  }
+  var definitions=Array.isArray(target.params)?target.params:[];
+  var keys=Object.keys(saved.params||{});
+  if(!definitions.length||keys.length!==definitions.length){
+    toast('档案参数结构与当前实验不一致；请保留档案并人工核对');return false;
+  }
+  var nextParams={};
+  for(var k=0;k<definitions.length;k++){
+    var definition=definitions[k];
+    var value=saved.params[definition.key];
+    if(!Object.prototype.hasOwnProperty.call(saved.params,definition.key)||
+       !Number.isFinite(value)||value<definition.min||value>definition.max||
+       !Number.isFinite(definition.min)||!Number.isFinite(definition.max)){
+      toast('档案参数 '+definition.key+' 超出当前实验允许范围，未应用任何参数');return false;
+    }
+    nextParams[definition.key]=value;
+  }
+  var nextState;
+  try{nextState=target.init?target.init(nextParams):{};}
+  catch(error){toast('实验模型无法使用这组参数：'+error.message);return false;}
+
+  setExperimentSidebarOpen(false);
+  cur=target;
+  P=nextParams;
+  ST=nextState||{};
+  paused=false;
+  var pauseButton=E('bp');
+  if(pauseButton){pauseButton.textContent='⏸ 暂停';pauseButton.className='bt';}
+  E('et').textContent=cur.name;
+  E('eb2').textContent=cur.brief;
+  buildParams();
+  buildPanel();
+  renderList();
+  refreshTutor(true);
+  setTimeout(resize,30);
+  setTimeout(resize,200);
+  toast('已载入实验参数；原始档案仍保留在列表中');
+  return true;
+}
 function renderD(){
   var b=E('db');if(!b)return;
+  if(b.dataset.archiveActionsBound!=='true'){
+    b.dataset.archiveActionsBound='true';
+    b.addEventListener('click',function(event){
+      var button=event.target.closest('[data-load-save]');
+      if(!button)return;
+      restoreSavedExperiment(Number(button.getAttribute('data-load-save')));
+    });
+  }
   if(!saves.length){b.innerHTML='<div class="ep">暂无存档记录<br>点击「💾 存档」保存当前实验参数</div>';return;}
   b.innerHTML='';for(var i=0;i<saves.length;i++){var s=saves[i];
     var d=document.createElement('div');d.className='rc';
     var parts=[];for(var k in s.params)if(s.params.hasOwnProperty(k))parts.push(esc(k)+'='+esc(typeof s.params[k]==='number'?+s.params[k].toFixed(3):s.params[k]));
     var meta=(s.experimentId?'实验ID '+esc(s.experimentId):'旧版存档 · 未记录实验ID')+' · '+(s.modelVersion?esc(s.modelVersion):'旧版模型');
-    d.innerHTML='<div class="rh"><span class="rn">'+(i+1)+'. '+esc(s.name)+'</span><span class="rt">'+esc(s.time)+'</span></div><div class="rp">'+meta+'<br>'+parts.join('  ')+'</div>';
+    d.innerHTML='<div class="rh"><span class="rn">'+(i+1)+'. '+esc(s.name)+'</span><span class="rt">'+esc(s.time)+'</span></div><div class="rp">'+meta+'<br>'+parts.join('  ')+'<div class="archive-action-row"><button type="button" class="w9-archive-load" data-load-save="'+i+'">载入本组参数</button></div></div>';
     b.appendChild(d);}
 }
+
 var tT=null;
 function toast(m){var t=E('ts');if(!t)return;t.textContent=m;t.className='ts on';clearTimeout(tT);tT=setTimeout(function(){t.className='ts';},1800);}
 
