@@ -179,10 +179,7 @@ EXP.push({id:'p7',name:'酸碱滴定曲线',cat:'化学',tags:['分析化学','p
   formulas:['V_eq=c(酸)·V(酸)/c(碱)','当量点前 [H⁺]=(n酸−n碱)/V总','当量点后 pOH=−lg[(n碱−n酸)/V总]','当量点 pH=7.00'],
   init:function(){return{Vb:0,t:0};},
   step:function(p,dt,st){var Veq=p.ca*p.va/p.cb;var Vm=Veq*1.9;st.Vb+=Vm/9*dt;if(st.Vb>Vm)st.Vb=0;st.t+=dt;},
-  pHAt:function(Vb,p){var nA=p.ca*p.va/1000;var nB=p.cb*Vb/1000;var Vt=(p.va+Vb)/1000;var df=nA-nB;
-    if(Math.abs(df)<1e-12)return 7;
-    if(df>0)return C(-Math.log10(df/Vt),0,14);
-    return C(14-(-Math.log10(-df/Vt)),0,14);},
+  pHAt:function(Vb,p){return window.PHYS_DOMAIN.strongAcidStrongBasePH({acidConcentrationMolPerL:p.ca,acidVolumeMl:p.va,baseConcentrationMolPerL:p.cb,baseVolumeMl:Vb});},
   pHC:function(ph){if(ph<3)return'#ef4444';if(ph<5)return'#f97316';if(ph<6.5)return'#facc15';if(ph<7.5)return'#4ade80';if(ph<9)return'#38bdf8';if(ph<11)return'#818cf8';return'#c084fc';},
   draw:function(c,W,H,p,st){var self=this;var Veq=p.ca*p.va/p.cb;var Vm=Veq*1.9;
     var gx0=66,gx1=Math.max(W-260,220);var gy0=54,gy1=H-66;
