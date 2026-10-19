@@ -722,7 +722,7 @@ var C3=[
 
 {id:'ch9',name:'反应级数与速率方程',cat:'化学',tags:['动力学','级数'],br:'反应速率与浓度幂次成正比，级数由实验确定。',
  p:[P('k','速率常数 k',0.001,1,0.001,0.1,''),P('c0','初始浓度 c₀',0.1,5,0.1,1,'mol/L'),P('n','反应级数 n',0,3,1,1,'')],
- f:['v=k·[A]ⁿ','零级 c=c₀−kt','一级 ln(c/c₀)=−kt','二级 1/c−1/c₀=kt'],
+ f:['v=k·[A]ⁿ','零级 c=c₀−kt','一级 ln(c/c₀)=−kt','二级 1/c−1/c₀=kt','三级 1/c²−1/c₀²=2kt'],
  xR:[0,10],yR:[0,2],xT:10,yT:5,xL:'时间 t (s)',yL:'浓度 c (mol/L)',col:'#a78bfa',
  fn:function(p,x){if(p.n===0)return Math.max(0,p.c0-p.k*x);
    if(p.n===1)return p.c0*Math.exp(-p.k*x);
