@@ -152,10 +152,15 @@ assert.ok(ohmBlock.includes("电荷流率") && ohmBlock.includes("C/s"),
   'Ohm readout must express current as charge flow per second, not charge in coulombs');
 
 const inclineBlock = catalogue.slice(catalogue.indexOf("id:'p5'"), catalogue.indexOf("id:'p6'"));
-assert.ok((inclineBlock.match(/PHYS_DOMAIN\.inclinedPlaneAcceleration/g)||[]).length >= 4,
-  'inclined-plane animation, drawing, readout and tutor must share the domain solver');
-assert.doesNotMatch(inclineBlock, /9\.8\*\(Math\.sin\(th\)-p\.mu\*Math\.cos\(th\)\)/,
-  'inclined-plane experiment must not duplicate the acceleration formula');
+assert.ok((inclineBlock.match(/PHYS_DOMAIN\.inclinedPlaneAcceleration/g)||[]).length >= 2,
+  'inclined-plane animation and drawing must use the shared acceleration solver');
+assert.ok((inclineBlock.match(/PHYS_DOMAIN\.inclinedPlaneForces/g)||[]).length >= 2,
+  'inclined-plane readout and tutor must use shared static/kinetic friction force calculations');
+assert.ok(inclineBlock.includes("静摩擦力 fₛ") && inclineBlock.includes("动摩擦力 fₖ") &&
+  inclineBlock.includes("本实验将静、动摩擦系数简化为同一个 μ"),
+  'inclined-plane output must distinguish static and kinetic friction and disclose the coefficient simplification');
+assert.doesNotMatch(inclineBlock, /p\.mu\*p\.m\*9\.8\*Math\.cos\(th\)/,
+  'inclined-plane readout must not report kinetic friction while the block is static');
 
 console.log('Physics/chemistry model smoke checks passed: ' + checked + ' models.');
 
