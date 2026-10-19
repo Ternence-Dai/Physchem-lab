@@ -1,0 +1,20 @@
+/* PhysChem Lab — interactive experiment workbench */
+body[data-workspace="physchem"]{background:radial-gradient(ellipse at 80% 0%,rgba(35,135,164,.14),transparent 38rem),#f1f6fa;color:#172f43}
+body[data-workspace="physchem"] .sb{background:linear-gradient(180deg,#12374c,#0b2338);box-shadow:10px 0 32px rgba(12,43,65,.1)}
+body[data-workspace="physchem"] .br{padding:22px 18px;border-bottom:1px solid rgba(222,241,250,.14)}
+body[data-workspace="physchem"] .br h1{color:#f4fbff;letter-spacing:-.02em}
+body[data-workspace="physchem"] .br p{color:#9fc4d5}
+body[data-workspace="physchem"] .mn{background:transparent;min-width:0}
+body[data-workspace="physchem"] .tb{min-height:70px;padding:12px clamp(16px,3vw,38px);background:rgba(250,253,255,.9);border-bottom:1px solid #dce7ef;backdrop-filter:blur(16px)}
+body[data-workspace="physchem"] .physchem-intro{margin:20px clamp(14px,3vw,36px);padding:clamp(24px,3vw,40px);border-radius:24px;background:linear-gradient(118deg,#12364b,#175c78 64%,#267e96);color:#f5fcff;box-shadow:0 20px 50px rgba(16,65,89,.18)}
+body[data-workspace="physchem"] .physchem-intro h2{color:#fff;font-size:clamp(26px,3.3vw,40px);letter-spacing:-.04em}
+body[data-workspace="physchem"] .physchem-intro p{color:#c7e2ed;line-height:1.8}
+body[data-workspace="physchem"] .physchem-intro .eyebrow{color:#8de1eb;letter-spacing:.18em;font-weight:850}
+body[data-workspace="physchem"] .physchem-tags span{border:1px solid rgba(223,247,255,.2);background:rgba(255,255,255,.09);color:#e6f8ff;border-radius:99px;padding:7px 11px}
+body[data-workspace="physchem"] .atom{background:radial-gradient(circle at 35% 30%,#a7eaf1,#1787a0 54%,#123b58);border-radius:50%;box-shadow:0 0 0 12px rgba(255,255,255,.05),0 0 50px rgba(55,190,207,.22)}
+body[data-workspace="physchem"] .lab-commandbar,body[data-workspace="physchem"] .product-workflow,body[data-workspace="physchem"] .lab-notebook{margin-left:clamp(14px,3vw,36px);margin-right:clamp(14px,3vw,36px);border:1px solid #dce7ef;border-radius:19px;background:#fff;box-shadow:0 12px 32px rgba(24,55,78,.06)}
+body[data-workspace="physchem"] .pnl{border:1px solid #dce7ef;border-radius:16px;background:#fff;box-shadow:0 10px 26px rgba(24,55,78,.055)}
+body[data-workspace="physchem"] .bt{border-radius:10px}
+body[data-workspace="physchem"] .bt:focus-visible,body[data-workspace="physchem"] button:focus-visible,body[data-workspace="physchem"] input:focus-visible{outline:3px solid rgba(20,151,180,.28);outline-offset:2px}
+body[data-workspace="physchem"] .fl button.on{background:#147e99;color:white}
+@media(max-width:760px){body[data-workspace="physchem"] .physchem-intro{margin:14px;padding:22px}body[data-workspace="physchem"] .lab-commandbar,body[data-workspace="physchem"] .product-workflow,body[data-workspace="physchem"] .lab-notebook{margin-left:14px;margin-right:14px}}
