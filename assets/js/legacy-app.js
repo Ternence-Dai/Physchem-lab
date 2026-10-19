@@ -120,6 +120,24 @@ function isValidExperimentSave(item){
   if(typeof item.time!=='string'||!item.time.trim()||item.time.length>80)return false;
   if(item.experimentId!==undefined && (typeof item.experimentId!=='string'||!item.experimentId.trim()||item.experimentId.length>80))return false;
   if(item.modelVersion!==undefined && (typeof item.modelVersion!=='string'||!item.modelVersion.trim()||item.modelVersion.length>80))return false;
+  if(item.experimentSnapshotVersion!==undefined && item.experimentSnapshotVersion!==1)return false;
+  if(item.snapshotAt!==undefined && (typeof item.snapshotAt!=='string'||
+     !/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$/.test(item.snapshotAt)||
+     !Number.isFinite(Date.parse(item.snapshotAt))||
+     new Date(Date.parse(item.snapshotAt)).toISOString()!==item.snapshotAt))return false;
+  if(item.note!==undefined && (typeof item.note!=='string'||item.note.length>1200||
+     /[\\x00-\\x08\\x0B\\x0C\\x0E-\\x1F\\x7F]/.test(item.note)))return false;
+  if(item.readouts!==undefined && (!Array.isArray(item.readouts)||item.readouts.length>30||
+     !item.readouts.every(function(row){
+       return !!row&&typeof row==='object'&&!Array.isArray(row)&&
+         typeof row.label==='string'&&row.label.trim().length>0&&row.label.length<=160&&
+         typeof row.value==='string'&&row.value.length<=240;
+     })))return false;
+  if(item.formulaSnapshot!==undefined && (!Array.isArray(item.formulaSnapshot)||
+     item.formulaSnapshot.length>30||!item.formulaSnapshot.every(function(row){
+       return typeof row==='string'&&row.length>0&&row.length<=600;
+     })))return false;
+  if(item.tutorSnapshot!==undefined && (typeof item.tutorSnapshot!=='string'||item.tutorSnapshot.length>4000))return false;
   if(!item.params||typeof item.params!=='object'||Array.isArray(item.params))return false;
   var keys=Object.keys(item.params);
   if(keys.length<1||keys.length>30)return false;
@@ -306,6 +324,7 @@ function selectExp(id){
   if(!f){SE('未找到实验: '+id);return;}
   setExperimentSidebarOpen(false);
   cur=f;P={};
+  var noteField=E('experimentNote');if(noteField)noteField.value='';
   for(var j=0;j<cur.params.length;j++)P[cur.params[j].key]=cur.params[j].value;
   ST=cur.init?cur.init(P):{};
   paused=false;
@@ -403,8 +422,22 @@ function bindUI(){
     var b=E('bp');if(b){b.textContent='⏸ 暂停';b.className='bt';}refreshTutor(true);toast('实验已重置 ↺');};
   var bs=E('bs');if(bs)bs.onclick=function(){if(!cur)return;
     if(storageRecoveryRequired){toast('存档恢复保护已启用：为避免覆盖旧数据，本次保存已暂停');return;}
-    var nextSaves=[{name:cur.name,experimentId:String(cur.id||''),modelVersion:ARCHIVE_MODEL_VERSION,time:new Date().toLocaleString('zh-CN',{hour12:false}),params:JSON.parse(JSON.stringify(P))}].concat(saves).slice(0,30);
-    if(persistExperimentSaves(nextSaves))toast('实验档案已保存到本机 ✓');
+    var snapshot=buildExperimentRecordSnapshot();
+    var record={
+      name:cur.name,
+      experimentId:String(cur.id||''),
+      modelVersion:ARCHIVE_MODEL_VERSION,
+      time:new Date().toLocaleString('zh-CN',{hour12:false}),
+      params:JSON.parse(JSON.stringify(P)),
+      experimentSnapshotVersion:snapshot.experimentSnapshotVersion,
+      snapshotAt:snapshot.snapshotAt,
+      note:snapshot.note,
+      readouts:snapshot.readouts,
+      formulaSnapshot:snapshot.formulaSnapshot,
+      tutorSnapshot:snapshot.tutorSnapshot
+    };
+    var nextSaves=[record].concat(saves).slice(0,30);
+    if(persistExperimentSaves(nextSaves))toast('实验档案已保存：参数、计算读数、公式、助教说明与观察备注 ✓');
     else toast('存档写入失败或恢复保护已启用；原有档案未被覆盖');
     updateSI();renderD();syncArchiveRecoveryUI();};
   var bd=E('bd');if(bd)bd.onclick=function(){var d=E('dr');if(d)d.className=d.className.indexOf('on')>=0?'dr':'dr on';renderD();};
@@ -479,11 +512,41 @@ function restoreSavedExperiment(index){
   buildPanel();
   renderList();
   refreshTutor(true);
+  var noteField=E('experimentNote');
+  if(noteField)noteField.value=typeof saved.note==='string'?saved.note:'';
   setTimeout(resize,30);
   setTimeout(resize,200);
-  toast('已载入实验参数；原始档案仍保留在列表中');
+  toast('已载入实验参数与观察备注；原始档案仍保留在列表中');
   return true;
 }
+function buildExperimentRecordSnapshot(){
+  var readouts=[];
+  try{
+    var rows=cur&&cur.readout?cur.readout(P,ST):[];
+    if(Array.isArray(rows))readouts=rows.slice(0,30).map(function(row){
+      return {
+        label:String(row&&row.k!==undefined?row.k:'结果').slice(0,160),
+        value:String(row&&row.v!==undefined?row.v:'—').slice(0,240)
+      };
+    });
+  }catch(error){console.warn('当前模型读数快照未能生成',error);}
+  var formulaSnapshot=Array.isArray(cur&&cur.formulas)
+    ?cur.formulas.slice(0,30).map(function(formula){return String(formula).slice(0,600);})
+    :[];
+  var tutorSnapshot='';
+  try{tutorSnapshot=cur&&cur.tutor?String(cur.tutor(P,ST)).slice(0,4000):'';}
+  catch(error){tutorSnapshot='当前助教说明未能生成：'+String(error&&error.message||error).slice(0,300);}
+  var noteField=E('experimentNote');
+  return {
+    experimentSnapshotVersion:1,
+    snapshotAt:new Date().toISOString(),
+    note:noteField?String(noteField.value||'').trim():'',
+    readouts:readouts,
+    formulaSnapshot:formulaSnapshot,
+    tutorSnapshot:tutorSnapshot
+  };
+}
+
 function renderD(){
   var b=E('db');if(!b)return;
   if(b.dataset.archiveActionsBound!=='true'){
@@ -499,7 +562,15 @@ function renderD(){
     var d=document.createElement('div');d.className='rc';
     var parts=[];for(var k in s.params)if(s.params.hasOwnProperty(k))parts.push(esc(k)+'='+esc(typeof s.params[k]==='number'?+s.params[k].toFixed(3):s.params[k]));
     var meta=(s.experimentId?'实验ID '+esc(s.experimentId):'旧版存档 · 未记录实验ID')+' · '+(s.modelVersion?esc(s.modelVersion):'旧版模型');
-    d.innerHTML='<div class="rh"><span class="rn">'+(i+1)+'. '+esc(s.name)+'</span><span class="rt">'+esc(s.time)+'</span></div><div class="rp">'+meta+'<br>'+parts.join('  ')+'<div class="archive-action-row"><button type="button" class="w9-archive-load" data-load-save="'+i+'">载入本组参数</button></div></div>';
+    var outputs=Array.isArray(s.readouts)&&s.readouts.length
+      ?'<div class="w9-archive-results">'+s.readouts.map(function(row){return '<div><span>'+esc(row.label)+'</span><b>'+esc(row.value)+'</b></div>';}).join('')+'</div>':'';
+    var note=s.note?'<div class="w9-archive-note"><strong>观察备注</strong><p>'+esc(s.note)+'</p></div>':'';
+    var formulas=Array.isArray(s.formulaSnapshot)&&s.formulaSnapshot.length
+      ?'<details class="w9-archive-formulas"><summary>公式快照 · '+s.formulaSnapshot.length+' 条</summary>'+s.formulaSnapshot.map(function(formula){return '<div>'+esc(formula)+'</div>';}).join('')+'</details>':'';
+    var snapshotMeta=s.snapshotAt?' · 结果快照 '+esc(new Date(s.snapshotAt).toLocaleString()):'';
+    d.innerHTML='<div class="rh"><span class="rn">'+(i+1)+'. '+esc(s.name)+'</span><span class="rt">'+esc(s.time)+'</span></div><div class="rp">'+meta+snapshotMeta+'<br>'+parts.join('  ')+outputs+note+formulas+
+      (s.tutorSnapshot?'<details class="w9-archive-tutor"><summary>当时的公式助教说明</summary><p>'+esc(s.tutorSnapshot)+'</p></details>':'')+
+      '<div class="archive-action-row"><button type="button" class="w9-archive-load" data-load-save="'+i+'">载入本组参数与备注</button></div></div>';
     b.appendChild(d);}
 }
 
