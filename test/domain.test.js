@@ -52,7 +52,9 @@ test("strong acid/strong base titration pH is correct before, at and after equiv
  assert.ok(Math.abs(strongAcidStrongBasePH({...p,baseVolumeMl:0})-1)<1e-12);
  assert.equal(strongAcidStrongBasePH({...p,baseVolumeMl:20}),7);
  const after=strongAcidStrongBasePH({...p,baseVolumeMl:30});
- const expected=14+Math.log10((3-2)/50);
+ const excessBaseConcentration=(3-2)/50;
+ const expected=14+Math.log10((excessBaseConcentration+
+  Math.hypot(excessBaseConcentration,2*Math.sqrt(1e-14)))/2);
  assert.ok(Math.abs(after-expected)<1e-12);
  assert.ok(strongAcidStrongBasePH({...p,baseVolumeMl:19.9})<7);
  assert.ok(strongAcidStrongBasePH({...p,baseVolumeMl:20.1})>7);
