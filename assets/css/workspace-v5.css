@@ -1,0 +1,60 @@
+/* PhysChem Lab Workspace V5 — immersive scientific simulation studio */
+:root{--p-bg:#080e1b;--p-panel:#111d2d;--p-line:#263b55;--p-text:#e9f2ff;--p-muted:#91a5bf;--p-cyan:#58d5df;--p-violet:#9b8cff;--p-teal:#4dc6ae}
+body[data-workspace="physchem"]{background:radial-gradient(ellipse at 52% -10%,#24345a 0,transparent 42%),var(--p-bg)!important;color:var(--p-text)!important;font-family:Inter,"Segoe UI","Microsoft YaHei",sans-serif}
+body[data-workspace="physchem"] .sb{width:286px;background:linear-gradient(180deg,#101e31,#091423);border-right:1px solid #263d55;box-shadow:14px 0 40px #0003;padding:18px 14px}
+body[data-workspace="physchem"] .br{padding:8px 8px 20px;border-bottom:1px solid #293d54}
+body[data-workspace="physchem"] .br h1{color:#eef5ff;font-size:16px;font-weight:850}
+body[data-workspace="physchem"] .br p{color:#90a8c5}
+body[data-workspace="physchem"] .lg{background:linear-gradient(145deg,#3f55a0,#168f9c);color:#fff;border-radius:13px;box-shadow:0 8px 22px #247da344}
+body[data-workspace="physchem"] .sc input{background:#0a1727;border:1px solid #304760;color:#e9f2ff;border-radius:9px}
+body[data-workspace="physchem"] .fl button{background:#14243a;border:1px solid #30455e;color:#a6bbd3;border-radius:8px}
+body[data-workspace="physchem"] .fl button.on{background:#25355d;border-color:#6976b5;color:#dbe1ff}
+body[data-workspace="physchem"] .cnt{color:#93a9c1}
+body[data-workspace="physchem"] .lst{scrollbar-color:#405977 transparent}
+body[data-workspace="physchem"] .lst .item,body[data-workspace="physchem"] .lst button{background:transparent;border:1px solid transparent;border-radius:9px;color:#afc1d7}
+body[data-workspace="physchem"] .lst .item:hover,body[data-workspace="physchem"] .lst button:hover{background:#ffffff0a;border-color:#2b4660}
+body[data-workspace="physchem"] .lst .active{background:#203b50!important;border-color:#3d6b7b!important;color:#ecffff!important;box-shadow:inset 3px 0 #5bd8d7}
+body[data-workspace="physchem"] .ft{border-top:1px solid #2a4057;color:#829bb5}
+body[data-workspace="physchem"] .mn{background:transparent!important;min-width:0}
+body[data-workspace="physchem"] .tb{position:sticky;top:0;z-index:25;min-height:72px;padding:10px clamp(14px,2vw,28px);background:#091625eF;border-bottom:1px solid #253b53;backdrop-filter:blur(18px)}
+body[data-workspace="physchem"] .tb h2{color:#eef5ff;font-size:17px;font-weight:820}
+body[data-workspace="physchem"] .tb p{color:#8fa6bf}
+body[data-workspace="physchem"] .ac .bt{background:#14263b;border:1px solid #35516a;color:#bcd0e3;border-radius:8px}
+body[data-workspace="physchem"] .ac .bt:hover{background:#203a50;border-color:#4c8290;color:#fff}
+body[data-workspace="physchem"] .physchem-intro{position:relative;isolation:isolate;overflow:hidden;margin:20px clamp(14px,2vw,28px) 15px;padding:27px clamp(20px,3vw,38px);border:1px solid #324b69;border-radius:20px;background:radial-gradient(circle at 87% 25%,#8c7bff2d,transparent 27%),radial-gradient(circle at 25% 110%,#27b8c62b,transparent 30%),linear-gradient(115deg,#172744,#112136 62%,#183348);box-shadow:0 17px 40px #0004}
+body[data-workspace="physchem"] .physchem-intro .eyebrow{color:#8fe6e8;font-size:10px;letter-spacing:2px;font-weight:850}
+body[data-workspace="physchem"] .physchem-intro h2{color:#f2f6ff;font-size:clamp(24px,2.7vw,35px);letter-spacing:-.8px}
+body[data-workspace="physchem"] .physchem-intro p{color:#adbed5;max-width:760px;font-size:12px;line-height:1.8}
+body[data-workspace="physchem"] .physchem-tags span{background:#ffffff0d;border:1px solid #7692b340;color:#d0ddf0;border-radius:7px;padding:6px 9px}
+body[data-workspace="physchem"] .physchem-intro .atom{background:linear-gradient(145deg,#6657b6,#147f91);border:1px solid #8b95d1;color:#fff;box-shadow:0 0 0 10px #8f83ff0d,0 12px 28px #0004}
+body[data-workspace="physchem"] .lab-commandbar{margin:0 clamp(14px,2vw,28px) 14px;padding:15px 18px;border:1px solid #2a4058;border-radius:14px;background:#101d2d;box-shadow:0 8px 23px #0003}
+body[data-workspace="physchem"] .lab-command-copy strong{color:#eaf3ff}
+body[data-workspace="physchem"] .lab-command-copy small{color:#90a7bf}
+body[data-workspace="physchem"] .lab-command-actions button{background:#172941;border:1px solid #344d69;color:#bad0e1;border-radius:8px}
+body[data-workspace="physchem"] .product-workflow{margin:0 clamp(14px,2vw,28px) 15px;padding:18px;border:1px solid #2d435e;border-radius:16px;background:#101d2d;box-shadow:0 8px 24px #0003}
+body[data-workspace="physchem"] .product-workflow__head h3{color:#edf4ff}
+body[data-workspace="physchem"] .product-workflow__head p,body[data-workspace="physchem"] .product-workflow__foot{color:#91a7bf}
+body[data-workspace="physchem"] .product-workflow__mode{background:#28325a;border:1px solid #4b5787;color:#b9b0ff}
+body[data-workspace="physchem"] .product-workflow__item{min-height:108px;background:linear-gradient(145deg,#182a42,#132239);border:1px solid #344c68;border-radius:11px}
+body[data-workspace="physchem"] .product-workflow__item i{background:#253b5b;color:#75dfe0}
+body[data-workspace="physchem"] .product-workflow__item b{color:#e7f1ff}
+body[data-workspace="physchem"] .product-workflow__item small{color:#94aac3}
+body[data-workspace="physchem"] .product-workflow__item span{color:#82e0dc}
+body[data-workspace="physchem"] .sw{margin:0 clamp(14px,2vw,28px) 15px;border:1px solid #29445f;border-radius:18px;background:radial-gradient(circle at 50% 42%,#172e49,#081827 74%);box-shadow:0 18px 42px #0005;min-height:360px}
+body[data-workspace="physchem"] .bt2{padding:0 clamp(14px,2vw,28px) 28px;gap:13px}
+body[data-workspace="physchem"] .bt2 .pnl{border:1px solid #2c435d;border-radius:15px;background:linear-gradient(145deg,#14243a,#0f1b2c);box-shadow:0 9px 25px #0004;color:#e3efff}
+body[data-workspace="physchem"] .bt2 .pnl h3{color:#eff5ff}
+body[data-workspace="physchem"] .bt2 .pnl input:not([type=range]),body[data-workspace="physchem"] .bt2 .pnl select{background:#0a1727;border-color:#304861;color:#ebf4ff}
+body[data-workspace="physchem"] .dr{background:#0d1a2b;border-left:1px solid #2c435c;box-shadow:-14px 0 38px #0005;color:#e7f2ff}
+body[data-workspace="physchem"] .dh{background:#122238;border-bottom:1px solid #2c435c}
+body[data-workspace="physchem"] .dh h3{color:#eff6ff}
+body[data-workspace="physchem"] .rc{background:#13243a;border:1px solid #304861;color:#e2efff}
+body[data-workspace="physchem"] .rc .rn{color:#e8f5ff}
+body[data-workspace="physchem"] .rc .rt,body[data-workspace="physchem"] .rc .rp{color:#95adc5}
+body[data-workspace="physchem"] .archive-tools .bt,body[data-workspace="physchem"] .archive-tools .archive-import{background:#182d44;border:1px solid #3a5872;color:#b9d6e5}
+body[data-workspace="physchem"] .ts{background:#14283a;border:1px solid #4b8790;color:#e4ffff}
+body[data-workspace="physchem"] .eb{background:#3b2b28!important;color:#ffddb0!important;border:1px solid #8b6548!important}
+body[data-workspace="physchem"] :where(button,input,select,textarea,a,[tabindex]):focus-visible{outline:3px solid #77e1e4!important;outline-offset:3px}
+@media(max-width:900px){body[data-workspace="physchem"] .sb{width:min(86vw,320px)}body[data-workspace="physchem"] .physchem-intro{margin:13px;padding:20px 17px}body[data-workspace="physchem"] .lab-commandbar{margin:0 13px 12px}body[data-workspace="physchem"] .product-workflow{margin:0 13px 12px;padding:14px 12px}body[data-workspace="physchem"] .sw{margin:0 13px 12px}body[data-workspace="physchem"] .bt2{padding:0 13px 25px}body[data-workspace="physchem"] .product-workflow__grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){body[data-workspace="physchem"] .physchem-intro .atom{display:none}body[data-workspace="physchem"] .physchem-intro h2{font-size:21px}body[data-workspace="physchem"] .lab-command-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:100%}body[data-workspace="physchem"] .lab-command-actions button{width:100%}body[data-workspace="physchem"] .product-workflow__item{min-height:108px;padding:9px}body[data-workspace="physchem"] .sw{min-height:320px}body[data-workspace="physchem"] .bt2{grid-template-columns:1fr}body[data-workspace="physchem"] .dr{width:100%;max-width:100%}}
+@media(prefers-reduced-motion:reduce){body[data-workspace="physchem"] *,body[data-workspace="physchem"] *:before,body[data-workspace="physchem"] *:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
