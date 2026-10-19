@@ -375,3 +375,101 @@ input[type=range]::-moz-range-thumb{background:linear-gradient(135deg,#fff,#2999
 .product-workflow__head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:20px}.product-workflow__head .eyebrow{display:block;margin-bottom:6px;color:var(--workflow-accent);font-size:10px;letter-spacing:.16em;font-weight:850}.product-workflow__head h3{margin:0;color:#172e45;font-size:clamp(19px,2vw,25px);font-weight:820;letter-spacing:-.04em}.product-workflow__head p{margin:6px 0 0;color:#63788e;font-size:12.5px;line-height:1.65}.product-workflow__mode{flex:0 0 auto;padding:7px 10px;border:1px solid color-mix(in srgb,var(--workflow-accent) 25%,#dce7ef);border-radius:999px;background:#fff;color:#61788d;font-size:9px;font-weight:800;letter-spacing:.08em}
 .product-workflow__grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.product-workflow__item{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:6px;min-width:0;min-height:132px;padding:15px 15px 13px;border:1px solid #e1eaf2;border-radius:15px;background:rgba(255,255,255,.94);color:#19334b;text-align:left;cursor:pointer;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}.product-workflow__item:hover{transform:translateY(-3px);border-color:color-mix(in srgb,var(--workflow-accent) 48%,#dce7ef);box-shadow:0 13px 30px rgba(28,58,86,.1)}.product-workflow__item i{font-style:normal;color:var(--workflow-accent);font-size:10px;font-weight:900;letter-spacing:.12em}.product-workflow__item b{font-size:14px;font-weight:800}.product-workflow__item small{color:#6b8094;font-size:11px;line-height:1.5}.product-workflow__item span{margin-top:auto;color:var(--workflow-accent);font-size:10px;font-weight:800}.product-workflow__foot{margin-top:14px;padding-top:11px;border-top:1px solid #e6edf3;color:#718397;font-size:10px;line-height:1.55}
 @media(max-width:900px){.product-workflow__grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:560px){.product-workflow{margin:12px 12px 18px;padding:16px;border-radius:17px}.product-workflow__head{display:block}.product-workflow__mode{display:inline-flex;margin-top:11px}.product-workflow__grid{gap:8px}.product-workflow__item{min-height:122px;padding:12px}.product-workflow__item b{font-size:13px}}@media(prefers-reduced-motion:reduce){.product-workflow__item{transition:none}.product-workflow__item:hover{transform:none}}
+
+
+/* V4 · PhysChem Lab scientific exploration console */
+.physchem-intro{
+  position:relative;isolation:isolate;overflow:hidden;min-height:166px;
+  padding:26px clamp(20px,3vw,38px);border-radius:20px;
+  background:
+    radial-gradient(circle at 84% 13%,rgba(53,171,165,.19),transparent 25%),
+    radial-gradient(circle at 96% 100%,rgba(63,137,169,.12),transparent 34%),
+    linear-gradient(112deg,#fff 0%,#eff8f9 58%,#eaf6f3 100%);
+  box-shadow:0 12px 32px rgba(24,78,91,.07);
+}
+.physchem-intro:after{
+  content:"PHYS · CHEM";position:absolute;z-index:-1;right:4%;top:17%;
+  color:rgba(21,117,126,.055);font-size:clamp(44px,7vw,92px);
+  font-weight:900;letter-spacing:-4px;line-height:1;
+}
+.physchem-intro h2{font-size:clamp(23px,2.5vw,32px);letter-spacing:-.7px}
+.physchem-intro p{font-size:12px;max-width:790px}
+.physchem-intro .atom{
+  width:90px;height:90px;flex-basis:90px;border-radius:27px;
+  color:#f1ffff;background:linear-gradient(145deg,#176f83,#3aa59c);
+  border:1px solid #72b8b6;box-shadow:0 13px 29px rgba(25,121,128,.17);
+  font-size:33px;
+}
+.lab-commandbar{
+  margin:0 clamp(16px,2.2vw,30px) 14px;padding:15px 18px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  border:1px solid #d8e7ea;border-radius:15px;background:#fff;
+  box-shadow:0 7px 21px rgba(22,69,83,.045);
+}
+.lab-command-copy{display:flex;flex-direction:column;gap:3px}
+.lab-command-copy .eyebrow{font-size:9px;letter-spacing:1.7px;color:#17828a;font-weight:850}
+.lab-command-copy strong{font-size:14px;color:#234b5c}
+.lab-command-copy small{font-size:10px;color:#78909a}
+.lab-command-actions{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:7px}
+.lab-command-actions button{
+  min-height:34px;padding:7px 11px;border:1px solid #dce8eb;border-radius:9px;
+  background:#f7fbfc;color:#4d707c;font-size:10px;font-weight:700;
+}
+.lab-command-actions button:hover{border-color:#a9d1d2;background:#eef8f7;color:#177e86}
+.product-workflow{
+  margin:0 clamp(16px,2.2vw,30px) 17px;padding:19px 20px;
+  border:1px solid #d9e7e9;border-radius:17px;background:#fff;
+  box-shadow:0 8px 22px rgba(22,69,83,.045);
+}
+.product-workflow__head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:13px}
+.product-workflow__head .eyebrow{font-size:9px;letter-spacing:1.8px;color:#16828a;font-weight:850}
+.product-workflow__head h3{font-size:16px;color:#234b5c;margin:4px 0}
+.product-workflow__head p{font-size:10.5px;color:#758b96}
+.product-workflow__mode{white-space:nowrap;padding:6px 10px;border-radius:30px;background:#edf7f5;color:#3f7d76;font-size:9px;font-weight:800}
+.product-workflow__grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+.product-workflow__item{
+  min-height:108px;display:flex;flex-direction:column;align-items:flex-start;gap:7px;
+  padding:12px;border:1px solid #e0eaec;border-radius:12px;
+  background:linear-gradient(145deg,#fff,#f6fbfb);text-align:left;
+  transition:transform .18s,border-color .18s,box-shadow .18s;
+}
+.product-workflow__item:hover{transform:translateY(-3px);border-color:#a9d3d3;box-shadow:0 9px 21px rgba(23,112,117,.075)}
+.product-workflow__item i{width:26px;height:26px;display:grid;place-items:center;border-radius:8px;background:#eaf6f4;color:#16818a;font-size:10px;font-style:normal;font-weight:850}
+.product-workflow__item b{font-size:11.5px;color:#294f5e}
+.product-workflow__item small{font-size:9.5px;color:#7b909a}
+.product-workflow__item span{margin-top:auto;color:#177f88;font-size:9.5px;font-weight:750}
+.product-workflow__foot{margin-top:11px;padding-top:9px;border-top:1px solid #edf1f2;color:#899ca3;font-size:9px;line-height:1.6}
+.sw{
+  margin:0 clamp(16px,2.2vw,30px) 15px;border:1px solid #d5e5e9;border-radius:18px;
+  background:radial-gradient(circle at 50% 40%,#17384b,#0c2436 70%);
+  box-shadow:0 12px 30px rgba(14,48,67,.16);overflow:hidden;
+}
+.bt2{gap:13px;padding:0 clamp(16px,2.2vw,30px) 28px}
+.bt2 .pnl{
+  border:1px solid #dbe7eb;border-radius:15px;background:#fff;
+  box-shadow:0 7px 22px rgba(22,69,83,.045);padding:17px;
+}
+.bt2 .pnl h3{color:#244b5d;font-size:13px}
+.bt2 .pnl input:not([type=range]),.bt2 .pnl select{border-color:#d8e5e9;background:#fbfdfd}
+.bt2 .pnl input:focus,.bt2 .pnl select:focus{border-color:#79b9b8;box-shadow:0 0 0 3px rgba(22,127,134,.1)}
+.bt2 .pnl .bd{background:#edf7f5;color:#3f7d76;border:1px solid #d4e9e4;border-radius:20px;padding:3px 7px;font-size:8px}
+@media(max-width:900px){
+ .lab-commandbar{align-items:flex-start;flex-direction:column}
+ .lab-command-actions{justify-content:flex-start}
+ .product-workflow__grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .product-workflow__head{flex-direction:column}
+}
+@media(max-width:560px){
+ .physchem-intro{padding:20px 16px;border-radius:15px}
+ .physchem-intro:after{font-size:38px;right:0}
+ .physchem-intro .atom{width:60px;height:60px;flex-basis:60px;border-radius:18px;font-size:22px}
+ .lab-commandbar{margin-left:12px;margin-right:12px;padding:13px}
+ .lab-command-actions{display:grid;width:100%;grid-template-columns:1fr 1fr}
+ .lab-command-actions button{width:100%;padding:7px 6px}
+ .product-workflow{margin-left:12px;margin-right:12px;padding:14px 11px}
+ .product-workflow__grid{gap:7px}
+ .product-workflow__item{min-height:112px;padding:9px}
+ .product-workflow__item small{font-size:8.5px}
+ .bt2{padding-left:12px;padding-right:12px}
+ .ac{flex-wrap:wrap;justify-content:flex-end}
+}
