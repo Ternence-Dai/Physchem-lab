@@ -325,6 +325,7 @@ function selectExp(id){
   setExperimentSidebarOpen(false);
   cur=f;P={};
   var noteField=E('experimentNote');if(noteField)noteField.value='';
+  updateExperimentNoteCount();
   for(var j=0;j<cur.params.length;j++)P[cur.params[j].key]=cur.params[j].value;
   ST=cur.init?cur.init(P):{};
   paused=false;
@@ -405,6 +406,9 @@ function boot(){
 }
 
 function bindUI(){
+  var noteField=E('experimentNote');
+  if(noteField)noteField.addEventListener('input',updateExperimentNoteCount);
+  updateExperimentNoteCount();
   var mobileMenu=E('mobileMenu');
   if(mobileMenu)mobileMenu.onclick=function(){
     var sidebar=E('experimentSidebar');
@@ -514,10 +518,16 @@ function restoreSavedExperiment(index){
   refreshTutor(true);
   var noteField=E('experimentNote');
   if(noteField)noteField.value=typeof saved.note==='string'?saved.note:'';
+  updateExperimentNoteCount();
   setTimeout(resize,30);
   setTimeout(resize,200);
   toast('已载入实验参数与观察备注；原始档案仍保留在列表中');
   return true;
+}
+function updateExperimentNoteCount(){
+  var field=E('experimentNote');
+  var counter=E('experimentNoteCount');
+  if(counter)counter.textContent=(field?field.value.length:0)+' / 1200';
 }
 function buildExperimentRecordSnapshot(){
   var readouts=[];
