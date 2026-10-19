@@ -121,6 +121,20 @@ assert.equal(langmuir.fn(langmuirParams, 0.5), 2,
 assert.equal(gibbs.fn({dH:10,dS:100}, 300), -20,
   'Gibbs free energy model must use ΔG=ΔH−TΔS with consistent units');
 
+const equilibriumModels = loadArray('C3');
+const henry = equilibriumModels.find(model => model.id === 'ch5');
+assert.ok(henry && henry.f.includes('P=c/kH'),
+  'Henry law must show the correct inverse relation P=c/kH');
+assert.equal(henry.fn({kH:0.034,P:2},2),0.068,
+  'Henry law concentration must remain c=kH*P');
+const leChatelier = equilibriumModels.find(model => model.id === 'ch4');
+assert.ok(leChatelier && leChatelier.mk && leChatelier.mk[0],
+  'Le Chatelier model must provide an equilibrium reference marker');
+assert.equal(leChatelier.mk[0].x({K:25}),25,
+  'Le Chatelier chart equilibrium marker must follow the live K parameter');
+assert.ok(app.includes("markerX=typeof mk.x==='function'?mk.x(p):mk.x"),
+  'curve renderer must resolve parameter-driven reference marker positions');
+
 const kinetics = loadArray('C3').find(model => model.id === 'ch9');
 assert.ok(kinetics, 'integrated reaction-order kinetics model must be present');
 const kineticsBase = {k:0.1,c0:1,n:3};
