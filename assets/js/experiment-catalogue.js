@@ -727,9 +727,12 @@ var C3=[
  fn:function(p,x){if(p.n===0)return Math.max(0,p.c0-p.k*x);
    if(p.n===1)return p.c0*Math.exp(-p.k*x);
    if(p.n===2)return p.c0/(1+p.k*p.c0*x);
-   return p.c0;},
- ro:function(p){return[{k:'速率常数 k',v:p.k},{k:'初始浓度 c₀',v:p.c0+' mol/L'},{k:'反应级数 n',v:p.n},{k:'速率 v₀',v:F(p.k*Math.pow(p.c0,p.n),4)+' mol/(L·s)'},{k:'半衰期',v:p.n===1?F(0.693/p.k,2)+' s':p.n===2?F(1/(p.k*p.c0),2)+' s':'—'},{k:'单位',v:p.n===1?'1/s':p.n===2?'L/(mol·s)':'mol/(L·s)'}];},
- tt:function(p){return'【模型】速率方程 v=k[A]ⁿ，n 为反应级数。\n\n【推演】\n· n='+p.n+' 级反应\n· v₀='+F(p.k*Math.pow(p.c0,p.n),4)+' mol/(L·s)\n'+(p.n===1?'· 半衰期 t½=0.693/k='+F(0.693/p.k,2)+' s（与浓度无关）':'')+'\n\n【结论】反应级数由实验测定，不能从化学计量式直接推断。';}},
+   return p.c0/Math.sqrt(1+2*p.k*p.c0*p.c0*x);},
+ ro:function(p){var half=p.n===0?p.c0/(2*p.k):p.n===1?0.693/p.k:p.n===2?1/(p.k*p.c0):3/(2*p.k*p.c0*p.c0);
+   var unit=p.n===0?'mol/(L·s)':p.n===1?'1/s':p.n===2?'L/(mol·s)':'L²/(mol²·s)';
+   return[{k:'速率常数 k',v:p.k},{k:'初始浓度 c₀',v:p.c0+' mol/L'},{k:'反应级数 n',v:p.n},{k:'速率 v₀',v:F(p.k*Math.pow(p.c0,p.n),4)+' mol/(L·s)'},{k:'半衰期',v:F(half,2)+' s'},{k:'k 的单位',v:unit}];},
+ tt:function(p){var half=p.n===0?p.c0/(2*p.k):p.n===1?0.693/p.k:p.n===2?1/(p.k*p.c0):3/(2*p.k*p.c0*p.c0);
+   return '【模型】速率方程 v=k[A]ⁿ，n 为反应级数。\n\n【推演】\n· n='+p.n+' 级反应\n· v₀='+F(p.k*Math.pow(p.c0,p.n),4)+' mol/(L·s)\n· 半衰期 t½='+F(half,2)+' s\n\n【结论】反应级数由实验测定，不能从化学计量式直接推断。';}},
 
 {id:'ch10',name:'pH 与缓冲溶液',cat:'化学',tags:['酸碱','缓冲'],br:'缓冲溶液的 pH 由 Henderson-Hasselbalch 方程决定。',
  p:[P('pKa','pKa',2,12,0.1,4.76,''),P('cA','酸浓度 [HA]',0.01,1,0.01,0.1,'mol/L'),P('cB','共轭碱 [A⁻]',0.01,1,0.01,0.1,'mol/L')],
