@@ -6,9 +6,9 @@
 
 ### PhET Acid-Base Solutions — 模型变量与教学可视化
 - 仓库：[phetsims/acid-base-solutions](https://github.com/phetsims/acid-base-solutions)
-- 模型说明：[doc/model.md](https://github.com/phetsims/acid-base-solutions/blob/main/doc/model.md)。
+- 模型说明：[acid-base-solutions 仓库](https://github.com/phetsims/acid-base-solutions)；pH/浓度/体积方程的现行参考可对照 [phetsims/ph-scale/doc/model.md](https://github.com/phetsims/ph-scale/blob/main/doc/model.md)。
 - 参考内容：溶液分为纯水、强酸、弱酸、强碱和弱碱；模型显式区分浓度、Ka/Kb、Kw、离子浓度与 pH；模型说明把假设和简化（例如电导率显示值）写明。
-- 维护状态注意：该单独仓库已标注不再维护并已整合。因此只将其模型说明作为可核查的教学参考，不复制旧代码，也不把其 0–14 显示范围作为所有浓溶液模型的通用限制。
+- 状态注意：`acid-base-solutions` 当前仍是可访问的 HTML5 仓库；旧 `ph-scale-basics` 仓库 README 明确说明已不再维护并整合。当前模型变量与量纲可继续对照 `phetsims/ph-scale` 的 model 文档。不能把某个模拟 UI 的显示范围直接当作所有浓溶液模型的通用边界。
 
 ### PhET 教学交互的可迁移原则
 - 控制变量应与观测量有直接关系；每个滑块调整应同步更新可见结果。
@@ -40,7 +40,7 @@
 
 ## 5. 参考链接
 - [PhET Acid-Base Solutions](https://github.com/phetsims/acid-base-solutions)
-- [PhET 模型说明](https://github.com/phetsims/acid-base-solutions/blob/main/doc/model.md)
+- [PhET pH model description](https://github.com/phetsims/ph-scale/blob/main/doc/model.md)
 - [PhET 交互式模拟网站](https://phet.colorado.edu/)
 
 
@@ -58,7 +58,7 @@
 
 | 上游项目 | 可核查入口 | 可迁移模式 | 状态/边界 |
 |---|---|---|---|
-| [PhET Acid-Base Solutions](https://github.com/phetsims/acid-base-solutions) | [模型说明](https://github.com/phetsims/acid-base-solutions/blob/main/doc/model.md) | 浓度、Ka/Kb、Kw、离子浓度、pH 的模型变量显式化；把公式假设写成可学习内容 | 独立仓库已归档/整合，仅作模型说明参考；不可照搬其 UI 范围作为浓溶液通用边界 |
+| [PhET Acid-Base Solutions](https://github.com/phetsims/acid-base-solutions) | [HTML5 仓库](https://github.com/phetsims/acid-base-solutions)、[pH 模型说明](https://github.com/phetsims/ph-scale/blob/main/doc/model.md) | 浓度、Ka/Kb、Kw、离子浓度、pH 的模型变量显式化；把公式假设写成可学习内容 | 仓库可访问，但模型范围与简化须按其文档核对；不照搬其 UI 范围作为浓溶液通用边界 |
 | [PhET pH Scale Basics](https://github.com/phetsims/ph-scale-basics) | [仓库状态说明](https://github.com/phetsims/ph-scale-basics) | 把微观粒子、浓度变化和 pH 显示联系起来，支持面向学习者的概念反馈 | 仓库 README 已声明不再维护并整合；只参考历史教学交互，不作为当前活跃依赖 |
 | [VirtualChemLab](https://github.com/qilaidev/virtual-chem-lab) | [功能/架构 README](https://github.com/qilaidev/virtual-chem-lab/blob/main/README.md) | YAML 实验模板、步骤引导、输入校验、曲线与学习记录、安全提示 | Python/PySide6 桌面应用，不是浏览器组件；项目明确不是研究级计算化学引擎 |
 | [ChemCollective Virtual Labs](https://chemcollective.org/vlabs) | [虚拟实验教学入口](https://chemcollective.org/vlabs) | 任务情境、试剂/操作步骤、观察结果和学习活动编排 | 教学实验平台，不能替代有明确边界条件的数值物理模型 |
