@@ -24,6 +24,19 @@
     <div class="ac"><button class="bt" id="bp">⏸ 暂停</button><button class="bt" id="br2">↺ 重置</button><button class="bt" id="bs">💾 存档</button><button class="bt" id="bd">📂 档案</button></div>
   </header>
   <section class="physchem-intro"><div><div class="eyebrow">PHYSICAL CHEMISTRY · INTERACTIVE LAB</div><h2>物理化学交互实验工作台</h2><p>选择实验、调节变量、观察模拟现象并核对公式结果。模拟曲线用于教学探索，不等同于真实实验测量。</p><div class="physchem-tags"><span>交互模拟</span><span>变量控制</span><span>公式计算</span><span>实验档案</span></div></div><div class="atom">⚛</div></section>
+  <div class="lab-commandbar" aria-label="实验操作快捷入口">
+    <div class="lab-command-copy">
+      <span class="eyebrow">EXPERIMENT WORKFLOW</span>
+      <strong>实验操作台</strong>
+      <small>选择实验 → 调节变量 → 查看实时结果 → 保存参数档案</small>
+    </div>
+    <div class="lab-command-actions">
+      <button type="button" onclick="document.getElementById('search').focus()">检索实验</button>
+      <button type="button" onclick="document.getElementById('bp').click()">暂停 / 继续</button>
+      <button type="button" onclick="document.getElementById('bs').click()">保存当前实验</button>
+      <button type="button" onclick="document.getElementById('bd').click()">查看实验档案</button>
+    </div>
+  </div>
   <section class="sw" id="sw"><canvas id="cv"></canvas></section>
   <section class="bt2">
     <div class="pnl p1"><h3>⚙️ 物理变量控制台</h3><div id="pb"></div></div>
