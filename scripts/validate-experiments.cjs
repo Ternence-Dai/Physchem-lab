@@ -253,7 +253,7 @@ assert.ok(app.includes('saved.modelVersion!==ARCHIVE_MODEL_VERSION') &&
   'archive restore must enforce model version, parameter bounds and successful model initialization');
 
 const restoreStart=app.indexOf('function restoreSavedExperiment(index){');
-const restoreEnd=app.indexOf('\\nfunction renderD()',restoreStart);
+const restoreEnd=app.indexOf('\nfunction renderD()',restoreStart);
 assert.ok(restoreStart>=0&&restoreEnd>restoreStart,'saved experiment restore function must be bounded for regression testing');
 const restoreSource=app.slice(restoreStart,restoreEnd);
 const mockTarget={
@@ -277,7 +277,7 @@ const restoreContext=vm.createContext({
   buildParams(){},buildPanel(){},renderList(){},refreshTutor(){},
   setTimeout(){},resize(){}
 });
-vm.runInContext(restoreSource+'\\nthis.restore=restoreSavedExperiment;',restoreContext);
+vm.runInContext(restoreSource+'\nthis.restore=restoreSavedExperiment;',restoreContext);
 assert.equal(restoreContext.restore(0),true,
   'valid saved parameters must load into the matching current experiment');
 assert.equal(restoreContext.cur.id,'p-test');
