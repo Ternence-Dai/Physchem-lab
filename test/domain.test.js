@@ -57,6 +57,22 @@ test("strong acid/strong base titration pH is correct before, at and after equiv
  assert.ok(strongAcidStrongBasePH({...p,baseVolumeMl:19.9})<7);
  assert.ok(strongAcidStrongBasePH({...p,baseVolumeMl:20.1})>7);
 });
+test("very dilute strong acid and base retain water autoionization near neutral pH",()=>{
+ const acid=strongAcidStrongBasePH({
+  acidConcentrationMolPerL:1e-10,acidVolumeMl:10,
+  baseConcentrationMolPerL:1e-10,baseVolumeMl:0
+ });
+ const base=strongAcidStrongBasePH({
+  acidConcentrationMolPerL:1e-10,acidVolumeMl:10,
+  baseConcentrationMolPerL:1e-10,baseVolumeMl:20
+ });
+ assert.ok(acid<7 && acid>6.99,"a 1e-10 M strong acid must be slightly acidic, not pH 10");
+ assert.ok(base>7 && base<7.01,"a 1e-10 M excess strong base must be slightly basic");
+ assert.ok(Math.abs(strongAcidStrongBasePH({
+  acidConcentrationMolPerL:1e-10,acidVolumeMl:10,
+  baseConcentrationMolPerL:1e-10,baseVolumeMl:10
+ })-7)<1e-12,"the equivalence point remains neutral at 25 °C");
+});
 test("strong acid/strong base concentration model does not silently clamp extreme calculated pH",()=>{
  const concentratedAcid=strongAcidStrongBasePH({
   acidConcentrationMolPerL:10,acidVolumeMl:10,
