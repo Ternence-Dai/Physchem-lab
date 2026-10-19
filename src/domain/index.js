@@ -102,6 +102,27 @@ export function ohmsLaw({voltageV,resistanceOhm}) {
   const heatJPerMinute=powerW*60;
   return Object.freeze(finiteResult({currentA,powerW,heatJPerMinute}, "Ohm's law result"));
 }
+export function inclinedPlaneForces({angleDeg,frictionCoefficient,massKg=1,gravity=9.8}) {
+  for (const [name,value] of Object.entries({angleDeg,frictionCoefficient,massKg,gravity})) {
+    if (!Number.isFinite(value)) throw new TypeError(`${name} must be finite`);
+  }
+  if (angleDeg < 0 || angleDeg > 90 || frictionCoefficient < 0 || massKg <= 0 || gravity <= 0) {
+    throw new RangeError("inclined-plane force parameters are outside their physical domain");
+  }
+  const angle=angleDeg*Math.PI/180;
+  const weight=massKg*gravity;
+  const normalForce=angleDeg===90 ? 0 : weight*Math.cos(angle);
+  const parallelGravity=weight*Math.sin(angle);
+  // Below the slip threshold, static friction balances the downslope component;
+  // above it, the simplified model uses μN as kinetic friction.
+  const slipping=parallelGravity > frictionCoefficient*normalForce;
+  const frictionForce=slipping ? frictionCoefficient*normalForce : parallelGravity;
+  const acceleration=slipping ? (parallelGravity-frictionForce)/massKg : 0;
+  return Object.freeze(finiteResult({
+    normalForce,parallelGravity,frictionForce,acceleration,slipping
+  },"inclined-plane forces"));
+}
+
 export function inclinedPlaneAcceleration({angleDeg,frictionCoefficient,gravity=9.8}) {
   for (const [name,value] of Object.entries({angleDeg,frictionCoefficient,gravity})) if (!Number.isFinite(value)) throw new TypeError(`${name} must be finite`);
   if (angleDeg < 0 || angleDeg > 90 || frictionCoefficient < 0 || gravity <= 0) throw new RangeError("inclined-plane parameters are outside their physical domain");
