@@ -680,7 +680,7 @@ var C3=[
  f:['Q<K 向右移动','Q>K 向左移动','Q=K 平衡'],
  xR:[0.01,100],yR:[0.01,100],xT:10,yT:10,xL:'反应商 Q',yL:'ΔG (kJ/mol)',col:'#34d399',
  fn:function(p,x){return 8.314*p.T/1000*Math.log(x/p.K);},
- mk:[{x:10,l:'Q=K',c:'#fbbf24'}],
+ mk:[{x:function(p){return p.K;},l:'Q=K',c:'#fbbf24'}],
  ro:function(p){var dG=8.314*p.T/1000*Math.log(p.Q/p.K);
    return[{k:'ΔG',v:F(dG,3)+' kJ/mol'},{k:'K',v:F(p.K,2)},{k:'Q',v:F(p.Q,3)},{k:'Q/K',v:F(p.Q/p.K,3)},{k:'移动方向',v:dG<0?'向右':dG>0?'向左':'平衡'},{k:'T',v:p.T+' K'}];},
  tt:function(p){var dG=8.314*p.T/1000*Math.log(p.Q/p.K);
