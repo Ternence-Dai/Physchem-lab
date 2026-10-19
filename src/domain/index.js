@@ -67,16 +67,24 @@ export function strongAcidStrongBasePH({acidConcentrationMolPerL,acidVolumeMl,ba
       acidVolumeMl<=0 || baseVolumeMl<0) {
     throw new RangeError("acid/base concentrations and acid volume must be positive; base volume must be non-negative");
   }
-  // mol/L × mL gives mmol; dividing excess mmol by total mL gives mol/L.
+  // mol/L × mL gives mmol. The signed excess strong-acid concentration
+  // is [H+] - [OH-] after neutralization. Retain water autoionization:
+  // [H+][OH-] = Kw = 1e-14 at 25 °C.
   const acidMmol=acidConcentrationMolPerL*acidVolumeMl;
   const baseMmol=baseConcentrationMolPerL*baseVolumeMl;
   const totalVolumeMl=acidVolumeMl+baseVolumeMl;
-  if (acidMmol===baseMmol) return 7;
-  const excessConcentration=(acidMmol>baseMmol
-    ? acidMmol-baseMmol : baseMmol-acidMmol)/totalVolumeMl;
-  const pH=acidMmol>baseMmol
-    ? -Math.log10(excessConcentration)
-    : 14+Math.log10(excessConcentration);
+  const netAcidConcentration=(acidMmol-baseMmol)/totalVolumeMl;
+  if (!Number.isFinite(netAcidConcentration)) {
+    throw new RangeError("net acid concentration exceeds the finite numeric range");
+  }
+  const kw=1e-14;
+  const discriminant=Math.hypot(netAcidConcentration,2*Math.sqrt(kw));
+  // Solve h² - c·h - Kw = 0. Use the conjugate form for c < 0
+  // to avoid catastrophic cancellation in very dilute basic solutions.
+  const hydrogenConcentration=netAcidConcentration>=0
+    ? netAcidConcentration/2+discriminant/2
+    : kw/(discriminant/2-netAcidConcentration/2);
+  const pH=-Math.log10(hydrogenConcentration);
   return finiteResult(pH,"strong acid/strong base pH");
 }
 
