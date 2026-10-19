@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {
-  idealGasPressure, idealGasParticleProperties, arrheniusRateConstant,
+  idealGasPressure, idealGasParticleProperties, strongAcidStrongBasePH, arrheniusRateConstant,
   projectileMotion, pendulumPeriod, ohmsLaw, inclinedPlaneAcceleration, inclinedPlaneForces, springOscillator
 } from "../src/domain/index.js";
 
@@ -47,6 +47,22 @@ test("ideal-gas particle properties retain representable outputs across extreme 
  assert.ok(Number.isFinite(extreme.numberDensityPerM3));
 });
 test("rejects non-positive absolute temperature and volume",()=>{ assert.throws(()=>idealGasPressure({amountMol:1,temperatureK:0,volumeM3:1}),RangeError); assert.throws(()=>idealGasPressure({amountMol:1,temperatureK:300,volumeM3:0}),RangeError); });
+test("strong acid/strong base titration pH is correct before, at and after equivalence",()=>{
+ const p={acidConcentrationMolPerL:0.1,acidVolumeMl:20,baseConcentrationMolPerL:0.1};
+ assert.ok(Math.abs(strongAcidStrongBasePH({...p,baseVolumeMl:0})-1)<1e-12);
+ assert.equal(strongAcidStrongBasePH({...p,baseVolumeMl:20}),7);
+ const after=strongAcidStrongBasePH({...p,baseVolumeMl:30});
+ const expected=14+Math.log10((3-2)/50);
+ assert.ok(Math.abs(after-expected)<1e-12);
+ assert.ok(strongAcidStrongBasePH({...p,baseVolumeMl:19.9})<7);
+ assert.ok(strongAcidStrongBasePH({...p,baseVolumeMl:20.1})>7);
+});
+test("strong acid/strong base titration rejects invalid concentrations and volumes",()=>{
+ const p={acidConcentrationMolPerL:0.1,acidVolumeMl:20,baseConcentrationMolPerL:0.1,baseVolumeMl:0};
+ assert.throws(()=>strongAcidStrongBasePH({...p,acidConcentrationMolPerL:0}),RangeError);
+ assert.throws(()=>strongAcidStrongBasePH({...p,baseVolumeMl:-1}),RangeError);
+ assert.throws(()=>strongAcidStrongBasePH({...p,baseVolumeMl:NaN}),TypeError);
+});
 test("Arrhenius rate increases with temperature for positive activation energy",()=>{ const a=arrheniusRateConstant({preExponentialFactor:1e7,activationEnergyJPerMol:50000,temperatureK:300}); const b=arrheniusRateConstant({preExponentialFactor:1e7,activationEnergyJPerMol:50000,temperatureK:350}); assert.ok(b>a); });
 test("Arrhenius prefactor recovers a representable rate after exponential underflow",()=>{
  const temperatureK=300, exponent=746;
