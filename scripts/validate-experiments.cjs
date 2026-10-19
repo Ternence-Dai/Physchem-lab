@@ -239,3 +239,62 @@ for (const duplicate of ['3*8.314', '1.381e-23', '6.022e23']) {
 }
 assert.ok(gasBlock.includes('BOLTZMANN') === false,
   'particle constants should remain encapsulated in the domain solver');
+
+
+assert.ok(pageHtml.includes('product-system-v9.css?v=20261019-v91'),
+  'PhysChem Lab must load the current V9.1 archive interaction layer');
+assert.ok(app.includes('function restoreSavedExperiment(index)') &&
+          app.includes('data-load-save=') &&
+          app.includes('restoreSavedExperiment(Number(button.getAttribute(\'data-load-save\')))'),
+  'saved experiment cards must expose a real parameter restore action');
+assert.ok(app.includes('saved.modelVersion!==ARCHIVE_MODEL_VERSION') &&
+          app.includes('value<definition.min||value>definition.max') &&
+          app.includes('nextState=target.init?target.init(nextParams):{}'),
+  'archive restore must enforce model version, parameter bounds and successful model initialization');
+
+const restoreStart=app.indexOf('function restoreSavedExperiment(index){');
+const restoreEnd=app.indexOf('\\nfunction renderD()',restoreStart);
+assert.ok(restoreStart>=0&&restoreEnd>restoreStart,'saved experiment restore function must be bounded for regression testing');
+const restoreSource=app.slice(restoreStart,restoreEnd);
+const mockTarget={
+  id:'p-test',name:'Test experiment',brief:'Test parameter model',
+  params:[{key:'v0',min:0,max:100}],
+  init:params=>({initializedAt:params.v0})
+};
+const restoreToasts=[];
+const restoreContext=vm.createContext({
+  saves:[{name:'Test experiment',experimentId:'p-test',modelVersion:'physchem-engine-v2',time:'2026-10-19',params:{v0:42}}],
+  EXP:[mockTarget],ARCHIVE_MODEL_VERSION:'physchem-engine-v2',
+  cur:null,P:{v0:12},ST:{initializedAt:12},paused:true,
+  toast(message){restoreToasts.push(message);},
+  setExperimentSidebarOpen(){},
+  E(id){
+    if(id==='bp')return {textContent:'⏸ 暂停',className:'bt'};
+    if(id==='et')return {textContent:''};
+    if(id==='eb2')return {textContent:''};
+    return null;
+  },
+  buildParams(){},buildPanel(){},renderList(){},refreshTutor(){},
+  setTimeout(){},resize(){}
+});
+vm.runInContext(restoreSource+'\\nthis.restore=restoreSavedExperiment;',restoreContext);
+assert.equal(restoreContext.restore(0),true,
+  'valid saved parameters must load into the matching current experiment');
+assert.equal(restoreContext.cur.id,'p-test');
+assert.equal(restoreContext.P.v0,42);
+assert.equal(restoreContext.ST.initializedAt,42);
+assert.equal(restoreContext.paused,false);
+assert.equal(restoreContext.saves.length,1,
+  'loading a saved parameter set must not delete or mutate the original archive');
+
+const validParams=JSON.stringify(restoreContext.P);
+restoreContext.saves[0].params={v0:101};
+assert.equal(restoreContext.restore(0),false,
+  'out-of-range saved parameters must be refused');
+assert.equal(JSON.stringify(restoreContext.P),validParams,
+  'refused parameter restore must not partially modify the live experiment');
+restoreContext.saves[0].params={v0:42};
+restoreContext.saves[0].modelVersion='physchem-engine-v1';
+assert.equal(restoreContext.restore(0),false,
+  'a different declared model version must not be auto-applied');
+console.log('PhysChem experiment archive parameter-restore checks passed.');
