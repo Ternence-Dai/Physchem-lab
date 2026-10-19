@@ -118,9 +118,10 @@ export function inclinedPlaneForces({angleDeg,frictionCoefficient,massKg=1,gravi
   const slipping=parallelGravity > frictionCoefficient*normalForce;
   const frictionForce=slipping ? frictionCoefficient*normalForce : parallelGravity;
   const acceleration=slipping ? (parallelGravity-frictionForce)/massKg : 0;
-  return Object.freeze(finiteResult({
-    normalForce,parallelGravity,frictionForce,acceleration,slipping
-  },"inclined-plane forces"));
+  const forces=finiteResult({
+    normalForce,parallelGravity,frictionForce,acceleration
+  },"inclined-plane forces");
+  return Object.freeze({...forces,slipping});
 }
 
 export function inclinedPlaneAcceleration({angleDeg,frictionCoefficient,gravity=9.8}) {
