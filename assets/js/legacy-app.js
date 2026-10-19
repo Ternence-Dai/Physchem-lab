@@ -130,14 +130,14 @@ function isValidExperimentSave(item){
   if(item.readouts!==undefined && (!Array.isArray(item.readouts)||item.readouts.length>30||
      !item.readouts.every(function(row){
        return !!row&&typeof row==='object'&&!Array.isArray(row)&&
-         typeof row.label==='string'&&row.label.trim().length>0&&row.label.length<=160&&
-         typeof row.value==='string'&&row.value.length<=240;
+         typeof row.label==='string'&&row.label.trim().length>0&&row.label.length<=120&&
+         typeof row.value==='string'&&row.value.length<=180;
      })))return false;
   if(item.formulaSnapshot!==undefined && (!Array.isArray(item.formulaSnapshot)||
-     item.formulaSnapshot.length>30||!item.formulaSnapshot.every(function(row){
-       return typeof row==='string'&&row.length>0&&row.length<=600;
+     item.formulaSnapshot.length>20||!item.formulaSnapshot.every(function(row){
+       return typeof row==='string'&&row.length>0&&row.length<=300;
      })))return false;
-  if(item.tutorSnapshot!==undefined && (typeof item.tutorSnapshot!=='string'||item.tutorSnapshot.length>4000))return false;
+  if(item.tutorSnapshot!==undefined && (typeof item.tutorSnapshot!=='string'||item.tutorSnapshot.length>2400))return false;
   if(!item.params||typeof item.params!=='object'||Array.isArray(item.params))return false;
   var keys=Object.keys(item.params);
   if(keys.length<1||keys.length>30)return false;
@@ -535,16 +535,16 @@ function buildExperimentRecordSnapshot(){
     var rows=cur&&cur.readout?cur.readout(P,ST):[];
     if(Array.isArray(rows))readouts=rows.slice(0,30).map(function(row){
       return {
-        label:String(row&&row.k!==undefined?row.k:'结果').slice(0,160),
-        value:String(row&&row.v!==undefined?row.v:'—').slice(0,240)
+        label:String(row&&row.k!==undefined?row.k:'结果').slice(0,120),
+        value:String(row&&row.v!==undefined?row.v:'—').slice(0,180)
       };
     });
   }catch(error){console.warn('当前模型读数快照未能生成',error);}
   var formulaSnapshot=Array.isArray(cur&&cur.formulas)
-    ?cur.formulas.slice(0,30).map(function(formula){return String(formula).slice(0,600);})
+    ?cur.formulas.slice(0,20).map(function(formula){return String(formula).slice(0,300);})
     :[];
   var tutorSnapshot='';
-  try{tutorSnapshot=cur&&cur.tutor?String(cur.tutor(P,ST)).slice(0,4000):'';}
+  try{tutorSnapshot=cur&&cur.tutor?String(cur.tutor(P,ST)).slice(0,2400):'';}
   catch(error){tutorSnapshot='当前助教说明未能生成：'+String(error&&error.message||error).slice(0,300);}
   var noteField=E('experimentNote');
   return {
