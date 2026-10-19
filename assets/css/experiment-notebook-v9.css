@@ -1,0 +1,76 @@
+/* Reproducible experiment notebook · additive V9 layer */
+body[data-workspace="physchem"] .lab-notebook{
+  margin:16px 0 28px;padding:20px 22px;
+  border:1px solid rgba(86,132,168,.18);border-radius:20px;
+  background:
+    radial-gradient(440px 170px at 100% 0%,rgba(62,150,159,.10),transparent 72%),
+    linear-gradient(140deg,rgba(255,255,255,.98),rgba(246,250,252,.98));
+  box-shadow:0 15px 36px rgba(20,48,68,.07)
+}
+body[data-workspace="physchem"] .lab-notebook__head{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:16px;
+  margin-bottom:15px
+}
+body[data-workspace="physchem"] .lab-notebook__head .eyebrow{
+  color:#27899a;font-size:9px;font-weight:850;letter-spacing:1.4px
+}
+body[data-workspace="physchem"] .lab-notebook__head h3{
+  margin:5px 0;color:#19394b;font-size:19px;letter-spacing:-.025em
+}
+body[data-workspace="physchem"] .lab-notebook__head p{
+  max-width:780px;margin:0;color:#60788a;font-size:11px;line-height:1.75
+}
+body[data-workspace="physchem"] .lab-notebook__tag{
+  flex-shrink:0;padding:7px 10px;border:1px solid #dcebe9;border-radius:999px;
+  background:#f2faf8;color:#367c76;font-size:9px;font-weight:800
+}
+body[data-workspace="physchem"] .lab-notebook label{
+  display:block;margin-bottom:7px;color:#36546a;font-size:11px;font-weight:800
+}
+body[data-workspace="physchem"] #experimentNote{
+  display:block;width:100%;min-height:92px;padding:12px 13px;
+  border:1px solid #d8e3e9;border-radius:12px;background:#fff;
+  color:#274257;font-size:12px;line-height:1.7;resize:vertical
+}
+body[data-workspace="physchem"] #experimentNote::placeholder{color:#9baeba}
+body[data-workspace="physchem"] .lab-notebook__foot{
+  display:flex;justify-content:space-between;gap:10px;margin-top:7px;
+  color:#8398a5;font-size:9px
+}
+body[data-workspace="physchem"] .w9-archive-results{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-top:9px
+}
+body[data-workspace="physchem"] .w9-archive-results>div{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:8px;
+  padding:7px 9px;border:1px solid #e0e9ed;border-radius:8px;background:#f6fafb;
+  color:#687f8c;font-size:9px
+}
+body[data-workspace="physchem"] .w9-archive-results b{
+  color:#225f71;font-size:10px;text-align:right
+}
+body[data-workspace="physchem"] .w9-archive-note{
+  margin-top:8px;padding:9px 10px;border-left:3px solid #55a79d;
+  border-radius:0 8px 8px 0;background:#eff8f6;color:#4e6c70
+}
+body[data-workspace="physchem"] .w9-archive-note strong{
+  display:block;margin-bottom:4px;color:#317f77;font-size:9px
+}
+body[data-workspace="physchem"] .w9-archive-note p{
+  margin:0;color:#547179;font-size:10px;line-height:1.65;white-space:pre-wrap
+}
+body[data-workspace="physchem"] :where(.w9-archive-formulas,.w9-archive-tutor){
+  margin-top:7px;padding:8px 9px;border:1px solid #e2eaf0;border-radius:8px;
+  background:#f8fafc;color:#647b8a;font-size:9px
+}
+body[data-workspace="physchem"] :where(.w9-archive-formulas,.w9-archive-tutor) summary{
+  color:#3e6c7a;font-weight:800;cursor:pointer
+}
+body[data-workspace="physchem"] :where(.w9-archive-formulas,.w9-archive-tutor)>div,
+body[data-workspace="physchem"] .w9-archive-tutor p{
+  margin:7px 0 0;color:#627987;font-size:9px;line-height:1.6;white-space:pre-wrap
+}
+@media(max-width:700px){
+  body[data-workspace="physchem"] .lab-notebook{padding:16px}
+  body[data-workspace="physchem"] .lab-notebook__head{flex-direction:column}
+  body[data-workspace="physchem"] .w9-archive-results{grid-template-columns:1fr}
+}
