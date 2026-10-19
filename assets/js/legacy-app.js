@@ -41,9 +41,9 @@ function drawCurve(c,W,H,p,st,g){
   c.strokeStyle=col+'40';c.lineWidth=8;c.stroke();
   c.strokeStyle=col;c.lineWidth=2.4;c.stroke();
   if(g.mk){for(var m=0;m<g.mk.length;m++){
-    var mk=g.mk[m],myValue=g.fn(p,mk.x,st.t||0);
-    if(!Number.isFinite(myValue))continue;
-    var mx=x2p(mk.x),my=y2p(myValue);c.fillStyle=mk.c||'#fbbf24';
+    var mk=g.mk[m],markerX=typeof mk.x==='function'?mk.x(p):mk.x,myValue=g.fn(p,markerX,st.t||0);
+    if(!Number.isFinite(markerX)||!Number.isFinite(myValue))continue;
+    var mx=x2p(markerX),my=y2p(myValue);c.fillStyle=mk.c||'#fbbf24';
     c.beginPath();c.arc(mx,my,5,0,7);c.fill();lb(c,mk.l||'',mx+8,my-14,mk.c||'#fbbf24',11);
   }}
   lb(c,g.xL||'x',padL+gw/2,padT+gh+30,'#22d3ee',11.5,'center');
