@@ -59,6 +59,20 @@ test("strong acid/strong base titration pH is correct before, at and after equiv
  assert.ok(strongAcidStrongBasePH({...p,baseVolumeMl:19.9})<7);
  assert.ok(strongAcidStrongBasePH({...p,baseVolumeMl:20.1})>7);
 });
+test("strong acid/base equivalence remains stable when finite input products would overflow",()=>{
+ const pH=strongAcidStrongBasePH({
+  acidConcentrationMolPerL:1e308,acidVolumeMl:1e308,
+  baseConcentrationMolPerL:1e308,baseVolumeMl:1e308
+ });
+ assert.equal(pH,7,
+  "equal acid/base equivalents must remain neutral without overflowing concentration-volume intermediates");
+ const acidOnly=strongAcidStrongBasePH({
+  acidConcentrationMolPerL:1e308,acidVolumeMl:1e308,
+  baseConcentrationMolPerL:1e308,baseVolumeMl:0
+ });
+ assert.ok(Number.isFinite(acidOnly) && acidOnly<0,
+  "a finite high-concentration acid input must yield a finite pH");
+});
 test("very dilute strong acid and base retain water autoionization near neutral pH",()=>{
  const acid=strongAcidStrongBasePH({
   acidConcentrationMolPerL:1e-10,acidVolumeMl:10,
