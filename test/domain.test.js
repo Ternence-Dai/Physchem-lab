@@ -57,6 +57,18 @@ test("strong acid/strong base titration pH is correct before, at and after equiv
  assert.ok(strongAcidStrongBasePH({...p,baseVolumeMl:19.9})<7);
  assert.ok(strongAcidStrongBasePH({...p,baseVolumeMl:20.1})>7);
 });
+test("strong acid/strong base concentration model does not silently clamp extreme calculated pH",()=>{
+ const concentratedAcid=strongAcidStrongBasePH({
+  acidConcentrationMolPerL:10,acidVolumeMl:10,
+  baseConcentrationMolPerL:0.1,baseVolumeMl:0
+ });
+ const concentratedBase=strongAcidStrongBasePH({
+  acidConcentrationMolPerL:0.1,acidVolumeMl:10,
+  baseConcentrationMolPerL:10,baseVolumeMl:20
+ });
+ assert.ok(concentratedAcid<0,"concentration-based ideal model may calculate negative pH");
+ assert.ok(concentratedBase>14,"concentration-based ideal model may calculate pH above 14");
+});
 test("strong acid/strong base titration rejects invalid concentrations and volumes",()=>{
  const p={acidConcentrationMolPerL:0.1,acidVolumeMl:20,baseConcentrationMolPerL:0.1,baseVolumeMl:0};
  assert.throws(()=>strongAcidStrongBasePH({...p,acidConcentrationMolPerL:0}),RangeError);
