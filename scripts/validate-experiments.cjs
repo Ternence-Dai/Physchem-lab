@@ -164,7 +164,9 @@ assert.ok(springBlock.split('PHYS_DOMAIN.springOscillator').length - 1 >= 4,
   'spring oscillator animation, energy display, readout and tutor must share the domain solver');
 assert.ok(!springBlock.includes('2*Math.PI*Math.sqrt(p.m/p.k)') && !springBlock.includes('0.5*p.m*st.v*st.v'),
   'spring oscillator period and energy must not be duplicated in the catalogue');
-assert.match(springBlock, /var a0=window\\.PHYS_DOMAIN\\.springOscillator[\\s\\S]*?st\\.x\\+=st\\.v\\*h\\+0\\.5\\*a0\\*h\\*h;var a1=window\\.PHYS_DOMAIN\\.springOscillator[\\s\\S]*?st\\.v\\+=0\\.5\\*\\(a0\\+a1\\)\\*h;/,
+assert.ok(springBlock.includes('var a0=window.PHYS_DOMAIN.springOscillator') &&
+  springBlock.includes('st.x+=st.v*h+0.5*a0*h*h;var a1=window.PHYS_DOMAIN.springOscillator') &&
+  springBlock.includes('st.v+=0.5*(a0+a1)*h;'),
   'spring oscillator animation must use velocity-Verlet integration to reduce numerical energy drift');
 const gasBlock = catalogue.slice(catalogue.indexOf("id:'p6'"), catalogue.indexOf("id:'p7'"));
 assert.ok(gasBlock.split('PHYS_DOMAIN.idealGasPressure').length - 1 >= 3,
