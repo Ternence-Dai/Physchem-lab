@@ -7,6 +7,7 @@ const app = fs.readFileSync('assets/js/legacy-app.js', 'utf8');
 const html = pageHtml + '\n' + fs.readFileSync('assets/js/experiment-catalogue.js', 'utf8') + '\n' + app;
 const catalogue = fs.readFileSync('assets/js/experiment-catalogue.js', 'utf8');
 const productCss = fs.readFileSync('assets/css/product-system.css', 'utf8');
+const notebookCss = fs.readFileSync('assets/css/experiment-notebook-v9.css', 'utf8');
 assert.ok(html.includes('product-system.css?v=20261019-v8'),
   'PhysChem Lab must load the V8 interactive engineering workspace stylesheet');
 assert.ok(productCss.includes('PhysChem Lab interactive engineering workspace'),
@@ -32,6 +33,29 @@ assert.ok(productCss.includes('@media(max-width:900px)') &&
 
 assert.ok(productCss.includes('prefers-reduced-motion:reduce'),
   'PhysChem Lab must respect reduced-motion preferences');
+assert.ok(pageHtml.includes('experiment-notebook-v9.css?v=20261019-v9') &&
+          pageHtml.includes('id="experimentNote"') &&
+          pageHtml.includes('id="experimentNoteCount"'),
+  'PhysChem Lab must mount the scientific notebook note field and V9 notebook stylesheet');
+for(const selector of [
+  '.lab-notebook{', '.lab-notebook__head{', '#experimentNote',
+  '.w9-archive-results', '.w9-archive-note', '.w9-archive-formulas'
+]) assert.ok(notebookCss.includes(selector),
+  'PhysChem notebook styling must include ' + selector);
+assert.ok(app.includes('function buildExperimentRecordSnapshot()') &&
+          app.includes('function updateExperimentNoteCount()') &&
+          app.includes('experimentSnapshotVersion:1') &&
+          app.includes('readouts:readouts') &&
+          app.includes('formulaSnapshot:formulaSnapshot') &&
+          app.includes('tutorSnapshot:tutorSnapshot'),
+  'saving an experiment must capture versioned results, formulas, tutor explanation and notebook observations');
+assert.ok(app.includes('saved.note') &&
+          app.includes('w9-archive-results') &&
+          app.includes('w9-archive-note') &&
+          app.includes('w9-archive-formulas') &&
+          app.includes('w9-archive-tutor'),
+  'archive review and parameter restore must expose the saved scientific context');
+
 assert.ok(html.includes('id="mobileMenu"') &&
           html.includes('id="experimentSidebar"') &&
           html.includes('id="sidebarBackdrop"'),
