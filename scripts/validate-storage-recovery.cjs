@@ -169,8 +169,10 @@ console.log('Physchem archive recovery checks passed (corrupt JSON, invalid shap
     {...snapshot,note:'x'.repeat(1201)},
     {...snapshot,snapshotAt:'2026-02-30T13:00:00.000Z'},
     {...snapshot,readouts:[{label:'',value:'x'}]},
-    {...snapshot,formulaSnapshot:['x'.repeat(601)]},
-    {...snapshot,tutorSnapshot:'x'.repeat(4001)}
+    {...snapshot,formulaSnapshot:['x'.repeat(301)]},
+    {...snapshot,tutorSnapshot:'x'.repeat(2401)},
+    {...snapshot,formulaSnapshot:Array(21).fill('P = nRT/V')},
+    {...snapshot,readouts:[{label:'Pressure',value:'x'.repeat(181)}]}
   ]){
     assert.equal(api.isValidExperimentSave(invalid),false,
       'malformed snapshot metadata must be rejected before import or overwrite');
