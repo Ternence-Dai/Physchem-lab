@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   idealGasPressure, idealGasParticleProperties, arrheniusRateConstant,
-  projectileMotion, pendulumPeriod, ohmsLaw, inclinedPlaneAcceleration, springOscillator
+  projectileMotion, pendulumPeriod, ohmsLaw, inclinedPlaneAcceleration, inclinedPlaneForces, springOscillator
 } from "../src/domain/index.js";
 
 test("ideal gas law returns SI pressure",()=>{ const p=idealGasPressure({amountMol:1,temperatureK:273.15,volumeM3:0.022414}); assert.ok(Math.abs(p-101325)<1200); });
@@ -81,6 +81,19 @@ test("Ohm heating avoids squaring a finite current into an intermediate overflow
  assert.ok(Math.abs(result.heatJPerMinute/(result.powerW*60)-1)<1e-12);
 });
 test("inclined plane acceleration includes friction threshold and exact vertical-plane limit",()=>{ assert.ok(Math.abs(inclinedPlaneAcceleration({angleDeg:30,frictionCoefficient:Math.tan(Math.PI/6)}))<1e-12); assert.equal(inclinedPlaneAcceleration({angleDeg:30,frictionCoefficient:1}),0); assert.equal(inclinedPlaneAcceleration({angleDeg:90,frictionCoefficient:0}),9.8); assert.equal(inclinedPlaneAcceleration({angleDeg:90,frictionCoefficient:100}),9.8); assert.equal(inclinedPlaneAcceleration({angleDeg:0,frictionCoefficient:0}),0); assert.throws(()=>inclinedPlaneAcceleration({angleDeg:90.01,frictionCoefficient:0}),RangeError); assert.throws(()=>inclinedPlaneAcceleration({angleDeg:30,frictionCoefficient:-0.1}),RangeError); });
+test("inclined plane distinguishes static friction from kinetic friction",()=>{
+ const held=inclinedPlaneForces({angleDeg:20,frictionCoefficient:0.5,massKg:3});
+ assert.equal(held.slipping,false);
+ assert.ok(Math.abs(held.frictionForce-held.parallelGravity)<1e-12,
+  "static friction must balance the downslope component, not always equal μN");
+ assert.equal(held.acceleration,0);
+ const sliding=inclinedPlaneForces({angleDeg:45,frictionCoefficient:0.2,massKg:3});
+ assert.equal(sliding.slipping,true);
+ assert.ok(Math.abs(sliding.frictionForce-0.2*sliding.normalForce)<1e-12);
+ assert.ok(Math.abs(sliding.acceleration-(sliding.parallelGravity-sliding.frictionForce)/3)<1e-12);
+ assert.equal(inclinedPlaneForces({angleDeg:90,frictionCoefficient:0.5,massKg:2}).frictionForce,0);
+ assert.throws(()=>inclinedPlaneForces({angleDeg:30,frictionCoefficient:0.2,massKg:0}),RangeError);
+});
 test("spring oscillator shares acceleration, period and energy calculations",()=>{ const a=springOscillator({massKg:1,springConstantNPerM:4,displacementM:0.5,velocityMPerS:0}); assert.equal(a.acceleration,-2); assert.ok(Math.abs(a.angularFrequency-2)<1e-12); assert.ok(Math.abs(a.period-Math.PI)<1e-12); assert.equal(a.kineticEnergy,0); assert.equal(a.elasticPotentialEnergy,0.5); assert.equal(a.totalEnergy,0.5); const b=springOscillator({massKg:1,springConstantNPerM:4,displacementM:0,velocityMPerS:1}); assert.equal(b.totalEnergy,a.totalEnergy); assert.throws(()=>springOscillator({massKg:0,springConstantNPerM:4,displacementM:0,velocityMPerS:1}),RangeError); assert.throws(()=>springOscillator({massKg:1,springConstantNPerM:4,displacementM:Infinity,velocityMPerS:1}),TypeError); });
 test("spring oscillator frequency avoids overflowing a ratio before its square root",()=>{ const result=springOscillator({massKg:1e-200,springConstantNPerM:1e200,displacementM:0,velocityMPerS:0}); assert.ok(Number.isFinite(result.angularFrequency)); assert.ok(Math.abs(result.angularFrequency/1e200-1)<1e-12); assert.ok(Number.isFinite(result.period)); assert.equal(result.acceleration,0); });
 test("spring acceleration avoids intermediate ratio overflow when the final result is finite",()=>{ const result=springOscillator({massKg:1e-200,springConstantNPerM:1e200,displacementM:1e-200,velocityMPerS:0}); assert.ok(Number.isFinite(result.acceleration)); assert.ok(Math.abs(result.acceleration/(-1e200)-1)<1e-12); });
