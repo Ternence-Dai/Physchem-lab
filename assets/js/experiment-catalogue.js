@@ -54,7 +54,7 @@ EXP.push({id:'p3',name:'弹簧振子与能量转化',cat:'物理',tags:['力学'
   params:[P('m','质量 m',0.2,3,0.1,1,'kg'),P('k','劲度系数 k',5,80,1,30,'N/m')],
   formulas:['F=−k·x','a=−(k/m)·x','ω=√(k/m)','T=2π√(m/k)','E=½mv²+½kx²=常数'],
   init:function(){return{x:0.6,v:0,t:0};},
-  step:function(p,dt,st){var n=6,h=dt/n;for(var i=0;i<n;i++){var a=window.PHYS_DOMAIN.springOscillator({massKg:p.m,springConstantNPerM:p.k,displacementM:st.x,velocityMPerS:st.v}).acceleration;st.v+=a*h;st.x+=st.v*h;}st.t+=dt;},
+  step:function(p,dt,st){var n=6,h=dt/n;for(var i=0;i<n;i++){var a0=window.PHYS_DOMAIN.springOscillator({massKg:p.m,springConstantNPerM:p.k,displacementM:st.x,velocityMPerS:st.v}).acceleration;st.x+=st.v*h+0.5*a0*h*h;var a1=window.PHYS_DOMAIN.springOscillator({massKg:p.m,springConstantNPerM:p.k,displacementM:st.x,velocityMPerS:st.v}).acceleration;st.v+=0.5*(a0+a1)*h;}st.t+=dt;},
   draw:function(c,W,H,p,st){var cy=H*0.42,wx=58;var sc=Math.min(160,(W/2-130)/0.72);var eqX=W/2+20,bw=72,bh=62;
     var bx=eqX+st.x*sc,left=bx-bw/2;
     c.fillStyle='#1b2740';c.fillRect(wx-22,cy-90,22,180);
