@@ -121,6 +121,23 @@ assert.equal(langmuir.fn(langmuirParams, 0.5), 2,
 assert.equal(gibbs.fn({dH:10,dS:100}, 300), -20,
   'Gibbs free energy model must use ΔG=ΔH−TΔS with consistent units');
 
+const kinetics = loadArray('C3').find(model => model.id === 'ch9');
+assert.ok(kinetics, 'integrated reaction-order kinetics model must be present');
+const kineticsBase = {k:0.1,c0:1,n:3};
+assert.ok(Math.abs(kinetics.fn(kineticsBase,10) - 1/Math.sqrt(3)) < 1e-12,
+  'third-order kinetics must use [A]=[A]0/sqrt(1+2*k*[A]0^2*t)');
+assert.ok(Math.abs(kinetics.fn(kineticsBase,0) - 1) < 1e-12,
+  'third-order concentration must start at the initial concentration');
+const thirdOrderReadout = kinetics.ro(kineticsBase);
+assert.ok(thirdOrderReadout.some(row => row.k === '半衰期' && row.v === '15.00 s'),
+  'third-order half-life must be 3/(2*k*[A]0^2)');
+assert.ok(thirdOrderReadout.some(row => row.k === 'k 的单位' && row.v === 'L²/(mol²·s)'),
+  'third-order rate constant must expose its dimensionally correct units');
+assert.ok(kinetics.fn({...kineticsBase,n:2},10) < 1 &&
+  kinetics.fn({...kineticsBase,n:1},10) < 1 &&
+  kinetics.fn({...kineticsBase,n:0},10) === 0,
+  'zero-, first-, second- and third-order models must all decay consistently');
+
 assert.ok(html.includes('var esc=function(v)'),
   'experiment renderer must define an HTML escaping helper');
 for (const token of [
