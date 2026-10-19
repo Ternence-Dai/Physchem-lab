@@ -58,6 +58,28 @@ export function idealGasParticleProperties({ amountMol, temperatureK, volumeM3, 
   }, "ideal-gas particle properties"));
 }
 
+export function strongAcidStrongBasePH({acidConcentrationMolPerL,acidVolumeMl,baseConcentrationMolPerL,baseVolumeMl}) {
+  const values={acidConcentrationMolPerL,acidVolumeMl,baseConcentrationMolPerL,baseVolumeMl};
+  for (const [name,value] of Object.entries(values)) {
+    if (!Number.isFinite(value)) throw new TypeError(`${name} must be finite`);
+  }
+  if (acidConcentrationMolPerL<=0 || baseConcentrationMolPerL<=0 ||
+      acidVolumeMl<=0 || baseVolumeMl<0) {
+    throw new RangeError("acid/base concentrations and acid volume must be positive; base volume must be non-negative");
+  }
+  // mol/L × mL gives mmol; dividing excess mmol by total mL gives mol/L.
+  const acidMmol=acidConcentrationMolPerL*acidVolumeMl;
+  const baseMmol=baseConcentrationMolPerL*baseVolumeMl;
+  const totalVolumeMl=acidVolumeMl+baseVolumeMl;
+  if (acidMmol===baseMmol) return 7;
+  const excessConcentration=(acidMmol>baseMmol
+    ? acidMmol-baseMmol : baseMmol-acidMmol)/totalVolumeMl;
+  const pH=acidMmol>baseMmol
+    ? -Math.log10(excessConcentration)
+    : 14+Math.log10(excessConcentration);
+  return finiteResult(C(pH,0,14),"strong acid/strong base pH");
+}
+
 export function arrheniusRateConstant({ preExponentialFactor, activationEnergyJPerMol, temperatureK }) {
   for (const [name,value] of Object.entries({preExponentialFactor,activationEnergyJPerMol,temperatureK})) if (!Number.isFinite(value)) throw new TypeError(`${name} must be finite`);
   if (preExponentialFactor < 0 || activationEnergyJPerMol < 0 || temperatureK <= 0) throw new RangeError("Arrhenius parameters are outside their physical domain");
