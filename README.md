@@ -30,3 +30,8 @@ The modernization work is being applied directly to `main`. The verified slice h
 Remaining delivery work includes reference datasets and citations for every experiment, more UI-to-domain integration across the full catalogue, explicit numerical error reporting, experiment notebooks and export, and browser-level testing. Simulated values and visual animations must not be presented as measured laboratory data.
 
 See [the rebuild plan](docs/REBUILD_PLAN.md) and [domain equations, units, and validity boundaries](docs/DOMAIN_CORE.md).
+
+
+## 开源项目深度对标
+
+本项目采用的上游参考、架构借鉴、实现边界与后续验收要求见 [docs/OPEN_SOURCE_BENCHMARKS.md](docs/OPEN_SOURCE_BENCHMARKS.md)。
