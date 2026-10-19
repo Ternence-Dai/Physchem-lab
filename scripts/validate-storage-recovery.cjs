@@ -147,3 +147,35 @@ console.log('Physchem archive recovery checks passed (corrupt JSON, invalid shap
   assert.equal(api.saves[0].experimentId,'p1');
   assert.equal(api.saves[0].modelVersion,'physchem-engine-v2');
 }
+{
+  const storage={getItem:()=> '[]',setItem(){}};
+  const api=load(storage);
+  const snapshot={
+    name:'Ideal gas law',experimentId:'p1',modelVersion:'physchem-engine-v2',
+    time:'2026-10-19 13:00:00',params:{amount:1,temperature:300},
+    experimentSnapshotVersion:1,snapshotAt:'2026-10-19T13:00:00.000Z',
+    note:'Observed proportional pressure increase\\nSimulation only',
+    readouts:[{label:'Pressure',value:'101.325 kPa'}],
+    formulaSnapshot:['P = nRT/V'],
+    tutorSnapshot:'At constant amount and volume, pressure increases with absolute temperature.'
+  };
+  assert.equal(api.isValidExperimentSave(snapshot),true,
+    'result snapshots, formulas and notebook notes must be accepted as additive archive fields');
+  assert.equal(api.persistExperimentSaves([snapshot]),true,
+    'new reproducibility fields must persist in the ordinary archive format');
+  assert.equal(api.saves[0].readouts[0].value,'101.325 kPa');
+  for(const invalid of [
+    {...snapshot,experimentSnapshotVersion:2},
+    {...snapshot,note:'x'.repeat(1201)},
+    {...snapshot,snapshotAt:'2026-02-30T13:00:00.000Z'},
+    {...snapshot,readouts:[{label:'',value:'x'}]},
+    {...snapshot,formulaSnapshot:['x'.repeat(601)]},
+    {...snapshot,tutorSnapshot:'x'.repeat(4001)}
+  ]){
+    assert.equal(api.isValidExperimentSave(invalid),false,
+      'malformed snapshot metadata must be rejected before import or overwrite');
+  }
+  assert.equal(api.isValidExperimentSave({
+    name:'Legacy archive',time:'2026-10-18',params:{v0:32}
+  }),true,'legacy parameter-only archives must remain backward compatible');
+}
