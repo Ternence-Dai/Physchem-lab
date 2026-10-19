@@ -46,3 +46,12 @@ These checks establish software consistency and selected numerical properties; t
 ## Inclined-plane boundary conditions
 
 The ideal inclined-plane acceleration model accepts angles from 0° through 90°. At exactly 90°, the normal force and friction contribution are exactly zero, so the implementation returns gravitational acceleration directly instead of relying on the floating-point approximation of cos(π/2). Angles above 90° are outside this model's defined domain.
+
+## Strong acid/strong base titration boundary
+
+The ideal strong-electrolyte titration model uses the signed excess concentration after neutralization together with water autoionization at 25 °C:
+- [H+][OH-] = Kw = 1×10^-14
+- [H+] - [OH-] = C_acid,excess
+- pH = -log10([H+])
+
+This prevents ultra-dilute strong-acid inputs (below 10^-7 mol/L) from incorrectly appearing basic and keeps ultra-dilute base solutions close to neutral. The model still treats concentrations as activities and is not a high-ionic-strength activity-coefficient model; concentrated-solution pH remains an approximation.
