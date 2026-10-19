@@ -28,7 +28,7 @@ EXP.push({id:'p1',name:'抛体运动轨迹',cat:'物理',tags:['力学','运动�
 });
 
 /* 2. 单摆 */
-EXP.push({id:'p2',name:'单摆与简谐振动',cat:'物理',tags:['力学','振动'],brief:'小角度下单摆做简谐振动，周期只与摆长和重力加速度有关。',resetOnChange:true,
+EXP.push({id:'p2',name:'单摆与简谐振动',cat:'物理',tags:['力学','振动'],brief:'动画按含阻尼的非线性方程演化；读数中的 T₀、f₀、ω₀ 是小角度无阻尼近似量，不是阻尼动画的逐周期测量值。',resetOnChange:true,
   params:[P('L','摆长 L',0.3,2,0.05,1,'m'),P('g','重力加速度 g',1.6,20,0.1,9.8,'m/s²'),P('b','阻尼系数 b',0,0.6,0.02,0,'')],
   formulas:['θ″=−(g/L)·sinθ−b·θ′','小角度近似 sinθ≈θ','T₀=2π√(L/g)（无阻尼近似）','ω₀=√(g/L)'],
   init:function(){return{th:0.17,w:0,t:0};},
@@ -44,7 +44,7 @@ EXP.push({id:'p2',name:'单摆与简谐振动',cat:'物理',tags:['力学','振�
     var T=window.PHYS_DOMAIN.pendulumPeriod({lengthM:p.L,gravity:p.g});
     pl(c,'T₀='+F(T)+' s',26,26,'rgba(34,211,238,.12)','#22d3ee');pl(c,'θ='+F(st.th*180/Math.PI,1)+'°',26,56,'rgba(167,139,250,.12)','#a78bfa');
   },
-  readout:function(p,st){var T=window.PHYS_DOMAIN.pendulumPeriod({lengthM:p.L,gravity:p.g});return[{k:'无阻尼近似周期 T₀',v:F(T)+' s'},{k:'频率 f',v:F(1/T)+' Hz'},{k:'角频率 ω',v:F(Math.sqrt(p.g/p.L))+' rad/s'},{k:'当前摆角',v:F(st.th*180/Math.PI,1)+'°'},{k:'角速度',v:F(st.w)+' rad/s'},{k:'摆长 L',v:F(p.L,2)+' m'}];},
+  readout:function(p,st){var T=window.PHYS_DOMAIN.pendulumPeriod({lengthM:p.L,gravity:p.g});return[{k:'无阻尼近似周期 T₀',v:F(T)+' s'},{k:'无阻尼近似频率 f₀',v:F(1/T)+' Hz'},{k:'无阻尼近似角频率 ω₀',v:F(Math.sqrt(p.g/p.L))+' rad/s'},{k:'当前摆角',v:F(st.th*180/Math.PI,1)+'°'},{k:'角速度',v:F(st.w)+' rad/s'},{k:'摆长 L',v:F(p.L,2)+' m'}];},
   tutor:function(p,st){var T=window.PHYS_DOMAIN.pendulumPeriod({lengthM:p.L,gravity:p.g});
     return '【模型】运动方程为 θ″=−(g/L)sinθ−bθ′，动画使用非线性 sinθ 与数值积分。下面的 T₀=2π√(L/g) 和 ω₀=√(g/L) 是无阻尼、小角度近似值，不是阻尼动画逐周期测得的周期；阻尼会改变振荡周期。\n\n【参数】L='+F(p.L,2)+' m, g='+F(p.g,1)+' m/s², b='+F(p.b,2)+'\n\n【推演】\n· 无阻尼近似 T₀='+F(T)+' s\n· 无阻尼近似 f₀='+F(1/T)+' Hz\n· 无阻尼近似 ω₀='+F(Math.sqrt(p.g/p.L))+' rad/s\n· 当前摆角 θ='+F(st.th*180/Math.PI,1)+'°\n\n【结论】'+(p.b>0.05?'阻尼 b='+F(p.b,2)+'，振幅随时间衰减。':'调大 b 观察阻尼振动。')+'\n\n【延伸】无阻尼近似周期里没有摆球质量——伽利略的等时性。';}
 });
