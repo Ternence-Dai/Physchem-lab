@@ -286,11 +286,12 @@ const mockTarget={
   init:params=>({initializedAt:params.v0})
 };
 const restoreToasts=[];
+const restoredNoteField={value:''};
 const restoreContext=vm.createContext({
   saves:[{name:'Test experiment',experimentId:'p-test',modelVersion:'physchem-engine-v2',time:'2026-10-19',params:{v0:42},note:'Observed stable response at the reference point.'}],
   EXP:[mockTarget],ARCHIVE_MODEL_VERSION:'physchem-engine-v2',
   cur:null,P:{v0:12},ST:{initializedAt:12},paused:true,
-  restoredNote:{value:''},
+  restoredNote:restoredNoteField,
   updateExperimentNoteCount(){},
   toast(message){restoreToasts.push(message);},
   setExperimentSidebarOpen(){},
@@ -298,7 +299,7 @@ const restoreContext=vm.createContext({
     if(id==='bp')return {textContent:'⏸ 暂停',className:'bt'};
     if(id==='et')return {textContent:''};
     if(id==='eb2')return {textContent:''};
-    if(id==='experimentNote')return this.restoredNote;
+    if(id==='experimentNote')return restoredNoteField;
     return null;
   },
   buildParams(){},buildPanel(){},renderList(){},refreshTutor(){},
@@ -313,7 +314,7 @@ assert.equal(restoreContext.ST.initializedAt,42);
 assert.equal(restoreContext.paused,false);
 assert.equal(restoreContext.saves.length,1,
   'loading a saved parameter set must not delete or mutate the original archive');
-assert.equal(restoreContext.restoredNote.value,'Observed stable response at the reference point.',
+assert.equal(restoredNoteField.value,'Observed stable response at the reference point.',
   'loading a saved experiment must restore its observation note');
 
 const validParams=JSON.stringify(restoreContext.P);
