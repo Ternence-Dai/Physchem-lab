@@ -77,7 +77,7 @@ export function strongAcidStrongBasePH({acidConcentrationMolPerL,acidVolumeMl,ba
   const pH=acidMmol>baseMmol
     ? -Math.log10(excessConcentration)
     : 14+Math.log10(excessConcentration);
-  return finiteResult(C(pH,0,14),"strong acid/strong base pH");
+  return finiteResult(Math.max(0,Math.min(14,pH)),"strong acid/strong base pH");
 }
 
 export function arrheniusRateConstant({ preExponentialFactor, activationEnergyJPerMol, temperatureK }) {
