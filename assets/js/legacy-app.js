@@ -122,11 +122,11 @@ function isValidExperimentSave(item){
   if(item.modelVersion!==undefined && (typeof item.modelVersion!=='string'||!item.modelVersion.trim()||item.modelVersion.length>80))return false;
   if(item.experimentSnapshotVersion!==undefined && item.experimentSnapshotVersion!==1)return false;
   if(item.snapshotAt!==undefined && (typeof item.snapshotAt!=='string'||
-     !/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$/.test(item.snapshotAt)||
+     !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\\.\d{3}Z$/.test(item.snapshotAt)||
      !Number.isFinite(Date.parse(item.snapshotAt))||
      new Date(Date.parse(item.snapshotAt)).toISOString()!==item.snapshotAt))return false;
   if(item.note!==undefined && (typeof item.note!=='string'||item.note.length>1200||
-     /[\\x00-\\x08\\x0B\\x0C\\x0E-\\x1F\\x7F]/.test(item.note)))return false;
+     /[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/.test(item.note)))return false;
   if(item.readouts!==undefined && (!Array.isArray(item.readouts)||item.readouts.length>30||
      !item.readouts.every(function(row){
        return !!row&&typeof row==='object'&&!Array.isArray(row)&&
