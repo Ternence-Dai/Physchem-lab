@@ -34,7 +34,9 @@ export function idealGasPressure({ amountMol, temperatureK, volumeM3 }) {
   if (amountMol === 0) return 0;
   // Evaluate the positive product/quotient in log space so an intermediate
   // amount/volume underflow does not erase a representable final pressure.
-  return finiteResult(Math.exp(Math.log(amountMol) - Math.log(volumeM3) + Math.log(GAS_CONSTANT) + Math.log(temperatureK)), "ideal gas pressure");
+  const pressure = Math.exp(Math.log(amountMol) - Math.log(volumeM3) + Math.log(GAS_CONSTANT) + Math.log(temperatureK));
+  if (pressure === 0) throw new RangeError("positive gas amount produces pressure below the representable numeric range");
+  return finiteResult(pressure, "ideal gas pressure");
 }
 export function idealGasParticleProperties({ amountMol, temperatureK, volumeM3, molarMassKgPerMol }) {
   for (const [name, value] of Object.entries({ amountMol, temperatureK, volumeM3, molarMassKgPerMol })) {
