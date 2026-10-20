@@ -524,8 +524,11 @@ function restoreSavedExperiment(index){
     }
   }
   if(!target && saved.experimentId===undefined){
-    for(var j=0;j<EXP.length;j++){
-      if(EXP[j].name===saved.name){target=EXP[j];break;}
+    var legacyMatches=EXP.filter(function(experiment){return experiment.name===saved.name;});
+    if(legacyMatches.length===1)target=legacyMatches[0];
+    else if(legacyMatches.length>1){
+      toast('旧版档案名称对应多个实验模型，已阻止自动载入以避免套用错误参数');
+      return false;
     }
   }
   if(!target){
