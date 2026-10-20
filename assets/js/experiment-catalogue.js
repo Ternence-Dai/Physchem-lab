@@ -174,9 +174,9 @@ EXP.push({id:'p6',name:'理想气体分子运动',cat:'化学',tags:['气体','�
 });
 
 /* 7. 酸碱滴定 */
-EXP.push({id:'p7',name:'酸碱滴定曲线',cat:'化学',tags:['分析化学','pH'],brief:'强酸强碱滴定过程中 pH 的突变规律，是定量分析的核心工具。',resetOnChange:true,
+EXP.push({id:'p7',name:'酸碱滴定曲线',cat:'化学',tags:['分析化学','pH'],brief:'强酸—强碱滴定曲线；模型固定 25°C，并通过 K_w=10⁻¹⁴ 纳入水的自解离平衡。',resetOnChange:true,
   params:[P('ca','酸的浓度 c(酸)',0.01,0.5,0.01,0.1,'mol/L'),P('va','酸的体积 V(酸)',10,50,1,20,'mL'),P('cb','碱的浓度 c(碱)',0.01,1,0.01,0.1,'mol/L')],
-  formulas:['V_eq=c(酸)·V(酸)/c(碱)','当量点前 [H⁺]=(n酸−n碱)/V总','当量点后 pOH=−lg[(n碱−n酸)/V总]','当量点 pH=7.00'],
+  formulas:['V_eq=c(酸)·V(酸)/c(碱)','c=(n酸−n碱)/V总=[H⁺]−[OH⁻]','[H⁺]=(c+√(c²+4K_w))/2（数值实现使用稳定共轭式）','pH=−lg[H⁺]；K_w=1.0×10⁻¹⁴（25°C）'],
   init:function(){return{Vb:0,t:0};},
   step:function(p,dt,st){var Veq=p.ca*p.va/p.cb;var Vm=Veq*1.9;st.Vb+=Vm/9*dt;if(st.Vb>Vm)st.Vb=0;st.t+=dt;},
   pHAt:function(Vb,p){return window.PHYS_DOMAIN.strongAcidStrongBasePH({acidConcentrationMolPerL:p.ca,acidVolumeMl:p.va,baseConcentrationMolPerL:p.cb,baseVolumeMl:Vb});},
@@ -213,7 +213,7 @@ EXP.push({id:'p7',name:'酸碱滴定曲线',cat:'化学',tags:['分析化学','p
     else if(r<0.999)sg='接近当量点——剩余酸量急剧减少，pH 开始爬坡。';
     else if(r<1.001)sg='当量点附近——pH≈7.00。';
     else sg='超过当量点——碱过量，pH 迅速跃升。';
-    return '【模型】滴定曲线记录"加入滴定剂体积"与"溶液 pH"的对应关系。\n\n【参数】c(酸)='+F(p.ca,2)+' mol/L, V(酸)='+p.va+' mL, c(碱)='+F(p.cb,2)+' mol/L\n\n【推演】\n· V_eq='+F(Veq,2)+' mL\n· V='+F(st.Vb,2)+' mL ('+F(C(r*100,0,200),1)+'%)\n· pH='+F(ph,2)+'\n\n【阶段】'+sg+'\n\n【模型边界】本实验只计算强酸—强碱、25°C 条件下的化学计量过量，不包含弱酸/弱碱的 Ka/Kb 平衡、缓冲区、水的自解离修正或活度系数。弱酸滴定当量点通常 pH>7，需另建平衡模型，不能直接套用本曲线。';}
+    return '【模型】滴定曲线记录"加入滴定剂体积"与"溶液 pH"的对应关系。\n\n【参数】c(酸)='+F(p.ca,2)+' mol/L, V(酸)='+p.va+' mL, c(碱)='+F(p.cb,2)+' mol/L\n\n【推演】\n· V_eq='+F(Veq,2)+' mL\n· V='+F(st.Vb,2)+' mL ('+F(C(r*100,0,200),1)+'%)\n· pH='+F(ph,2)+'\n\n【阶段】'+sg+'\n\n【模型边界】本模型适用于强酸—强碱、25°C 条件：以物质的量差求得净过量浓度 c，并计入水的自解离平衡 K_w=1.0×10⁻¹⁴（[H⁺][OH⁻]=K_w）。模型不包含弱酸/弱碱的 K_a/K_b 平衡、缓冲区组分、离子活度系数及温度对 K_w 的变化；弱酸滴定当量点通常 pH≠7，不能直接套用本曲线。';}
 });
 
 /* 8. 反应速率 */
