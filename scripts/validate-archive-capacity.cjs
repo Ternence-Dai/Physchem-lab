@@ -79,3 +79,119 @@ assert.ok(css.includes('.archive-capacity-note') &&
           css.includes('@media(max-width:520px)'),
   'capacity notice and delete controls must remain visible on mobile');
 console.log('PhysChem archive capacity and explicit deletion checks passed.');
+
+
+for (const invalidIndex of [-1, 1.5, Number.NaN, Number.MAX_SAFE_INTEGER]) {
+  const beforeInvalidDelete = state.saves.map(row => row.name);
+  assert.equal(state.deleteSavedExperiment(invalidIndex), false,
+    'archive deletion must reject negative, fractional, non-finite and out-of-range indexes');
+  assert.deepEqual(state.saves.map(row => row.name), beforeInvalidDelete,
+    'invalid archive indexes must never mutate persisted records');
+}
+
+
+const restoreStart = app.indexOf('function restoreSavedExperiment(index)');
+const restoreEnd = app.indexOf('function updateExperimentNoteCount()', restoreStart);
+const restoreSource = app.slice(restoreStart, restoreEnd);
+assert.ok(restoreStart >= 0 && restoreEnd > restoreStart, 'archive restore handler must remain discoverable');
+const restoreState = {
+  saves: [{ name:'Known', time:'2026-10-20', params:{a:1} }],
+  EXP: [{ id:'known', name:'Known', params:[{key:'a',min:0,max:2}], init:p=>({value:p.a}) }],
+  ARCHIVE_MODEL_VERSION:'physchem-engine-v2',
+  toast() {}, setExperimentSidebarOpen() {}, buildParams() {}, buildPanel() {},
+  renderList() {}, refreshTutor() {}, updateExperimentNoteCount() {},
+  setTimeout() {}, paused:false, P:{}, ST:{}, cur:null,
+  E: id => ({textContent:'',value:''})
+};
+vm.createContext(restoreState);
+vm.runInContext(restoreSource + String.fromCharCode(10) + 'this.restoreSavedExperiment=restoreSavedExperiment;',restoreState);
+for (const invalidIndex of [-1,1.5,Number.NaN,Number.MAX_SAFE_INTEGER]) {
+  assert.equal(restoreState.restoreSavedExperiment(invalidIndex),false,
+    'archive restore must reject invalid indexes before applying parameters');
+  assert.equal(restoreState.cur,null,'invalid archive restore must not switch the active experiment');
+}
+
+
+const validationStart = app.indexOf('function isValidExperimentSave(item)');
+const validationEnd = app.indexOf('var rawSaved', validationStart);
+assert.ok(validationStart >= 0 && validationEnd > validationStart,
+  'archive save validators must be available for import validation');
+const validationState = {};
+vm.createContext(validationState);
+vm.runInContext(app.slice(validationStart, validationEnd) +
+  '\nthis.isValidExperimentSaveList = isValidExperimentSaveList;', validationState);
+const versionedSave = {
+  name:'Versioned experiment',time:'2026-10-20 09:00:00',
+  experimentId:'EXP-42',experimentSnapshotVersion:1,
+  snapshotAt:'2026-10-20T09:00:00.000Z',params:{temperature:298.15,pressure:1}
+};
+assert.equal(validationState.isValidExperimentSaveList([versionedSave]),true);
+assert.equal(validationState.isValidExperimentSaveList([
+  versionedSave,{...versionedSave,params:{pressure:1,temperature:298.15}}
+]),false,'an imported archive must reject duplicate versioned snapshots even when parameter key order differs');
+assert.equal(validationState.isValidExperimentSaveList([
+  versionedSave,{...versionedSave,params:{temperature:300,pressure:1}}
+]),true,'distinct parameter snapshots for the same experiment and instant remain available for reconciliation');
+
+
+const missingSnapshotTime = { ...versionedSave };
+delete missingSnapshotTime.snapshotAt;
+assert.equal(validationState.isValidExperimentSaveList([missingSnapshotTime]), false,
+  'versioned experiment snapshots must retain their immutable snapshot timestamp');
+const missingExperimentId = { ...versionedSave };
+delete missingExperimentId.experimentId;
+assert.equal(validationState.isValidExperimentSaveList([missingExperimentId]), false,
+  'versioned experiment snapshots must retain their stable experiment identity');
+const unversionedSnapshot = { ...versionedSave };
+delete unversionedSnapshot.experimentSnapshotVersion;
+assert.equal(validationState.isValidExperimentSaveList([unversionedSnapshot]), false,
+  'snapshot timestamps must not be accepted without an explicit snapshot schema version');
+
+
+const releaseHelper = app.match(/function deferArchiveObjectUrlRelease\(url\)\s*\{[\s\S]*?\n\}/);
+assert.ok(releaseHelper, 'archive export must use a deferred object-URL release helper');
+const revokeCalls = [];
+const scheduledCallbacks = [];
+const releaseContext = {
+  URL: { revokeObjectURL: url => revokeCalls.push(url) },
+  setTimeout: (callback, delay) => {
+    scheduledCallbacks.push({ callback, delay });
+    return scheduledCallbacks.length;
+  }
+};
+vm.runInNewContext(
+  releaseHelper[0] + "\ndeferArchiveObjectUrlRelease('blob:physchem-archive-test');",
+  releaseContext
+);
+assert.deepEqual(revokeCalls, [],
+  'the download object URL must remain valid immediately after the export click');
+assert.equal(scheduledCallbacks.length, 1);
+assert.equal(scheduledCallbacks[0].delay, 1000,
+  'object URL cleanup must be deferred to give mobile browsers time to consume the download');
+scheduledCallbacks[0].callback();
+assert.deepEqual(revokeCalls, ['blob:physchem-archive-test']);
+
+const exportStart = app.indexOf('function exportExperimentArchive(){');
+const exportEnd = app.indexOf('\nfunction syncArchiveRecoveryUI', exportStart);
+assert.ok(exportStart >= 0 && exportEnd > exportStart);
+const exportHandler = app.slice(exportStart, exportEnd);
+assert.ok(exportHandler.includes('deferArchiveObjectUrlRelease(url);'));
+assert.ok(!exportHandler.includes('URL.revokeObjectURL(url);'),
+  'archive export must not revoke the download URL synchronously');
+
+const legacyRestoreGuardSource = app.slice(restoreStart, restoreEnd);
+assert.ok(legacyRestoreGuardSource.includes('legacyMatches.length===1') &&
+          legacyRestoreGuardSource.includes('legacyMatches.length>1') &&
+          legacyRestoreGuardSource.includes('避免套用错误参数'),
+  'legacy archives without stable IDs must refuse ambiguous duplicate-name model matches');
+
+const legacyRestore = app.slice(restoreStart, restoreEnd);
+assert.ok(legacyRestore.includes('legacyMatches.length===1') &&
+          legacyRestore.includes('legacyMatches.length>1') &&
+          legacyRestore.includes('避免套用错误参数'),
+  'legacy archives without stable IDs must refuse ambiguous duplicate-name model matches');
+
+
+const unsupportedSnapshotField = { ...versionedSave, privilegedRestore: true };
+assert.equal(validationState.isValidExperimentSaveList([unsupportedSnapshotField]), false,
+  'saved experiment snapshots must reject unsupported metadata instead of silently preserving unknown fields');

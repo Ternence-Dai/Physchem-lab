@@ -34,7 +34,9 @@ export function idealGasPressure({ amountMol, temperatureK, volumeM3 }) {
   if (amountMol === 0) return 0;
   // Evaluate the positive product/quotient in log space so an intermediate
   // amount/volume underflow does not erase a representable final pressure.
-  return finiteResult(Math.exp(Math.log(amountMol) - Math.log(volumeM3) + Math.log(GAS_CONSTANT) + Math.log(temperatureK)), "ideal gas pressure");
+  const pressure = Math.exp(Math.log(amountMol) - Math.log(volumeM3) + Math.log(GAS_CONSTANT) + Math.log(temperatureK));
+  if (pressure === 0) throw new RangeError("positive gas amount produces pressure below the representable numeric range");
+  return finiteResult(pressure, "ideal gas pressure");
 }
 export function idealGasParticleProperties({ amountMol, temperatureK, volumeM3, molarMassKgPerMol }) {
   for (const [name, value] of Object.entries({ amountMol, temperatureK, volumeM3, molarMassKgPerMol })) {
@@ -51,6 +53,7 @@ export function idealGasParticleProperties({ amountMol, temperatureK, volumeM3, 
     Math.log(BOLTZMANN_CONSTANT) + Math.log(temperatureK));
   const numberDensityPerM3 = amountMol === 0 ? 0
     : Math.exp(Math.log(amountMol) + Math.log(AVOGADRO_CONSTANT) - Math.log(volumeM3));
+  if (amountMol > 0 && numberDensityPerM3 === 0) throw new RangeError("number density is below the numeric range");
   return Object.freeze(finiteResult({
     rmsSpeed,
     averageKineticEnergyJ,
@@ -134,10 +137,11 @@ export function ohmsLaw({voltageV,resistanceOhm}) {
   if (resistanceOhm <= 0) throw new RangeError("resistance must be positive");
   const currentA=voltageV/resistanceOhm;
   const powerW=voltageV*currentA;
-  // Joule heating is electrical power integrated over one minute. Reuse the
-  // validated power result instead of squaring current first, which can
-  // overflow even when multiplying I² by a tiny resistance would be finite.
-  const heatJPerMinute=powerW*60;
+  // Minute-scale heat can remain representable even when the instantaneous
+  // power rounds to zero at the subnormal boundary. Evaluate it independently.
+  const heatJPerMinute=voltageV===0 ? 0 : powerW>0 ? powerW*60 : Math.exp(
+    2*Math.log(Math.abs(voltageV))-Math.log(resistanceOhm)+Math.log(60)
+  );
   return Object.freeze(finiteResult({currentA,powerW,heatJPerMinute}, "Ohm's law result"));
 }
 export function inclinedPlaneForces({angleDeg,frictionCoefficient,massKg=1,gravity=9.8}) {

@@ -176,3 +176,28 @@ test("projectile trajectory recovers representable results after intermediate sq
  assert.ok(Math.abs(result.maxHeight/5e199-1)<1e-12);
 });
 test("rejects finite inputs whose calculated results overflow",()=>{ assert.throws(()=>idealGasPressure({amountMol:1e308,temperatureK:300,volumeM3:1}),RangeError); assert.throws(()=>pendulumPeriod({lengthM:1e308,gravity:1e-308}),RangeError); assert.throws(()=>ohmsLaw({voltageV:1e308,resistanceOhm:1e-308}),RangeError); assert.throws(()=>springOscillator({massKg:1,springConstantNPerM:1,displacementM:1e308,velocityMPerS:0}),RangeError); assert.throws(()=>projectileMotion({initialSpeed:1e308,angleDeg:45,gravity:9.8}),RangeError); });
+
+
+test("Ohm minute heat remains representable when instantaneous power rounds to zero",()=>{
+ const result=ohmsLaw({voltageV:1e-160,resistanceOhm:1e5});
+ assert.equal(result.powerW,0);
+ assert.ok(result.heatJPerMinute>0,
+  "integrating a subnormal instantaneous power can recover a representable minute heat");
+});
+
+
+test("Ohm heat output remains finite at a tiny voltage when representable",()=>{
+ const result=ohmsLaw({voltageV:1e-160,resistanceOhm:1e-300});
+ assert.ok(Number.isFinite(result.heatJPerMinute));
+ assert.ok(result.heatJPerMinute>0);
+});
+
+
+test("ideal gas pressure rejects positive inputs whose result underflows to zero",()=>{
+ assert.throws(()=>idealGasPressure({amountMol:Number.MIN_VALUE,temperatureK:1,volumeM3:1e308}),RangeError);
+});
+
+
+test("ideal-gas particle properties reject positive amount when number density underflows to zero",()=>{
+ assert.throws(()=>idealGasParticleProperties({amountMol:Number.MIN_VALUE,temperatureK:300,volumeM3:1e308,molarMassKgPerMol:0.02897}),RangeError);
+});

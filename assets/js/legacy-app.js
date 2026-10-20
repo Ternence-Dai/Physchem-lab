@@ -116,11 +116,15 @@ var archiveRawValue=null;
 var archiveReadFailed=false;
 function isValidExperimentSave(item){
   if(!item||typeof item!=='object'||Array.isArray(item))return false;
+  var allowedFields=['name','time','params','note','readouts','formulaSnapshot','tutorSnapshot','experimentId','modelVersion','experimentSnapshotVersion','snapshotAt'];
+  if(Object.keys(item).some(function(key){return allowedFields.indexOf(key)===-1;}))return false;
   if(typeof item.name!=='string'||!item.name.trim()||item.name.length>160)return false;
   if(typeof item.time!=='string'||!item.time.trim()||item.time.length>80)return false;
   if(item.experimentId!==undefined && (typeof item.experimentId!=='string'||!item.experimentId.trim()||item.experimentId.length>80))return false;
   if(item.modelVersion!==undefined && (typeof item.modelVersion!=='string'||!item.modelVersion.trim()||item.modelVersion.length>80))return false;
   if(item.experimentSnapshotVersion!==undefined && item.experimentSnapshotVersion!==1)return false;
+  if(item.experimentSnapshotVersion===1 && (!item.experimentId || item.snapshotAt===undefined))return false;
+  if(item.snapshotAt!==undefined && item.experimentSnapshotVersion!==1)return false;
   if(item.snapshotAt!==undefined && (typeof item.snapshotAt!=='string'||
      !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(item.snapshotAt)||
      !Number.isFinite(Date.parse(item.snapshotAt))||
@@ -146,7 +150,18 @@ function isValidExperimentSave(item){
   });
 }
 function isValidExperimentSaveList(value){
-  return Array.isArray(value)&&value.length<=30&&value.every(isValidExperimentSave);
+  if(!Array.isArray(value)||value.length>30||!value.every(isValidExperimentSave))return false;
+  var identities=Object.create(null);
+  return value.every(function(item){
+    if(item.experimentSnapshotVersion!==1||!item.experimentId||!item.snapshotAt)return true;
+    var parameters=Object.keys(item.params).sort().map(function(key){
+      return [key,item.params[key]];
+    });
+    var identity=JSON.stringify([item.experimentId,item.snapshotAt,parameters]);
+    if(identities[identity])return false;
+    identities[identity]=true;
+    return true;
+  });
 }
 var rawSaved=null;
 try{
@@ -220,6 +235,11 @@ function restoreExperimentArchive(input){
     return false;
   }
 }
+function deferArchiveObjectUrlRelease(url){
+  // Safari and iOS may begin consuming the download after click() returns.
+  // Keep the object URL alive briefly so the browser can finish reading it.
+  setTimeout(function(){URL.revokeObjectURL(url);},1000);
+}
 function exportExperimentArchive(){
   var payload=buildExperimentArchiveBackup();
   var blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
@@ -232,7 +252,7 @@ function exportExperimentArchive(){
   document.body.appendChild(link);
   link.click();
   link.remove();
-  URL.revokeObjectURL(url);
+  deferArchiveObjectUrlRelease(url);
   toast(storageRecoveryRequired?'已导出原始存档恢复包；请妥善保管并检查内容。':'实验档案备份已导出');
 }
 function syncArchiveRecoveryUI(){
@@ -506,8 +526,11 @@ function restoreSavedExperiment(index){
     }
   }
   if(!target && saved.experimentId===undefined){
-    for(var j=0;j<EXP.length;j++){
-      if(EXP[j].name===saved.name){target=EXP[j];break;}
+    var legacyMatches=EXP.filter(function(experiment){return experiment.name===saved.name;});
+    if(legacyMatches.length===1)target=legacyMatches[0];
+    else if(legacyMatches.length>1){
+      toast('旧版档案名称对应多个实验模型，已阻止自动载入以避免套用错误参数');
+      return false;
     }
   }
   if(!target){
