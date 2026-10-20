@@ -68,7 +68,7 @@ assert.equal(state.deleteSavedExperiment(0),false,
 assert.deepEqual(state.saves.map(row=>row.name),before);
 
 assert.ok(app.includes("event.target.closest('[data-delete-save]')") &&
-          app.includes('data-delete-save="'+i+'"') &&
+          /data-delete-save="\x27\+i\+\x27"/.test(app) &&
           app.includes('saves.length>=30'),
   'archive UI must expose delegated per-record deletion and enforce its capacity');
 assert.ok(html.includes('最多保留 30 份实验档案') &&
