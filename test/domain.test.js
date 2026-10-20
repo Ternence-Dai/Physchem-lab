@@ -196,3 +196,8 @@ test("Ohm heat output remains finite at a tiny voltage when representable",()=>{
 test("ideal gas pressure rejects positive inputs whose result underflows to zero",()=>{
  assert.throws(()=>idealGasPressure({amountMol:Number.MIN_VALUE,temperatureK:1,volumeM3:1e308}),RangeError);
 });
+
+
+test("ideal-gas particle properties reject positive amount when number density underflows to zero",()=>{
+ assert.throws(()=>idealGasParticleProperties({amountMol:Number.MIN_VALUE,temperatureK:300,volumeM3:1e308,molarMassKgPerMol:0.02897}),RangeError);
+});
