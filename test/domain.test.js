@@ -184,3 +184,10 @@ test("Ohm minute heat remains representable when instantaneous power rounds to z
  assert.ok(result.heatJPerMinute>0,
   "integrating a subnormal instantaneous power can recover a representable minute heat");
 });
+
+
+test("Ohm heat output remains finite at a tiny voltage when representable",()=>{
+ const result=ohmsLaw({voltageV:1e-160,resistanceOhm:1e-300});
+ assert.ok(Number.isFinite(result.heatJPerMinute));
+ assert.ok(result.heatJPerMinute>0);
+});
