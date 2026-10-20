@@ -146,7 +146,18 @@ function isValidExperimentSave(item){
   });
 }
 function isValidExperimentSaveList(value){
-  return Array.isArray(value)&&value.length<=30&&value.every(isValidExperimentSave);
+  if(!Array.isArray(value)||value.length>30||!value.every(isValidExperimentSave))return false;
+  var identities=Object.create(null);
+  return value.every(function(item){
+    if(item.experimentSnapshotVersion!==1||!item.experimentId||!item.snapshotAt)return true;
+    var parameters=Object.keys(item.params).sort().map(function(key){
+      return [key,item.params[key]];
+    });
+    var identity=JSON.stringify([item.experimentId,item.snapshotAt,parameters]);
+    if(identities[identity])return false;
+    identities[identity]=true;
+    return true;
+  });
 }
 var rawSaved=null;
 try{
