@@ -191,3 +191,8 @@ test("Ohm heat output remains finite at a tiny voltage when representable",()=>{
  assert.ok(Number.isFinite(result.heatJPerMinute));
  assert.ok(result.heatJPerMinute>0);
 });
+
+
+test("ideal gas pressure rejects positive inputs whose result underflows to zero",()=>{
+ assert.throws(()=>idealGasPressure({amountMol:Number.MIN_VALUE,temperatureK:1,volumeM3:1e308}),RangeError);
+});
