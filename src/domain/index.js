@@ -136,7 +136,7 @@ export function ohmsLaw({voltageV,resistanceOhm}) {
   const powerW=voltageV*currentA;
   // Minute-scale heat can remain representable even when the instantaneous
   // power rounds to zero at the subnormal boundary. Evaluate it independently.
-  const heatJPerMinute=voltageV===0 ? 0 : Math.exp(
+  const heatJPerMinute=voltageV===0 ? 0 : powerW>0 ? powerW*60 : Math.exp(
     2*Math.log(Math.abs(voltageV))-Math.log(resistanceOhm)+Math.log(60)
   );
   return Object.freeze(finiteResult({currentA,powerW,heatJPerMinute}, "Ohm's law result"));
