@@ -119,7 +119,7 @@ assert.ok(validationStart >= 0 && validationEnd > validationStart,
 const validationState = {};
 vm.createContext(validationState);
 vm.runInContext(app.slice(validationStart, validationEnd) +
-  '\\nthis.isValidExperimentSaveList = isValidExperimentSaveList;', validationState);
+  '\nthis.isValidExperimentSaveList = isValidExperimentSaveList;', validationState);
 const versionedSave = {
   name:'Versioned experiment',time:'2026-10-20 09:00:00',
   experimentId:'EXP-42',experimentSnapshotVersion:1,
