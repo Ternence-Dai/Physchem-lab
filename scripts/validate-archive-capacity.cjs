@@ -79,3 +79,12 @@ assert.ok(css.includes('.archive-capacity-note') &&
           css.includes('@media(max-width:520px)'),
   'capacity notice and delete controls must remain visible on mobile');
 console.log('PhysChem archive capacity and explicit deletion checks passed.');
+
+
+for (const invalidIndex of [-1, 1.5, Number.NaN, Number.MAX_SAFE_INTEGER]) {
+  const beforeInvalidDelete = state.saves.map(row => row.name);
+  assert.equal(state.deleteSavedExperiment(invalidIndex), false,
+    'archive deletion must reject negative, fractional, non-finite and out-of-range indexes');
+  assert.deepEqual(state.saves.map(row => row.name), beforeInvalidDelete,
+    'invalid archive indexes must never mutate persisted records');
+}
