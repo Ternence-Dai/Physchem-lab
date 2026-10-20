@@ -25,6 +25,8 @@ jobs:
         run: node scripts/validate-experiments.cjs
       - name: Validate experiment archive recovery
         run: node scripts/validate-storage-recovery.cjs
+      - name: Validate archive capacity and explicit deletion
+        run: node scripts/validate-archive-capacity.cjs
       - name: Parse embedded JavaScript
         run: |
           node <<'NODE'
