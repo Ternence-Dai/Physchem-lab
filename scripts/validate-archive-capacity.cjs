@@ -88,3 +88,24 @@ for (const invalidIndex of [-1, 1.5, Number.NaN, Number.MAX_SAFE_INTEGER]) {
   assert.deepEqual(state.saves.map(row => row.name), beforeInvalidDelete,
     'invalid archive indexes must never mutate persisted records');
 }
+
+
+const restoreStart = app.indexOf('function restoreSavedExperiment(index)');
+const restoreEnd = app.indexOf('function updateExperimentNoteCount()', restoreStart);
+assert.ok(restoreStart >= 0 && restoreEnd > restoreStart, 'archive restore handler must remain discoverable');
+const restoreState = {
+  saves: [{ name:'Known', time:'2026-10-20', params:{a:1} }],
+  EXP: [{ id:'known', name:'Known', params:[{key:'a',min:0,max:2}], init:p=>({value:p.a}) }],
+  ARCHIVE_MODEL_VERSION:'physchem-engine-v2',
+  toast() {}, setExperimentSidebarOpen() {}, buildParams() {}, buildPanel() {},
+  renderList() {}, refreshTutor() {}, updateExperimentNoteCount() {},
+  setTimeout() {}, paused:false, P:{}, ST:{}, cur:null,
+  E: id => ({textContent:'',value:''})
+};
+vm.createContext(restoreState);
+vm.runInContext(restoreSource+'\\nthis.restoreSavedExperiment=restoreSavedExperiment;',restoreState);
+for (const invalidIndex of [-1,1.5,Number.NaN,Number.MAX_SAFE_INTEGER]) {
+  assert.equal(restoreState.restoreSavedExperiment(invalidIndex),false,
+    'archive restore must reject invalid indexes before applying parameters');
+  assert.equal(restoreState.cur,null,'invalid archive restore must not switch the active experiment');
+}
