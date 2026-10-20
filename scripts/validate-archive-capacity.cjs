@@ -104,7 +104,7 @@ const restoreState = {
   E: id => ({textContent:'',value:''})
 };
 vm.createContext(restoreState);
-vm.runInContext(restoreSource+'\\nthis.restoreSavedExperiment=restoreSavedExperiment;',restoreState);
+vm.runInContext(restoreSource + String.fromCharCode(10) + 'this.restoreSavedExperiment=restoreSavedExperiment;',restoreState);
 for (const invalidIndex of [-1,1.5,Number.NaN,Number.MAX_SAFE_INTEGER]) {
   assert.equal(restoreState.restoreSavedExperiment(invalidIndex),false,
     'archive restore must reject invalid indexes before applying parameters');
