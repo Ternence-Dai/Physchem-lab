@@ -247,7 +247,7 @@ assert.ok(titrationBlock.includes('K_w=1.0×10⁻¹⁴') &&
   titrationBlock.includes('计入水的自解离平衡 K_w=1.0×10⁻¹⁴') &&
   !titrationBlock.includes('水的自解离修正或活度系数'),
   'titration formulas and tutor must agree with the implemented 25°C water-autoionization model');
-assert.ok(titrationBlock.includes('不包含弱酸/弱碱的 Ka/Kb 平衡') &&
+assert.ok(titrationBlock.includes('不包含弱酸/弱碱的 K_a/K_b 平衡') &&
   titrationBlock.includes('不能直接套用本曲线'),
   'titration tutor must disclose the strong-acid/strong-base model boundary');
 const gasBlock = catalogue.slice(catalogue.indexOf("id:'p6'"), catalogue.indexOf("id:'p7'"));
