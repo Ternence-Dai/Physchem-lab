@@ -233,6 +233,11 @@ function restoreExperimentArchive(input){
     return false;
   }
 }
+function deferArchiveObjectUrlRelease(url){
+  // Safari and iOS may begin consuming the download after click() returns.
+  // Keep the object URL alive briefly so the browser can finish reading it.
+  setTimeout(function(){URL.revokeObjectURL(url);},1000);
+}
 function exportExperimentArchive(){
   var payload=buildExperimentArchiveBackup();
   var blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
@@ -245,7 +250,7 @@ function exportExperimentArchive(){
   document.body.appendChild(link);
   link.click();
   link.remove();
-  URL.revokeObjectURL(url);
+  deferArchiveObjectUrlRelease(url);
   toast(storageRecoveryRequired?'已导出原始存档恢复包；请妥善保管并检查内容。':'实验档案备份已导出');
 }
 function syncArchiveRecoveryUI(){

@@ -146,3 +146,35 @@ const unversionedSnapshot = { ...versionedSave };
 delete unversionedSnapshot.experimentSnapshotVersion;
 assert.equal(validationState.isValidExperimentSaveList([unversionedSnapshot]), false,
   'snapshot timestamps must not be accepted without an explicit snapshot schema version');
+
+
+const releaseHelper = app.match(/function deferArchiveObjectUrlRelease\(url\)\s*\{[\s\S]*?\n\}/);
+assert.ok(releaseHelper, 'archive export must use a deferred object-URL release helper');
+const revokeCalls = [];
+const scheduledCallbacks = [];
+const releaseContext = {
+  URL: { revokeObjectURL: url => revokeCalls.push(url) },
+  setTimeout: (callback, delay) => {
+    scheduledCallbacks.push({ callback, delay });
+    return scheduledCallbacks.length;
+  }
+};
+vm.runInNewContext(
+  releaseHelper[0] + "\ndeferArchiveObjectUrlRelease('blob:physchem-archive-test');",
+  releaseContext
+);
+assert.deepEqual(revokeCalls, [],
+  'the download object URL must remain valid immediately after the export click');
+assert.equal(scheduledCallbacks.length, 1);
+assert.equal(scheduledCallbacks[0].delay, 1000,
+  'object URL cleanup must be deferred to give mobile browsers time to consume the download');
+scheduledCallbacks[0].callback();
+assert.deepEqual(revokeCalls, ['blob:physchem-archive-test']);
+
+const exportStart = app.indexOf('function exportExperimentArchive(){');
+const exportEnd = app.indexOf('\nfunction syncArchiveRecoveryUI', exportStart);
+assert.ok(exportStart >= 0 && exportEnd > exportStart);
+const exportHandler = app.slice(exportStart, exportEnd);
+assert.ok(exportHandler.includes('deferArchiveObjectUrlRelease(url);'));
+assert.ok(!exportHandler.includes('URL.revokeObjectURL(url);'),
+  'archive export must not revoke the download URL synchronously');
