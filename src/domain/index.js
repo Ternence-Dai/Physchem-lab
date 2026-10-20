@@ -28,6 +28,19 @@ function halfScaledSquare(scale, value) {
     ? (scale * (magnitude * 0.5)) * magnitude
     : (scale * magnitude) * (magnitude * 0.5);
 }
+
+export function dilutionConcentration({initialConcentrationMolPerL,initialVolumeMl,finalVolumeMl}) {
+  for (const [name,value] of Object.entries({initialConcentrationMolPerL,initialVolumeMl,finalVolumeMl})) {
+    if (!Number.isFinite(value)) throw new TypeError(`${name} must be finite`);
+  }
+  if (initialConcentrationMolPerL < 0 || initialVolumeMl <= 0 || finalVolumeMl < initialVolumeMl) {
+    throw new RangeError("initial concentration must be non-negative; initial volume positive; final volume no smaller than initial volume");
+  }
+  if (initialConcentrationMolPerL === 0) return 0;
+  const concentration = initialConcentrationMolPerL * (initialVolumeMl / finalVolumeMl);
+  return finiteResult(concentration, "dilution concentration");
+}
+
 export function idealGasPressure({ amountMol, temperatureK, volumeM3 }) {
   for (const [name,value] of Object.entries({amountMol,temperatureK,volumeM3})) if (!Number.isFinite(value)) throw new TypeError(`${name} must be finite`);
   if (amountMol < 0 || temperatureK <= 0 || volumeM3 <= 0) throw new RangeError("amount must be non-negative; temperature and volume must be positive");
