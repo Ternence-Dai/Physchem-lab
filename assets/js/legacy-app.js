@@ -121,6 +121,8 @@ function isValidExperimentSave(item){
   if(item.experimentId!==undefined && (typeof item.experimentId!=='string'||!item.experimentId.trim()||item.experimentId.length>80))return false;
   if(item.modelVersion!==undefined && (typeof item.modelVersion!=='string'||!item.modelVersion.trim()||item.modelVersion.length>80))return false;
   if(item.experimentSnapshotVersion!==undefined && item.experimentSnapshotVersion!==1)return false;
+  if(item.experimentSnapshotVersion===1 && (!item.experimentId || item.snapshotAt===undefined))return false;
+  if(item.snapshotAt!==undefined && item.experimentSnapshotVersion!==1)return false;
   if(item.snapshotAt!==undefined && (typeof item.snapshotAt!=='string'||
      !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(item.snapshotAt)||
      !Number.isFinite(Date.parse(item.snapshotAt))||

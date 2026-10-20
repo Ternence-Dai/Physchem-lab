@@ -132,3 +132,17 @@ assert.equal(validationState.isValidExperimentSaveList([
 assert.equal(validationState.isValidExperimentSaveList([
   versionedSave,{...versionedSave,params:{temperature:300,pressure:1}}
 ]),true,'distinct parameter snapshots for the same experiment and instant remain available for reconciliation');
+
+
+const missingSnapshotTime = { ...versionedSave };
+delete missingSnapshotTime.snapshotAt;
+assert.equal(validationState.isValidExperimentSaveList([missingSnapshotTime]), false,
+  'versioned experiment snapshots must retain their immutable snapshot timestamp');
+const missingExperimentId = { ...versionedSave };
+delete missingExperimentId.experimentId;
+assert.equal(validationState.isValidExperimentSaveList([missingExperimentId]), false,
+  'versioned experiment snapshots must retain their stable experiment identity');
+const unversionedSnapshot = { ...versionedSave };
+delete unversionedSnapshot.experimentSnapshotVersion;
+assert.equal(validationState.isValidExperimentSaveList([unversionedSnapshot]), false,
+  'snapshot timestamps must not be accepted without an explicit snapshot schema version');
