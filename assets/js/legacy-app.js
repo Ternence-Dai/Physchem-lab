@@ -116,6 +116,8 @@ var archiveRawValue=null;
 var archiveReadFailed=false;
 function isValidExperimentSave(item){
   if(!item||typeof item!=='object'||Array.isArray(item))return false;
+  var allowedFields=['name','time','params','note','readouts','formulaSnapshot','tutorSnapshot','experimentId','modelVersion','experimentSnapshotVersion','snapshotAt'];
+  if(Object.keys(item).some(function(key){return allowedFields.indexOf(key)===-1;}))return false;
   if(typeof item.name!=='string'||!item.name.trim()||item.name.length>160)return false;
   if(typeof item.time!=='string'||!item.time.trim()||item.time.length>80)return false;
   if(item.experimentId!==undefined && (typeof item.experimentId!=='string'||!item.experimentId.trim()||item.experimentId.length>80))return false;
