@@ -14,6 +14,11 @@ test("dilution concentration follows conservation of solute across volume expans
  assert.throws(()=>dilutionConcentration({initialConcentrationMolPerL:1,initialVolumeMl:10,finalVolumeMl:Infinity}),TypeError);
 });
 
+test("dilution calculation preserves a representable result after volume-ratio underflow",()=>{
+ const result=dilutionConcentration({initialConcentrationMolPerL:1e308,initialVolumeMl:1e-200,finalVolumeMl:1e200});
+ assert.ok(Number.isFinite(result) && result>0);
+ assert.ok(Math.abs(result/1e-92-1)<1e-12);
+});
 test("ideal gas law returns SI pressure",()=>{ const p=idealGasPressure({amountMol:1,temperatureK:273.15,volumeM3:0.022414}); assert.ok(Math.abs(p-101325)<1200); });
 test("ideal gas calculation avoids avoidable intermediate overflow",()=>{ const pressure=idealGasPressure({amountMol:1e308,temperatureK:1e100,volumeM3:1e308}); assert.ok(Number.isFinite(pressure)); assert.ok(Math.abs(pressure/(8.31446261815324e100)-1)<1e-12); });
 test("ideal gas calculation recovers a representable result after ratio underflow",()=>{
