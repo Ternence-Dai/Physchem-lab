@@ -75,6 +75,7 @@
   <div class="dh"><h3>📂 实验档案数据库</h3><button class="dc" id="dx">✕</button></div>
   <div class="archive-tools">
     <div id="archiveRecoveryStatus" class="archive-recovery-status" hidden></div>
+    <div class="archive-capacity-note">最多保留 30 份实验档案；达到上限后不会自动覆盖旧记录。</div>
     <button class="bt" id="archiveExport" type="button">导出档案备份</button>
     <label class="bt archive-import" for="archiveImport">导入 / 恢复备份</label>
     <input id="archiveImport" type="file" accept="application/json,.json" hidden>
@@ -84,7 +85,7 @@
 <div class="ts" id="ts"></div><div class="eb" id="eb3"></div>
 <script>window.EXP=[];window.P=function(k,l,mn,mx,s,v,u){return{key:k,label:l,min:mn,max:mx,step:s,value:v,unit:u||""};};window.F=function(v,n){n=n===undefined?2:n;if(!isFinite(v))return "—";if(Math.abs(v)>=1e6||(Math.abs(v)<1e-3&&v!==0))return Number(v).toExponential(2);return Number(v).toFixed(n);};</script>
 <script src="./assets/js/experiment-catalogue.js?v=20261020-titration-kw-v3"></script>
-<script src="./assets/js/legacy-app.js"></script>
+<script src="./assets/js/legacy-app.js?v=20261020-archive-capacity-v2"></script>
   <script src="./assets/js/workspace-v5.js?v=20261019-v52"></script>
   <script src="./assets/js/workspace-v5-context.js?v=20261019-v52"></script>
 </body>
