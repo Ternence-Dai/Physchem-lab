@@ -242,6 +242,11 @@ assert.ok(springBlock.includes('var a0=window.PHYS_DOMAIN.springOscillator') &&
 const titrationBlock = catalogue.slice(catalogue.indexOf("id:'p7'"), catalogue.indexOf("id:'p8'"));
 assert.ok(titrationBlock.includes('PHYS_DOMAIN.strongAcidStrongBasePH'),
   'strong acid/base titration curve must use the shared domain pH model');
+assert.ok(titrationBlock.includes('K_w=1.0×10⁻¹⁴') &&
+  titrationBlock.includes('c=(n酸−n碱)/V总=[H⁺]−[OH⁻]') &&
+  titrationBlock.includes('计入水的自解离平衡 K_w=1.0×10⁻¹⁴') &&
+  !titrationBlock.includes('水的自解离修正或活度系数'),
+  'titration formulas and tutor must agree with the implemented 25°C water-autoionization model');
 assert.ok(titrationBlock.includes('不包含弱酸/弱碱的 Ka/Kb 平衡') &&
   titrationBlock.includes('不能直接套用本曲线'),
   'titration tutor must disclose the strong-acid/strong-base model boundary');
