@@ -37,8 +37,10 @@ export function dilutionConcentration({initialConcentrationMolPerL,initialVolume
     throw new RangeError("initial concentration must be non-negative; initial volume positive; final volume no smaller than initial volume");
   }
   if (initialConcentrationMolPerL === 0) return 0;
-  // Log-space evaluation avoids losing a representable concentration when
-  // the intermediate initialVolume/finalVolume ratio underflows to zero.
+  // Keep the direct expression for ordinary inputs (including exact simple
+  // decimal results); use log space only when an intermediate loses range.
+  const direct = initialConcentrationMolPerL * (initialVolumeMl / finalVolumeMl);
+  if (Number.isFinite(direct) && direct > 0) return direct;
   const concentration = Math.exp(
     Math.log(initialConcentrationMolPerL) + Math.log(initialVolumeMl) - Math.log(finalVolumeMl)
   );
