@@ -190,3 +190,8 @@ assert.ok(legacyRestore.includes('legacyMatches.length===1') &&
           legacyRestore.includes('legacyMatches.length>1') &&
           legacyRestore.includes('避免套用错误参数'),
   'legacy archives without stable IDs must refuse ambiguous duplicate-name model matches');
+
+
+const unsupportedSnapshotField = { ...versionedSave, privilegedRestore: true };
+assert.equal(validationState.isValidExperimentSaveList([unsupportedSnapshotField]), false,
+  'saved experiment snapshots must reject unsupported metadata instead of silently preserving unknown fields');
