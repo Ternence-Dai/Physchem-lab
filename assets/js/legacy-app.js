@@ -426,6 +426,12 @@ function bindUI(){
     var b=E('bp');if(b){b.textContent='⏸ 暂停';b.className='bt';}refreshTutor(true);toast('实验已重置 ↺');};
   var bs=E('bs');if(bs)bs.onclick=function(){if(!cur)return;
     if(storageRecoveryRequired){toast('存档恢复保护已启用：为避免覆盖旧数据，本次保存已暂停');return;}
+    if(saves.length>=30){
+      toast('实验档案已达到 30 份上限。请先导出备份，或在档案列表明确删除旧记录；系统不会自动覆盖。');
+      setExperimentSidebarOpen(false);
+      var archiveDrawer=E('dr');if(archiveDrawer)archiveDrawer.className='dr on';
+      return;
+    }
     var snapshot=buildExperimentRecordSnapshot();
     var record={
       name:cur.name,
@@ -440,7 +446,7 @@ function bindUI(){
       formulaSnapshot:snapshot.formulaSnapshot,
       tutorSnapshot:snapshot.tutorSnapshot
     };
-    var nextSaves=[record].concat(saves).slice(0,30);
+    var nextSaves=[record].concat(saves);
     if(persistExperimentSaves(nextSaves))toast('实验档案已保存：参数、计算读数、公式、助教说明与观察备注 ✓');
     else toast('存档写入失败或恢复保护已启用；原有档案未被覆盖');
     updateSI();renderD();syncArchiveRecoveryUI();};
@@ -460,7 +466,34 @@ function bindUI(){
   var rT=null;window.addEventListener('resize',function(){clearTimeout(rT);rT=setTimeout(resize,60);});
 }
 
-function updateSI(){var x=E('si');if(x)x.textContent='📁 存档：'+saves.length+' 条';}
+function updateSI(){
+  var x=E('si');
+  if(x){
+    x.textContent='📁 存档：'+saves.length+' / 30 条';
+    x.title='最多保留 30 份；满额时不会自动覆盖旧档案。';
+  }
+}
+function deleteSavedExperiment(index){
+  if(storageRecoveryRequired){toast('存档恢复保护已启用，当前禁止删除；请先恢复或导出原始数据');return false;}
+  if(!Number.isSafeInteger(index)||index<0||index>=saves.length){
+    toast('未找到要删除的实验档案');return false;
+  }
+  var target=saves[index];
+  var label=String(target&&target.name||'未命名实验');
+  if(!confirm('确定删除“'+label+'”这份实验档案吗？此操作不可撤销。建议先导出档案备份。'))return false;
+  var nextSaves=saves.slice();
+  nextSaves.splice(index,1);
+  if(!persistExperimentSaves(nextSaves)){
+    syncArchiveRecoveryUI();
+    toast('档案删除未完成：存储写入失败，原有档案保持不变');
+    return false;
+  }
+  updateSI();
+  renderD();
+  syncArchiveRecoveryUI();
+  toast('已删除所选实验档案；其他档案保持不变');
+  return true;
+}
 function restoreSavedExperiment(index){
   if(!Number.isSafeInteger(index)||index<0||index>=saves.length){
     toast('未找到对应的实验档案记录');return false;
@@ -562,6 +595,11 @@ function renderD(){
   if(b.dataset.archiveActionsBound!=='true'){
     b.dataset.archiveActionsBound='true';
     b.addEventListener('click',function(event){
+      var deleteButton=event.target.closest('[data-delete-save]');
+      if(deleteButton){
+        deleteSavedExperiment(Number(deleteButton.getAttribute('data-delete-save')));
+        return;
+      }
       var button=event.target.closest('[data-load-save]');
       if(!button)return;
       restoreSavedExperiment(Number(button.getAttribute('data-load-save')));
@@ -580,7 +618,7 @@ function renderD(){
     var snapshotMeta=s.snapshotAt?' · 结果快照 '+esc(new Date(s.snapshotAt).toLocaleString()):'';
     d.innerHTML='<div class="rh"><span class="rn">'+(i+1)+'. '+esc(s.name)+'</span><span class="rt">'+esc(s.time)+'</span></div><div class="rp">'+meta+snapshotMeta+'<br>'+parts.join('  ')+outputs+note+formulas+
       (s.tutorSnapshot?'<details class="w9-archive-tutor"><summary>当时的公式助教说明</summary><p>'+esc(s.tutorSnapshot)+'</p></details>':'')+
-      '<div class="archive-action-row"><button type="button" class="w9-archive-load" data-load-save="'+i+'">载入本组参数与备注</button></div></div>';
+      '<div class="archive-action-row"><button type="button" class="w9-archive-load" data-load-save="'+i+'">载入本组参数与备注</button><button type="button" class="w9-archive-delete" data-delete-save="'+i+'" aria-label="删除第 '+(i+1)+' 份实验档案">删除档案</button></div></div>';
     b.appendChild(d);}
 }
 
