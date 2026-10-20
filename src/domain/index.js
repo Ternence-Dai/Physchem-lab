@@ -53,6 +53,7 @@ export function idealGasParticleProperties({ amountMol, temperatureK, volumeM3, 
     Math.log(BOLTZMANN_CONSTANT) + Math.log(temperatureK));
   const numberDensityPerM3 = amountMol === 0 ? 0
     : Math.exp(Math.log(amountMol) + Math.log(AVOGADRO_CONSTANT) - Math.log(volumeM3));
+  if (amountMol > 0 && numberDensityPerM3 === 0) throw new RangeError("number density is below the numeric range");
   return Object.freeze(finiteResult({
     rmsSpeed,
     averageKineticEnergyJ,
