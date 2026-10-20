@@ -110,3 +110,25 @@ for (const invalidIndex of [-1,1.5,Number.NaN,Number.MAX_SAFE_INTEGER]) {
     'archive restore must reject invalid indexes before applying parameters');
   assert.equal(restoreState.cur,null,'invalid archive restore must not switch the active experiment');
 }
+
+
+const validationStart = app.indexOf('function isValidExperimentSave(item)');
+const validationEnd = app.indexOf('var rawSaved', validationStart);
+assert.ok(validationStart >= 0 && validationEnd > validationStart,
+  'archive save validators must be available for import validation');
+const validationState = {};
+vm.createContext(validationState);
+vm.runInContext(app.slice(validationStart, validationEnd) +
+  '\\nthis.isValidExperimentSaveList = isValidExperimentSaveList;', validationState);
+const versionedSave = {
+  name:'Versioned experiment',time:'2026-10-20 09:00:00',
+  experimentId:'EXP-42',experimentSnapshotVersion:1,
+  snapshotAt:'2026-10-20T09:00:00.000Z',params:{temperature:298.15,pressure:1}
+};
+assert.equal(validationState.isValidExperimentSaveList([versionedSave]),true);
+assert.equal(validationState.isValidExperimentSaveList([
+  versionedSave,{...versionedSave,params:{pressure:1,temperature:298.15}}
+]),false,'an imported archive must reject duplicate versioned snapshots even when parameter key order differs');
+assert.equal(validationState.isValidExperimentSaveList([
+  versionedSave,{...versionedSave,params:{temperature:300,pressure:1}}
+]),true,'distinct parameter snapshots for the same experiment and instant remain available for reconciliation');
