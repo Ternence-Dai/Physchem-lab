@@ -1,9 +1,18 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {
-  idealGasPressure, idealGasParticleProperties, strongAcidStrongBasePH, arrheniusRateConstant,
+  dilutionConcentration, idealGasPressure, idealGasParticleProperties, strongAcidStrongBasePH, arrheniusRateConstant,
   projectileMotion, pendulumPeriod, ohmsLaw, inclinedPlaneAcceleration, inclinedPlaneForces, springOscillator
 } from "../src/domain/index.js";
+
+test("dilution concentration follows conservation of solute across volume expansion",()=>{
+ assert.equal(dilutionConcentration({initialConcentrationMolPerL:2,initialVolumeMl:25,finalVolumeMl:100}),0.5);
+ assert.equal(dilutionConcentration({initialConcentrationMolPerL:0,initialVolumeMl:10,finalVolumeMl:10}),0);
+ assert.throws(()=>dilutionConcentration({initialConcentrationMolPerL:-1,initialVolumeMl:10,finalVolumeMl:20}),RangeError);
+ assert.throws(()=>dilutionConcentration({initialConcentrationMolPerL:1,initialVolumeMl:20,finalVolumeMl:10}),RangeError);
+ assert.throws(()=>dilutionConcentration({initialConcentrationMolPerL:1,initialVolumeMl:0,finalVolumeMl:10}),RangeError);
+ assert.throws(()=>dilutionConcentration({initialConcentrationMolPerL:1,initialVolumeMl:10,finalVolumeMl:Infinity}),TypeError);
+});
 
 test("ideal gas law returns SI pressure",()=>{ const p=idealGasPressure({amountMol:1,temperatureK:273.15,volumeM3:0.022414}); assert.ok(Math.abs(p-101325)<1200); });
 test("ideal gas calculation avoids avoidable intermediate overflow",()=>{ const pressure=idealGasPressure({amountMol:1e308,temperatureK:1e100,volumeM3:1e308}); assert.ok(Number.isFinite(pressure)); assert.ok(Math.abs(pressure/(8.31446261815324e100)-1)<1e-12); });
