@@ -178,3 +178,9 @@ const exportHandler = app.slice(exportStart, exportEnd);
 assert.ok(exportHandler.includes('deferArchiveObjectUrlRelease(url);'));
 assert.ok(!exportHandler.includes('URL.revokeObjectURL(url);'),
   'archive export must not revoke the download URL synchronously');
+
+const legacyRestore = app.slice(restoreStart, restoreEnd);
+assert.ok(legacyRestore.includes('legacyMatches.length===1') &&
+          legacyRestore.includes('legacyMatches.length>1') &&
+          legacyRestore.includes('避免套用错误参数'),
+  'legacy archives without stable IDs must refuse ambiguous duplicate-name model matches');
