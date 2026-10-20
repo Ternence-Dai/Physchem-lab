@@ -32,18 +32,18 @@ const state = {
   messages:[],
   renderCount:0,
   updates:0,
-  syncs:0,
-  confirm(){return this.confirms;},
-  persistExperimentSaves(next){
-    if(!this.allowWrite)return false;
-    this.saves=JSON.parse(JSON.stringify(next));
-    return true;
-  },
-  toast(message){this.messages.push(message);},
-  updateSI(){this.updates++;},
-  renderD(){this.renderCount++;},
-  syncArchiveRecoveryUI(){this.syncs++;}
+  syncs:0
 };
+state.confirm=()=>state.confirms;
+state.persistExperimentSaves=next=>{
+  if(!state.allowWrite)return false;
+  state.saves=JSON.parse(JSON.stringify(next));
+  return true;
+};
+state.toast=message=>state.messages.push(message);
+state.updateSI=()=>{state.updates++;};
+state.renderD=()=>{state.renderCount++;};
+state.syncArchiveRecoveryUI=()=>{state.syncs++;};
 vm.createContext(state);
 vm.runInContext(deleteSource+'\nthis.deleteSavedExperiment=deleteSavedExperiment;',state);
 assert.equal(state.deleteSavedExperiment(1),true);
