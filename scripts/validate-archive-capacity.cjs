@@ -92,6 +92,7 @@ for (const invalidIndex of [-1, 1.5, Number.NaN, Number.MAX_SAFE_INTEGER]) {
 
 const restoreStart = app.indexOf('function restoreSavedExperiment(index)');
 const restoreEnd = app.indexOf('function updateExperimentNoteCount()', restoreStart);
+const restoreSource = app.slice(restoreStart, restoreEnd);
 assert.ok(restoreStart >= 0 && restoreEnd > restoreStart, 'archive restore handler must remain discoverable');
 const restoreState = {
   saves: [{ name:'Known', time:'2026-10-20', params:{a:1} }],
