@@ -134,10 +134,11 @@ export function ohmsLaw({voltageV,resistanceOhm}) {
   if (resistanceOhm <= 0) throw new RangeError("resistance must be positive");
   const currentA=voltageV/resistanceOhm;
   const powerW=voltageV*currentA;
-  // Joule heating is electrical power integrated over one minute. Reuse the
-  // validated power result instead of squaring current first, which can
-  // overflow even when multiplying I² by a tiny resistance would be finite.
-  const heatJPerMinute=powerW*60;
+  // Minute-scale heat can remain representable even when the instantaneous
+  // power rounds to zero at the subnormal boundary. Evaluate it independently.
+  const heatJPerMinute=voltageV===0 ? 0 : Math.exp(
+    2*Math.log(Math.abs(voltageV))-Math.log(resistanceOhm)+Math.log(60)
+  );
   return Object.freeze(finiteResult({currentA,powerW,heatJPerMinute}, "Ohm's law result"));
 }
 export function inclinedPlaneForces({angleDeg,frictionCoefficient,massKg=1,gravity=9.8}) {
