@@ -159,8 +159,8 @@ assert.ok(!pageHtml.includes('100个物理化学趣味实验') && !pageHtml.incl
   'the page must not display a stale hard-coded 100-experiment total');
 
 
-assert.ok(pageHtml.includes('experiment-catalogue.js?v=20261021-catalogue-restore-v1') &&
-          pageHtml.includes('legacy-app.js?v=20261021-catalogue-restore-v1'),
+assert.ok(pageHtml.includes('experiment-catalogue.js?v=20261021-catalogue-restore-v2') &&
+          pageHtml.includes('legacy-app.js?v=20261021-catalogue-restore-v2'),
   'catalogue and simulation scripts must use fresh cache-busting versions after restoration');
 assert.ok(pageHtml.includes('id="simulationStatus"') &&
           pageHtml.includes('实时动态图示') &&
@@ -363,3 +363,32 @@ restoreContext.saves[0].modelVersion='physchem-engine-v1';
 assert.equal(restoreContext.restore(0),false,
   'a different declared model version must not be auto-applied');
 console.log('PhysChem experiment archive parameter-restore checks passed.');
+
+
+// Execute the complete catalogue in script order with the same factory contract as the browser.
+assert.ok(pageHtml.indexOf('legacy-app.js?v=20261021-catalogue-restore-v2') <
+          pageHtml.indexOf('experiment-catalogue.js?v=20261021-catalogue-restore-v2'),
+  'the engine must load before the catalogue because the catalogue uses its model factories');
+assert.ok(app.includes('window.mkCurve=mkCurve') &&
+          app.includes('window.mkMotion=mkMotion') &&
+          app.includes('window.mkPart=mkPart'),
+  'the engine must expose its catalogue factories before the catalogue script executes');
+const runtimeModels=[];
+const runtimeWindow={EXP:runtimeModels,PHYS_DOMAIN:{}};
+const runtimeContext={
+  window:runtimeWindow,EXP:runtimeModels,
+  P:(key,label,min,max,step,value,unit)=>({key,label,min,max,step,value,unit:unit||''}),
+  F:(value,digits=2)=>Number(value).toFixed(digits),
+  mkCurve:model=>({id:model.id,name:model.name,cat:model.cat}),
+  mkMotion:model=>({id:model.id,name:model.name,cat:model.cat}),
+  mkPart:model=>({id:model.id,name:model.name,cat:model.cat}),
+  Math,Number,isFinite
+};
+vm.runInNewContext(catalogue,runtimeContext,{timeout:2000});
+assert.equal(runtimeModels.length,108,
+  'executing the catalogue must register all 8 flagship and 100 categorized experiments at runtime');
+assert.equal(new Set(runtimeModels.map(model=>model.id)).size,108,
+  'the runtime catalogue must contain 108 unique experiment IDs');
+assert.ok(runtimeModels.every(model=>model.id&&model.name&&model.cat),
+  'every runtime experiment must expose its visible directory fields');
+console.log('PhysChem runtime catalogue registration passed: ' + runtimeModels.length + ' experiments.');
