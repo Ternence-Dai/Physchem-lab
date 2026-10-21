@@ -139,7 +139,7 @@ for (const name of ['M','C1','C2','C3','C4','C5','C6']) {
     checked++;
   }
 }
-assert.equal(checked, 100, 'the catalogue advertises 100 experiments and must contain exactly 100 validated models');
+assert.equal(checked, 100, 'the categorized catalogue must contain exactly 100 validated models');
 
 assert.equal(experimentIds.size, 100, 'all 100 categorized models must have unique identifiers');
 
