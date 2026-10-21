@@ -98,6 +98,11 @@ function mkPart(g){
     readout:g.ro,tutor:g.tt};
 }
 
+// The catalogue is loaded after this engine file and uses these factories to register models.
+window.mkCurve=mkCurve;
+window.mkMotion=mkMotion;
+window.mkPart=mkPart;
+
 /* ============ 辅助：参数 ============ */
 function P(k,l,mn,mx,s,v,u){return{key:k,label:l,min:mn,max:mx,step:s,value:v,unit:u||''};}
 
