@@ -312,6 +312,8 @@ function resize(){
 
 function renderList(){
   var box=E('lst');if(!box)return;box.innerHTML='';
+  box.setAttribute('role','list');
+  box.setAttribute('aria-label','完整物理化学实验目录');
   var list=[];
   for(var i=0;i<EXP.length;i++){
     var e=EXP[i];var ok=true;
@@ -324,12 +326,21 @@ function renderList(){
   for(var j=0;j<list.length;j++){
     var ex=list[j];var d=document.createElement('div');
     d.className='it'+(cur&&cur.id===ex.id?' on':'');
+    d.setAttribute('role','listitem');
+    d.setAttribute('tabindex','0');
+    d.setAttribute('aria-label',ex.name+'，'+ex.cat+'实验');
     d.innerHTML='<div class="t"><span class="tg '+(ex.cat==='物理'?'p':'c')+'">'+esc(ex.cat)+'</span>'+esc(ex.name)+'</div><div class="d">'+esc(ex.brief)+'</div>';
-    (function(id){d.onclick=function(){selectExp(id);};})(ex.id);
+    (function(id,node){node.onclick=function(){selectExp(id);};node.onkeydown=function(event){if(event.key==='Enter'||event.key===' '){event.preventDefault();selectExp(id);}};})(ex.id,d);
     box.appendChild(d);
   }
 }
 
+function syncSimulationStatus(){
+  var status=E('simulationStatus');
+  var panel=E('sw');
+  if(status)status.textContent=paused?'已暂停':'运行中';
+  if(panel)panel.classList.toggle('is-paused',!!paused);
+}
 function setExperimentSidebarOpen(open){
   var sidebar=E('experimentSidebar');
   var backdrop=E('sidebarBackdrop');
@@ -422,7 +433,7 @@ function boot(){
   if(!resize()){requestAnimationFrame(boot);return;}
   try{renderList();updateSI();renderD();selectExp('p1');}catch(e){SE('初始化失败: '+e.message);console.error(e);return;}
   setTimeout(resize,50);setTimeout(resize,250);setTimeout(resize,600);setTimeout(resize,1200);
-  started=true;requestAnimationFrame(loop);
+  started=true;syncSimulationStatus();requestAnimationFrame(loop);
 }
 
 function bindUI(){
@@ -441,9 +452,9 @@ function bindUI(){
   var archiveImport=E('archiveImport');
   if(archiveImport)archiveImport.onchange=function(){importExperimentArchiveFile(this);};
   syncArchiveRecoveryUI();
-  var bp=E('bp');if(bp)bp.onclick=function(){paused=!paused;this.textContent=paused?'▶ 继续':'⏸ 暂停';this.className=paused?'bt on':'bt';};
+  var bp=E('bp');if(bp)bp.onclick=function(){paused=!paused;this.textContent=paused?'▶ 继续':'⏸ 暂停';this.className=paused?'bt on':'bt';syncSimulationStatus();};
   var br=E('br2');if(br)br.onclick=function(){ST=cur&&cur.init?cur.init(P):{};paused=false;
-    var b=E('bp');if(b){b.textContent='⏸ 暂停';b.className='bt';}refreshTutor(true);toast('实验已重置 ↺');};
+    var b=E('bp');if(b){b.textContent='⏸ 暂停';b.className='bt';}syncSimulationStatus();refreshTutor(true);toast('实验已重置 ↺');};
   var bs=E('bs');if(bs)bs.onclick=function(){if(!cur)return;
     if(storageRecoveryRequired){toast('存档恢复保护已启用：为避免覆盖旧数据，本次保存已暂停');return;}
     if(saves.length>=30){
