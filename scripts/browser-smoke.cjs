@@ -26,6 +26,8 @@ const { chromium } = require('playwright');
       const label = (await item.getAttribute('aria-label')) || `experiment #${index + 1}`;
       await item.click();
       await page.waitForTimeout(100);
+      const renderError = await page.evaluate(() => window.__physchemDrawError || window.__physchemStepError || null);
+      if (renderError) throw new Error(`${label}: renderer error: ${renderError.message}`);
       const result = await page.locator('#cv').evaluate(canvas => {
         const context = canvas.getContext('2d');
         if (!context || canvas.width < 100 || canvas.height < 100) return { pixels: 0, colored: 0 };
