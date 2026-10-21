@@ -12,7 +12,7 @@ function pl(c,t,x,y,bg,fg){c.save();c.font='11px Menlo,Consolas,monospace';var w
 function rr(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.lineTo(x+w-r,y);c.quadraticCurveTo(x+w,y,x+w,y+r);c.lineTo(x+w,y+h-r);c.quadraticCurveTo(x+w,y+h,x+w-r,y+h);c.lineTo(x+r,y+h);c.quadraticCurveTo(x,y+h,x,y+h-r);c.lineTo(x,y+r);c.quadraticCurveTo(x,y,x+r,y);c.closePath();}
 function ptR(s,x0,y0,x1,y1){var w=x1-x0,h=y1-y0,P=2*(w+h);var d=(((s%1)+1)%1)*P;if(d<w)return[x0+d,y0];d-=w;if(d<h)return[x1,y0+d];d-=h;if(d<w)return[x1-d,y1];d-=w;return[x0,y1-d];}
 // Public drawing primitives shared with the separately loaded experiment catalogue.
-window.PHYS_DRAW={clamp:C,roundedRect:rr,pill:pl,label:lb};
+window.PHYS_DRAW={clamp:C,roundedRect:rr,pill:pl,label:lb,spring:dSpr,perimeterPoint:ptR};
 
 var EXP=window.EXP||(window.EXP=[]);
 
