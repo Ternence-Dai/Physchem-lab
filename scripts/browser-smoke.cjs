@@ -15,7 +15,7 @@ const { chromium } = require('playwright');
       return total && total.textContent.trim() === '108' &&
         document.querySelectorAll('#lst .it').length === 108 &&
         document.querySelector('#simulationStatus')?.textContent.trim() === '运行中';
-    }, { timeout: 20000 });
+    }, undefined, { timeout: 20000 });
 
     const total = await page.locator('#lst .it').count();
     if (total !== 108) throw new Error(`Expected 108 visible experiment entries, received ${total}`);
