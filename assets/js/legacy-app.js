@@ -312,6 +312,8 @@ function resize(){
 
 function renderList(){
   var box=E('lst');if(!box)return;box.innerHTML='';
+  var total=E('catalogueTotal');if(total)total.textContent=String(EXP.length);
+  var totalInline=E('catalogueTotalInline');if(totalInline)totalInline.textContent=String(EXP.length);
   box.setAttribute('role','list');
   box.setAttribute('aria-label','完整物理化学实验目录');
   var list=[];
