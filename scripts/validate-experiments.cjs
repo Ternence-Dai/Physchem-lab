@@ -8,7 +8,7 @@ const html = pageHtml + '\n' + fs.readFileSync('assets/js/experiment-catalogue.j
 const catalogue = fs.readFileSync('assets/js/experiment-catalogue.js', 'utf8');
 const productCss = fs.readFileSync('assets/css/product-system.css', 'utf8');
 const notebookCss = fs.readFileSync('assets/css/experiment-notebook-v9.css', 'utf8');
-assert.ok(html.includes('product-system.css?v=20261019-v8'),
+assert.ok(html.includes('product-system.css?v=20261021-ui-restoration-v1'),
   'PhysChem Lab must load the V8 interactive engineering workspace stylesheet');
 assert.ok(productCss.includes('PhysChem Lab interactive engineering workspace'),
   'PhysChem Lab V3 visual layer must be present');
@@ -33,7 +33,7 @@ assert.ok(productCss.includes('@media(max-width:900px)') &&
 
 assert.ok(productCss.includes('prefers-reduced-motion:reduce'),
   'PhysChem Lab must respect reduced-motion preferences');
-assert.ok(pageHtml.includes('experiment-notebook-v9.css?v=20261019-v9') &&
+assert.ok(pageHtml.includes('experiment-notebook-v9.css?v=20261021-ui-restoration-v1') &&
           pageHtml.includes('id="experimentNote"') &&
           pageHtml.includes('id="experimentNoteCount"'),
   'PhysChem Lab must mount the scientific notebook note field and V9 notebook stylesheet');
@@ -60,7 +60,7 @@ assert.ok(html.includes('id="mobileMenu"') &&
           html.includes('id="experimentSidebar"') &&
           html.includes('id="sidebarBackdrop"'),
   'mobile experiment navigation controls must be mounted in the page');
-assert.ok(html.includes('product-system.css?v=20261019-v8'));
+assert.ok(html.includes('product-system.css?v=20261021-ui-restoration-v1'));
 
 const P = (key,label,min,max,step,value,unit) => ({key,label,min,max,step,value,unit:unit||''});
 const F = (value,digits=2) => Number(value).toFixed(digits);
@@ -141,6 +141,19 @@ for (const name of ['M','C1','C2','C3','C4','C5','C6']) {
 }
 assert.equal(checked, 100, 'the catalogue advertises 100 experiments and must contain exactly 100 validated models');
 assert.equal(experimentIds.size, 100, 'all 100 experiments must have unique identifiers');
+
+assert.ok(pageHtml.includes('experiment-catalogue.js?v=20261021-catalogue-restore-v1') &&
+          pageHtml.includes('legacy-app.js?v=20261021-catalogue-restore-v1'),
+  'catalogue and simulation scripts must use fresh cache-busting versions after restoration');
+assert.ok(pageHtml.includes('id="simulationStatus"') &&
+          pageHtml.includes('实时动态图示') &&
+          app.includes('function syncSimulationStatus()') &&
+          app.includes('syncSimulationStatus();'),
+  'the interactive simulation canvas must expose and synchronize its running/paused state');
+assert.ok(app.includes("box.setAttribute('role','list')") &&
+          app.includes("node.onkeydown=function(event)"),
+  'the full experiment directory must expose accessible list semantics and keyboard selection');
+
 assert.ok(html.includes('公式助教') && html.includes('LOCAL') && !html.includes('LLM'), 'the offline formula tutor must not be presented as a live LLM');
 const addedModels = loadArray('C5');
 const vanthoff = addedModels.find(model => model.id === 'k36');
