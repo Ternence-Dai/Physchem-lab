@@ -11,6 +11,8 @@ function lb(c,t,x,y,col,sz,al){sz=sz||11;al=al||'left';c.save();c.font=sz+'px Me
 function pl(c,t,x,y,bg,fg){c.save();c.font='11px Menlo,Consolas,monospace';var w=c.measureText(t).width+20;c.fillStyle=bg;var r=9;c.beginPath();c.moveTo(x+r,y);c.lineTo(x+w-r,y);c.quadraticCurveTo(x+w,y,x+w,y+r);c.lineTo(x+w,y+23-r);c.quadraticCurveTo(x+w,y+23,x+w-r,y+23);c.lineTo(x+r,y+23);c.quadraticCurveTo(x,y+23,x,y+23-r);c.lineTo(x,y+r);c.quadraticCurveTo(x,y,x+r,y);c.closePath();c.fill();c.fillStyle=fg;c.textAlign='left';c.textBaseline='middle';c.fillText(t,x+10,y+11.5);c.restore();}
 function rr(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.lineTo(x+w-r,y);c.quadraticCurveTo(x+w,y,x+w,y+r);c.lineTo(x+w,y+h-r);c.quadraticCurveTo(x+w,y+h,x+w-r,y+h);c.lineTo(x+r,y+h);c.quadraticCurveTo(x,y+h,x,y+h-r);c.lineTo(x,y+r);c.quadraticCurveTo(x,y,x+r,y);c.closePath();}
 function ptR(s,x0,y0,x1,y1){var w=x1-x0,h=y1-y0,P=2*(w+h);var d=(((s%1)+1)%1)*P;if(d<w)return[x0+d,y0];d-=w;if(d<h)return[x1,y0+d];d-=h;if(d<w)return[x1-d,y1];d-=w;return[x0,y1-d];}
+// Public drawing primitives shared with the separately loaded experiment catalogue.
+window.PHYS_DRAW={clamp:C,roundedRect:rr,pill:pl,label:lb,spring:dSpr,perimeterPoint:ptR};
 
 var EXP=window.EXP||(window.EXP=[]);
 
@@ -361,7 +363,7 @@ function selectExp(id){
   for(var i=0;i<EXP.length;i++)if(EXP[i].id===id){f=EXP[i];break;}
   if(!f){SE('未找到实验: '+id);return;}
   setExperimentSidebarOpen(false);
-  cur=f;P={};
+  cur=f;window.__physchemDrawError=null;window.__physchemStepError=null;P={};
   var noteField=E('experimentNote');if(noteField)noteField.value='';
   updateExperimentNoteCount();
   for(var j=0;j<cur.params.length;j++)P[cur.params[j].key]=cur.params[j].value;
@@ -427,7 +429,7 @@ function loop(ts){
   if(!cur||!ctx)return;
   if(!paused&&cur.step){try{cur.step(P,dt,ST);}catch(e){}}
   ctx.clearRect(0,0,W,H);
-  try{cur.draw(ctx,W,H,P,ST);}catch(e){}
+  try{cur.draw(ctx,W,H,P,ST);window.__physchemDrawError=null;}catch(e){window.__physchemDrawError={experimentId:cur.id,message:String(e&&e.message||e)};}
   ctx.save();ctx.font='11px Menlo,Consolas,monospace';ctx.fillStyle='rgba(125,143,171,.55)';ctx.textAlign='right';ctx.textBaseline='bottom';
   ctx.fillText('PhysChem Lab · Ternence Dai',W-16,H-12);ctx.restore();
   if(ts-lastRO>110){lastRO=ts;updateRO();}

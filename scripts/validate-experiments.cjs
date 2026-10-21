@@ -374,7 +374,7 @@ assert.ok(app.includes('window.mkCurve=mkCurve') &&
           app.includes('window.mkPart=mkPart'),
   'the engine must expose its catalogue factories before the catalogue script executes');
 const runtimeModels=[];
-const runtimeWindow={EXP:runtimeModels,PHYS_DOMAIN:{}};
+const runtimeWindow={EXP:runtimeModels,PHYS_DOMAIN:{},PHYS_DRAW:{clamp(){},roundedRect(){},pill(){},label(){},spring(){},perimeterPoint(){}}};
 const runtimeContext={
   window:runtimeWindow,EXP:runtimeModels,
   P:(key,label,min,max,step,value,unit)=>({key,label,min,max,step,value,unit:unit||''}),
