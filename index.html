@@ -8,19 +8,19 @@
 <link rel="stylesheet" href="./assets/css/legacy-app.css">
 
 
-  <link rel="stylesheet" href="./assets/css/product-system.css?v=20261019-v8">
-  <link rel="stylesheet" href="./assets/css/workspace-v5.css?v=20261019-v5">
-  <link rel="stylesheet" href="./assets/css/product-system-v9.css?v=20261019-v92">
-  <link rel="stylesheet" href="./assets/css/experiment-notebook-v9.css?v=20261019-v9">
-<link rel="stylesheet" href="./assets/css/physchem-lab-workspace.css?v=20261019-v1">
-<link rel="stylesheet" href="./assets/css/readability-accessibility-v10.css?v=20261021-v10">
+  <link rel="stylesheet" href="./assets/css/product-system.css?v=20261021-ui-restoration-v1">
+  <link rel="stylesheet" href="./assets/css/workspace-v5.css?v=20261021-ui-restoration-v1">
+  <link rel="stylesheet" href="./assets/css/product-system-v9.css?v=20261021-ui-restoration-v1">
+  <link rel="stylesheet" href="./assets/css/experiment-notebook-v9.css?v=20261021-ui-restoration-v1">
+<link rel="stylesheet" href="./assets/css/physchem-lab-workspace.css?v=20261021-ui-restoration-v1">
+<link rel="stylesheet" href="./assets/css/readability-accessibility-v10.css?v=20261021-ui-restoration-v1">
 </head>
 <body data-workspace="physchem">
 <aside class="sb" id="experimentSidebar">
   <div class="br"><div class="lg">⚛</div><div><h1>PhysChem Lab</h1><p>100个物理化学趣味实验</p></div></div>
   <div class="sc"><input id="search" placeholder="🔍 检索实验 / 标签 / 公式" autocomplete="off"></div>
   <div class="fl"><button data-c="全部" class="on">全部</button><button data-c="物理">物理</button><button data-c="化学">化学</button></div>
-  <div class="cnt">显示：<b id="cnt">0</b> / 100 个实验</div>
+  <div class="cnt" aria-live="polite">当前筛选：<b id="cnt">0</b> / 100 个实验 · 目录完整加载</div>
   <div class="lst" id="lst"></div>
   <div class="ft"><div id="si">📁 存档：0 条</div><div style="margin-top:6px">署名：<b>Ternence Dai</b></div><div>邮箱：<span class="em">18662613315@163.com</span></div></div>
 </aside>
@@ -52,7 +52,7 @@
       <button class="product-workflow__item" type="button" onclick="document.getElementById('bs').click()"><i>04</i><b>保存实验</b><small>参数 · 结果 · 公式 · 观察备注</small><span>保存快照 ↗</span></button>
     </div><div class="product-workflow__foot">对标 PhET 模型文档与 ChemCollective 探究式实验流程；模拟结果不等同于真实测量值。</div>
   </section>
-  <section class="sw" id="sw"><canvas id="cv"></canvas></section>
+  <section class="sw" id="sw" aria-label="物理化学实时动态图示"><div class="simulation-status" aria-live="polite"><span class="simulation-status__pulse"></span><span>实时动态图示</span><b id="simulationStatus">正在启动</b><small>MODEL SIMULATION · NOT MEASURED DATA</small></div><canvas id="cv" aria-label="当前实验的实时模拟动画或参数曲线"></canvas></section>
   <section class="bt2">
     <div class="pnl p1"><h3>⚙️ 物理变量控制台</h3><div id="pb"></div></div>
     <div class="pnl p2"><h3>📐 公式与实时计算</h3><div id="fb"></div></div>
@@ -85,9 +85,9 @@
 </aside>
 <div class="ts" id="ts"></div><div class="eb" id="eb3"></div>
 <script>window.EXP=[];window.P=function(k,l,mn,mx,s,v,u){return{key:k,label:l,min:mn,max:mx,step:s,value:v,unit:u||""};};window.F=function(v,n){n=n===undefined?2:n;if(!isFinite(v))return "—";if(Math.abs(v)>=1e6||(Math.abs(v)<1e-3&&v!==0))return Number(v).toExponential(2);return Number(v).toFixed(n);};</script>
-<script src="./assets/js/experiment-catalogue.js?v=20261020-titration-kw-v3"></script>
-<script src="./assets/js/legacy-app.js?v=20261020-archive-capacity-v2"></script>
-  <script src="./assets/js/workspace-v5.js?v=20261019-v52"></script>
-  <script src="./assets/js/workspace-v5-context.js?v=20261019-v52"></script>
+<script src="./assets/js/experiment-catalogue.js?v=20261021-catalogue-restore-v1"></script>
+<script src="./assets/js/legacy-app.js?v=20261021-catalogue-restore-v1"></script>
+  <script src="./assets/js/workspace-v5.js?v=20261021-ui-restoration-v1"></script>
+  <script src="./assets/js/workspace-v5-context.js?v=20261021-ui-restoration-v1"></script>
 </body>
 </html>
