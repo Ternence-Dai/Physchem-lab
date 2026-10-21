@@ -146,7 +146,7 @@ assert.equal(experimentIds.size, 100, 'all 100 categorized models must have uniq
 // The eight flagship models (p1-p8) are registered in addition to the 100
 // categorized models above. Count the complete runtime catalogue, not only
 // the seven categorized arrays used by the domain smoke test.
-const completeCatalogueIds = [...catalogue.matchAll(/\\bid:'([^']+)'/g)].map(match => match[1]);
+const completeCatalogueIds = [...catalogue.matchAll(/id:'([^']+)'/g)].map(match => match[1]);
 assert.equal(completeCatalogueIds.length, 108,
   'the complete interactive catalogue must include 8 flagship and 100 categorized experiments');
 assert.equal(new Set(completeCatalogueIds).size, 108,
@@ -155,7 +155,7 @@ assert.ok(pageHtml.includes('id="catalogueTotal"') &&
           pageHtml.includes('id="catalogueTotalInline"') &&
           app.includes('String(EXP.length)'),
   'the visible experiment totals must be derived from the complete runtime catalogue');
-assert.doesNotMatch(pageHtml, /100个物理化学趣味实验|\\/ 100 个实验/,
+assert.ok(!pageHtml.includes('100个物理化学趣味实验') && !pageHtml.includes('/ 100 个实验'),
   'the page must not display a stale hard-coded 100-experiment total');
 
 
