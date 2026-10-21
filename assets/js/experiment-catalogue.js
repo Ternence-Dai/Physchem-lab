@@ -1,3 +1,7 @@
+/* Shared rendering helpers exported by legacy-app.js. */
+var PHYS_DRAW=window.PHYS_DRAW;
+if(!PHYS_DRAW)throw new Error('PhysChem canvas drawing API is unavailable');
+var C=PHYS_DRAW.clamp,rr=PHYS_DRAW.roundedRect,pl=PHYS_DRAW.pill,lb=PHYS_DRAW.label;
 /* ============================================================
    8 个旗舰实验
    ============================================================ */
