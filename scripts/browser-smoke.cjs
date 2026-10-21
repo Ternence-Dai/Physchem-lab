@@ -50,6 +50,47 @@ const { chromium } = require('playwright');
       drawResults.push(label);
     }
 
+    const animatedExperiments = [
+      '抛体运动轨迹',
+      '单摆与简谐振动',
+      '弹簧振子与能量转化',
+      '欧姆定律电路',
+      '理想气体分子运动'
+    ];
+    const frameSignature = async () => page.locator('#cv').evaluate(canvas => {
+      const context = canvas.getContext('2d');
+      if (!context) throw new Error('Canvas 2D context is unavailable during animation test');
+      const width = Math.min(canvas.width, 900);
+      const height = Math.min(canvas.height, 520);
+      const bytes = context.getImageData(0, 0, width, height).data;
+      let hash = 2166136261;
+      for (let i = 0; i < bytes.length; i += 32) {
+        hash ^= bytes[i];
+        hash = Math.imul(hash, 16777619);
+        hash ^= bytes[i + 1];
+        hash = Math.imul(hash, 16777619);
+        hash ^= bytes[i + 2];
+        hash = Math.imul(hash, 16777619);
+      }
+      return hash >>> 0;
+    });
+    const motionResults = [];
+    for (const name of animatedExperiments) {
+      const item = page.locator('#lst .it').filter({ hasText: name }).first();
+      if (await item.count() !== 1) throw new Error('Animated experiment is missing or duplicated: ' + name);
+      await item.click();
+      await page.waitForFunction(expected => document.querySelector('#et')?.textContent === expected, name);
+      const frames = [];
+      for (let sample = 0; sample < 3; sample++) {
+        await page.waitForTimeout(280);
+        frames.push(await frameSignature());
+      }
+      if (new Set(frames).size < 2) {
+        throw new Error(name + ': canvas pixels did not change across consecutive animation frames (' + frames.join(',') + ')');
+      }
+      motionResults.push(name);
+    }
+
     await page.setViewportSize({ width: 390, height: 844 });
     await page.reload({ waitUntil: 'networkidle' });
     await page.waitForFunction(() => document.querySelectorAll('#lst .it').length === 108);
@@ -72,7 +113,7 @@ const { chromium } = require('playwright');
     }
 
     if (pageErrors.length) throw new Error('Browser runtime errors: ' + pageErrors.join(' | '));
-    console.log(`Browser canvas smoke test passed: ${drawResults.length}/108 experiments drew visible colored output; mobile drawer and canvas passed.`);
+    console.log(`Browser canvas smoke test passed: ${drawResults.length}/108 experiments drew visible colored output; ${motionResults.length}/${animatedExperiments.length} representative simulations changed rendered frames; mobile drawer and canvas passed.`);
   } finally {
     await browser.close();
   }
