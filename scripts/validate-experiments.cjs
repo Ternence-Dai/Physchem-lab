@@ -140,7 +140,24 @@ for (const name of ['M','C1','C2','C3','C4','C5','C6']) {
   }
 }
 assert.equal(checked, 100, 'the catalogue advertises 100 experiments and must contain exactly 100 validated models');
-assert.equal(experimentIds.size, 100, 'all 100 experiments must have unique identifiers');
+
+assert.equal(experimentIds.size, 100, 'all 100 categorized models must have unique identifiers');
+
+// The eight flagship models (p1-p8) are registered in addition to the 100
+// categorized models above. Count the complete runtime catalogue, not only
+// the seven categorized arrays used by the domain smoke test.
+const completeCatalogueIds = [...catalogue.matchAll(/\\bid:'([^']+)'/g)].map(match => match[1]);
+assert.equal(completeCatalogueIds.length, 108,
+  'the complete interactive catalogue must include 8 flagship and 100 categorized experiments');
+assert.equal(new Set(completeCatalogueIds).size, 108,
+  'all 108 interactive catalogue IDs must be unique');
+assert.ok(pageHtml.includes('id="catalogueTotal"') &&
+          pageHtml.includes('id="catalogueTotalInline"') &&
+          app.includes('String(EXP.length)'),
+  'the visible experiment totals must be derived from the complete runtime catalogue');
+assert.doesNotMatch(pageHtml, /100个物理化学趣味实验|\\/ 100 个实验/,
+  'the page must not display a stale hard-coded 100-experiment total');
+
 
 assert.ok(pageHtml.includes('experiment-catalogue.js?v=20261021-catalogue-restore-v1') &&
           pageHtml.includes('legacy-app.js?v=20261021-catalogue-restore-v1'),
