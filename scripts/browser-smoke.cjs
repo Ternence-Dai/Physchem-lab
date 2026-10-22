@@ -25,6 +25,11 @@ const { chromium } = require('playwright');
         document.querySelector('#simulationStatus')?.textContent.trim() === '运行中';
     }, undefined, { timeout: 20000 });
 
+    const contextScript = await page.locator('script[src*="workspace-v5-context.js"]').getAttribute('src');
+    if (!contextScript || !contextScript.includes('v=20261022-live-context-metrics-v1')) {
+      throw new Error('Live experiment context metrics asset version is missing: ' + contextScript);
+    }
+
     const total = await page.locator('#lst .it').count();
     if (total !== 108) throw new Error(`Expected 108 visible experiment entries, received ${total}`);
 
