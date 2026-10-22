@@ -28,12 +28,44 @@ const { chromium } = require('playwright');
     const total = await page.locator('#lst .it').count();
     if (total !== 108) throw new Error(`Expected 108 visible experiment entries, received ${total}`);
 
+    await page.waitForFunction(() =>
+      document.querySelector('#w5ExperimentCatalogue')?.textContent.includes('108') &&
+      document.querySelector('#w5ExperimentParams')?.textContent.includes('可调变量') &&
+      document.querySelector('#w5ExperimentArchive')?.textContent.includes('存档') &&
+      document.querySelector('#w5ExperimentStatus')?.textContent.includes('运行中')
+    , undefined, { timeout: 10000 });
+    const initialContext = await page.evaluate(() => ({
+      title: document.querySelector('#w5ExperimentTitle')?.textContent.trim(),
+      catalogue: document.querySelector('#w5ExperimentCatalogue')?.textContent.trim(),
+      params: document.querySelector('#w5ExperimentParams')?.textContent.trim(),
+      archive: document.querySelector('#w5ExperimentArchive')?.textContent.trim()
+    }));
+    if (!initialContext.title || !initialContext.catalogue.startsWith('108 / 108') ||
+        !/^\\d+ 个可调变量$/.test(initialContext.params) ||
+        !initialContext.archive.includes('0 条')) {
+      throw new Error('Live experiment context metrics did not reflect the full catalogue, active parameters and empty archive: ' + JSON.stringify(initialContext));
+    }
+
     const drawResults = [];
     for (let index = 0; index < total; index++) {
       const item = page.locator('#lst .it').nth(index);
       const label = (await item.getAttribute('aria-label')) || `experiment #${index + 1}`;
       await item.click();
       await page.waitForTimeout(100);
+      if (index === 0) {
+        await page.waitForFunction(() =>
+          document.querySelector('#w5ExperimentTitle')?.textContent === document.querySelector('#et')?.textContent
+        );
+        await page.locator('#bp').click();
+        await page.waitForFunction(() => document.querySelector('#w5ExperimentStatus')?.textContent === '已暂停');
+        await page.locator('#bp').click();
+        await page.waitForFunction(() => document.querySelector('#w5ExperimentStatus')?.textContent === '正在运行');
+        await page.locator('#bs').click();
+        await page.waitForFunction(() =>
+          document.querySelector('#si')?.textContent.includes('1 条') &&
+          document.querySelector('#w5ExperimentArchive')?.textContent.includes('1 条')
+        , undefined, { timeout: 10000 });
+      }
       const renderError = await page.evaluate(() => window.__physchemDrawError || window.__physchemStepError || null);
       if (renderError) throw new Error(`${label}: renderer error: ${renderError.message}`);
       const result = await page.locator('#cv').evaluate(canvas => {
