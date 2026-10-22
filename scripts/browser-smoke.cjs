@@ -10,6 +10,14 @@ const { chromium } = require('playwright');
 
   try {
     await page.goto('http://127.0.0.1:4173/', { waitUntil: 'networkidle', timeout: 30000 });
+    const skipLink = page.locator('a.skip-link[href="#main-content"]');
+    if (await skipLink.count() !== 1) throw new Error('Keyboard skip-navigation link is missing');
+    await page.keyboard.press('Tab');
+    if (!(await page.evaluate(() => document.activeElement?.classList.contains('skip-link')))) {
+      throw new Error('Skip navigation is not the first keyboard focus target');
+    }
+    await page.keyboard.press('Enter');
+    await page.waitForFunction(() => document.activeElement?.id === 'main-content');
     await page.waitForFunction(() => {
       const total = document.querySelector('#catalogueTotal');
       return total && total.textContent.trim() === '108' &&
