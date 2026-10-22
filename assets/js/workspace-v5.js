@@ -89,6 +89,7 @@
         empty.className = 'w5-command-empty';
         empty.textContent = '暂未找到可跳转模块，请使用页面原有导航。';
         list.appendChild(empty);
+        input.removeAttribute('aria-activedescendant');
         return;
       }
       visibleItems.forEach((item, index) => {
