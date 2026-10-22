@@ -25,8 +25,29 @@ const { chromium } = require('playwright');
         document.querySelector('#simulationStatus')?.textContent.trim() === '运行中';
     }, undefined, { timeout: 20000 });
 
+    const contextScript = await page.locator('script[src*="workspace-v5-context.js"]').getAttribute('src');
+    if (!contextScript || !contextScript.includes('v=20261022-live-context-metrics-v2')) {
+      throw new Error('Live experiment context metrics asset version is missing: ' + contextScript);
+    }
+
     const total = await page.locator('#lst .it').count();
     if (total !== 108) throw new Error(`Expected 108 visible experiment entries, received ${total}`);
+
+    await page.waitForSelector('#w5ExperimentCatalogue', { timeout: 10000 });
+    await page.waitForTimeout(150);
+    const initialContext = await page.evaluate(() => ({
+      title: document.querySelector('#w5ExperimentTitle')?.textContent.trim(),
+      catalogue: document.querySelector('#w5ExperimentCatalogue')?.textContent.trim(),
+      params: document.querySelector('#w5ExperimentParams')?.textContent.trim(),
+      archive: document.querySelector('#w5ExperimentArchive')?.textContent.trim()
+    }));
+    const initialStatus = await page.locator('#w5ExperimentStatus').innerText();
+    if (!initialContext.title || !initialContext.catalogue.startsWith('108 / 108') ||
+        !/^\d+ 个可调变量$/.test(initialContext.params) ||
+        !initialContext.archive.includes('0 条') || !['正在运行', '静态预览'].includes(initialStatus)) {
+      throw new Error('Live experiment context metrics did not reflect the full catalogue, active parameters, archive and simulation state: ' +
+        JSON.stringify({ ...initialContext, status: initialStatus, visibleItems: total, simulationStatus: await page.locator('#simulationStatus').innerText() }));
+    }
 
     const drawResults = [];
     for (let index = 0; index < total; index++) {
@@ -34,6 +55,20 @@ const { chromium } = require('playwright');
       const label = (await item.getAttribute('aria-label')) || `experiment #${index + 1}`;
       await item.click();
       await page.waitForTimeout(100);
+      if (index === 0) {
+        await page.waitForFunction(() =>
+          document.querySelector('#w5ExperimentTitle')?.textContent === document.querySelector('#et')?.textContent
+        );
+        await page.locator('#bp').click();
+        await page.waitForFunction(() => document.querySelector('#w5ExperimentStatus')?.textContent === '已暂停');
+        await page.locator('#bp').click();
+        await page.waitForFunction(() => document.querySelector('#w5ExperimentStatus')?.textContent === '正在运行');
+        await page.locator('#bs').click();
+        await page.waitForFunction(() =>
+          document.querySelector('#si')?.textContent.includes('1 / 30 条') &&
+          document.querySelector('#w5ExperimentArchive')?.textContent.includes('1 条')
+        , undefined, { timeout: 10000 });
+      }
       const renderError = await page.evaluate(() => window.__physchemDrawError || window.__physchemStepError || null);
       if (renderError) throw new Error(`${label}: renderer error: ${renderError.message}`);
       const result = await page.locator('#cv').evaluate(canvas => {
@@ -103,6 +138,7 @@ const { chromium } = require('playwright');
     // then restore animation when the operating-system/browser preference is cleared.
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.waitForFunction(() => document.querySelector('#simulationStatus')?.textContent.includes('静态预览'));
+    await page.waitForFunction(() => document.querySelector('#w5ExperimentStatus')?.textContent === '静态预览');
     const reducedExperiment = page.locator('#lst .it').filter({ hasText: '单摆与简谐振动' }).first();
     await reducedExperiment.click();
     await page.waitForFunction(() => document.querySelector('#et')?.textContent === '单摆与简谐振动');
@@ -120,6 +156,7 @@ const { chromium } = require('playwright');
 
     await page.emulateMedia({ reducedMotion: 'no-preference' });
     await page.waitForFunction(() => document.querySelector('#simulationStatus')?.textContent === '运行中');
+    await page.waitForFunction(() => document.querySelector('#w5ExperimentStatus')?.textContent === '正在运行');
     const resumedFrames = [];
     for (let sample = 0; sample < 3; sample++) {
       await page.waitForTimeout(280);

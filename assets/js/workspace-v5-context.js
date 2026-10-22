@@ -190,18 +190,45 @@
     mode.textContent = "本地交互模拟";
     const status = document.createElement("span");
     status.id = "w5ExperimentStatus";
-    status.textContent = document.getElementById("bp")?.textContent?.includes("继续") ? "已暂停" : "正在运行";
     tags.append(mode, status);
-    strip.append(text, tags);
+
+    const meta = document.createElement("div");
+    meta.className = "w5-experiment-context__meta";
+    const catalogueMeta = document.createElement("span");
+    catalogueMeta.id = "w5ExperimentCatalogue";
+    const paramsMeta = document.createElement("span");
+    paramsMeta.id = "w5ExperimentParams";
+    const archiveMeta = document.createElement("span");
+    archiveMeta.id = "w5ExperimentArchive";
+    meta.append(catalogueMeta, paramsMeta, archiveMeta);
+    strip.append(text, tags, meta);
     workflow.insertAdjacentElement("afterend", strip);
 
-    const observer = new MutationObserver(() => {
+    const updateMeta = () => {
+      const total = document.getElementById("catalogueTotal")?.textContent?.trim() || "—";
+      const visible = document.getElementById("cnt")?.textContent?.trim()
+        || String(document.querySelectorAll("#lst .it").length);
+      const controls = document.querySelectorAll(
+        "#pb input:not([type='hidden']), #pb select, #pb textarea"
+      ).length;
+      const archiveText = document.getElementById("si")?.textContent || "";
+      const archiveCount = archiveText.match(/存档[：:]\s*(\d+)/);
+      const reducedPreview = document.getElementById("simulationStatus")?.textContent?.includes("静态预览");
+      const paused = document.getElementById("bp")?.textContent?.includes("继续");
+      catalogueMeta.textContent = visible + " / " + total + " 项实验";
+      paramsMeta.textContent = controls + " 个可调变量";
+      archiveMeta.textContent = archiveCount ? "存档 " + archiveCount[1] + " 条" : "存档状态待读取";
+      status.textContent = reducedPreview ? "静态预览" : paused ? "已暂停" : "正在运行";
+    };
+    const update = () => {
       title.textContent = document.getElementById("et")?.textContent || "当前实验";
       brief.textContent = document.getElementById("eb2")?.textContent || "";
-      const control = document.getElementById("bp");
-      status.textContent = control?.textContent?.includes("继续") ? "已暂停" : "正在运行";
-    });
-    ["et", "eb2", "bp"].forEach(id => {
+      updateMeta();
+    };
+    update();
+
+    const observer = new MutationObserver(update);
+    ["et", "eb2", "bp", "lst", "cnt", "catalogueTotal", "pb", "si", "simulationStatus"].forEach(id => {
       const node = document.getElementById(id);
       if (node) observer.observe(node, { childList: true, characterData: true, subtree: true });
     });
