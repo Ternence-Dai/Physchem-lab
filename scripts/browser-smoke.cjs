@@ -140,6 +140,7 @@ const { chromium } = require('playwright');
     // then restore animation when the operating-system/browser preference is cleared.
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.waitForFunction(() => document.querySelector('#simulationStatus')?.textContent.includes('静态预览'));
+    await page.waitForFunction(() => document.querySelector('#w5ExperimentStatus')?.textContent === '静态预览');
     const reducedExperiment = page.locator('#lst .it').filter({ hasText: '单摆与简谐振动' }).first();
     await reducedExperiment.click();
     await page.waitForFunction(() => document.querySelector('#et')?.textContent === '单摆与简谐振动');
@@ -157,6 +158,7 @@ const { chromium } = require('playwright');
 
     await page.emulateMedia({ reducedMotion: 'no-preference' });
     await page.waitForFunction(() => document.querySelector('#simulationStatus')?.textContent === '运行中');
+    await page.waitForFunction(() => document.querySelector('#w5ExperimentStatus')?.textContent === '正在运行');
     const resumedFrames = [];
     for (let sample = 0; sample < 3; sample++) {
       await page.waitForTimeout(280);
