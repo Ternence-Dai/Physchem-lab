@@ -65,7 +65,7 @@ const { chromium } = require('playwright');
         await page.waitForFunction(() => document.querySelector('#w5ExperimentStatus')?.textContent === '正在运行');
         await page.locator('#bs').click();
         await page.waitForFunction(() =>
-          document.querySelector('#si')?.textContent.includes('1 条') &&
+          document.querySelector('#si')?.textContent.includes('1 / 30 条') &&
           document.querySelector('#w5ExperimentArchive')?.textContent.includes('1 条')
         , undefined, { timeout: 10000 });
       }
