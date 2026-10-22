@@ -24,7 +24,6 @@ body :where(button,a,input,select,textarea,[tabindex]):focus-visible { outline:3
 
 /* PhysChem Lab UI v2 — scientific console hierarchy and responsive instrument panels */
 body[data-workspace="physchem"]{--pc-ink:#163849;--pc-muted:#617d88;--pc-line:#d7e5e8;--pc-teal:#087f83;--pc-mint:#dff3ee}
-body[data-workspace="physchem"] .sb{width:304px}
 body[data-workspace="physchem"] .br .lg{background:linear-gradient(145deg,#39b9ae,#16758a);box-shadow:0 8px 22px #0a1e2e}
 body[data-workspace="physchem"] .sc input{border:1px solid #31566a;background:#102f42;color:#f0fbff;border-radius:11px;min-height:40px}
 body[data-workspace="physchem"] .fl{gap:6px;padding:10px 14px}
@@ -62,5 +61,5 @@ body[data-workspace="physchem"] .rc{background:#fff;border-color:#d8e6e8;box-sha
 body[data-workspace="physchem"] .rc .rn{color:#1c4554}
 body[data-workspace="physchem"] .rc .rp{color:#607b85}
 @media(max-width:1120px){body[data-workspace="physchem"] .bt2{grid-template-columns:1fr 1fr}body[data-workspace="physchem"] .bt2 .p3{grid-column:1/-1}}
-@media(max-width:760px){body[data-workspace="physchem"] .sb{width:min(88vw,330px)}body[data-workspace="physchem"] .physchem-intro{min-height:0;padding:23px 18px}body[data-workspace="physchem"] .physchem-intro .atom{width:64px;height:64px;flex-basis:64px;font-size:25px;border-radius:19px}body[data-workspace="physchem"] .sw,body[data-workspace="physchem"] #cv{min-height:300px}body[data-workspace="physchem"] .bt2{display:grid;grid-template-columns:1fr;padding-bottom:22px}body[data-workspace="physchem"] .bt2 .pnl{min-height:0}body[data-workspace="physchem"] .bt2 .p3{grid-column:auto}body[data-workspace="physchem"] .product-workflow{padding:16px}body[data-workspace="physchem"] .product-workflow__item{min-height:112px}}
+@media(max-width:760px){body[data-workspace="physchem"] .physchem-intro{min-height:0;padding:23px 18px}body[data-workspace="physchem"] .physchem-intro .atom{width:64px;height:64px;flex-basis:64px;font-size:25px;border-radius:19px}body[data-workspace="physchem"] .sw,body[data-workspace="physchem"] #cv{min-height:300px}body[data-workspace="physchem"] .bt2{display:grid;grid-template-columns:1fr;padding-bottom:22px}body[data-workspace="physchem"] .bt2 .pnl{min-height:0}body[data-workspace="physchem"] .bt2 .p3{grid-column:auto}body[data-workspace="physchem"] .product-workflow{padding:16px}body[data-workspace="physchem"] .product-workflow__item{min-height:112px}}
 @media(prefers-reduced-motion:reduce){body[data-workspace="physchem"] .lst .it{transition:none}}
