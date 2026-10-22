@@ -10,10 +10,10 @@ const css = fs.readFileSync('assets/css/nist-webbook-reference-v1.css', 'utf8');
 assert.ok(html.includes('nist-webbook-reference-v1.css?v=20261022-nist-webbook-v1') &&
           html.includes('nist-webbook-reference-v1.js?v=20261022-nist-webbook-v1'),
   'PhysChem entry point must load the NIST reference search and styles');
-assert.ok(runtime.includes('https://webbook.nist.gov/cgi/cbook.cgi') &&
-          runtime.includes("searchParams.set('Name'") &&
-          runtime.includes("searchParams.set('Units', 'SI')"),
-  'NIST lookup must construct the official Chemistry WebBook name search URL');
+assert.ok(runtime.includes('https://webbook.nist.gov/cgi/cbook.cgi?Name=') &&
+          runtime.includes('encodeURIComponent(term)') &&
+          runtime.includes('&Units=SI'),
+  'NIST lookup must construct the official Chemistry WebBook name search URL safely');
 assert.ok(runtime.includes('encodeURIComponent(term)') &&
           runtime.includes('noopener noreferrer'),
   'user-entered compound names must be safely encoded and external links isolated');
