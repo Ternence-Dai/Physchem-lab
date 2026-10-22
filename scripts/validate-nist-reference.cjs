@@ -34,7 +34,10 @@ assert.ok(browserTest.includes('Expected 108 visible experiment entries') &&
           browserTest.includes('simulationInputsBeforeNist') &&
           browserTest.includes('108-experiment catalogue'),
   'browser acceptance must preserve and exercise the full 108 experiment collection');
-assert.ok(catalogue.includes('function renderCurrentFrame') &&
-          catalogue.includes('EXP'),
-  'existing experiment simulation renderer must remain in place');
+assert.ok(catalogue.includes('EXP.push') &&
+          catalogue.includes('window.PHYS_DRAW'),
+  'all original experiment definitions must keep using the shared canvas drawing API');
+const simulationRuntime = fs.readFileSync('assets/js/legacy-app.js', 'utf8');
+assert.ok(simulationRuntime.includes('function renderCurrentFrame()'),
+  'the original animation loop and simulation renderer must remain in place');
 console.log('PhysChem NIST reference lookup safety and catalogue-preservation checks passed.');
