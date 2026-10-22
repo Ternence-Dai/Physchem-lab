@@ -38,3 +38,85 @@ body[data-workspace="physchem"] #main-content :is(input,select,textarea){min-hei
 @media(max-width:900px){body[data-workspace="physchem"] .sb{width:250px;flex:0 0 250px}body[data-workspace="physchem"] .mn{left:250px;margin-left:0}body[data-workspace="physchem"] .physchem-intro,body[data-workspace="physchem"] .lab-commandbar,body[data-workspace="physchem"] .product-workflow{margin-left:14px;margin-right:14px}}
 @media(max-width:680px){body[data-workspace="physchem"] .sb{width:min(86vw,300px);flex:0 0 min(86vw,300px);transform:translateX(-105%);transition:transform .2s}body[data-workspace="physchem"] .sb.open{transform:translateX(0)}body[data-workspace="physchem"] .mn{left:0;margin-left:0;width:100%}body[data-workspace="physchem"] .tb{padding:10px 13px;flex-wrap:wrap}body[data-workspace="physchem"] .tb .ac{width:100%;margin-left:0}body[data-workspace="physchem"] .physchem-intro{margin:13px;padding:20px}.physchem-intro .atom{display:none}body[data-workspace="physchem"] .lab-commandbar{align-items:flex-start;flex-direction:column;margin:0 13px 12px}body[data-workspace="physchem"] .product-workflow{margin:0 13px 12px}body[data-workspace="physchem"] #main-content>.content{padding:8px 12px 28px}}
 @media(prefers-reduced-motion:reduce){body[data-workspace="physchem"] .sb{transition:none}}
+
+/* V3 instrument workspace — canvas and parameter consoles share the full viewport */
+body[data-workspace="physchem"] .mn{
+  display:flex;flex-direction:column;align-items:stretch;
+  overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;
+  padding:0 0 28px;scrollbar-gutter:stable;
+}
+body[data-workspace="physchem"] .tb{
+  position:sticky;top:0;left:auto;right:auto;z-index:35;
+  flex:0 0 auto;min-height:72px;height:auto;
+}
+body[data-workspace="physchem"] .sw{
+  position:relative;inset:auto;left:auto;right:auto;top:auto;bottom:auto;
+  flex:0 0 clamp(390px,49vh,650px);height:clamp(390px,49vh,650px);
+  min-height:390px;margin:16px 20px 15px;border:1px solid #34566e;
+  border-radius:16px;overflow:hidden;
+  background:radial-gradient(ellipse at 50% 38%,#183950,#0a1927 76%);
+  box-shadow:0 18px 40px #020a1260;
+}
+body[data-workspace="physchem"] .simulation-status{
+  position:absolute;top:13px;left:14px;z-index:3;display:flex;align-items:center;
+  gap:8px;padding:8px 11px;border:1px solid #3a6076;border-radius:9px;
+  background:#071a2adf;color:#c7e3ec;font-size:10px;backdrop-filter:blur(10px)
+}
+body[data-workspace="physchem"] .simulation-status__pulse{
+  width:7px;height:7px;border-radius:50%;background:#64dfbd;
+  box-shadow:0 0 0 4px #64dfbd20,0 0 12px #64dfbd80
+}
+body[data-workspace="physchem"] .simulation-status b{color:#83e4ce;font-size:10px}
+body[data-workspace="physchem"] .simulation-status small{color:#7999ac;font-size:8px;letter-spacing:.08em}
+body[data-workspace="physchem"] #cv{width:100%;height:100%;min-height:390px;display:block}
+body[data-workspace="physchem"] .bt2{
+  position:relative;inset:auto;left:auto;right:auto;bottom:auto;
+  display:grid;grid-template-columns:minmax(250px,.92fr) minmax(280px,1fr) minmax(280px,1fr);
+  align-items:stretch;gap:13px;width:auto;height:auto;margin:0 20px;padding:0
+}
+body[data-workspace="physchem"] .bt2 .pnl,
+body[data-workspace="physchem"] .bt2 .p1,
+body[data-workspace="physchem"] .bt2 .p2,
+body[data-workspace="physchem"] .bt2 .p3{
+  position:relative;inset:auto;left:auto;right:auto;top:auto;bottom:auto;
+  width:auto;height:auto;min-width:0;min-height:340px;max-height:none;
+  padding:16px 16px 18px;overflow:visible;
+  border:1px solid #34566e;border-radius:14px;
+  background:linear-gradient(150deg,#142e42,#0d2031);
+  box-shadow:0 13px 30px #020a124a
+}
+body[data-workspace="physchem"] .bt2 .pnl h3{
+  margin:-2px -2px 15px;padding:0 0 11px;border-bottom:1px solid #2d4e64;
+  color:#8ce2e3;font-size:13px;letter-spacing:.01em
+}
+body[data-workspace="physchem"] .bt2 .pnl .pm{margin-bottom:15px}
+body[data-workspace="physchem"] .bt2 .pnl .r{font-size:12px}
+body[data-workspace="physchem"] .bt2 .pnl .v{font-size:11px}
+body[data-workspace="physchem"] .lab-notebook{
+  margin:16px 20px 0;padding:19px 21px;border:1px solid #34566e;
+  border-radius:14px;background:linear-gradient(145deg,#122a3d,#0d2030);
+  box-shadow:0 13px 30px #020a1240
+}
+body[data-workspace="physchem"] .lab-notebook h3{color:#e8f7fb;font-size:17px}
+body[data-workspace="physchem"] .lab-notebook p,
+body[data-workspace="physchem"] .lab-notebook label{color:#9db7c3}
+body[data-workspace="physchem"] .lab-notebook textarea{
+  width:100%;min-height:108px;padding:12px 13px;border:1px solid #3c6076;
+  border-radius:9px;background:#091b2a;color:#e7f4f8
+}
+@media(max-width:1180px){
+  body[data-workspace="physchem"] .bt2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  body[data-workspace="physchem"] .bt2 .p3{grid-column:1/-1;min-height:220px}
+}
+@media(max-width:760px){
+  body[data-workspace="physchem"] .mn{left:0;width:100%}
+  body[data-workspace="physchem"] .sw{flex-basis:360px;height:360px;min-height:360px;margin:12px}
+  body[data-workspace="physchem"] #cv{min-height:360px}
+  body[data-workspace="physchem"] .bt2{grid-template-columns:minmax(0,1fr);gap:10px;margin:0 12px}
+  body[data-workspace="physchem"] .bt2 .pnl,
+  body[data-workspace="physchem"] .bt2 .p3{grid-column:auto;min-height:0}
+  body[data-workspace="physchem"] .lab-notebook{margin:12px;padding:14px}
+}
+@media(prefers-reduced-motion:reduce){
+  body[data-workspace="physchem"] .simulation-status__pulse{box-shadow:none}
+}
