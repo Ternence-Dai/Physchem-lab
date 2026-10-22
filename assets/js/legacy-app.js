@@ -303,6 +303,9 @@ function importExperimentArchiveFile(input){
 var typer=null;
 var started=false;
 var last=0,lastRO=0;
+var animationFrameId=0;
+var motionPreference=window.matchMedia?window.matchMedia('(prefers-reduced-motion: reduce)'):null;
+var reducedMotion=!!(motionPreference&&motionPreference.matches);
 var fCat='全部',sQ='';
 
 function resize(){
@@ -314,6 +317,7 @@ function resize(){
   cv.width=Math.floor(W*dpr);cv.height=Math.floor(H*dpr);
   cv.style.width=W+'px';cv.style.height=H+'px';
   ctx.setTransform(dpr,0,0,dpr,0,0);
+  if(started&&reducedMotion)renderCurrentFrame();
   return true;
 }
 
@@ -347,8 +351,14 @@ function renderList(){
 function syncSimulationStatus(){
   var status=E('simulationStatus');
   var panel=E('sw');
-  if(status)status.textContent=paused?'已暂停':'运行中';
-  if(panel)panel.classList.toggle('is-paused',!!paused);
+  var button=E('bp');
+  if(status)status.textContent=reducedMotion?'静态预览（已启用减少动态效果）':paused?'已暂停':'运行中';
+  if(panel)panel.classList.toggle('is-paused',!!paused||reducedMotion);
+  if(button){
+    button.disabled=!!reducedMotion;
+    button.textContent=reducedMotion?'静态预览':paused?'▶ 继续':'⏸ 暂停';
+    button.title=reducedMotion?'已尊重系统减少动态效果设置':'暂停或继续当前实验动画';
+  }
 }
 function setExperimentSidebarOpen(open){
   var sidebar=E('experimentSidebar');
@@ -369,9 +379,9 @@ function selectExp(id){
   for(var j=0;j<cur.params.length;j++)P[cur.params[j].key]=cur.params[j].value;
   ST=cur.init?cur.init(P):{};
   paused=false;
-  var bp=E('bp');if(bp){bp.textContent='⏸ 暂停';bp.className='bt';}
   E('et').textContent=cur.name;E('eb2').textContent=cur.brief;
-  buildParams();buildPanel();renderList();refreshTutor(true);
+  buildParams();buildPanel();renderList();refreshTutor(true);syncSimulationStatus();
+  if(reducedMotion&&started)renderCurrentFrame();
   setTimeout(resize,30);setTimeout(resize,200);
 }
 
@@ -393,6 +403,7 @@ var pTimer=null;
 function onPC(){
   if(cur.resetOnChange)ST=cur.init?cur.init(P):{};
   updateRO();
+  if(reducedMotion&&started)renderCurrentFrame();
   clearTimeout(pTimer);pTimer=setTimeout(function(){refreshTutor(false);},260);
 }
 
@@ -422,17 +433,43 @@ function refreshTutor(imm){
   if(imm){clearInterval(typer);el2.textContent=txt;}else typeTxt(el2,txt);
 }
 
-function loop(ts){
-  if(!started)return;
-  requestAnimationFrame(loop);
-  if(!last)last=ts;var dt=(ts-last)/1000;last=ts;dt=C(dt,0,0.05);
+function drawCurrentFrame(ts,dt,advance){
   if(!cur||!ctx)return;
-  if(!paused&&cur.step){try{cur.step(P,dt,ST);}catch(e){}}
+  if(advance&&!paused&&!reducedMotion&&cur.step){
+    try{cur.step(P,dt,ST);}catch(e){window.__physchemStepError={experimentId:cur.id,message:String(e&&e.message||e)};}
+  }
   ctx.clearRect(0,0,W,H);
-  try{cur.draw(ctx,W,H,P,ST);window.__physchemDrawError=null;}catch(e){window.__physchemDrawError={experimentId:cur.id,message:String(e&&e.message||e)};}
+  try{cur.draw(ctx,W,H,P,ST);window.__physchemDrawError=null;}
+  catch(e){window.__physchemDrawError={experimentId:cur.id,message:String(e&&e.message||e)};}
   ctx.save();ctx.font='11px Menlo,Consolas,monospace';ctx.fillStyle='rgba(125,143,171,.55)';ctx.textAlign='right';ctx.textBaseline='bottom';
   ctx.fillText('PhysChem Lab · Ternence Dai',W-16,H-12);ctx.restore();
-  if(ts-lastRO>110){lastRO=ts;updateRO();}
+  if(!advance||ts-lastRO>110){lastRO=ts;updateRO();}
+}
+function renderCurrentFrame(){
+  if(!cur||!ctx)return;
+  drawCurrentFrame(0,0,false);
+}
+function scheduleAnimationFrame(){
+  if(started&&!reducedMotion&&!animationFrameId)animationFrameId=requestAnimationFrame(loop);
+}
+function loop(ts){
+  animationFrameId=0;
+  if(!started||reducedMotion)return;
+  if(!last)last=ts;var dt=(ts-last)/1000;last=ts;dt=C(dt,0,0.05);
+  drawCurrentFrame(ts,dt,true);
+  scheduleAnimationFrame();
+}
+function handleMotionPreferenceChange(event){
+  reducedMotion=!!event.matches;
+  if(reducedMotion){
+    if(animationFrameId)cancelAnimationFrame(animationFrameId);
+    animationFrameId=0;
+    renderCurrentFrame();
+  }else{
+    last=0;
+    scheduleAnimationFrame();
+  }
+  syncSimulationStatus();
 }
 
 function boot(){
@@ -442,10 +479,15 @@ function boot(){
   if(!resize()){requestAnimationFrame(boot);return;}
   try{renderList();updateSI();renderD();selectExp('p1');}catch(e){SE('初始化失败: '+e.message);console.error(e);return;}
   setTimeout(resize,50);setTimeout(resize,250);setTimeout(resize,600);setTimeout(resize,1200);
-  started=true;syncSimulationStatus();requestAnimationFrame(loop);
+  started=true;syncSimulationStatus();
+  if(reducedMotion)renderCurrentFrame();else scheduleAnimationFrame();
 }
 
 function bindUI(){
+  if(motionPreference){
+    if(typeof motionPreference.addEventListener==='function')motionPreference.addEventListener('change',handleMotionPreferenceChange);
+    else if(typeof motionPreference.addListener==='function')motionPreference.addListener(handleMotionPreferenceChange);
+  }
   var noteField=E('experimentNote');
   if(noteField)noteField.addEventListener('input',updateExperimentNoteCount);
   updateExperimentNoteCount();
@@ -463,7 +505,7 @@ function bindUI(){
   syncArchiveRecoveryUI();
   var bp=E('bp');if(bp)bp.onclick=function(){paused=!paused;this.textContent=paused?'▶ 继续':'⏸ 暂停';this.className=paused?'bt on':'bt';syncSimulationStatus();};
   var br=E('br2');if(br)br.onclick=function(){ST=cur&&cur.init?cur.init(P):{};paused=false;
-    var b=E('bp');if(b){b.textContent='⏸ 暂停';b.className='bt';}syncSimulationStatus();refreshTutor(true);toast('实验已重置 ↺');};
+    syncSimulationStatus();if(reducedMotion)renderCurrentFrame();refreshTutor(true);toast('实验已重置 ↺');};
   var bs=E('bs');if(bs)bs.onclick=function(){if(!cur)return;
     if(storageRecoveryRequired){toast('存档恢复保护已启用：为避免覆盖旧数据，本次保存已暂停');return;}
     if(saves.length>=30){

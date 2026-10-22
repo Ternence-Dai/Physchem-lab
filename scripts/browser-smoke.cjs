@@ -99,6 +99,39 @@ const { chromium } = require('playwright');
       motionResults.push(name);
     }
 
+    // Reduced-motion must freeze the simulation without removing its static drawing,
+    // then restore animation when the operating-system/browser preference is cleared.
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.waitForFunction(() => document.querySelector('#simulationStatus')?.textContent.includes('静态预览'));
+    const reducedExperiment = page.locator('#lst .it').filter({ hasText: '单摆与简谐振动' }).first();
+    await reducedExperiment.click();
+    await page.waitForFunction(() => document.querySelector('#et')?.textContent === '单摆与简谐振动');
+    const frozenFrames = [];
+    for (let sample = 0; sample < 3; sample++) {
+      await page.waitForTimeout(280);
+      frozenFrames.push(await frameSignature());
+    }
+    if (new Set(frozenFrames).size !== 1) {
+      throw new Error('Reduced-motion preference did not freeze the experiment canvas: ' + frozenFrames.join(','));
+    }
+    if (!(await page.locator('#bp').isDisabled())) {
+      throw new Error('Animation control must be disabled while reduced-motion is active');
+    }
+
+    await page.emulateMedia({ reducedMotion: 'no-preference' });
+    await page.waitForFunction(() => document.querySelector('#simulationStatus')?.textContent === '运行中');
+    const resumedFrames = [];
+    for (let sample = 0; sample < 3; sample++) {
+      await page.waitForTimeout(280);
+      resumedFrames.push(await frameSignature());
+    }
+    if (new Set(resumedFrames).size < 2) {
+      throw new Error('Animation did not resume after reduced-motion preference was cleared: ' + resumedFrames.join(','));
+    }
+    if (await page.locator('#bp').isDisabled()) {
+      throw new Error('Animation controls remained disabled after reduced-motion preference was cleared');
+    }
+
     await page.setViewportSize({ width: 390, height: 844 });
     await page.reload({ waitUntil: 'networkidle' });
     await page.waitForFunction(() => document.querySelectorAll('#lst .it').length === 108);
