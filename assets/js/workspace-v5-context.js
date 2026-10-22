@@ -212,7 +212,7 @@
         "#pb input:not([type='hidden']), #pb select, #pb textarea"
       ).length;
       const archiveText = document.getElementById("si")?.textContent || "";
-      const archiveCount = archiveText.match(/(\d+)\s*条/);
+      const archiveCount = archiveText.match(/存档[：:]\s*(\d+)/);
       const reducedPreview = document.getElementById("simulationStatus")?.textContent?.includes("静态预览");
       const paused = document.getElementById("bp")?.textContent?.includes("继续");
       catalogueMeta.textContent = visible + " / " + total + " 项实验";
