@@ -172,7 +172,7 @@
   function updateExperimentContext() {
     const workflow = document.querySelector(".product-workflow");
     const canvas = document.getElementById("sw");
-    if (!workflow || !canvas || document.querySelector(".w5-experiment-context")) return;
+    if (!canvas || document.querySelector(".w5-experiment-context")) return;
     const strip = document.createElement("div");
     strip.className = "w5-experiment-context";
     const text = document.createElement("div");
@@ -202,7 +202,8 @@
     archiveMeta.id = "w5ExperimentArchive";
     meta.append(catalogueMeta, paramsMeta, archiveMeta);
     strip.append(text, tags, meta);
-    workflow.insertAdjacentElement("afterend", strip);
+    if (workflow) workflow.insertAdjacentElement("afterend", strip);
+    else canvas.insertAdjacentElement("beforebegin", strip);
 
     const updateMeta = () => {
       const total = document.getElementById("catalogueTotal")?.textContent?.trim() || "—";
