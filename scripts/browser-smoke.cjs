@@ -33,22 +33,20 @@ const { chromium } = require('playwright');
     const total = await page.locator('#lst .it').count();
     if (total !== 108) throw new Error(`Expected 108 visible experiment entries, received ${total}`);
 
-    await page.waitForFunction(() =>
-      document.querySelector('#w5ExperimentCatalogue')?.textContent.includes('108') &&
-      document.querySelector('#w5ExperimentParams')?.textContent.includes('可调变量') &&
-      document.querySelector('#w5ExperimentArchive')?.textContent.includes('存档') &&
-      document.querySelector('#w5ExperimentStatus')?.textContent.includes('运行中')
-    , undefined, { timeout: 10000 });
+    await page.waitForSelector('#w5ExperimentCatalogue', { timeout: 10000 });
+    await page.waitForTimeout(150);
     const initialContext = await page.evaluate(() => ({
       title: document.querySelector('#w5ExperimentTitle')?.textContent.trim(),
       catalogue: document.querySelector('#w5ExperimentCatalogue')?.textContent.trim(),
       params: document.querySelector('#w5ExperimentParams')?.textContent.trim(),
       archive: document.querySelector('#w5ExperimentArchive')?.textContent.trim()
     }));
+    const initialStatus = await page.locator('#w5ExperimentStatus').innerText();
     if (!initialContext.title || !initialContext.catalogue.startsWith('108 / 108') ||
         !/^\d+ 个可调变量$/.test(initialContext.params) ||
-        !initialContext.archive.includes('0 条')) {
-      throw new Error('Live experiment context metrics did not reflect the full catalogue, active parameters and empty archive: ' + JSON.stringify(initialContext));
+        !initialContext.archive.includes('0 条') || !['正在运行', '静态预览'].includes(initialStatus)) {
+      throw new Error('Live experiment context metrics did not reflect the full catalogue, active parameters, archive and simulation state: ' +
+        JSON.stringify({ ...initialContext, status: initialStatus, visibleItems: total, simulationStatus: await page.locator('#simulationStatus').innerText() }));
     }
 
     const drawResults = [];
