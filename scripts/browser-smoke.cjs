@@ -18,8 +18,8 @@ const { chromium } = require('playwright');
       position: getComputedStyle(node).position,
       width: getComputedStyle(node).width
     }));
-    if (!referenceCssResponse.ok() || !referenceCssText.includes('--lab-deep:#0d1c2b') ||
-        labLayout.position !== 'fixed' || labLayout.width !== '294px') {
+    if (!referenceCssResponse.ok() || !referenceCssText.includes('width:296px;flex-basis:296px') ||
+        labLayout.position !== 'fixed' || labLayout.width !== '296px') {
       throw new Error('PhysChem control-room layout was not loaded/applied: ' + JSON.stringify(labLayout));
     }
     const physchemGeometry = await page.evaluate(() => {
