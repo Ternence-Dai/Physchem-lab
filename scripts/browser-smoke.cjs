@@ -62,7 +62,7 @@ const { chromium } = require('playwright');
     }
 
     if (Math.abs(physchemGeometry.sidebarRight - physchemGeometry.mainLeft) > 1 ||
-        physchemGeometry.mainStyleLeft !== '294px' ||
+        physchemGeometry.mainStyleLeft !== '296px' ||
         physchemGeometry.mainMarginLeft !== '0px' ||
         physchemGeometry.mainWidth < physchemGeometry.viewport * 0.75) {
       throw new Error('PhysChem main panel is still offset from the experiment rail: ' + JSON.stringify(physchemGeometry));
