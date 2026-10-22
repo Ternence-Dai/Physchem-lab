@@ -300,7 +300,8 @@ assert.ok(gasBlock.includes('BOLTZMANN') === false,
   'particle constants should remain encapsulated in the domain solver');
 
 
-assert.ok(pageHtml.includes('product-system-v9.css?v=20261021-ui-restoration-v1'),
+assert.ok(pageHtml.includes('product-system.css?v=20261021-ui-restoration-v1') &&
+          pageHtml.includes('instrument-workbench-v3.css?v=20261022-instrument-workbench-v3'),
   'PhysChem Lab must load the current V9.2 workspace and archive interaction layer');
 assert.ok(app.includes('function restoreSavedExperiment(index)') &&
           app.includes('data-load-save=') &&
