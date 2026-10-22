@@ -37,6 +37,30 @@ const { chromium } = require('playwright');
         viewport: innerWidth
       };
     });
+    const instrumentLayout = await page.evaluate(() => {
+      const workspace = document.querySelector('#main-content');
+      const stage = document.querySelector('#sw');
+      const controls = document.querySelector('.bt2');
+      const notes = document.querySelector('.lab-notebook');
+      const css = node => getComputedStyle(node);
+      const box = node => { const r=node.getBoundingClientRect(); return {left:r.left,right:r.right,width:r.width,top:r.top,bottom:r.bottom}; };
+      return {
+        main:box(workspace),stage:box(stage),controls:box(controls),notes:box(notes),
+        grid:css(controls).display,areas:css(controls).gridTemplateAreas,
+        panel1:box(controls.querySelector('.p1')),panel2:box(controls.querySelector('.p2')),
+        panel3:box(controls.querySelector('.p3'))
+      };
+    });
+    if (instrumentLayout.grid !== 'grid' ||
+        !instrumentLayout.areas.includes('controls') ||
+        !instrumentLayout.areas.includes('results') ||
+        instrumentLayout.stage.width < instrumentLayout.main.width * .85 ||
+        instrumentLayout.panel1.right > instrumentLayout.panel2.left + 2 ||
+        instrumentLayout.panel3.top < instrumentLayout.panel2.bottom - 2) {
+      throw new Error('PhysChem instrument workbench grid did not separate simulation, controls, results and tutor: ' +
+        JSON.stringify(instrumentLayout));
+    }
+
     if (Math.abs(physchemGeometry.sidebarRight - physchemGeometry.mainLeft) > 1 ||
         physchemGeometry.mainStyleLeft !== '294px' ||
         physchemGeometry.mainMarginLeft !== '0px' ||
