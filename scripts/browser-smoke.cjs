@@ -26,7 +26,7 @@ const { chromium } = require('playwright');
     }, undefined, { timeout: 20000 });
 
     const contextScript = await page.locator('script[src*="workspace-v5-context.js"]').getAttribute('src');
-    if (!contextScript || !contextScript.includes('v=20261022-live-context-metrics-v1')) {
+    if (!contextScript || !contextScript.includes('v=20261022-live-context-metrics-v2')) {
       throw new Error('Live experiment context metrics asset version is missing: ' + contextScript);
     }
 
