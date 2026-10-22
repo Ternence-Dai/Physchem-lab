@@ -22,6 +22,27 @@ const { chromium } = require('playwright');
         labLayout.position !== 'fixed' || labLayout.width !== '294px') {
       throw new Error('PhysChem control-room layout was not loaded/applied: ' + JSON.stringify(labLayout));
     }
+    const physchemGeometry = await page.evaluate(() => {
+      const sidebar = document.querySelector('#experimentSidebar');
+      const main = document.querySelector('#main-content');
+      const side = sidebar.getBoundingClientRect();
+      const body = main.getBoundingClientRect();
+      const style = getComputedStyle(main);
+      return {
+        sidebarRight: side.right,
+        mainLeft: body.left,
+        mainStyleLeft: style.left,
+        mainMarginLeft: style.marginLeft,
+        mainWidth: body.width,
+        viewport: innerWidth
+      };
+    });
+    if (Math.abs(physchemGeometry.sidebarRight - physchemGeometry.mainLeft) > 1 ||
+        physchemGeometry.mainStyleLeft !== '294px' ||
+        physchemGeometry.mainMarginLeft !== '0px' ||
+        physchemGeometry.mainWidth < physchemGeometry.viewport * 0.75) {
+      throw new Error('PhysChem main panel is still offset from the experiment rail: ' + JSON.stringify(physchemGeometry));
+    }
 
     const skipLink = page.locator('a.skip-link[href="#main-content"]');
     if (await skipLink.count() !== 1) throw new Error('Keyboard skip-navigation link is missing');
