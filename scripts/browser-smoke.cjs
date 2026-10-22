@@ -43,6 +43,27 @@ const { chromium } = require('playwright');
         physchemGeometry.mainWidth < physchemGeometry.viewport * 0.75) {
       throw new Error('PhysChem main panel is still offset from the experiment rail: ' + JSON.stringify(physchemGeometry));
     }
+    const instrumentWorkspace = await page.evaluate(() => {
+      const main = document.querySelector('#main-content');
+      const canvas = document.querySelector('#sw');
+      const controls = document.querySelector('.bt2');
+      const panels = [...(controls?.querySelectorAll('.pnl') || [])];
+      const canvasBox = canvas?.getBoundingClientRect();
+      const controlBox = controls?.getBoundingClientRect();
+      const notebook = document.querySelector('.lab-notebook');
+      return {
+        scrollable: getComputedStyle(main).overflowY === 'auto',
+        controlsGrid: getComputedStyle(controls).display === 'grid',
+        canvasAboveControls: !!canvasBox && !!controlBox && canvasBox.bottom <= controlBox.top + 2,
+        allPanelsInFlow: panels.length === 3 && panels.every(node => getComputedStyle(node).position === 'relative'),
+        notebookBelowControls: !!notebook && !!controlBox && notebook.getBoundingClientRect().top >= controlBox.bottom - 2
+      };
+    });
+    if (!instrumentWorkspace.scrollable || !instrumentWorkspace.controlsGrid ||
+        !instrumentWorkspace.canvasAboveControls || !instrumentWorkspace.allPanelsInFlow ||
+        !instrumentWorkspace.notebookBelowControls) {
+      throw new Error('PhysChem instrument canvas/control workflow is still compressed or overlapping: ' + JSON.stringify(instrumentWorkspace));
+    }
 
     const skipLink = page.locator('a.skip-link[href="#main-content"]');
     if (await skipLink.count() !== 1) throw new Error('Keyboard skip-navigation link is missing');
