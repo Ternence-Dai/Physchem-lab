@@ -12,3 +12,22 @@ body[data-workspace="physchem"] .bt2 .pnl{border-radius:9px}
 body[data-workspace="physchem"] .dr{width:330px}
 @media(max-width:920px){body[data-workspace="physchem"] .sb{width:250px;flex-basis:250px}body[data-workspace="physchem"] .mn{left:250px!important}body[data-workspace="physchem"] .bt2{grid-template-columns:1fr}}
 @media(max-width:680px){body[data-workspace="physchem"] .sb{width:min(86vw,300px);flex-basis:min(86vw,300px)}body[data-workspace="physchem"] .mn{left:0!important}body[data-workspace="physchem"] .sw{margin:0 10px 10px}body[data-workspace="physchem"] .bt2{padding:0 10px 20px}}
+
+/* The experiment rail is also styled by legacy #experimentSidebar rules.
+   The ID-scoped override keeps the reference shell authoritative. */
+body[data-workspace="physchem"] #experimentSidebar{
+  width:296px!important;flex:0 0 296px!important;
+}
+body[data-workspace="physchem"] #main-content{
+  left:296px!important;right:0;top:0;bottom:0;width:auto;margin-left:0!important;
+}
+@media(max-width:920px){
+  body[data-workspace="physchem"] #experimentSidebar{width:250px!important;flex-basis:250px!important}
+  body[data-workspace="physchem"] #main-content{left:250px!important;margin-left:0!important}
+}
+@media(max-width:680px){
+  body[data-workspace="physchem"] #experimentSidebar{
+    width:min(86vw,300px)!important;flex-basis:min(86vw,300px)!important;
+  }
+  body[data-workspace="physchem"] #main-content{left:0!important;width:100%;margin-left:0!important}
+}
