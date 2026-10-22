@@ -128,6 +128,31 @@ const { chromium } = require('playwright');
         JSON.stringify({ ...initialContext, status: initialStatus, visibleItems: total, simulationStatus: await page.locator('#simulationStatus').innerText() }));
     }
 
+    const simulationInputsBeforeNist = await page.locator('#pb input').evaluateAll(nodes => nodes.map(node => node.value));
+    await page.locator('#nistReferenceOpen').click();
+    const nistDialog = page.locator('#nistReferenceDialog');
+    await nistDialog.waitFor({ state: 'visible' });
+    if (!(await nistDialog.innerText()).includes('不会自动修改实验参数') ||
+        !(await nistDialog.innerText()).includes('最近更新为 2025')) {
+      throw new Error('NIST reference search must explain its source age and must not claim automatic model validation');
+    }
+    await nistDialog.locator('#nistReferenceCompound').fill('water & <reference>');
+    const nistLink = await nistDialog.locator('#nistReferenceSearch').evaluate(node => {
+      const url = new URL(node.href);
+      return { host:url.hostname, path:url.pathname, name:url.searchParams.get('Name'), units:url.searchParams.get('Units') };
+    });
+    if (nistLink.host !== 'webbook.nist.gov' || nistLink.path !== '/cgi/cbook.cgi' ||
+        nistLink.name !== 'water & <reference>' || nistLink.units !== 'SI') {
+      throw new Error('NIST reference lookup did not safely encode the submitted compound name: ' + JSON.stringify(nistLink));
+    }
+    await nistDialog.locator('button[aria-label="关闭"]').click();
+    await page.evaluate(() => document.activeElement?.blur());
+    const simulationInputsAfterNist = await page.locator('#pb input').evaluateAll(nodes => nodes.map(node => node.value));
+    if (JSON.stringify(simulationInputsBeforeNist) !== JSON.stringify(simulationInputsAfterNist) ||
+        await page.locator('#lst .it').count() !== 108) {
+      throw new Error('NIST reference lookup must not change existing model parameters or the 108-experiment catalogue');
+    }
+
     const drawResults = [];
     for (let index = 0; index < total; index++) {
       const item = page.locator('#lst .it').nth(index);
