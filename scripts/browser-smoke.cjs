@@ -41,7 +41,7 @@ const { chromium } = require('playwright');
       archive: document.querySelector('#w5ExperimentArchive')?.textContent.trim()
     }));
     if (!initialContext.title || !initialContext.catalogue.startsWith('108 / 108') ||
-        !/^\\d+ 个可调变量$/.test(initialContext.params) ||
+        !/^\d+ 个可调变量$/.test(initialContext.params) ||
         !initialContext.archive.includes('0 条')) {
       throw new Error('Live experiment context metrics did not reflect the full catalogue, active parameters and empty archive: ' + JSON.stringify(initialContext));
     }
