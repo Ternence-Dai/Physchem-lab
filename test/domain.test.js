@@ -322,3 +322,28 @@ test("archive comparison refuses a numeric delta that overflows the finite numbe
  assert.equal(pressure.unit,"");
  assert.match(pressure.reason,/超出数值范围/);
 });
+
+
+test("archive comparison requires real calendar timestamps with explicit valid time zones",()=>{
+ const base={
+  experimentId:"ideal-gas",experimentSnapshotVersion:1,
+  modelVersion:"physchem-engine-v2",snapshotAt:"2026-10-23T01:00:00.000Z",
+  params:{temperatureK:300},readouts:[{label:"Pressure",value:"1 Pa"}]
+ };
+ for (const snapshotAt of [
+  "2026-02-30T01:00:00Z",
+  "2026-13-01T01:00:00Z",
+  "2026-01-01T24:00:00Z",
+  "2026-01-01T01:00:00",
+  "2026-01-01T01:00:00+14:30"
+ ]) {
+  assert.equal(compareExperimentArchiveSnapshots(base,{...base,snapshotAt}).compatible,false,
+   `invalid snapshot timestamp must be rejected: ${snapshotAt}`);
+ }
+ assert.equal(compareExperimentArchiveSnapshots(base,{
+  ...base,snapshotAt:"2024-02-29T01:00:00+14:00"
+ }).compatible,true,"a real leap day and the maximum legal UTC offset are accepted");
+ assert.equal(compareExperimentArchiveSnapshots(base,{
+  ...base,snapshotAt:"2026-10-23T01:00:00.123456789Z"
+ }).compatible,true,"fractional seconds are accepted");
+});

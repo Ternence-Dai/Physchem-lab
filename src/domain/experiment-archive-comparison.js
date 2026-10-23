@@ -1,3 +1,25 @@
+function isValidSnapshotTimestamp(value) {
+  if (typeof value !== "string") return false;
+  const match = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.(\d{1,9}))?(Z|([+-])(\d{2}):(\d{2}))$/.exec(value);
+  if (!match) return false;
+  const [, yearText, monthText, dayText, hourText, minuteText, secondText, , zone, , offsetHourText, offsetMinuteText] = match;
+  const year = Number(yearText), month = Number(monthText), day = Number(dayText);
+  const hour = Number(hourText), minute = Number(minuteText), second = Number(secondText);
+  const leapYear = year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
+  const monthDays = [31, leapYear ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  const daysInMonth = monthDays[month - 1] || 0;
+  if (month < 1 || month > 12 || day < 1 || day > daysInMonth ||
+      hour > 23 || minute > 59 || second > 59) return false;
+  if (zone !== "Z") {
+    const offsetHour = Number(offsetHourText), offsetMinute = Number(offsetMinuteText);
+    if (offsetMinute > 59 || offsetHour > 14 || (offsetHour === 14 && offsetMinute !== 0)) return false;
+  }
+  const timestamp = Date.parse(value);
+  if (!Number.isFinite(timestamp)) return false;
+  const normalizedYear = new Date(timestamp).getUTCFullYear();
+  return normalizedYear >= 0 && normalizedYear <= 9999;
+}
+
 function snapshotDate(snapshot) {
   return snapshot.snapshotAt || snapshot.time || "时间未知";
 }
@@ -25,7 +47,7 @@ export function compareExperimentArchiveSnapshots(left, right) {
     return blocked("请选择两份有效的实验档案快照。");
   }
   if (left.experimentSnapshotVersion !== 1 || right.experimentSnapshotVersion !== 1 ||
-      !left.snapshotAt || !right.snapshotAt) {
+      !isValidSnapshotTimestamp(left.snapshotAt) || !isValidSnapshotTimestamp(right.snapshotAt)) {
     return blocked("旧版档案缺少稳定的实验 ID 或结果时间戳，不能保证模型与结果口径一致。");
   }
   if (typeof left.experimentId !== "string" || !left.experimentId ||
