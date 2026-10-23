@@ -77,8 +77,8 @@ test("strong acid/strong base titration pH is correct before, at and after equiv
 });
 test("strong acid/base equivalence survives underflow in an extreme volume fraction",()=>{
  const pH=strongAcidStrongBasePH({
-  acidConcentrationMolPerL:1e193,acidVolumeMl:1e-200,
-  baseConcentrationMolPerL:1e-7,baseVolumeMl:1e200
+  acidConcentrationMolPerL:1e308,acidVolumeMl:1e-16,
+  baseConcentrationMolPerL:1e-16,baseVolumeMl:1e308
  });
  assert.ok(Math.abs(pH-7)<1e-12,
   "equal acid/base equivalents must not lose the small-volume contribution to fraction underflow");
