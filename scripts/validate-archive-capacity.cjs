@@ -4,6 +4,7 @@ const vm = require('node:vm');
 const assert = require('node:assert/strict');
 
 const app = fs.readFileSync('assets/js/legacy-app.js', 'utf8');
+const archiveCss = fs.readFileSync('assets/css/archive-comparison-v1.css', 'utf8');
 const html = fs.readFileSync('index.html', 'utf8');
 const css = fs.readFileSync('assets/css/experiment-notebook-v9.css', 'utf8');
 
@@ -214,3 +215,7 @@ assert.ok(html.includes('archiveComparisonPanel') &&
   'archive drawer must expose the comparison panel and its run/clear actions');
 assert.ok(html.includes('archive-comparison-v1.css'),
   'archive comparison stylesheet must be mounted in the application shell');
+assert.ok(archiveCss.includes('aside#dr.dr.on') &&
+          archiveCss.includes('width:calc(100vw - 24px)!important') &&
+          archiveCss.includes('aside#dr.dr.on #archiveComparisonPanel'),
+  'the open archive drawer and its comparison panel must expand to the mobile viewport width');
