@@ -75,16 +75,19 @@ export function compareExperimentArchiveSnapshots(left, right) {
     const leftParsed = hasLeft ? numericValueAndUnit(leftValue) : null;
     const rightParsed = hasRight ? numericValueAndUnit(rightValue) : null;
     const sameUnit = !!leftParsed && !!rightParsed && leftParsed.unit === rightParsed.unit;
+    const candidateDelta = sameUnit ? rightParsed.value - leftParsed.value : null;
+    const finiteDelta = sameUnit && Number.isFinite(candidateDelta);
     return {
       label,
       leftValue,
       rightValue,
-      unit: sameUnit ? leftParsed.unit : "",
-      delta: sameUnit ? rightParsed.value - leftParsed.value : null,
-      comparable: sameUnit,
+      unit: finiteDelta ? leftParsed.unit : "",
+      delta: finiteDelta ? candidateDelta : null,
+      comparable: finiteDelta,
       reason: !hasLeft || !hasRight ? "仅一份档案记录此结果" :
         !leftParsed || !rightParsed ? "非纯数值结果，不计算差值" :
-        !sameUnit ? "单位不同，不自动换算" : ""
+        !sameUnit ? "单位不同，不自动换算" :
+        !finiteDelta ? "差值超出数值范围，无法可靠比较" : ""
     };
   });
 
