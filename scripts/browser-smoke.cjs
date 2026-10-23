@@ -238,7 +238,10 @@ const fs = require('node:fs');
         });
         if (!mobileArchivePanel.width || mobileArchivePanel.width<320 ||
             mobileArchivePanel.left<0 || mobileArchivePanel.right>391 ||
-            mobileArchivePanel.drawerWidth<350) {
+            mobileArchivePanel.drawerWidth<350 ||
+            Number.parseFloat(mobileArchivePanel.drawerCssWidth)<350 ||
+            !mobileArchivePanel.drawerOpen ||
+            mobileArchivePanel.right-mobileArchivePanel.left>mobileArchivePanel.drawerWidth+2) {
           throw new Error('Mobile archive comparison panel is clipped: '+JSON.stringify(mobileArchivePanel));
         }
         await page.locator('#archiveComparisonPanel').screenshot({
