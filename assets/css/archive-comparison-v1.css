@@ -119,3 +119,41 @@ body[data-workspace="physchem"] .archive-action-row{display:flex;flex-wrap:wrap;
 @media(prefers-reduced-motion:reduce){
   body[data-workspace="physchem"] .w9-archive-compare *{scroll-behavior:auto!important;transition:none!important;animation:none!important}
 }
+
+@media(max-width:640px){
+  body[data-workspace="physchem"] .dr{
+    width:min(96vw,520px)!important;max-width:none!important
+  }
+}
+
+/* The reference shell used an equally specific fixed 330px drawer rule.
+   Pin the mobile drawer by ID so the comparison console receives real width. */
+@media(max-width:640px){
+  body[data-workspace="physchem"] #dr.dr{
+    width:calc(100vw - 24px)!important;
+    min-width:0!important;
+    max-width:calc(100vw - 24px)!important;
+    box-sizing:border-box!important
+  }
+  body[data-workspace="physchem"] #dr.dr .w9-archive-compare{
+    width:100%;max-width:100%;min-width:0;box-sizing:border-box
+  }
+}
+
+/* Explicitly size the open archive drawer itself; a fixed 330px reference-shell
+   width otherwise wins over the inner comparison panel on 390px screens. */
+@media(max-width:640px){
+  body[data-workspace="physchem"] aside#dr.dr.on{
+    width:calc(100vw - 24px)!important;
+    min-width:calc(100vw - 24px)!important;
+    max-width:calc(100vw - 24px)!important;
+    right:0!important;left:auto!important;
+    box-sizing:border-box!important
+  }
+  body[data-workspace="physchem"] aside#dr.dr.on #db{
+    width:100%;min-width:0;max-width:100%;box-sizing:border-box
+  }
+  body[data-workspace="physchem"] aside#dr.dr.on #archiveComparisonPanel{
+    width:100%;min-width:0;max-width:100%;box-sizing:border-box
+  }
+}
