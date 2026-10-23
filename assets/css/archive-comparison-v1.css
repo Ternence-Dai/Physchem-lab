@@ -119,3 +119,9 @@ body[data-workspace="physchem"] .archive-action-row{display:flex;flex-wrap:wrap;
 @media(prefers-reduced-motion:reduce){
   body[data-workspace="physchem"] .w9-archive-compare *{scroll-behavior:auto!important;transition:none!important;animation:none!important}
 }
+
+@media(max-width:640px){
+  body[data-workspace="physchem"] .dr{
+    width:min(96vw,520px)!important;max-width:none!important
+  }
+}
