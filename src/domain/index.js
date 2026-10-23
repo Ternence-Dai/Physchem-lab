@@ -98,13 +98,26 @@ export function strongAcidStrongBasePH({acidConcentrationMolPerL,acidVolumeMl,ba
   // intermediates can overflow even when the final mixed concentration is
   // finite (for example, equal very-large acid/base inputs at equivalence).
   const volumeScale=Math.max(acidVolumeMl,baseVolumeMl);
-  const acidVolumeFraction=(acidVolumeMl/volumeScale)/
-    (acidVolumeMl/volumeScale+baseVolumeMl/volumeScale);
-  const baseVolumeFraction=(baseVolumeMl/volumeScale)/
-    (acidVolumeMl/volumeScale+baseVolumeMl/volumeScale);
-  const netAcidConcentration=
-    acidConcentrationMolPerL*acidVolumeFraction-
-    baseConcentrationMolPerL*baseVolumeFraction;
+  const normalizedVolumeSum=acidVolumeMl/volumeScale+baseVolumeMl/volumeScale;
+  // A direct volume fraction can underflow even when its product with a
+  // large finite concentration would remain representable. Keep each
+  // weighted concentration in log space until after the subtraction.
+  const logAcidContribution=Math.log(acidConcentrationMolPerL)+
+    Math.log(acidVolumeMl)-Math.log(volumeScale)-Math.log(normalizedVolumeSum);
+  const logBaseContribution=baseVolumeMl===0 ? Number.NEGATIVE_INFINITY :
+    Math.log(baseConcentrationMolPerL)+Math.log(baseVolumeMl)-
+    Math.log(volumeScale)-Math.log(normalizedVolumeSum);
+  let netAcidConcentration;
+  if (logAcidContribution===logBaseContribution) {
+    netAcidConcentration=0;
+  } else {
+    const acidExcess=logAcidContribution>logBaseContribution;
+    const largerLog=Math.max(logAcidContribution,logBaseContribution);
+    const smallerLog=Math.min(logAcidContribution,logBaseContribution);
+    const logDifference=largerLog+Math.log1p(-Math.exp(smallerLog-largerLog));
+    const magnitude=Math.exp(logDifference);
+    netAcidConcentration=acidExcess ? magnitude : -magnitude;
+  }
   if (!Number.isFinite(netAcidConcentration)) {
     throw new RangeError("net acid concentration exceeds the finite numeric range");
   }
