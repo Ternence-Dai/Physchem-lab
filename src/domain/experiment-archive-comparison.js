@@ -2,7 +2,7 @@ function isValidSnapshotTimestamp(value) {
   if (typeof value !== "string") return false;
   const match = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.(\d{1,9}))?(Z|([+-])(\d{2}):(\d{2}))$/.exec(value);
   if (!match) return false;
-  const [, yearText, monthText, dayText, hourText, minuteText, secondText, , zone, , offsetHourText, offsetMinuteText] = match;
+  const [, yearText, monthText, dayText, hourText, minuteText, secondText, , zone, sign, offsetHourText, offsetMinuteText] = match;
   const year = Number(yearText), month = Number(monthText), day = Number(dayText);
   const hour = Number(hourText), minute = Number(minuteText), second = Number(secondText);
   const leapYear = year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
@@ -12,7 +12,8 @@ function isValidSnapshotTimestamp(value) {
       hour > 23 || minute > 59 || second > 59) return false;
   if (zone !== "Z") {
     const offsetHour = Number(offsetHourText), offsetMinute = Number(offsetMinuteText);
-    if (offsetMinute > 59 || offsetHour > 14 || (offsetHour === 14 && offsetMinute !== 0)) return false;
+    if (offsetMinute > 59 || offsetHour > 14 || (offsetHour === 14 && offsetMinute !== 0) ||
+        (sign === "-" && offsetHour === 0 && offsetMinute === 0)) return false;
   }
   const timestamp = Date.parse(value);
   if (!Number.isFinite(timestamp)) return false;
