@@ -17,6 +17,7 @@
 <link rel="stylesheet" href="./assets/css/instrument-workbench-v3.css?v=20261022-instrument-workbench-v3">
 <link rel="stylesheet" href="./assets/css/reference-platform-v4.css?v=20261022-reference-v5">
 <link rel="stylesheet" href="./assets/css/nist-webbook-reference-v1.css?v=20261022-nist-webbook-v1">
+<link rel="stylesheet" href="./assets/css/archive-comparison-v1.css?v=20261023-archive-compare-v1">
 <link rel="stylesheet" href="./assets/css/readability-accessibility-v10.css?v=20261021-ui-v2">
 
 </head>
@@ -66,6 +67,24 @@
     <label class="bt archive-import" for="archiveImport">导入 / 恢复备份</label>
     <input id="archiveImport" type="file" accept="application/json,.json" hidden>
   </div>
+  <section class="w9-archive-compare" id="archiveComparisonPanel" aria-label="实验档案方案对照">
+    <div class="w9-archive-compare__head">
+      <div><span>REPRODUCIBLE RUN COMPARISON</span><h4>实验档案对照</h4>
+        <p>选择同一实验、同一模型版本的两份历史快照。只按相同标签与相同单位计算结果差值。</p></div>
+      <b>只读对照</b>
+    </div>
+    <div class="w9-archive-compare__toolbar">
+      <span id="archiveCompareSelectionStatus" role="status" aria-live="polite">已选 0 / 2 份档案</span>
+      <div>
+        <button id="archiveCompareRun" type="button" disabled>开始对照</button>
+        <button id="archiveCompareClear" type="button" class="w9-archive-compare__clear" disabled>清除选择</button>
+      </div>
+    </div>
+    <div id="archiveCompareResult" class="w9-archive-compare__result" aria-live="polite">
+      <div class="w9-archive-compare__empty">在下方任意两份档案中点击“加入对照”，即可查看参数变更与结果差值。</div>
+    </div>
+    <p class="w9-archive-compare__boundary">不重算历史模型、不修改存档。若实验 ID 或模型版本不同，或结果单位不同，则阻止自动比较 / 差值计算。</p>
+  </section>
   <div class="db" id="db"><div class="ep">暂无存档记录<br>点击「💾 存档」保存当前实验参数</div></div>
 </aside>
 <div class="ts" id="ts"></div><div class="eb" id="eb3"></div>
