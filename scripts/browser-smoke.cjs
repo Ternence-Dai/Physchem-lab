@@ -1,6 +1,7 @@
 'use strict';
 
 const { chromium } = require('playwright');
+const fs = require('node:fs');
 
 (async () => {
   const browser = await chromium.launch({ headless: true });
@@ -172,6 +173,95 @@ const { chromium } = require('playwright');
           document.querySelector('#si')?.textContent.includes('1 / 30 条') &&
           document.querySelector('#w5ExperimentArchive')?.textContent.includes('1 条')
         , undefined, { timeout: 10000 });
+
+        await page.locator('#pb input').first().evaluate(node => {
+          const current=Number(node.value),step=Number(node.step)||1;
+          const min=Number(node.min),max=Number(node.max);
+          const next=current+step<=max?current+step:current-step>=min?current-step:current;
+          node.value=String(next);
+          node.dispatchEvent(new Event('input',{bubbles:true}));
+        });
+        await page.waitForTimeout(80);
+        await page.locator('#bs').click();
+        await page.waitForFunction(() =>
+          document.querySelector('#si')?.textContent.includes('2 / 30 条') &&
+          document.querySelector('#w5ExperimentArchive')?.textContent.includes('2 条')
+        , undefined, { timeout: 10000 });
+
+        const savedArchiveBeforeCompare = await page.evaluate(() =>
+          localStorage.getItem('physchem_lab_saved_experiments_v1'));
+        await page.locator('#bd').click();
+        await page.waitForSelector('#archiveComparisonPanel');
+        const comparePicks = page.locator('#db [data-compare-save]');
+        if (await comparePicks.count() !== 2) {
+          throw new Error('Two saved runs of the same active experiment must be selectable for comparison');
+        }
+        await comparePicks.nth(0).click();
+        await comparePicks.nth(1).click();
+        await page.waitForFunction(() =>
+          document.querySelector('#archiveCompareRun')?.disabled === false);
+        await page.locator('#archiveCompareRun').click();
+        await page.waitForSelector('.w9-archive-compare__identity');
+        const archiveComparison = await page.evaluate(() => ({
+          status:document.querySelector('#archiveCompareSelectionStatus')?.textContent || '',
+          experiment:document.querySelector('.w9-archive-compare__identity strong')?.textContent || '',
+          parameterRows:document.querySelectorAll('.w9-archive-compare__table-section:first-of-type tbody tr').length,
+          readoutRows:document.querySelectorAll('.w9-archive-compare__table-section:last-of-type tbody tr').length,
+          resultText:document.querySelector('#archiveCompareResult')?.innerText || '',
+          storage:localStorage.getItem('physchem_lab_saved_experiments_v1')
+        }));
+        if (!archiveComparison.status.includes('2 / 2') ||
+            !archiveComparison.experiment ||
+            archiveComparison.parameterRows < 1 ||
+            archiveComparison.readoutRows < 1 ||
+            !archiveComparison.resultText.includes('差值（右 − 左）') ||
+            archiveComparison.storage !== savedArchiveBeforeCompare) {
+          throw new Error('Archive comparison must present two same-model snapshots without mutating stored history: ' +
+            JSON.stringify({...archiveComparison,storageUnchanged:archiveComparison.storage===savedArchiveBeforeCompare}));
+        }
+        fs.mkdirSync('artifacts',{recursive:true});
+        await page.locator('#archiveComparisonPanel').screenshot({
+          path:'artifacts/physchem-archive-comparison-desktop.png'
+        });
+        await page.setViewportSize({width:390,height:844});
+        const archiveStylesheet = await page.locator('link[rel="stylesheet"][href*="archive-comparison-v1.css"]').getAttribute('href');
+        if (!archiveStylesheet || !archiveStylesheet.includes('archive-compare-v2')) {
+          throw new Error('Archive comparison stylesheet cache version was not refreshed: ' + archiveStylesheet);
+        }
+        const mobileArchivePanel=await page.locator('#archiveComparisonPanel').evaluate(node=>{
+          const rect=node.getBoundingClientRect();
+          const drawer=document.querySelector('#dr');
+          const drawerRect=drawer.getBoundingClientRect();
+          const style=getComputedStyle(drawer);
+          return {left:rect.left,right:rect.right,width:rect.width,drawerWidth:drawerRect.width,
+            drawerCssWidth:style.width,drawerMaxWidth:style.maxWidth,drawerOpen:drawer.classList.contains('on')};
+        });
+        if (!mobileArchivePanel.width || mobileArchivePanel.width<320 ||
+            mobileArchivePanel.left<0 || mobileArchivePanel.right>391 ||
+            mobileArchivePanel.drawerWidth<350 ||
+            Number.parseFloat(mobileArchivePanel.drawerCssWidth)<350 ||
+            !mobileArchivePanel.drawerOpen) {
+          throw new Error('Mobile archive comparison panel is clipped: '+JSON.stringify(mobileArchivePanel));
+        }
+        await page.locator('#archiveComparisonPanel').screenshot({
+          path:'artifacts/physchem-archive-comparison-mobile.png'
+        });
+        await page.setViewportSize({width:1440,height:1000});
+        await page.locator('#archiveCompareClear').click();
+        await page.waitForFunction(() =>
+          document.querySelector('#archiveCompareSelectionStatus')?.textContent.includes('0 / 2') &&
+          document.querySelector('#archiveCompareRun')?.disabled === true &&
+          document.querySelector('#archiveCompareResult')?.textContent.includes('在下方任意两份档案')
+        );
+        const selectionReset = await page.evaluate(() => ({
+          pressed:[...document.querySelectorAll('#db [data-compare-save]')].filter(button=>button.getAttribute('aria-pressed')==='true').length,
+          disabled:[...document.querySelectorAll('#db [data-compare-save]')].filter(button=>button.disabled).length
+        }));
+        if(selectionReset.pressed!==0 || selectionReset.disabled!==0) {
+          throw new Error('Clearing archive comparison must reset both selection controls: '+JSON.stringify(selectionReset));
+        }
+        await page.locator('#dx').click();
+        await page.waitForFunction(()=>!document.querySelector('#dr')?.classList.contains('on'));
       }
       const renderError = await page.evaluate(() => window.__physchemDrawError || window.__physchemStepError || null);
       if (renderError) throw new Error(`${label}: renderer error: ${renderError.message}`);
