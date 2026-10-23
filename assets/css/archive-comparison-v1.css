@@ -154,6 +154,6 @@ body[data-workspace="physchem"] .archive-action-row{display:flex;flex-wrap:wrap;
     width:100%;min-width:0;max-width:100%;box-sizing:border-box
   }
   body[data-workspace="physchem"] aside#dr.dr.on #archiveComparisonPanel{
-    width:100%;min-width:0;max-width:100%;box-sizing:border-box
+    width:auto!important;min-width:0;max-width:100%;box-sizing:border-box
   }
 }
