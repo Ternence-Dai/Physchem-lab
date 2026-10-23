@@ -5,7 +5,9 @@ function isValidSnapshotTimestamp(value) {
   const [, yearText, monthText, dayText, hourText, minuteText, secondText, , zone, , offsetHourText, offsetMinuteText] = match;
   const year = Number(yearText), month = Number(monthText), day = Number(dayText);
   const hour = Number(hourText), minute = Number(minuteText), second = Number(secondText);
-  const daysInMonth = new Date(Date.UTC(year, month, 0)).getUTCDate();
+  const leapYear = year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
+  const monthDays = [31, leapYear ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  const daysInMonth = monthDays[month - 1] || 0;
   if (month < 1 || month > 12 || day < 1 || day > daysInMonth ||
       hour > 23 || minute > 59 || second > 59) return false;
   if (zone !== "Z") {
