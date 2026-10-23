@@ -280,3 +280,25 @@ test("experiment archive comparison blocks different experiments, model versions
   {label:"Pressure",value:"1 Pa"},{label:"Pressure",value:"2 Pa"}
  ]}).compatible,false);
 });
+
+
+test("archive comparison preserves zero deltas and never mutates saved snapshots",()=>{
+ const left={
+  name:"基准组",time:"2026/10/23 10:00",experimentId:"ideal-gas",
+  experimentSnapshotVersion:1,snapshotAt:"2026-10-23T02:00:00.000Z",
+  modelVersion:"physchem-engine-v2",params:{temperatureK:300},
+  readouts:[{label:"压力",value:"100 Pa"}]
+ };
+ const right={
+  name:"复测组",time:"2026/10/23 10:05",experimentId:"ideal-gas",
+  experimentSnapshotVersion:1,snapshotAt:"2026-10-23T02:05:00.000Z",
+  modelVersion:"physchem-engine-v2",params:{temperatureK:300},
+  readouts:[{label:"压力",value:"100 Pa"}]
+ };
+ const before=JSON.stringify([left,right]);
+ const result=compareExperimentArchiveSnapshots(left,right);
+ assert.equal(result.compatible,true);
+ assert.equal(result.readouts[0].delta,0);
+ assert.equal(result.readouts[0].comparable,true);
+ assert.equal(JSON.stringify([left,right]),before);
+});
