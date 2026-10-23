@@ -157,3 +157,18 @@ body[data-workspace="physchem"] .archive-action-row{display:flex;flex-wrap:wrap;
     width:100%;min-width:0;max-width:100%;box-sizing:border-box
   }
 }
+
+
+/* The archive drawer's content host inherits an 8px inset from the legacy shell.
+   Size the comparison host inside that inset instead of combining 100% width with margins. */
+@media(max-width:640px){
+  body[data-workspace="physchem"] aside#dr.dr.on #archiveComparisonPanel{
+    width:calc(100% - 16px)!important;
+    min-width:0!important;
+    max-width:calc(100% - 16px)!important;
+    margin-left:8px!important;
+    margin-right:8px!important;
+    box-sizing:border-box!important;
+    overflow-x:hidden
+  }
+}
