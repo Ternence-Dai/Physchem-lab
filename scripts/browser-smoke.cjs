@@ -230,8 +230,11 @@ const fs = require('node:fs');
         }
         const mobileArchivePanel=await page.locator('#archiveComparisonPanel').evaluate(node=>{
           const rect=node.getBoundingClientRect();
-          const drawer=document.querySelector('#dr').getBoundingClientRect();
-          return {left:rect.left,right:rect.right,width:rect.width,drawerWidth:drawer.width};
+          const drawer=document.querySelector('#dr');
+          const drawerRect=drawer.getBoundingClientRect();
+          const style=getComputedStyle(drawer);
+          return {left:rect.left,right:rect.right,width:rect.width,drawerWidth:drawerRect.width,
+            drawerCssWidth:style.width,drawerMaxWidth:style.maxWidth,drawerOpen:drawer.classList.contains('on')};
         });
         if (!mobileArchivePanel.width || mobileArchivePanel.width<320 ||
             mobileArchivePanel.left<0 || mobileArchivePanel.right>391 ||
