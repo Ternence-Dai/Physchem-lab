@@ -356,3 +356,29 @@ test("archive comparison requires real calendar timestamps with explicit valid t
   ...base,snapshotAt:"2026-10-23T01:00:00.123456789Z"
  }).compatible,true,"fractional seconds are accepted");
 });
+
+
+test("archive comparison freezes detached parameter snapshots without freezing source archives",()=>{
+ const nestedLeft={calibration:{points:[1,2,3]}};
+ const nestedRight={calibration:{points:[1,2,4]}};
+ const left={
+  experimentId:"ideal-gas",experimentSnapshotVersion:1,
+  modelVersion:"physchem-engine-v2",snapshotAt:"2026-10-23T01:00:00.000Z",
+  params:{metadata:nestedLeft},readouts:[]
+ };
+ const right={
+  experimentId:"ideal-gas",experimentSnapshotVersion:1,
+  modelVersion:"physchem-engine-v2",snapshotAt:"2026-10-23T01:10:00.000Z",
+  params:{metadata:nestedRight},readouts:[]
+ };
+ const result=compareExperimentArchiveSnapshots(left,right);
+ assert.equal(result.compatible,true);
+ assert.equal(Object.isFrozen(nestedLeft),false);
+ assert.equal(Object.isFrozen(nestedLeft.calibration),false);
+ assert.equal(Object.isFrozen(nestedLeft.calibration.points),false);
+ assert.equal(Object.isFrozen(nestedRight.calibration.points),false);
+ assert.notEqual(result.parameters[0].leftValue,nestedLeft);
+ assert.notEqual(result.parameters[0].leftValue.calibration,nestedLeft.calibration);
+ assert.ok(Object.isFrozen(result.parameters[0].leftValue));
+ assert.ok(Object.isFrozen(result.parameters[0].leftValue.calibration.points));
+});
