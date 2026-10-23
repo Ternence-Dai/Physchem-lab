@@ -335,7 +335,8 @@ test("archive comparison requires real calendar timestamps with explicit valid t
   "2026-13-01T01:00:00Z",
   "2026-01-01T24:00:00Z",
   "2026-01-01T01:00:00",
-  "2026-01-01T01:00:00+14:30"
+  "2026-01-01T01:00:00+14:30",
+  "2026-01-01T01:00:00-00:00"
  ]) {
   assert.equal(compareExperimentArchiveSnapshots(base,{...base,snapshotAt}).compatible,false,
    `invalid snapshot timestamp must be rejected: ${snapshotAt}`);
