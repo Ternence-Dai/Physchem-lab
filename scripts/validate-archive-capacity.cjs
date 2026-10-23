@@ -195,3 +195,22 @@ assert.ok(legacyRestore.includes('legacyMatches.length===1') &&
 const unsupportedSnapshotField = { ...versionedSave, privilegedRestore: true };
 assert.equal(validationState.isValidExperimentSaveList([unsupportedSnapshotField]), false,
   'saved experiment snapshots must reject unsupported metadata instead of silently preserving unknown fields');
+
+
+const comparisonHelper = fs.readFileSync('src/domain/experiment-archive-comparison.js', 'utf8');
+assert.ok(comparisonHelper.includes('compareExperimentArchiveSnapshots') &&
+          comparisonHelper.includes('left.modelVersion !== right.modelVersion') &&
+          comparisonHelper.includes('left.experimentId !== right.experimentId') &&
+          comparisonHelper.includes('leftParsed.unit === rightParsed.unit'),
+  'archive comparison must require the same experiment and model version and compare only exactly matching units');
+assert.ok(app.includes('data-compare-save') &&
+          app.includes('archiveCompareVisible') &&
+          app.includes('compareExperimentArchiveSnapshots') &&
+          app.includes('renderArchiveComparison'),
+  'archive drawer must provide a read-only selection and same-model comparison workflow');
+assert.ok(html.includes('archiveComparisonPanel') &&
+          html.includes('archiveCompareRun') &&
+          html.includes('archiveCompareClear'),
+  'archive drawer must expose the comparison panel and its run/clear actions');
+assert.ok(html.includes('archive-comparison-v1.css'),
+  'archive comparison stylesheet must be mounted in the application shell');

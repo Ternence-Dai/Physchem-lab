@@ -215,3 +215,5 @@ export function springOscillator({massKg,springConstantNPerM,displacementM,veloc
     totalEnergy:kineticEnergy+elasticPotentialEnergy
   }, "spring oscillator result"));
 }
+
+export { compareExperimentArchiveSnapshots } from './experiment-archive-comparison.js';

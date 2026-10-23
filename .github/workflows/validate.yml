@@ -76,3 +76,11 @@ jobs:
           exit 1
       - name: Verify all 108 experiment drawings and mobile navigation
         run: node scripts/browser-smoke.cjs
+      - name: Upload archive comparison desktop and mobile UI evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: physchem-archive-comparison-ui
+          path: artifacts/*.png
+          if-no-files-found: ignore
+          retention-days: 7
