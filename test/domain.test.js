@@ -302,3 +302,23 @@ test("archive comparison preserves zero deltas and never mutates saved snapshots
  assert.equal(result.readouts[0].comparable,true);
  assert.equal(JSON.stringify([left,right]),before);
 });
+
+
+test("archive comparison refuses a numeric delta that overflows the finite number range",()=>{
+ const base={
+  experimentId:"ideal-gas",experimentSnapshotVersion:1,
+  modelVersion:"physchem-engine-v2",snapshotAt:"2026-10-23T01:00:00.000Z",
+  params:{temperatureK:300},
+  readouts:[{label:"压力",value:"-1e308 Pa"}]
+ };
+ const next={
+  ...base,snapshotAt:"2026-10-23T01:10:00.000Z",
+  readouts:[{label:"压力",value:"1e308 Pa"}]
+ };
+ const result=compareExperimentArchiveSnapshots(base,next);
+ const pressure=result.readouts.find(row=>row.label==="压力");
+ assert.equal(pressure.comparable,false);
+ assert.equal(pressure.delta,null);
+ assert.equal(pressure.unit,"");
+ assert.match(pressure.reason,/超出数值范围/);
+});
