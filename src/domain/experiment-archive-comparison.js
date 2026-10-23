@@ -1,0 +1,100 @@
+function snapshotDate(snapshot) {
+  return snapshot.snapshotAt || snapshot.time || "时间未知";
+}
+
+function numericValueAndUnit(raw) {
+  if (typeof raw !== "string") return null;
+  const match = /^\s*([+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?)\s*(.*?)\s*$/i.exec(raw);
+  if (!match) return null;
+  const value = Number(match[1]);
+  if (!Number.isFinite(value)) return null;
+  return { value, unit: match[2].trim() };
+}
+
+function frozen(value) {
+  if (value && typeof value === "object" && !Object.isFrozen(value)) {
+    Object.freeze(value);
+    Object.keys(value).forEach(key => frozen(value[key]));
+  }
+  return value;
+}
+
+export function compareExperimentArchiveSnapshots(left, right) {
+  const blocked = reason => Object.freeze({ compatible: false, reason, readouts: [], parameters: [] });
+  if (!left || !right || typeof left !== "object" || typeof right !== "object") {
+    return blocked("请选择两份有效的实验档案快照。");
+  }
+  if (left.experimentSnapshotVersion !== 1 || right.experimentSnapshotVersion !== 1 ||
+      !left.snapshotAt || !right.snapshotAt) {
+    return blocked("旧版档案缺少稳定的实验 ID 或结果时间戳，不能保证模型与结果口径一致。");
+  }
+  if (typeof left.experimentId !== "string" || !left.experimentId ||
+      left.experimentId !== right.experimentId) {
+    return blocked("两份档案不是同一个实验模型，已阻止跨实验比较。");
+  }
+  if (typeof left.modelVersion !== "string" || !left.modelVersion ||
+      left.modelVersion !== right.modelVersion) {
+    return blocked("两份档案的模型版本不同，不能直接比较计算结果。");
+  }
+  if (!left.params || !right.params || !Array.isArray(left.readouts) || !Array.isArray(right.readouts)) {
+    return blocked("档案缺少参数或结果快照，无法完成对照。");
+  }
+
+  const leftParams = left.params;
+  const rightParams = right.params;
+  const parameterKeys = [...new Set([...Object.keys(leftParams), ...Object.keys(rightParams)])].sort();
+  const parameters = parameterKeys.map(key => ({
+    key,
+    leftValue: Object.prototype.hasOwnProperty.call(leftParams, key) ? leftParams[key] : null,
+    rightValue: Object.prototype.hasOwnProperty.call(rightParams, key) ? rightParams[key] : null,
+    changed: !Object.prototype.hasOwnProperty.call(leftParams, key) ||
+      !Object.prototype.hasOwnProperty.call(rightParams, key) || leftParams[key] !== rightParams[key]
+  }));
+
+  function readoutMap(rows) {
+    const map = new Map();
+    for (const row of rows) {
+      if (!row || typeof row.label !== "string" || !row.label.trim() ||
+          typeof row.value !== "string") continue;
+      const key = row.label.trim();
+      if (map.has(key)) return null;
+      map.set(key, row.value);
+    }
+    return map;
+  }
+  const leftReadouts = readoutMap(left.readouts);
+  const rightReadouts = readoutMap(right.readouts);
+  if (!leftReadouts || !rightReadouts) return blocked("某份档案的结果标签重复，无法保证一一对应。");
+
+  const labels = [...new Set([...leftReadouts.keys(), ...rightReadouts.keys()])].sort();
+  const readouts = labels.map(label => {
+    const hasLeft = leftReadouts.has(label);
+    const hasRight = rightReadouts.has(label);
+    const leftValue = hasLeft ? leftReadouts.get(label) : null;
+    const rightValue = hasRight ? rightReadouts.get(label) : null;
+    const leftParsed = hasLeft ? numericValueAndUnit(leftValue) : null;
+    const rightParsed = hasRight ? numericValueAndUnit(rightValue) : null;
+    const sameUnit = !!leftParsed && !!rightParsed && leftParsed.unit === rightParsed.unit;
+    return {
+      label,
+      leftValue,
+      rightValue,
+      unit: sameUnit ? leftParsed.unit : "",
+      delta: sameUnit ? rightParsed.value - leftParsed.value : null,
+      comparable: sameUnit,
+      reason: !hasLeft || !hasRight ? "仅一份档案记录此结果" :
+        !leftParsed || !rightParsed ? "非纯数值结果，不计算差值" :
+        !sameUnit ? "单位不同，不自动换算" : ""
+    };
+  });
+
+  return frozen({
+    compatible: true,
+    experimentId: left.experimentId,
+    modelVersion: left.modelVersion,
+    left: { name: left.name, time: left.time, snapshotAt: snapshotDate(left) },
+    right: { name: right.name, time: right.time, snapshotAt: snapshotDate(right) },
+    parameters,
+    readouts
+  });
+}
