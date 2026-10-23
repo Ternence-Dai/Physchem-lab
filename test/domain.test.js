@@ -1,4 +1,6 @@
 import test from "node:test";
+import { compareExperimentArchiveSnapshots } from "../src/domain/experiment-archive-comparison.js";
+
 import assert from "node:assert/strict";
 import {
   dilutionConcentration, idealGasPressure, idealGasParticleProperties, strongAcidStrongBasePH, arrheniusRateConstant,
@@ -214,4 +216,89 @@ test("ideal gas pressure rejects positive inputs whose result underflows to zero
 
 test("ideal-gas particle properties reject positive amount when number density underflows to zero",()=>{
  assert.throws(()=>idealGasParticleProperties({amountMol:Number.MIN_VALUE,temperatureK:300,volumeM3:1e308,molarMassKgPerMol:0.02897}),RangeError);
+});
+
+
+test("experiment archive comparison requires the same stable experiment and model version",()=>{
+ const left={
+  name:"基准温度组",time:"2026/10/23 09:00:00",experimentId:"ideal-gas",
+  experimentSnapshotVersion:1,snapshotAt:"2026-10-23T01:00:00.000Z",
+  modelVersion:"physchem-engine-v2",params:{temperatureK:300,volumeM3:0.01},
+  readouts:[{label:"压力",value:"24943.39 Pa"},{label:"粒子数密度",value:"6.02e25 m⁻³"}]
+ };
+ const right={
+  name:"升温对照组",time:"2026/10/23 09:10:00",experimentId:"ideal-gas",
+  experimentSnapshotVersion:1,snapshotAt:"2026-10-23T01:10:00.000Z",
+  modelVersion:"physchem-engine-v2",params:{temperatureK:320,volumeM3:0.01},
+  readouts:[{label:"压力",value:"26606.28 Pa"},{label:"粒子数密度",value:"5.64e25 m⁻³"}]
+ };
+ const result=compareExperimentArchiveSnapshots(left,right);
+ assert.equal(result.compatible,true);
+ assert.equal(result.parameters.find(row=>row.key==="temperatureK").changed,true);
+ const pressure=result.readouts.find(row=>row.label==="压力");
+ assert.equal(pressure.comparable,true);
+ assert.equal(pressure.unit,"Pa");
+ assert.ok(Math.abs(pressure.delta-(26606.28-24943.39))<1e-9);
+ const frozenBefore=JSON.stringify([left,right]);
+ assert.ok(Object.isFrozen(result) && Object.isFrozen(result.readouts));
+ assert.equal(JSON.stringify([left,right]),frozenBefore,
+   "comparison must not mutate or rewrite historical snapshots");
+});
+
+test("experiment archive comparison never converts different units or fabricates non-numeric deltas",()=>{
+ const base={
+  experimentId:"titration",experimentSnapshotVersion:1,
+  modelVersion:"physchem-engine-v2",snapshotAt:"2026-10-23T01:00:00.000Z",
+  params:{concentration:0.1},
+  readouts:[{label:"温度",value:"25 °C"},{label:"观察现象",value:"溶液变为浅粉色"}]
+ };
+ const next={
+  ...base,snapshotAt:"2026-10-23T01:10:00.000Z",
+  readouts:[{label:"温度",value:"298.15 K"},{label:"观察现象",value:"颜色保持浅粉色"}]
+ };
+ const result=compareExperimentArchiveSnapshots(base,next);
+ const temperature=result.readouts.find(row=>row.label==="温度");
+ const observation=result.readouts.find(row=>row.label==="观察现象");
+ assert.equal(temperature.comparable,false);
+ assert.equal(temperature.delta,null);
+ assert.match(temperature.reason,/单位不同/);
+ assert.equal(observation.comparable,false);
+ assert.equal(observation.delta,null);
+ assert.match(observation.reason,/非纯数值/);
+});
+
+test("experiment archive comparison blocks different experiments, model versions and legacy snapshots",()=>{
+ const base={
+  experimentId:"ideal-gas",experimentSnapshotVersion:1,
+  modelVersion:"physchem-engine-v2",snapshotAt:"2026-10-23T01:00:00.000Z",
+  params:{temperatureK:300},readouts:[{label:"Pressure",value:"1 Pa"}]
+ };
+ assert.equal(compareExperimentArchiveSnapshots(base,{...base,experimentId:"arrhenius"}).compatible,false);
+ assert.equal(compareExperimentArchiveSnapshots(base,{...base,modelVersion:"physchem-engine-v3"}).compatible,false);
+ assert.equal(compareExperimentArchiveSnapshots(base,{...base,experimentSnapshotVersion:undefined,snapshotAt:undefined}).compatible,false);
+ assert.equal(compareExperimentArchiveSnapshots(base,{...base,readouts:[
+  {label:"Pressure",value:"1 Pa"},{label:"Pressure",value:"2 Pa"}
+ ]}).compatible,false);
+});
+
+
+test("archive comparison preserves zero deltas and never mutates saved snapshots",()=>{
+ const left={
+  name:"基准组",time:"2026/10/23 10:00",experimentId:"ideal-gas",
+  experimentSnapshotVersion:1,snapshotAt:"2026-10-23T02:00:00.000Z",
+  modelVersion:"physchem-engine-v2",params:{temperatureK:300},
+  readouts:[{label:"压力",value:"100 Pa"}]
+ };
+ const right={
+  name:"复测组",time:"2026/10/23 10:05",experimentId:"ideal-gas",
+  experimentSnapshotVersion:1,snapshotAt:"2026-10-23T02:05:00.000Z",
+  modelVersion:"physchem-engine-v2",params:{temperatureK:300},
+  readouts:[{label:"压力",value:"100 Pa"}]
+ };
+ const before=JSON.stringify([left,right]);
+ const result=compareExperimentArchiveSnapshots(left,right);
+ assert.equal(result.compatible,true);
+ assert.equal(result.readouts[0].delta,0);
+ assert.equal(result.readouts[0].comparable,true);
+ assert.equal(JSON.stringify([left,right]),before);
 });
