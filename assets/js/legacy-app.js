@@ -118,6 +118,8 @@ var paused=false;
 var SAVE_KEY='physchem_lab_saved_experiments_v1';
 var ARCHIVE_MODEL_VERSION='physchem-engine-v2';
 var saves=[];
+var archiveCompareSelection=[];
+var archiveCompareVisible=false;
 var storageRecoveryRequired=false;
 var archiveRawValue=null;
 var archiveReadFailed=false;
@@ -498,6 +500,24 @@ function bindUI(){
   };
   var sidebarBackdrop=E('sidebarBackdrop');
   if(sidebarBackdrop)sidebarBackdrop.onclick=function(){setExperimentSidebarOpen(false);};
+  var archiveComparePanel=E('archiveComparisonPanel');
+  if(archiveComparePanel&&archiveComparePanel.dataset.compareActionsBound!=='true'){
+    archiveComparePanel.dataset.compareActionsBound='true';
+    archiveComparePanel.addEventListener('click',function(event){
+      var action=event.target.closest('[data-archive-compare-action]');
+      if(!action)return;
+      var command=action.getAttribute('data-archive-compare-action');
+      if(command==='clear'){
+        archiveCompareSelection=[];
+        archiveCompareVisible=false;
+        renderD();
+      }else if(command==='run'){
+        if(archiveCompareSelection.length!==2)return;
+        archiveCompareVisible=true;
+        renderArchiveComparison();
+      }
+    });
+  }
   var archiveExport=E('archiveExport');
   if(archiveExport)archiveExport.onclick=exportExperimentArchive;
   var archiveImport=E('archiveImport');
@@ -675,11 +695,122 @@ function buildExperimentRecordSnapshot(){
   };
 }
 
+function archiveSnapshotIdentity(snapshot){
+  return JSON.stringify([
+    String(snapshot.experimentId||''),String(snapshot.modelVersion||''),
+    String(snapshot.experimentSnapshotVersion||''),String(snapshot.snapshotAt||''),
+    String(snapshot.time||''),String(snapshot.name||'')
+  ]);
+}
+function selectedArchiveSnapshots(){
+  var selected=[];
+  for(var i=0;i<archiveCompareSelection.length;i++){
+    var identity=archiveCompareSelection[i];
+    var snapshot=saves.find(function(item){return archiveSnapshotIdentity(item)===identity;});
+    if(snapshot)selected.push(snapshot);
+  }
+  archiveCompareSelection=archiveCompareSelection.filter(function(identity){
+    return saves.some(function(item){return archiveSnapshotIdentity(item)===identity;});
+  });
+  return selected;
+}
+function archiveDateLabel(snapshot){
+  var value=snapshot.snapshotAt||snapshot.time||'时间未知';
+  if(snapshot.snapshotAt){
+    var date=new Date(snapshot.snapshotAt);
+    if(Number.isFinite(date.getTime()))return date.toLocaleString('zh-CN',{hour12:false});
+  }
+  return String(value);
+}
+function archiveComparisonValue(value){
+  return value===null||value===undefined?'—':String(value);
+}
+function archiveComparisonDelta(value,unit){
+  if(typeof value!=='number'||!Number.isFinite(value))return '—';
+  var stable=Number(value.toPrecision(7));
+  var sign=stable>0?'+':'';
+  return sign+String(stable)+(unit?' '+unit:'');
+}
+function renderArchiveComparison(){
+  var panel=E('archiveComparisonPanel');
+  if(!panel)return;
+  var selected=selectedArchiveSnapshots();
+  var status=E('archiveCompareSelectionStatus');
+  var run=E('archiveCompareRun');
+  var clear=E('archiveCompareClear');
+  var output=E('archiveCompareResult');
+  if(status)status.textContent='已选 '+selected.length+' / 2 份档案';
+  if(run)run.disabled=selected.length!==2;
+  if(clear)clear.disabled=selected.length===0;
+  var picks=document.querySelectorAll('[data-compare-save]');
+  for(var i=0;i<picks.length;i++){
+    var identity=picks[i].getAttribute('data-compare-save');
+    var isSelected=archiveCompareSelection.indexOf(identity)>=0;
+    picks[i].textContent=isSelected?'已选 · 取消':'加入对照';
+    picks[i].setAttribute('aria-pressed',isSelected?'true':'false');
+    picks[i].disabled=!isSelected&&archiveCompareSelection.length>=2;
+  }
+  if(!output)return;
+  if(!archiveCompareVisible||selected.length!==2){
+    output.innerHTML='<div class="w9-archive-compare__empty">在下方任意两份档案中点击“加入对照”，即可查看参数变更与结果差值。</div>';
+    return;
+  }
+  if(!window.PHYS_DOMAIN||typeof window.PHYS_DOMAIN.compareExperimentArchiveSnapshots!=='function'){
+    output.innerHTML='<div class="w9-archive-compare__blocked">对照计算模块尚未加载；历史档案保持不变，请刷新后重试。</div>';
+    return;
+  }
+  var comparison=window.PHYS_DOMAIN.compareExperimentArchiveSnapshots(selected[0],selected[1]);
+  if(!comparison.compatible){
+    output.innerHTML='<div class="w9-archive-compare__blocked"><strong>无法自动对照</strong><p>'+esc(comparison.reason)+'</p></div>';
+    return;
+  }
+  var parameters=comparison.parameters.filter(function(row){return row.changed;});
+  var parameterRows=parameters.map(function(row){
+    return '<tr><th scope="row">'+esc(row.key)+'</th><td>'+esc(archiveComparisonValue(row.leftValue))+
+      '</td><td>'+esc(archiveComparisonValue(row.rightValue))+'</td></tr>';
+  }).join('');
+  var readoutRows=comparison.readouts.map(function(row){
+    var delta=row.comparable?archiveComparisonDelta(row.delta,row.unit):'—';
+    var note=row.comparable?'':row.reason;
+    return '<tr><th scope="row">'+esc(row.label)+'</th><td>'+esc(archiveComparisonValue(row.leftValue))+
+      '</td><td>'+esc(archiveComparisonValue(row.rightValue))+
+      '</td><td class="'+(row.comparable?'is-comparable':'is-not-comparable')+'">'+
+      esc(delta)+(note?'<small>'+esc(note)+'</small>':'')+'</td></tr>';
+  }).join('');
+  var leftTitle=esc(selected[0].name)+' · '+esc(archiveDateLabel(selected[0]));
+  var rightTitle=esc(selected[1].name)+' · '+esc(archiveDateLabel(selected[1]));
+  output.innerHTML=
+    '<div class="w9-archive-compare__identity"><div><span>实验模型</span><strong>'+
+      esc(comparison.experimentId)+'</strong></div><div><span>计算版本</span><strong>'+
+      esc(comparison.modelVersion)+'</strong></div></div>'+
+    '<section class="w9-archive-compare__table-section"><h5>输入参数变化</h5>'+
+      '<div class="w9-archive-compare__table-wrap"><table><thead><tr><th>参数键</th><th>'+leftTitle+
+      '</th><th>'+rightTitle+'</th></tr></thead><tbody>'+
+      (parameterRows||'<tr><td colspan="3">两份快照中的输入参数相同。</td></tr>')+
+      '</tbody></table></div><p>参数只展示保存值，不补写未随档案保存的单位，也不推测单位换算。</p></section>'+
+    '<section class="w9-archive-compare__table-section"><h5>计算结果对照</h5>'+
+      '<div class="w9-archive-compare__table-wrap"><table><thead><tr><th>结果项</th><th>'+leftTitle+
+      '</th><th>'+rightTitle+'</th><th>差值（右 − 左）</th></tr></thead><tbody>'+
+      (readoutRows||'<tr><td colspan="4">两份档案没有可对应的结果项。</td></tr>')+
+      '</tbody></table></div><p>差值仅在结果标签相同且单位完全一致时计算；其余保留原始文本并说明未比较原因。</p></section>';
+}
+
 function renderD(){
   var b=E('db');if(!b)return;
   if(b.dataset.archiveActionsBound!=='true'){
     b.dataset.archiveActionsBound='true';
     b.addEventListener('click',function(event){
+      var compareButton=event.target.closest('[data-compare-save]');
+      if(compareButton){
+        var identity=compareButton.getAttribute('data-compare-save');
+        var position=archiveCompareSelection.indexOf(identity);
+        if(position>=0)archiveCompareSelection.splice(position,1);
+        else if(archiveCompareSelection.length>=2){toast('每次最多选择两份档案对照');return;}
+        else archiveCompareSelection.push(identity);
+        archiveCompareVisible=false;
+        renderD();
+        return;
+      }
       var deleteButton=event.target.closest('[data-delete-save]');
       if(deleteButton){
         deleteSavedExperiment(Number(deleteButton.getAttribute('data-delete-save')));
@@ -690,7 +821,10 @@ function renderD(){
       restoreSavedExperiment(Number(button.getAttribute('data-load-save')));
     });
   }
-  if(!saves.length){b.innerHTML='<div class="ep">暂无存档记录<br>点击「💾 存档」保存当前实验参数</div>';return;}
+  if(!saves.length){
+    b.innerHTML='<div class="ep">暂无存档记录<br>点击「💾 存档」保存当前实验参数</div>';
+    renderArchiveComparison();return;
+  }
   b.innerHTML='';for(var i=0;i<saves.length;i++){var s=saves[i];
     var d=document.createElement('div');d.className='rc';
     var parts=[];for(var k in s.params)if(s.params.hasOwnProperty(k))parts.push(esc(k)+'='+esc(typeof s.params[k]==='number'?+s.params[k].toFixed(3):s.params[k]));
@@ -703,8 +837,9 @@ function renderD(){
     var snapshotMeta=s.snapshotAt?' · 结果快照 '+esc(new Date(s.snapshotAt).toLocaleString()):'';
     d.innerHTML='<div class="rh"><span class="rn">'+(i+1)+'. '+esc(s.name)+'</span><span class="rt">'+esc(s.time)+'</span></div><div class="rp">'+meta+snapshotMeta+'<br>'+parts.join('  ')+outputs+note+formulas+
       (s.tutorSnapshot?'<details class="w9-archive-tutor"><summary>当时的公式助教说明</summary><p>'+esc(s.tutorSnapshot)+'</p></details>':'')+
-      '<div class="archive-action-row"><button type="button" class="w9-archive-load" data-load-save="'+i+'">载入本组参数与备注</button><button type="button" class="w9-archive-delete" data-delete-save="'+i+'" aria-label="删除第 '+(i+1)+' 份实验档案">删除档案</button></div></div>';
+      '<div class="archive-action-row"><button type="button" class="w9-archive-load" data-load-save="'+i+'">载入本组参数与备注</button><button type="button" class="w9-archive-compare-pick" data-compare-save="'+esc(archiveSnapshotIdentity(s))+'" aria-pressed="false">加入对照</button><button type="button" class="w9-archive-delete" data-delete-save="'+i+'" aria-label="删除第 '+(i+1)+' 份实验档案">删除档案</button></div></div>';
     b.appendChild(d);}
+  renderArchiveComparison();
 }
 
 var tT=null;
