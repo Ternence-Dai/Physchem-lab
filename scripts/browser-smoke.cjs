@@ -233,9 +233,9 @@ const fs = require('node:fs');
           const drawer=document.querySelector('#dr').getBoundingClientRect();
           return {left:rect.left,right:rect.right,width:rect.width,drawerWidth:drawer.width};
         });
-        if (!mobileArchivePanel.width || mobileArchivePanel.width<300 ||
+        if (!mobileArchivePanel.width || mobileArchivePanel.width<320 ||
             mobileArchivePanel.left<0 || mobileArchivePanel.right>391 ||
-            mobileArchivePanel.drawerWidth<340) {
+            mobileArchivePanel.drawerWidth<350) {
           throw new Error('Mobile archive comparison panel is clipped: '+JSON.stringify(mobileArchivePanel));
         }
         await page.locator('#archiveComparisonPanel').screenshot({
