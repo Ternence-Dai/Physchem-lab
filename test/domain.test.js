@@ -356,3 +356,21 @@ test("archive comparison requires real calendar timestamps with explicit valid t
   ...base,snapshotAt:"2026-10-23T01:00:00.123456789Z"
  }).compatible,true,"fractional seconds are accepted");
 });
+
+
+test("strong acid/base titration preserves one-ULP concentration differences near equivalence",()=>{
+ const acidConcentration=1e308;
+ const nextConcentration=1.0000000000000002e308;
+ const baseExcess=strongAcidStrongBasePH({
+  acidConcentrationMolPerL:acidConcentration,acidVolumeMl:1e308,
+  baseConcentrationMolPerL:nextConcentration,baseVolumeMl:1e308
+ });
+ const acidExcess=strongAcidStrongBasePH({
+  acidConcentrationMolPerL:nextConcentration,acidVolumeMl:1e308,
+  baseConcentrationMolPerL:acidConcentration,baseVolumeMl:1e308
+ });
+ assert.ok(Number.isFinite(baseExcess) && baseExcess>300,
+  "one-ULP excess base must not collapse to neutral pH when logarithms round the contributions equal");
+ assert.ok(Number.isFinite(acidExcess) && acidExcess< -290,
+  "one-ULP excess acid must remain acidic at extreme concentration");
+});
