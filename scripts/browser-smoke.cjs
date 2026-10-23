@@ -224,6 +224,10 @@ const fs = require('node:fs');
           path:'artifacts/physchem-archive-comparison-desktop.png'
         });
         await page.setViewportSize({width:390,height:844});
+        const archiveStylesheet = await page.locator('link[rel="stylesheet"][href*="archive-comparison-v1.css"]').getAttribute('href');
+        if (!archiveStylesheet || !archiveStylesheet.includes('archive-compare-v2')) {
+          throw new Error('Archive comparison stylesheet cache version was not refreshed: ' + archiveStylesheet);
+        }
         const mobileArchivePanel=await page.locator('#archiveComparisonPanel').evaluate(node=>{
           const rect=node.getBoundingClientRect();
           const drawer=document.querySelector('#dr').getBoundingClientRect();
