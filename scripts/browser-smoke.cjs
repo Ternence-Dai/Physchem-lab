@@ -242,6 +242,19 @@ const fs = require('node:fs');
           path:'artifacts/physchem-archive-comparison-mobile.png'
         });
         await page.setViewportSize({width:1440,height:1000});
+        await page.locator('#archiveCompareClear').click();
+        await page.waitForFunction(() =>
+          document.querySelector('#archiveCompareSelectionStatus')?.textContent.includes('0 / 2') &&
+          document.querySelector('#archiveCompareRun')?.disabled === true &&
+          document.querySelector('#archiveCompareResult')?.textContent.includes('在下方任意两份档案')
+        );
+        const selectionReset = await page.evaluate(() => ({
+          pressed:[...document.querySelectorAll('#db [data-compare-save]')].filter(button=>button.getAttribute('aria-pressed')==='true').length,
+          disabled:[...document.querySelectorAll('#db [data-compare-save]')].filter(button=>button.disabled).length
+        }));
+        if(selectionReset.pressed!==0 || selectionReset.disabled!==0) {
+          throw new Error('Clearing archive comparison must reset both selection controls: '+JSON.stringify(selectionReset));
+        }
         await page.locator('#dx').click();
         await page.waitForFunction(()=>!document.querySelector('#dr')?.classList.contains('on'));
       }
