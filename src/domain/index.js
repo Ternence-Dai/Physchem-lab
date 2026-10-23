@@ -99,25 +99,17 @@ export function strongAcidStrongBasePH({acidConcentrationMolPerL,acidVolumeMl,ba
   // finite (for example, equal very-large acid/base inputs at equivalence).
   const volumeScale=Math.max(acidVolumeMl,baseVolumeMl);
   const normalizedVolumeSum=acidVolumeMl/volumeScale+baseVolumeMl/volumeScale;
-  // A direct volume fraction can underflow even when its product with a
-  // large finite concentration would remain representable. Keep each
-  // weighted concentration in log space until after the subtraction.
-  const logAcidContribution=Math.log(acidConcentrationMolPerL)+
-    Math.log(acidVolumeMl)-Math.log(volumeScale)-Math.log(normalizedVolumeSum);
-  const logBaseContribution=baseVolumeMl===0 ? Number.NEGATIVE_INFINITY :
-    Math.log(baseConcentrationMolPerL)+Math.log(baseVolumeMl)-
-    Math.log(volumeScale)-Math.log(normalizedVolumeSum);
-  let netAcidConcentration;
-  if (logAcidContribution===logBaseContribution) {
-    netAcidConcentration=0;
-  } else {
-    const acidExcess=logAcidContribution>logBaseContribution;
-    const largerLog=Math.max(logAcidContribution,logBaseContribution);
-    const smallerLog=Math.min(logAcidContribution,logBaseContribution);
-    const logDifference=largerLog+Math.log1p(-Math.exp(smallerLog-largerLog));
-    const magnitude=Math.exp(logDifference);
-    netAcidConcentration=acidExcess ? magnitude : -magnitude;
-  }
+  // Scale each concentration contribution independently. The stable ratio
+  // helper recovers products when a tiny volume fraction underflows, while
+  // subtracting the resulting finite contributions preserves one-ULP
+  // differences near equivalence (logarithms can round those inputs equal).
+  const acidContribution=multiplyRatioStable(
+    acidVolumeMl,volumeScale,acidConcentrationMolPerL/normalizedVolumeSum
+  );
+  const baseContribution=baseVolumeMl===0 ? 0 : multiplyRatioStable(
+    baseVolumeMl,volumeScale,baseConcentrationMolPerL/normalizedVolumeSum
+  );
+  const netAcidConcentration=acidContribution-baseContribution;
   if (!Number.isFinite(netAcidConcentration)) {
     throw new RangeError("net acid concentration exceeds the finite numeric range");
   }
