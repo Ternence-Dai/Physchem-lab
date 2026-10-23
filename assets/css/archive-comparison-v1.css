@@ -1,0 +1,121 @@
+/* Reproducible archive comparison: compare saved evidence without rerunning or mutating models. */
+body[data-workspace="physchem"] .w9-archive-compare{
+  display:flex;flex-direction:column;gap:11px;margin:12px 12px 14px;padding:13px;
+  border:1px solid #344f63;border-radius:11px;background:linear-gradient(150deg,#112b3f,#0d2235);
+  box-shadow:0 8px 22px #020b1540
+}
+body[data-workspace="physchem"] .w9-archive-compare__head{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:10px
+}
+body[data-workspace="physchem"] .w9-archive-compare__head>div{min-width:0}
+body[data-workspace="physchem"] .w9-archive-compare__head>div>span{
+  color:#69b7b1;font-size:8px;font-weight:900;letter-spacing:.13em
+}
+body[data-workspace="physchem"] .w9-archive-compare__head h4{
+  margin:4px 0;color:#eef7fa;font-size:15px;font-weight:850
+}
+body[data-workspace="physchem"] .w9-archive-compare__head p{
+  margin:0;color:#a7bdc8;font-size:9px;line-height:1.6
+}
+body[data-workspace="physchem"] .w9-archive-compare__head>b{
+  flex:0 0 auto;padding:5px 7px;border:1px solid #3a746f;border-radius:6px;
+  background:#143d42;color:#a2ddd2;font-size:8px;font-weight:850
+}
+body[data-workspace="physchem"] .w9-archive-compare__toolbar{
+  display:flex;align-items:center;justify-content:space-between;gap:9px;padding:8px 9px;
+  border:1px solid #2d475c;border-radius:8px;background:#0d2032
+}
+body[data-workspace="physchem"] #archiveCompareSelectionStatus{
+  color:#b4c8d1;font-size:9px;font-weight:800
+}
+body[data-workspace="physchem"] .w9-archive-compare__toolbar>div{display:flex;gap:5px}
+body[data-workspace="physchem"] .w9-archive-compare__toolbar button{
+  min-height:31px;padding:6px 9px;border:1px solid #397c7b;border-radius:6px;
+  background:#17545a;color:#e0f7f4;font-size:9px;font-weight:850;cursor:pointer
+}
+body[data-workspace="physchem"] .w9-archive-compare__toolbar button:disabled{
+  border-color:#344a59;background:#203746;color:#819aa7;cursor:not-allowed
+}
+body[data-workspace="physchem"] .w9-archive-compare__toolbar .w9-archive-compare__clear{
+  border-color:#435c6d;background:#1a3446;color:#bdcdd5
+}
+body[data-workspace="physchem"] .w9-archive-compare__empty{
+  padding:10px 11px;border:1px dashed #3a586a;border-radius:7px;
+  color:#a6bac5;font-size:9px;line-height:1.65
+}
+body[data-workspace="physchem"] .w9-archive-compare__blocked{
+  padding:10px 11px;border:1px solid #805d45;border-left:3px solid #c78b5c;
+  border-radius:7px;background:#352b28;color:#f0c6a1;font-size:10px;line-height:1.6
+}
+body[data-workspace="physchem"] .w9-archive-compare__blocked strong{display:block;margin-bottom:3px;color:#f4d2b2}
+body[data-workspace="physchem"] .w9-archive-compare__blocked p{margin:0;color:#e6c2a5}
+body[data-workspace="physchem"] .w9-archive-compare__identity{
+  display:grid;grid-template-columns:1fr 1fr;gap:6px
+}
+body[data-workspace="physchem"] .w9-archive-compare__identity>div{
+  display:grid;gap:3px;min-width:0;padding:8px;border:1px solid #345469;border-radius:7px;background:#102a3e
+}
+body[data-workspace="physchem"] .w9-archive-compare__identity span{color:#8eabb9;font-size:8px}
+body[data-workspace="physchem"] .w9-archive-compare__identity strong{
+  overflow-wrap:anywhere;color:#d7edf0;font-size:9px;font-weight:850
+}
+body[data-workspace="physchem"] .w9-archive-compare__table-section{display:grid;gap:6px}
+body[data-workspace="physchem"] .w9-archive-compare__table-section h5{
+  margin:2px 0;color:#d9ebed;font-size:10px;font-weight:850
+}
+body[data-workspace="physchem"] .w9-archive-compare__table-wrap{
+  max-width:100%;overflow:auto;border:1px solid #2e4a5e;border-radius:7px;background:#f7fafb
+}
+body[data-workspace="physchem"] .w9-archive-compare__table-wrap table{
+  width:100%;min-width:450px;border-collapse:collapse;font-size:9px;font-variant-numeric:tabular-nums
+}
+body[data-workspace="physchem"] .w9-archive-compare__table-wrap th,
+body[data-workspace="physchem"] .w9-archive-compare__table-wrap td{
+  padding:7px 8px;border-bottom:1px solid #e0e9ed;text-align:left;vertical-align:top;
+  color:#34566a;font-size:9px;line-height:1.5
+}
+body[data-workspace="physchem"] .w9-archive-compare__table-wrap thead th{
+  background:#eaf1f4;color:#35596b;font-size:8px;font-weight:850
+}
+body[data-workspace="physchem"] .w9-archive-compare__table-wrap tbody th{
+  background:#f1f6f7;color:#294e61;font-weight:850
+}
+body[data-workspace="physchem"] .w9-archive-compare__table-wrap td.is-comparable{
+  color:#126a65;font-weight:850
+}
+body[data-workspace="physchem"] .w9-archive-compare__table-wrap td.is-not-comparable{color:#71828a}
+body[data-workspace="physchem"] .w9-archive-compare__table-wrap td small{
+  display:block;margin-top:2px;color:#7a8b91;font-size:8px
+}
+body[data-workspace="physchem"] .w9-archive-compare__table-section>p{
+  margin:0;color:#a5bbc5;font-size:8px;line-height:1.6
+}
+body[data-workspace="physchem"] .w9-archive-compare__boundary{
+  margin:0;padding-top:8px;border-top:1px solid #2c465b;color:#9bb1bd;font-size:8px;line-height:1.65
+}
+body[data-workspace="physchem"] .w9-archive-compare :where(button):focus-visible,
+body[data-workspace="physchem"] .w9-archive-compare-pick:focus-visible{
+  outline:3px solid #7dd6d0!important;outline-offset:2px
+}
+body[data-workspace="physchem"] .w9-archive-compare-pick{
+  min-height:30px;padding:5px 8px;border:1px solid #477c7b;border-radius:6px;
+  background:#153f47;color:#bfece4;font-size:9px;font-weight:850;cursor:pointer
+}
+body[data-workspace="physchem"] .w9-archive-compare-pick[aria-pressed="true"]{
+  border-color:#6bb5a8;background:#205b59;color:#f0fffa
+}
+body[data-workspace="physchem"] .w9-archive-compare-pick:disabled{
+  border-color:#344956;background:#203746;color:#8196a1;cursor:not-allowed
+}
+body[data-workspace="physchem"] .archive-action-row{display:flex;flex-wrap:wrap;gap:6px}
+@media(max-width:640px){
+  body[data-workspace="physchem"] .w9-archive-compare{margin:10px 8px 12px;padding:11px}
+  body[data-workspace="physchem"] .w9-archive-compare__head{flex-direction:column}
+  body[data-workspace="physchem"] .w9-archive-compare__toolbar{align-items:flex-start;flex-direction:column}
+  body[data-workspace="physchem"] .w9-archive-compare__toolbar>div{width:100%}
+  body[data-workspace="physchem"] .w9-archive-compare__toolbar button{flex:1}
+  body[data-workspace="physchem"] .w9-archive-compare__identity{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){
+  body[data-workspace="physchem"] .w9-archive-compare *{scroll-behavior:auto!important;transition:none!important;animation:none!important}
+}
