@@ -125,3 +125,17 @@ body[data-workspace="physchem"] .archive-action-row{display:flex;flex-wrap:wrap;
     width:min(96vw,520px)!important;max-width:none!important
   }
 }
+
+/* The reference shell used an equally specific fixed 330px drawer rule.
+   Pin the mobile drawer by ID so the comparison console receives real width. */
+@media(max-width:640px){
+  body[data-workspace="physchem"] #dr.dr{
+    width:calc(100vw - 24px)!important;
+    min-width:0!important;
+    max-width:calc(100vw - 24px)!important;
+    box-sizing:border-box!important
+  }
+  body[data-workspace="physchem"] #dr.dr .w9-archive-compare{
+    width:100%;max-width:100%;min-width:0;box-sizing:border-box
+  }
+}
