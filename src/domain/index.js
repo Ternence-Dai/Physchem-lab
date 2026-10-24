@@ -191,7 +191,7 @@ export function pendulumStep({
     throw new RangeError("pendulum angular acceleration exceeds the finite numeric range");
   }
   const naturalTimeScale = sqrtPositiveRatio(lengthM, gravity);
-  const maxStep = naturalTimeScale * 0.05;
+  const maxStep = naturalTimeScale * 0.01;
   const stepCount = Math.max(1, Math.ceil(deltaTimeSeconds / maxStep));
   if (!Number.isSafeInteger(stepCount) || stepCount > 10000) {
     throw new RangeError("pendulum time step exceeds the 10000-substep integration limit");
