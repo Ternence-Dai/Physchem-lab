@@ -4,7 +4,7 @@ import { compareExperimentArchiveSnapshots } from "../src/domain/experiment-arch
 import assert from "node:assert/strict";
 import {
   dilutionConcentration, idealGasPressure, idealGasParticleProperties, strongAcidStrongBasePH, arrheniusRateConstant,
-  projectileMotion, pendulumPeriod, ohmsLaw, inclinedPlaneAcceleration, inclinedPlaneForces, springOscillator
+  projectileMotion, pendulumPeriod, pendulumStep, ohmsLaw, inclinedPlaneAcceleration, inclinedPlaneForces, springOscillator
 } from "../src/domain/index.js";
 
 test("dilution concentration follows conservation of solute across volume expansion",()=>{
