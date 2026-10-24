@@ -98,6 +98,18 @@ const fs = require('node:fs');
     }
     await page.keyboard.press('Enter');
     await page.waitForFunction(() => document.activeElement?.id === 'main-content');
+    const semanticCatalog = await page.evaluate(() => ({
+      listRole: document.querySelector('#lst')?.getAttribute('role'),
+      items: [...document.querySelectorAll('#lst > [role="listitem"]')].length,
+      buttons: [...document.querySelectorAll('#lst > [role="listitem"] > button.it')].length,
+      keyboardOperable: [...document.querySelectorAll('#lst > [role="listitem"] > button.it')].every(node =>
+        node.tagName === 'BUTTON' && node.type === 'button' && node.hasAttribute('aria-pressed'))
+    }));
+    if (semanticCatalog.listRole !== 'list' || !semanticCatalog.items ||
+        semanticCatalog.items !== semanticCatalog.buttons || !semanticCatalog.keyboardOperable) {
+      throw new Error('PhysChem experiment catalogue must expose keyboard-operable list buttons: ' +
+        JSON.stringify(semanticCatalog));
+    }
     await page.waitForFunction(() => {
       const total = document.querySelector('#catalogueTotal');
       return total && total.textContent.trim() === '108' &&
