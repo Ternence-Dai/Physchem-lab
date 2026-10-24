@@ -259,6 +259,27 @@ const fs = require('node:fs');
           path:'artifacts/physchem-archive-comparison-mobile.png'
         });
         await page.setViewportSize({width:1440,height:1000});
+        await page.waitForFunction(() => {
+          const canvas=document.querySelector('#cv');
+          const host=document.querySelector('#sw');
+          if(!canvas||!host)return false;
+          const rect=host.getBoundingClientRect();
+          const dpr=Math.min(window.devicePixelRatio||1,2);
+          return canvas.width===Math.floor(rect.width*dpr) &&
+            canvas.height===Math.floor(rect.height*dpr);
+        }, undefined, {timeout:10000});
+        await page.waitForFunction(() => {
+          const canvas=document.querySelector('#cv');
+          const context=canvas?.getContext('2d');
+          if(!context||canvas.width<100||canvas.height<100)return false;
+          const data=context.getImageData(0,0,Math.min(canvas.width,900),Math.min(canvas.height,520)).data;
+          let colored=0;
+          for(let i=0;i<data.length;i+=4){
+            if(data[i+3]>0&&Math.max(data[i],data[i+1],data[i+2])-Math.min(data[i],data[i+1],data[i+2])>35)colored++;
+            if(colored>=20)return true;
+          }
+          return false;
+        }, undefined, {timeout:10000});
         await page.locator('#archiveCompareClear').click();
         await page.waitForFunction(() =>
           document.querySelector('#archiveCompareSelectionStatus')?.textContent.includes('0 / 2') &&
