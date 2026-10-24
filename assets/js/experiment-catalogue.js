@@ -36,7 +36,7 @@ EXP.push({id:'p2',name:'单摆与简谐振动',cat:'物理',tags:['力学','振�
   params:[P('L','摆长 L',0.3,2,0.05,1,'m'),P('g','重力加速度 g',1.6,20,0.1,9.8,'m/s²'),P('b','阻尼系数 b',0,0.6,0.02,0,'')],
   formulas:['θ″=−(g/L)·sinθ−b·θ′','小角度近似 sinθ≈θ','T₀=2π√(L/g)（无阻尼近似）','ω₀=√(g/L)'],
   init:function(){return{th:0.17,w:0,t:0};},
-  step:function(p,dt,st){var n=8,h=dt/n;for(var i=0;i<n;i++){var a=-(p.g/p.L)*Math.sin(st.th)-p.b*st.w;st.w+=a*h;st.th+=st.w*h;}st.t+=dt;},
+  step:function(p,dt,st){var next=window.PHYS_DOMAIN.pendulumStep({angleRad:st.th,angularVelocityRadPerS:st.w,lengthM:p.L,gravity:p.g,dampingCoefficient:p.b,deltaTimeSeconds:dt});st.th=next.angleRad;st.w=next.angularVelocityRadPerS;st.t+=dt;},
   draw:function(c,W,H,p,st){var px=W/2,py=64;var sc=Math.min((H-py-74)/2.2,236);var L=p.L*sc;
     var bx=px+L*Math.sin(st.th),by=py+L*Math.cos(st.th);
     c.fillStyle='#1b2740';c.fillRect(px-90,py-22,180,14);
