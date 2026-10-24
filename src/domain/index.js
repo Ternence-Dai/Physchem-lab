@@ -165,6 +165,56 @@ export function pendulumPeriod({lengthM,gravity}) {
   if (lengthM <= 0 || gravity <= 0) throw new RangeError("pendulum length and gravity must be positive");
   return finiteResult(2*Math.PI*sqrtPositiveRatio(lengthM,gravity), "pendulum period");
 }
+
+/**
+ * Advance a nonlinear damped pendulum with bounded-step fourth-order
+ * Runge-Kutta integration. The UI may call this with variable animation-frame
+ * deltas; internal substeps are tied to the natural time scale so the result
+ * does not depend on the browser refresh rate.
+ */
+export function pendulumStep({
+  angleRad, angularVelocityRadPerS, lengthM, gravity,
+  dampingCoefficient = 0, deltaTimeSeconds
+}) {
+  const values = { angleRad, angularVelocityRadPerS, lengthM, gravity, dampingCoefficient, deltaTimeSeconds };
+  for (const [name, value] of Object.entries(values)) {
+    if (!Number.isFinite(value)) throw new TypeError(name + " must be finite");
+  }
+  if (lengthM <= 0 || gravity <= 0 || dampingCoefficient < 0 || deltaTimeSeconds < 0) {
+    throw new RangeError("pendulum integration parameters are outside their physical domain");
+  }
+  if (deltaTimeSeconds === 0) {
+    return Object.freeze({ angleRad, angularVelocityRadPerS });
+  }
+  const gravityOverLength = gravity / lengthM;
+  if (!Number.isFinite(gravityOverLength)) {
+    throw new RangeError("pendulum angular acceleration exceeds the finite numeric range");
+  }
+  const naturalTimeScale = sqrtPositiveRatio(lengthM, gravity);
+  const maxStep = naturalTimeScale * 0.05;
+  const stepCount = Math.max(1, Math.ceil(deltaTimeSeconds / maxStep));
+  if (!Number.isSafeInteger(stepCount) || stepCount > 10000) {
+    throw new RangeError("pendulum time step exceeds the 10000-substep integration limit");
+  }
+  const h = deltaTimeSeconds / stepCount;
+  const acceleration = (angle, velocity) =>
+    -gravityOverLength * Math.sin(angle) - dampingCoefficient * velocity;
+  let angle = angleRad;
+  let velocity = angularVelocityRadPerS;
+  for (let index = 0; index < stepCount; index += 1) {
+    const k1Angle = velocity;
+    const k1Velocity = acceleration(angle, velocity);
+    const k2Angle = velocity + h * k1Velocity / 2;
+    const k2Velocity = acceleration(angle + h * k1Angle / 2, velocity + h * k1Velocity / 2);
+    const k3Angle = velocity + h * k2Velocity / 2;
+    const k3Velocity = acceleration(angle + h * k2Angle / 2, velocity + h * k2Velocity / 2);
+    const k4Angle = velocity + h * k3Velocity;
+    const k4Velocity = acceleration(angle + h * k3Angle, velocity + h * k3Velocity);
+    angle += h * (k1Angle + 2 * k2Angle + 2 * k3Angle + k4Angle) / 6;
+    velocity += h * (k1Velocity + 2 * k2Velocity + 2 * k3Velocity + k4Velocity) / 6;
+  }
+  return Object.freeze(finiteResult({ angleRad: angle, angularVelocityRadPerS: velocity }, "pendulum integration"));
+}
 export function ohmsLaw({voltageV,resistanceOhm}) {
   for (const [name,value] of Object.entries({voltageV,resistanceOhm})) if (!Number.isFinite(value)) throw new TypeError(`${name} must be finite`);
   if (resistanceOhm <= 0) throw new RangeError("resistance must be positive");
