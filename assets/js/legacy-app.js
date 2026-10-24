@@ -111,7 +111,7 @@ function P(k,l,mn,mx,s,v,u){return{key:k,label:l,min:mn,max:mx,step:s,value:v,un
 /* ============================================================
    引擎
    ============================================================ */
-var cv,ctx,sw;
+var cv,ctx,sw,resizeObserver=null;
 var W=800,H=500;
 var cur=null,P={},ST={};
 var paused=false;
@@ -319,7 +319,9 @@ function resize(){
   cv.width=Math.floor(W*dpr);cv.height=Math.floor(H*dpr);
   cv.style.width=W+'px';cv.style.height=H+'px';
   ctx.setTransform(dpr,0,0,dpr,0,0);
-  if(started&&reducedMotion)renderCurrentFrame();
+  // Assigning canvas.width/height clears its bitmap. Repaint immediately after every container resize,
+  // including animated mode, so a throttled or paused animation frame cannot leave a blank instrument.
+  if(started)renderCurrentFrame();
   return true;
 }
 
@@ -569,6 +571,10 @@ function bindUI(){
       setExperimentSidebarOpen(false);
     }});
   var rT=null;window.addEventListener('resize',function(){clearTimeout(rT);rT=setTimeout(resize,60);});
+  if(typeof ResizeObserver==='function'&&sw){
+    resizeObserver=new ResizeObserver(function(){if(started)resize();});
+    resizeObserver.observe(sw);
+  }
 }
 
 function updateSI(){
