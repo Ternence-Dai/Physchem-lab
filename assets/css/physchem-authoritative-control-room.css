@@ -1,0 +1,80 @@
+/* PhysChem Lab — authoritative instrument-room layer.
+   Loaded last to resolve legacy stylesheet conflicts without changing model behavior. */
+body[data-workspace="physchem"]{
+  --pc-bg:#071827;--pc-panel:#0d2435;--pc-panel-2:#102b40;
+  --pc-line:#29495e;--pc-text:#e7f2f8;--pc-muted:#91adbd;
+  --pc-accent:#59c8d7;--pc-good:#65d6aa;
+  background:var(--pc-bg)!important;color:var(--pc-text)!important;
+}
+body[data-workspace="physchem"] #experimentSidebar{
+  background:#081b2a!important;border-right:1px solid var(--pc-line)!important;
+}
+body[data-workspace="physchem"] #main-content{background:var(--pc-bg)!important;overflow-y:auto}
+body[data-workspace="physchem"] .tb{
+  position:sticky;top:0;z-index:30;background:rgba(8,27,42,.96)!important;
+  border-bottom:1px solid var(--pc-line)!important;backdrop-filter:blur(14px);
+}
+body[data-workspace="physchem"] .tb h2{color:var(--pc-text)}
+body[data-workspace="physchem"] .tb p{color:var(--pc-muted)}
+body[data-workspace="physchem"] #sw{
+  margin:12px 16px 14px;min-height:clamp(360px,54vh,620px);
+  border:1px solid #31566c;border-radius:12px;overflow:hidden;
+  background:radial-gradient(ellipse at 50% 45%,#102f43 0%,#061521 72%);
+  box-shadow:0 18px 42px rgba(0,0,0,.24);
+}
+body[data-workspace="physchem"] #cv{min-height:clamp(360px,54vh,620px)}
+body[data-workspace="physchem"] .bt2{
+  display:grid;grid-template-columns:minmax(280px,1.05fr) minmax(320px,.95fr);
+  align-items:start;gap:12px;padding:0 16px 18px;
+}
+body[data-workspace="physchem"] .bt2 .pnl{
+  min-width:0;margin:0;padding:16px;border:1px solid var(--pc-line);
+  border-radius:11px;background:linear-gradient(180deg,var(--pc-panel-2),var(--pc-panel));
+  color:var(--pc-text);box-shadow:0 10px 26px rgba(0,0,0,.16);
+}
+body[data-workspace="physchem"] .bt2 .pnl h3{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  margin:0 0 14px;padding-bottom:11px;border-bottom:1px solid var(--pc-line);
+  color:#dff4fa;font-size:14px;letter-spacing:.02em;
+}
+body[data-workspace="physchem"] .bt2 .pnl label,
+body[data-workspace="physchem"] .bt2 .pnl small{color:var(--pc-muted)}
+body[data-workspace="physchem"] .bt2 input,
+body[data-workspace="physchem"] .bt2 select,
+body[data-workspace="physchem"] .bt2 textarea{
+  accent-color:var(--pc-accent);color:var(--pc-text);
+}
+body[data-workspace="physchem"] .lab-notebook{
+  margin:0 16px 22px;border:1px solid var(--pc-line)!important;
+  border-radius:11px!important;background:var(--pc-panel)!important;color:var(--pc-text);
+}
+body[data-workspace="physchem"] .lab-notebook p,
+body[data-workspace="physchem"] .lab-notebook label{color:var(--pc-muted)}
+body[data-workspace="physchem"] .lab-notebook textarea{
+  background:#071b2a;color:var(--pc-text);border:1px solid #36586d;
+}
+body[data-workspace="physchem"] #experimentSidebar .it[aria-current="true"],
+body[data-workspace="physchem"] #experimentSidebar .it:has(button[aria-pressed="true"]){
+  outline:1px solid var(--pc-accent);background:#12364a;
+}
+body[data-workspace="physchem"] button:focus-visible,
+body[data-workspace="physchem"] input:focus-visible,
+body[data-workspace="physchem"] select:focus-visible,
+body[data-workspace="physchem"] textarea:focus-visible{
+  outline:2px solid #70dce7!important;outline-offset:3px;
+}
+@media(max-width:900px){
+  body[data-workspace="physchem"] .bt2{grid-template-columns:minmax(0,1fr)}
+  body[data-workspace="physchem"] #sw,
+  body[data-workspace="physchem"] #cv{min-height:380px}
+}
+@media(max-width:680px){
+  body[data-workspace="physchem"] #sw{margin:10px 10px 12px;border-radius:9px}
+  body[data-workspace="physchem"] .bt2{padding:0 10px 14px;gap:10px}
+  body[data-workspace="physchem"] .lab-notebook{margin:0 10px 16px}
+  body[data-workspace="physchem"] .tb .ac{gap:5px;flex-wrap:wrap}
+}
+@media(prefers-reduced-motion:reduce){
+  body[data-workspace="physchem"] *,body[data-workspace="physchem"] *::before,
+  body[data-workspace="physchem"] *::after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}
+}

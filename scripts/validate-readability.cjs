@@ -4,7 +4,7 @@ const assert = require('node:assert/strict');
 const html = fs.readFileSync('index.html', 'utf8');
 const css = fs.readFileSync('assets/css/readability-accessibility-v10.css', 'utf8');
 assert.match(html, /readability-accessibility-v10\.css/, 'readability baseline must load on the app shell');
-assert.match(html, /readability-accessibility-v10\.css[^"']*["'][^>]*>\s*<\/head>/s, 'readability baseline must be the final stylesheet');
+assert.match(html, /physchem-authoritative-control-room\.css[^"']*["'][^>]*>\s*<\/head>/s, 'the PhysChem instrument-room layer must be the final stylesheet');
 assert.match(css, /body\s*\{[^}]*font-size:\s*16px\s*!important/s, 'body copy must start at 16px');
 assert.match(css, /font-size:\s*max\(14px,\s*1em\)\s*!important/, 'supporting text must not fall below 14px');
 assert.match(css, /input,select,textarea,button\)\s*\{[^}]*font-size:16px\s*!important/s, 'interactive controls must use readable 16px text');
