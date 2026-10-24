@@ -36,6 +36,13 @@
   <header class="tb"><button class="bt mobile-menu" type="button" id="mobileMenu" aria-label="打开实验目录" aria-controls="experimentSidebar" aria-expanded="false">☰</button><div class="tbl"><h2 id="et">加载中…</h2><p id="eb2">正在初始化实验室…</p></div>
     <div class="ac"><button class="bt" id="bp">⏸ 暂停</button><button class="bt" id="br2">↺ 重置</button><button class="bt" id="bs">💾 存档</button><button class="bt" id="bd">📂 档案</button></div>
   </header>
+  <nav class="physchem-lab-sequence" aria-label="物理化学实验操作序列" style="display:flex;gap:8px;flex-wrap:wrap;padding:10px 18px;border-bottom:1px solid rgba(86,139,158,.2);background:rgba(10,36,50,.72)">
+    <span style="align-self:center;color:#7ea8b9;font-size:11px;letter-spacing:.12em">LAB SEQUENCE</span>
+    <button type="button" class="bt" onclick="document.getElementById('bp').click()">变量控制</button>
+    <button type="button" class="bt" onclick="document.getElementById('br2').click()">重置实验</button>
+    <button type="button" class="bt" onclick="document.getElementById('bs').click()">保存实验快照</button>
+    <button type="button" class="bt" onclick="document.getElementById('bd').click()">打开实验档案</button>
+  </nav>
   
   
   
