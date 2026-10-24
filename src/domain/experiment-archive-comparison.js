@@ -35,11 +35,11 @@ function numericValueAndUnit(raw) {
 }
 
 function frozen(value) {
-  if (value && typeof value === "object" && !Object.isFrozen(value)) {
-    Object.freeze(value);
-    Object.keys(value).forEach(key => frozen(value[key]));
-  }
-  return value;
+  if (!value || typeof value !== "object") return value;
+  const copy = Array.isArray(value)
+    ? value.map(item => frozen(item))
+    : Object.fromEntries(Object.entries(value).map(([key, item]) => [key, frozen(item)]));
+  return Object.freeze(copy);
 }
 
 export function compareExperimentArchiveSnapshots(left, right) {

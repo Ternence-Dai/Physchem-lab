@@ -401,3 +401,47 @@ test("nonlinear pendulum RK4 validates physical inputs and bounds pathological f
  assert.throws(()=>pendulumStep({...valid,deltaTimeSeconds:1e6}),RangeError);
  assert.throws(()=>pendulumStep({...valid,angleRad:NaN}),TypeError);
 });
+
+
+test("strong acid/base titration preserves one-ULP concentration differences near equivalence",()=>{
+ const acidConcentration=1e308;
+ const nextConcentration=1.0000000000000002e308;
+ const baseExcess=strongAcidStrongBasePH({
+  acidConcentrationMolPerL:acidConcentration,acidVolumeMl:1e308,
+  baseConcentrationMolPerL:nextConcentration,baseVolumeMl:1e308
+ });
+ const acidExcess=strongAcidStrongBasePH({
+  acidConcentrationMolPerL:nextConcentration,acidVolumeMl:1e308,
+  baseConcentrationMolPerL:acidConcentration,baseVolumeMl:1e308
+ });
+ assert.ok(Number.isFinite(baseExcess) && baseExcess>300,
+  "one-ULP excess base must not collapse to neutral pH when logarithms round the contributions equal");
+ assert.ok(Number.isFinite(acidExcess) && acidExcess< -290,
+  "one-ULP excess acid must remain acidic at extreme concentration");
+});
+
+
+test("archive comparison freezes detached parameter snapshots without freezing source archives",()=>{
+ const nestedLeft={calibration:{points:[1,2,3]}};
+ const nestedRight={calibration:{points:[1,2,4]}};
+ const left={
+  experimentId:"ideal-gas",experimentSnapshotVersion:1,
+  modelVersion:"physchem-engine-v2",snapshotAt:"2026-10-23T01:00:00.000Z",
+  params:{metadata:nestedLeft},readouts:[]
+ };
+ const right={
+  experimentId:"ideal-gas",experimentSnapshotVersion:1,
+  modelVersion:"physchem-engine-v2",snapshotAt:"2026-10-23T01:10:00.000Z",
+  params:{metadata:nestedRight},readouts:[]
+ };
+ const result=compareExperimentArchiveSnapshots(left,right);
+ assert.equal(result.compatible,true);
+ assert.equal(Object.isFrozen(nestedLeft),false);
+ assert.equal(Object.isFrozen(nestedLeft.calibration),false);
+ assert.equal(Object.isFrozen(nestedLeft.calibration.points),false);
+ assert.equal(Object.isFrozen(nestedRight.calibration.points),false);
+ assert.notEqual(result.parameters[0].leftValue,nestedLeft);
+ assert.notEqual(result.parameters[0].leftValue.calibration,nestedLeft.calibration);
+ assert.ok(Object.isFrozen(result.parameters[0].leftValue));
+ assert.ok(Object.isFrozen(result.parameters[0].leftValue.calibration.points));
+});
