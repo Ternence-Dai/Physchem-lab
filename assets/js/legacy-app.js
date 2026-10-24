@@ -339,14 +339,17 @@ function renderList(){
   E('cnt').textContent=String(list.length);
   if(!list.length){box.innerHTML='<div style="color:#5a6d87;font-size:12px;padding:16px;text-align:center">未找到匹配的实验</div>';return;}
   for(var j=0;j<list.length;j++){
-    var ex=list[j];var d=document.createElement('div');
+    var ex=list[j];var item=document.createElement('div');
+    item.setAttribute('role','listitem');
+    var d=document.createElement('button');
+    d.type='button';
     d.className='it'+(cur&&cur.id===ex.id?' on':'');
-    d.setAttribute('role','listitem');
-    d.setAttribute('tabindex','0');
+    d.setAttribute('aria-pressed',cur&&cur.id===ex.id?'true':'false');
     d.setAttribute('aria-label',ex.name+'，'+ex.cat+'实验');
     d.innerHTML='<div class="t"><span class="tg '+(ex.cat==='物理'?'p':'c')+'">'+esc(ex.cat)+'</span>'+esc(ex.name)+'</div><div class="d">'+esc(ex.brief)+'</div>';
-    (function(id,node){node.onclick=function(){selectExp(id);};node.onkeydown=function(event){if(event.key==='Enter'||event.key===' '){event.preventDefault();selectExp(id);}};})(ex.id,d);
-    box.appendChild(d);
+    (function(id,node){node.onclick=function(){selectExp(id);};})(ex.id,d);
+    item.appendChild(d);
+    box.appendChild(item);
   }
 }
 
