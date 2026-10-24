@@ -168,8 +168,11 @@ assert.ok(pageHtml.includes('id="simulationStatus"') &&
           app.includes('syncSimulationStatus();'),
   'the interactive simulation canvas must expose and synchronize its running/paused state');
 assert.ok(app.includes("box.setAttribute('role','list')") &&
-          app.includes("node.onkeydown=function(event)"),
-  'the full experiment directory must expose accessible list semantics and keyboard selection');
+          app.includes("item.setAttribute('role','listitem')") &&
+          app.includes("d.type='button'") &&
+          app.includes("d.setAttribute('aria-pressed'") &&
+          app.includes("node.onclick=function(){selectExp(id);}"),
+  'the full experiment directory must expose native keyboard-operable list buttons and selected state');
 
 assert.ok(html.includes('公式助教') && html.includes('LOCAL') && !html.includes('LLM'), 'the offline formula tutor must not be presented as a live LLM');
 const addedModels = loadArray('C5');
