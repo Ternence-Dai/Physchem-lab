@@ -356,3 +356,48 @@ test("archive comparison requires real calendar timestamps with explicit valid t
   ...base,snapshotAt:"2026-10-23T01:00:00.123456789Z"
  }).compatible,true,"fractional seconds are accepted");
 });
+
+
+test("nonlinear pendulum RK4 conserves undamped energy across variable frame sizes",()=>{
+ const lengthM=1,gravity=9.81,initialAngle=0.5;
+ const period=pendulumPeriod({lengthM,gravity});
+ const energy=state=>0.5*lengthM*state.angularVelocityRadPerS**2+
+  gravity*lengthM*(1-Math.cos(state.angleRad));
+ const initial={angleRad:initialAngle,angularVelocityRadPerS:0};
+ const startEnergy=energy(initial);
+ let state={...initial};
+ const frameSizes=[period/45,period/90,period/120,period/60];
+ for(let cycle=0;cycle<10;cycle++){
+  const dt=frameSizes[cycle%frameSizes.length];
+  const count=Math.round(period/dt);
+  const frameDt=period/count;
+  for(let i=0;i<count;i++){
+   state=pendulumStep({ ...state,lengthM,gravity,dampingCoefficient:0,deltaTimeSeconds:frameDt });
+  }
+ }
+ assert.ok(Math.abs(energy(state)/startEnergy-1)<1e-8,
+  "RK4 substeps should keep nonlinear pendulum energy stable over ten periods");
+});
+
+test("nonlinear pendulum RK4 dissipates mechanical energy with positive damping",()=>{
+ const parameters={lengthM:0.8,gravity:9.81,dampingCoefficient:0.35};
+ const energy=state=>0.5*parameters.lengthM*state.angularVelocityRadPerS**2+
+  parameters.gravity*parameters.lengthM*(1-Math.cos(state.angleRad));
+ let state={angleRad:0.7,angularVelocityRadPerS:0};
+ const initialEnergy=energy(state);
+ for(let i=0;i<1200;i++){
+  state=pendulumStep({...parameters,...state,deltaTimeSeconds:1/60});
+ }
+ assert.ok(energy(state)<initialEnergy*0.01,
+  "damped pendulum energy should decay rather than grow during the animation");
+});
+
+test("nonlinear pendulum RK4 validates physical inputs and bounds pathological frame deltas",()=>{
+ const valid={angleRad:0.2,angularVelocityRadPerS:0,lengthM:1,gravity:9.81,dampingCoefficient:0,deltaTimeSeconds:0};
+ assert.deepEqual(pendulumStep(valid),{angleRad:0.2,angularVelocityRadPerS:0});
+ assert.throws(()=>pendulumStep({...valid,lengthM:0}),RangeError);
+ assert.throws(()=>pendulumStep({...valid,dampingCoefficient:-1}),RangeError);
+ assert.throws(()=>pendulumStep({...valid,deltaTimeSeconds:-1}),RangeError);
+ assert.throws(()=>pendulumStep({...valid,deltaTimeSeconds:1e6}),RangeError);
+ assert.throws(()=>pendulumStep({...valid,angleRad:NaN}),TypeError);
+});
