@@ -290,6 +290,50 @@ test("experiment archive comparison blocks different experiments, model versions
 });
 
 
+test("archive comparison blocks malformed readout rows instead of silently dropping them",()=>{
+ const base={
+  experimentId:"ideal-gas",experimentSnapshotVersion:1,
+  modelVersion:"physchem-engine-v2",snapshotAt:"2026-10-23T01:00:00.000Z",
+  params:{temperatureK:300},readouts:[{label:"Pressure",value:"1 Pa"}]
+ };
+ const malformedRows=[
+  [null],
+  [{}],
+  [{label:"",value:"1 Pa"}],
+  [{label:"Pressure",value:1}],
+  [["Pressure","1 Pa"]],
+  [{label:"Pressure",value:"1 Pa"},null]
+ ];
+ for(const readouts of malformedRows){
+  const result=compareExperimentArchiveSnapshots(base,{...base,readouts});
+  assert.equal(result.compatible,false,
+   "malformed archive rows must block comparison rather than disappear: "+String(readouts));
+  assert.match(result.reason,/缺失、无效或重复/);
+ }
+ const malformedLeft=compareExperimentArchiveSnapshots(
+  {...base,readouts:[{label:"Pressure",value:null}]},base
+ );
+ assert.equal(malformedLeft.compatible,false,
+  "malformed rows in either archive must block comparison");
+});
+
+test("archive comparison blocks malformed parameter containers instead of treating them as empty",()=>{
+ const base={
+  experimentId:"ideal-gas",experimentSnapshotVersion:1,
+  modelVersion:"physchem-engine-v2",snapshotAt:"2026-10-23T01:00:00.000Z",
+  params:{temperatureK:300},readouts:[{label:"Pressure",value:"1 Pa"}]
+ };
+ for(const params of [[], "corrupt", 42, true]){
+  const result=compareExperimentArchiveSnapshots(base,{...base,params});
+  assert.equal(result.compatible,false,
+   "malformed parameter containers must block comparison: "+String(params));
+  assert.match(result.reason,/有效的参数对象/);
+ }
+ const malformedLeft=compareExperimentArchiveSnapshots({...base,params:[]},base);
+ assert.equal(malformedLeft.compatible,false,
+  "malformed parameter containers in either archive must block comparison");
+});
+
 test("archive comparison preserves zero deltas and never mutates saved snapshots",()=>{
  const left={
   name:"基准组",time:"2026/10/23 10:00",experimentId:"ideal-gas",

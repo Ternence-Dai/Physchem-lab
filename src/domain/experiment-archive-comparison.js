@@ -59,8 +59,10 @@ export function compareExperimentArchiveSnapshots(left, right) {
       left.modelVersion !== right.modelVersion) {
     return blocked("两份档案的模型版本不同，不能直接比较计算结果。");
   }
-  if (!left.params || !right.params || !Array.isArray(left.readouts) || !Array.isArray(right.readouts)) {
-    return blocked("档案缺少参数或结果快照，无法完成对照。");
+  if (!left.params || typeof left.params !== "object" || Array.isArray(left.params) ||
+      !right.params || typeof right.params !== "object" || Array.isArray(right.params) ||
+      !Array.isArray(left.readouts) || !Array.isArray(right.readouts)) {
+    return blocked("档案缺少有效的参数对象或结果快照，无法完成对照。");
   }
 
   const leftParams = left.params;
@@ -77,8 +79,9 @@ export function compareExperimentArchiveSnapshots(left, right) {
   function readoutMap(rows) {
     const map = new Map();
     for (const row of rows) {
-      if (!row || typeof row.label !== "string" || !row.label.trim() ||
-          typeof row.value !== "string") continue;
+      if (!row || typeof row !== "object" || Array.isArray(row) ||
+          typeof row.label !== "string" || !row.label.trim() ||
+          typeof row.value !== "string") return null;
       const key = row.label.trim();
       if (map.has(key)) return null;
       map.set(key, row.value);
@@ -87,7 +90,7 @@ export function compareExperimentArchiveSnapshots(left, right) {
   }
   const leftReadouts = readoutMap(left.readouts);
   const rightReadouts = readoutMap(right.readouts);
-  if (!leftReadouts || !rightReadouts) return blocked("某份档案的结果标签重复，无法保证一一对应。");
+  if (!leftReadouts || !rightReadouts) return blocked("某份档案包含缺失、无效或重复的结果记录，无法保证一一对应。");
 
   const labels = [...new Set([...leftReadouts.keys(), ...rightReadouts.keys()])].sort();
   const readouts = labels.map(label => {
