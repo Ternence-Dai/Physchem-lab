@@ -59,8 +59,10 @@ export function compareExperimentArchiveSnapshots(left, right) {
       left.modelVersion !== right.modelVersion) {
     return blocked("两份档案的模型版本不同，不能直接比较计算结果。");
   }
-  if (!left.params || !right.params || !Array.isArray(left.readouts) || !Array.isArray(right.readouts)) {
-    return blocked("档案缺少参数或结果快照，无法完成对照。");
+  if (!left.params || typeof left.params !== "object" || Array.isArray(left.params) ||
+      !right.params || typeof right.params !== "object" || Array.isArray(right.params) ||
+      !Array.isArray(left.readouts) || !Array.isArray(right.readouts)) {
+    return blocked("档案缺少有效的参数对象或结果快照，无法完成对照。");
   }
 
   const leftParams = left.params;
