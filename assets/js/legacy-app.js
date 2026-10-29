@@ -86,7 +86,7 @@ function mkPart(g){
       var bx=W*0.14,by=52,bw=W*0.72,bh=H-110;
       c.fillStyle='rgba(12,22,40,.85)';rr(c,bx,by,bw,bh,10);c.fill();
       c.strokeStyle=g.bc||'rgba(34,211,238,.55)';c.lineWidth=2.5;rr(c,bx,by,bw,bh,10);c.stroke();
-      if(!st.ps){st.ps=[];for(var i=0;i<n;i++){var a=Math.random()*Math.PI*2;st.ps.push({x:Math.random(),y:Math.random(),vx:Math.cos(a),vy:Math.sin(a),r:(g.rMin||2)+(g.rMax||4)-(g.rMin||2)*Math.random()});}}
+      if(!st.ps){st.ps=[];for(var i=0;i<n;i++){var a=Math.random()*Math.PI*2;st.ps.push({x:Math.random(),y:Math.random(),vx:Math.cos(a),vy:Math.sin(a),r:(g.rMin||2)+((g.rMax||4)-(g.rMin||2))*Math.random()});}}
       var spd=g.speed?g.speed(p):0.3;var hue=g.hue?g.hue(p):200;
       for(var k=0;k<st.ps.length;k++){var pt=st.ps[k];pt.x+=pt.vx*spd*st.dt;pt.y+=pt.vy*spd*st.dt;
         if(pt.x<0.03){pt.x=0.03;pt.vx*=-1;}if(pt.x>0.97){pt.x=0.97;pt.vx*=-1;}

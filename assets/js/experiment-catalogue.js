@@ -223,7 +223,7 @@ EXP.push({id:'p7',name:'酸碱滴定曲线',cat:'化学',tags:['分析化学','p
 /* 8. 反应速率 */
 EXP.push({id:'p8',name:'化学反应速率与活化能',cat:'化学',tags:['动力学','阿伦尼乌斯'],brief:'温度、浓度与催化剂如何影响反应速率——阿伦尼乌斯方程。',resetOnChange:false,
   params:[P('T','温度 T',20,90,1,25,'°C'),P('c','反应物浓度 c',0.1,2,0.05,1,'mol/L'),{key:'cat',label:'催化剂',min:0,max:1,step:1,value:0,unit:'',fmt:function(v){return v?'有':'无';}}],
-  formulas:['v=k·c(A)','k=A·e^(−Ea/RT)','无催化剂 Ea=70 kJ/mol','有催化剂 Ea=40 kJ/mol'],
+  formulas:['v=k·c(A)','k=A·e^(−Ea/RT)','无催化剂 Ea=70 kJ/mol','有催化剂 Ea=40 kJ/mol','本实验取指前因子 A=1 s⁻¹，k 与 v 为相对演示量，非真实动力学数据'],
   init:function(){var ps=[];for(var i=0;i<50;i++){var a=Math.random()*Math.PI*2;
     ps.push({x:0.08+Math.random()*0.84,y:0.08+Math.random()*0.84,vx:Math.cos(a),vy:Math.sin(a),r:2.6+Math.random()*1.8});}
     return{ps:ps,flashes:[],count:0,t:0};},
@@ -487,13 +487,13 @@ var C1=[
  tt:function(p){var r=p.ang*Math.PI/180;var dl=2.43e-12*(1-Math.cos(r));return'【模型】康普顿散射：光子与电子碰撞，一部分能量转移给电子。\n\n【推演】\n· Δλ='+F(dl*1e12,3)+' pm\n· λ′='+F((p.lam*1e-9+dl)*1e12,3)+' pm\n\n【结论】散射光波长变长，证明光子具有动量 p=h/λ。康普顿因此获1927年诺贝尔奖。';}},
 
 {id:'o7',name:'德布罗意波长',cat:'物理',tags:['量子','波粒二象性'],br:'所有物质都具有波动性，波长 λ=h/p。',
- p:[P('m','质量 m',1,1000,1,9.11,''),P('v','速度 v',1,10000,100,1000,'m/s')],
+ p:[P('m','质量 m',1,1000,1,9.11,'×10⁻³¹ kg'),P('v','速度 v',1,10000,100,1000,'m/s')],
  f:['λ=h/(mv)','p=mv','E=p²/2m'],
  xR:[0,10000],yR:[0,1],xT:10,yT:5,xL:'速度 v (m/s)',yL:'相对波长',col:'#a78bfa',
- fn:function(p,x){var h=6.626e-34;var m=p.m*(p.m<100?9.11e-31:1.67e-27);return (h/(m*x))/1e-9;},
- ro:function(p){var h=6.626e-34;var m=p.m*(p.m<100?9.11e-31:1.67e-27);var lam=h/(m*p.v);
+ fn:function(p,x){var h=6.626e-34;var m=p.m*1e-31;return (h/(m*x))/1e-9;},
+ ro:function(p){var h=6.626e-34;var m=p.m*1e-31;var lam=h/(m*p.v);
    return[{k:'德布罗意波长',v:F(lam*1e12,3)+' pm'},{k:'动量 p',v:F(m*p.v,3)+' kg·m/s'},{k:'动能',v:F(0.5*m*p.v*p.v/1.602e-19,3)+' eV'},{k:'质量 m',v:m.toExponential(2)+' kg'},{k:'速度 v',v:p.v+' m/s'},{k:'频率 f',v:F(p.v/lam,3)+' Hz'}];},
- tt:function(p){var h=6.626e-34;var m=p.m*(p.m<100?9.11e-31:1.67e-27);var lam=h/(m*p.v);return'【模型】德布罗意关系 λ=h/p，物质波假设。\n\n【推演】\n· λ='+F(lam*1e12,3)+' pm\n· 电子（0.5MeV）λ≈1pm，X射线量级\n\n【结论】1927年戴维孙-革末实验用电子衍射证实了物质波。';}},
+ tt:function(p){var h=6.626e-34;var m=p.m*1e-31;var lam=h/(m*p.v);return'【模型】德布罗意关系 λ=h/p，物质波假设。\n\n【推演】\n· λ='+F(lam*1e12,3)+' pm\n\n【结论】1927年戴维孙-革末实验用电子衍射证实了物质波。';}},
 
 {id:'o8',name:'单摆波速',cat:'物理',tags:['波动','摆'],br:'绳波传播速度与张力和线密度有关 v=√(T/μ)。',
  p:[P('T','张力 T',1,100,1,20,'N'),P('mu','线密度 μ',0.01,1,0.01,0.1,'kg/m')],
@@ -751,7 +751,7 @@ var C3=[
 
 {id:'ch11',name:'溶度积与沉淀',cat:'化学',tags:['沉淀','Ksp'],br:'难溶电解质溶解平衡由 Ksp 描述，Q>Ksp 时沉淀。',
  p:[P('Ksp','溶度积 Ksp',1e-15,1e-3,1e-15,1.8e-10,''),P('cA','阳离子浓度',1e-6,0.1,1e-6,0.01,'mol/L'),P('cB','阴离子浓度',1e-6,0.1,1e-6,0.01,'mol/L')],
- f:['Ksp=[A⁺]ᵃ[B⁻]ᵇ','Q>Ksp 沉淀','Q<Ksp 溶解','Q=Ksp 饱和'],
+ f:['Ksp=[A⁺]ᵃ[B⁻]ᵇ','Q>Ksp 沉淀','Q<Ksp 溶解','Q=Ksp 饱和','溶解度 s=√Ksp 仅适用于 1:1 型盐（如 AgCl），AB₂ 型（如 CaF₂）为 s=(Ksp/4)^⅓'],
  xR:[1e-6,0.1],yR:[1e-6,0.1],xT:10,yT:10,xL:'阳离子浓度',yL:'阴离子浓度',col:'#f472b6',
  fn:function(p,x){return p.Ksp/x;},
  ro:function(p){var Q=p.cA*p.cB;var ratio=Q/p.Ksp;
@@ -761,14 +761,14 @@ var C3=[
 
 {id:'ch12',name:'能斯特方程',cat:'化学',tags:['电化学','电极'],br:'电极电势与浓度有关，E=E°−(RT/nF)·lnQ。',
  p:[P('E0','标准电势 E°',-2,2,0.05,1.1,'V'),P('n','转移电子数 n',1,4,1,2,''),P('Q','反应商 Q',1e-6,1e6,1e-6,1,'')],
- f:['E=E°−(0.0592/n)·lgQ','ΔG=−nFE','E>0 反应自发'],
- xR:[1e-6,1e6],yR:[-2,2],xT:10,yT:5,xL:'lg Q',yL:'电极电势 E (V)',col:'#22d3ee',
- fn:function(p,x){return p.E0-0.0592/p.n*Math.log10(x);},
- mk:[{x:1,l:'Q=1',c:'#fbbf24'}],
+ f:['E=E°−(0.0592/n)·lgQ（0.0592 为 25 °C 时取值）','ΔG=−nFE','半电池电势，需与另一电极配对构成电池后判断自发性'],
+ xR:[-6,6],yR:[-2,2],xT:12,yT:5,xL:'lg Q',yL:'电极电势 E (V)',col:'#22d3ee',
+ fn:function(p,x){return p.E0-0.0592/p.n*x;},
+ mk:[{x:0,l:'Q=1',c:'#fbbf24'}],
  ro:function(p){var E=p.E0-0.0592/p.n*Math.log10(p.Q);
-   return[{k:'实际电势 E',v:F(E,3)+' V'},{k:'标准电势 E°',v:p.E0+' V'},{k:'lg Q',v:F(Math.log10(p.Q),3)},{k:'转移电子 n',v:p.n},{k:'ΔG',v:F(-p.n*96485*E/1000,2)+' kJ/mol'},{k:'自发性',v:E>0?'自发':'非自发'}];},
+   return[{k:'实际电势 E',v:F(E,3)+' V'},{k:'标准电势 E°',v:p.E0+' V'},{k:'lg Q',v:F(Math.log10(p.Q),3)},{k:'转移电子 n',v:p.n},{k:'ΔG',v:F(-p.n*96485*E/1000,2)+' kJ/mol'},{k:'自发性',v:'半电池电势，需与另一电极配对构成电池后判断自发性'}];},
  tt:function(p){var E=p.E0-0.0592/p.n*Math.log10(p.Q);
-   return'【模型】能斯特方程 E=E°−(0.0592/n)·lgQ。\n\n【推演】\n· E='+F(E,3)+' V\n· ΔG=−nFE='+F(-p.n*96485*E/1000,2)+' kJ/mol\n\n【结论】'+(E>0?'E>0，反应自发。':'E<0，反应非自发。')+'\n\n【延伸】这是原电池、电解池、pH 电极、生物膜电位的基础。';}}
+   return'【模型】能斯特方程 E=E°−(0.0592/n)·lgQ（0.0592 为 25 °C 时取值）。\n\n【推演】\n· E='+F(E,3)+' V\n· ΔG=−nFE='+F(-p.n*96485*E/1000,2)+' kJ/mol\n\n【结论】此 E 为半电池电势，需与另一电极配对构成电池后判断自发性。\n\n【延伸】这是原电池、电解池、pH 电极、生物膜电位的基础。';}}
 ];
 for(var i=0;i<C3.length;i++){EXP.push(mkCurve(C3[i]));}
 
