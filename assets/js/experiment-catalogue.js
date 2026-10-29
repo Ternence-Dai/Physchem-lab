@@ -217,7 +217,7 @@ EXP.push({id:'p7',name:'酸碱滴定曲线',cat:'化学',tags:['分析化学','p
     else if(r<0.999)sg='接近当量点——剩余酸量急剧减少，pH 开始爬坡。';
     else if(r<1.001)sg='当量点附近——pH≈7.00。';
     else sg='超过当量点——碱过量，pH 迅速跃升。';
-    return '【模型】滴定曲线记录"加入滴定剂体积"与"溶液 pH"的对应关系。\n\n【参数】c(酸)='+F(p.ca,2)+' mol/L, V(酸)='+p.va+' mL, c(碱)='+F(p.cb,2)+' mol/L\n\n【推演】\n· V_eq='+F(Veq,2)+' mL\n· V='+F(st.Vb,2)+' mL ('+F(C(r*100,0,200),1)+'%)\n· pH='+F(ph,2)+'\n\n【阶段】'+sg+'\n\n【模型边界】本模型适用于强酸—强碱、25°C 条件：以物质的量差求得净过量浓度 c，并计入水的自解离平衡 K_w=1.0×10⁻¹⁴（[H⁺][OH⁻]=K_w）。模型不包含弱酸/弱碱的 K_a/K_b 平衡、缓冲区组分、离子活度系数及温度对 K_w 的变化；弱酸滴定当量点通常 pH≠7，不能直接套用本曲线。';}
+    return '【模型】滴定曲线记录"加入滴定剂体积"与"溶液 pH"的对应关系。\n\n【参数】c(酸)='+F(p.ca,2)+' mol/L, V(酸)='+p.va+' mL, c(碱)='+F(p.cb,2)+' mol/L\n\n【推演】\n· V_eq='+F(Veq,2)+' mL\n· V='+F(st.Vb,2)+' mL ('+F(C(r*100,0,200),1)+'%)\n· pH='+F(ph,2)+'\n\n【阶段】'+sg+'\n\n【模型边界】本模型适用于强酸—强碱、25°C 条件：以物质的量差求得净过量浓度 c，并计入水的自解离平衡 K_w=1.0×10⁻¹⁴（[H⁺][OH⁻]=K_w；此为模型近似取值，25 °C 实际 K_w=1.008×10⁻¹⁴、pKw=13.997）。模型不包含弱酸/弱碱的 K_a/K_b 平衡、缓冲区组分、离子活度系数及温度对 K_w 的变化；弱酸滴定当量点通常 pH≠7，不能直接套用本曲线。';}
 });
 
 /* 8. 反应速率 */
@@ -436,7 +436,7 @@ var C1=[
  f:['Δx=λD/d','亮纹 光程差=kλ','暗纹 光程差=(k+½)λ'],
  xR:[-10,10],yR:[0,1.1],xT:10,yT:5,xL:'屏上位置 (mm)',yL:'相对光强',col:'#a78bfa',
  fn:function(p,x){var d=p.d*1e-3,D=p.D;var dx=x*1e-3*d/(p.lam*1e-9*D);var I=Math.cos(Math.PI*dx);return I*I;},
- ro:function(p){var dx=p.lam*1e-9*p.D/(p.d*1e-3);return[{k:'条纹间距 Δx',v:F(dx*1000,3)+' mm'},{k:'波长 λ',v:p.lam+' nm'},{k:'缝间距 d',v:p.d+' mm'},{k:'屏距离 D',v:p.D+' m'},{k:'波数 k',v:F(1/p.lam*1e9,2)+' /m'},{k:'频率 f',v:F(3e8/(p.lam*1e-9)/1e14,2)+'×10¹⁴ Hz'}];},
+ ro:function(p){var dx=p.lam*1e-9*p.D/(p.d*1e-3);return[{k:'条纹间距 Δx',v:F(dx*1000,3)+' mm'},{k:'波长 λ',v:p.lam+' nm'},{k:'缝间距 d',v:p.d+' mm'},{k:'屏距离 D',v:p.D+' m'},{k:'波数 k',v:F(1/p.lam*1e9,2)+' /m'},{k:'频率 f',v:F(2.99792458e8/(p.lam*1e-9)/1e14,2)+'×10¹⁴ Hz'}];},
  tt:function(p){var dx=p.lam*1e-9*p.D/(p.d*1e-3);return'【模型】双缝干涉：光程差 kλ 处亮，(k+½)λ 处暗。\n\n【推演】\n· Δx=λD/d='+F(dx*1000,3)+' mm\n· 波长='+p.lam+' nm\n\n【结论】这是光具有波动性的判决性实验——1801年托马斯·杨用它推翻了光的微粒说。';}},
 
 {id:'o3',name:'单缝衍射',cat:'物理',tags:['光学','衍射'],br:'光通过单缝后偏离直线传播，中央主极大最亮。',
@@ -449,7 +449,7 @@ var C1=[
 
 {id:'o4',name:'黑体辐射(维恩位移)',cat:'物理',tags:['热力学','量子'],br:'黑体辐射谱峰值波长与温度成反比——量子力学诞生的导火索。',
  p:[P('T','温度 T',1000,8000,100,5000,'K')],
- f:['λ_max·T=2.898×10⁻³ m·K','普朗克公式 B(λ,T)','M=σT⁴'],
+ f:['λ_max·T=2.897771955×10⁻³ m·K','普朗克公式 B(λ,T)','M=σT⁴'],
  xR:[0,3000],yR:[0,1.1],xT:10,yT:5,xL:'波长 (nm)',yL:'相对辐射强度',col:'#f87171',
  fn:function(p,x){
    // Wavelength is plotted in nm. The x-axis includes 0, where Planck's
@@ -464,8 +464,8 @@ var C1=[
    if(!Number.isFinite(logRatio))return logRatio===-Infinity?0:1;
    return Math.exp(Math.max(-745,Math.min(700,logRatio)));
  },
- ro:function(p){var lm=2.897771955e-3/p.T*1e9;return[{k:'峰值波长',v:F(lm,0)+' nm'},{k:'温度 T',v:p.T+' K'},{k:'辐射出射度',v:F(5.67e-8*Math.pow(p.T,4)/1e6,2)+' MW/m²'},{k:'峰值频率',v:F(3e8/(lm*1e-9)/1e14,2)+'×10¹⁴ Hz'},{k:'光子能量',v:F(6.626e-34*3e8/(lm*1e-9)/1.602e-19,2)+' eV'},{k:'颜色',v:p.T>6000?'蓝白色':p.T>4000?'白色':p.T>3000?'暖白':'橙红'}];},
- tt:function(p){var lm=2.898e-3/p.T*1e9;return'【模型】黑体辐射谱是经典物理无法解释的难题，普朗克提出"能量量子化"假设才解决。\n\n【推演】\n· λ_max='+F(lm,0)+' nm\n· M=σT⁴='+F(5.67e-8*Math.pow(p.T,4)/1e6,2)+' MW/m²\n\n【结论】温度越高，峰值波长越短，颜色越蓝——铁块加热"红→黄→白"的原因。';}},
+ ro:function(p){var lm=2.897771955e-3/p.T*1e9;return[{k:'峰值波长',v:F(lm,0)+' nm'},{k:'温度 T',v:p.T+' K'},{k:'辐射出射度',v:F(5.67e-8*Math.pow(p.T,4)/1e6,2)+' MW/m²'},{k:'峰值频率',v:F(2.99792458e8/(lm*1e-9)/1e14,2)+'×10¹⁴ Hz'},{k:'光子能量',v:F(6.62607015e-34*2.99792458e8/(lm*1e-9)/1.602176634e-19,2)+' eV'},{k:'颜色',v:p.T>6000?'蓝白色':p.T>4000?'白色':p.T>3000?'暖白':'橙红'}];},
+ tt:function(p){var lm=2.897771955e-3/p.T*1e9;return'【模型】黑体辐射谱是经典物理无法解释的难题，普朗克提出"能量量子化"假设才解决。\n\n【推演】\n· λ_max='+F(lm,0)+' nm\n· M=σT⁴='+F(5.67e-8*Math.pow(p.T,4)/1e6,2)+' MW/m²\n\n【结论】温度越高，峰值波长越短，颜色越蓝——铁块加热"红→黄→白"的原因。';}},
 
 {id:'o5',name:'光电效应',cat:'物理',tags:['量子','光电'],br:'光照射金属表面发射电子，爱因斯坦用光子说解释。',
  p:[P('lam','波长 λ',200,700,10,400,'nm'),P('W','逸出功 W',1,5,0.1,2.3,'eV')],
@@ -483,17 +483,17 @@ var C1=[
  xR:[0,180],yR:[0,0.02],xT:9,yT:5,xL:'散射角 θ (°)',yL:'波长变化 Δλ (nm)',col:'#22d3ee',
  fn:function(p,x){var r=x*Math.PI/180;return 2.43e-12*(1-Math.cos(r))*1e9;},
  ro:function(p){var r=p.ang*Math.PI/180;var dl=2.43e-12*(1-Math.cos(r));
-   return[{k:'波长变化 Δλ',v:F(dl*1e12,3)+' pm'},{k:'散射波长 λ′',v:F((p.lam*1e-9+dl)*1e12,3)+' pm'},{k:'入射波长',v:F(p.lam*1e9,1)+' pm'},{k:'散射角 θ',v:p.ang+'°'},{k:'康普顿波长',v:'2.43 pm'},{k:'电子反冲动能',v:F(6.626e-34*3e8*(1/(p.lam*1e-9)-1/(p.lam*1e-9+dl))/1.602e-19,2)+' eV'}];},
+   return[{k:'波长变化 Δλ',v:F(dl*1e12,3)+' pm'},{k:'散射波长 λ′',v:F((p.lam*1e-9+dl)*1e12,3)+' pm'},{k:'入射波长',v:F(p.lam*1e9,1)+' pm'},{k:'散射角 θ',v:p.ang+'°'},{k:'康普顿波长',v:'2.43 pm'},{k:'电子反冲动能',v:F(6.62607015e-34*2.99792458e8*(1/(p.lam*1e-9)-1/(p.lam*1e-9+dl))/1.602176634e-19,2)+' eV'}];},
  tt:function(p){var r=p.ang*Math.PI/180;var dl=2.43e-12*(1-Math.cos(r));return'【模型】康普顿散射：光子与电子碰撞，一部分能量转移给电子。\n\n【推演】\n· Δλ='+F(dl*1e12,3)+' pm\n· λ′='+F((p.lam*1e-9+dl)*1e12,3)+' pm\n\n【结论】散射光波长变长，证明光子具有动量 p=h/λ。康普顿因此获1927年诺贝尔奖。';}},
 
 {id:'o7',name:'德布罗意波长',cat:'物理',tags:['量子','波粒二象性'],br:'所有物质都具有波动性，波长 λ=h/p。',
  p:[P('m','质量 m',1,1000,1,9.11,'×10⁻³¹ kg'),P('v','速度 v',1,10000,100,1000,'m/s')],
  f:['λ=h/(mv)','p=mv','E=p²/2m'],
  xR:[0,10000],yR:[0,1],xT:10,yT:5,xL:'速度 v (m/s)',yL:'相对波长',col:'#a78bfa',
- fn:function(p,x){var h=6.626e-34;var m=p.m*1e-31;return (h/(m*x))/1e-9;},
- ro:function(p){var h=6.626e-34;var m=p.m*1e-31;var lam=h/(m*p.v);
-   return[{k:'德布罗意波长',v:F(lam*1e12,3)+' pm'},{k:'动量 p',v:F(m*p.v,3)+' kg·m/s'},{k:'动能',v:F(0.5*m*p.v*p.v/1.602e-19,3)+' eV'},{k:'质量 m',v:m.toExponential(2)+' kg'},{k:'速度 v',v:p.v+' m/s'},{k:'频率 f',v:F(p.v/lam,3)+' Hz'}];},
- tt:function(p){var h=6.626e-34;var m=p.m*1e-31;var lam=h/(m*p.v);return'【模型】德布罗意关系 λ=h/p，物质波假设。\n\n【推演】\n· λ='+F(lam*1e12,3)+' pm\n\n【结论】1927年戴维孙-革末实验用电子衍射证实了物质波。';}},
+ fn:function(p,x){var h=6.62607015e-34;var m=p.m*1e-31;return (h/(m*x))/1e-9;},
+ ro:function(p){var h=6.62607015e-34;var m=p.m*1e-31;var lam=h/(m*p.v);
+   return[{k:'德布罗意波长',v:F(lam*1e12,3)+' pm'},{k:'动量 p',v:F(m*p.v,3)+' kg·m/s'},{k:'动能',v:F(0.5*m*p.v*p.v/1.602176634e-19,3)+' eV'},{k:'质量 m',v:m.toExponential(2)+' kg'},{k:'速度 v',v:p.v+' m/s'},{k:'频率 f',v:F(p.v/lam,3)+' Hz'}];},
+ tt:function(p){var h=6.62607015e-34;var m=p.m*1e-31;var lam=h/(m*p.v);return'【模型】德布罗意关系 λ=h/p，物质波假设。\n\n【推演】\n· λ='+F(lam*1e12,3)+' pm\n\n【结论】1927年戴维孙-革末实验用电子衍射证实了物质波。';}},
 
 {id:'o8',name:'单摆波速',cat:'物理',tags:['波动','摆'],br:'绳波传播速度与张力和线密度有关 v=√(T/μ)。',
  p:[P('T','张力 T',1,100,1,20,'N'),P('mu','线密度 μ',0.01,1,0.01,0.1,'kg/m')],
@@ -534,14 +534,14 @@ var C1=[
  p:[P('T','温度 T',100,1500,10,300,'K'),P('M','摩尔质量 M',2,100,1,28,'g/mol')],
  f:['f(v)=4π(M/2πRT)^(3/2)·v²·e^(−Mv²/2RT)','最概然速率 v_p=√(2RT/M)','平均速率 v̄=√(8RT/πM)'],
  xR:[0,2000],yR:[0,1.1],xT:10,yT:5,xL:'分子速率 v (m/s)',yL:'相对分布 f(v)',col:'#22d3ee',
- fn:function(p,x){var R=8.314,T=p.T,M=p.M/1000;var A=4*Math.PI*Math.pow(M/(2*Math.PI*R*T),1.5);
+ fn:function(p,x){var R=8.314462618,T=p.T,M=p.M/1000;var A=4*Math.PI*Math.pow(M/(2*Math.PI*R*T),1.5);
    var v2=x*x;var e=Math.exp(-M*v2/(2*R*T));var vp=Math.sqrt(2*R*T/M);
    var Avp=4*Math.PI*Math.pow(M/(2*Math.PI*R*T),1.5)*vp*vp*Math.exp(-M*vp*vp/(2*R*T));
    return A*v2*e/Avp;},
- ro:function(p){var R=8.314,T=p.T,M=p.M/1000;
+ ro:function(p){var R=8.314462618,T=p.T,M=p.M/1000;
    var vp=Math.sqrt(2*R*T/M);var vbar=Math.sqrt(8*R*T/(Math.PI*M));var vrms=Math.sqrt(3*R*T/M);
    return[{k:'最概然速率 v_p',v:F(vp,0)+' m/s'},{k:'平均速率 v̄',v:F(vbar,0)+' m/s'},{k:'方均根 v_rms',v:F(vrms,0)+' m/s'},{k:'温度 T',v:p.T+' K'},{k:'摩尔质量 M',v:p.M+' g/mol'},{k:'v_p/v_rms',v:F(vp/vrms,3)}];},
- tt:function(p){var R=8.314,T=p.T,M=p.M/1000;var vp=Math.sqrt(2*R*T/M);
+ tt:function(p){var R=8.314462618,T=p.T,M=p.M/1000;var vp=Math.sqrt(2*R*T/M);
    return'【模型】麦克斯韦-玻尔兹曼分布：分子速率服从统计规律。\n\n【推演】\n· v_p=√(2RT/M)='+F(vp,0)+' m/s\n· 三个特征速率：v_p < v̄ < v_rms\n\n【结论】温度升高，分布曲线右移且变宽——高速分子比例增加，这就是温度升高反应速率加快的原因。';}}
 ];
 for(var i=0;i<C1.length;i++){EXP.push(mkCurve(C1[i]));}
@@ -580,10 +580,10 @@ var C2=[
  p:[P('v','速度 v',1e5,1e7,1e5,1e6,'m/s'),P('B','磁场 B',0.01,1,0.01,0.1,'T'),P('q','电荷量(×e)',1,10,1,1,'')],
  f:['F=qvB','r=mv/(qB)','T=2πm/(qB)'],
  xR:[0,1],yR:[0,1e7],xT:10,yT:5,xL:'磁场 B (T)',yL:'轨道半径 (m)',col:'#22d3ee',
- fn:function(p,x){var m=9.11e-31,q=p.q*1.602e-19;return m*p.v/(q*x);},
- ro:function(p){var m=9.11e-31,q=p.q*1.602e-19;var r=m*p.v/(q*p.B);var T=2*Math.PI*m/(q*p.B);
+ fn:function(p,x){var m=9.11e-31,q=p.q*1.602176634e-19;return m*p.v/(q*x);},
+ ro:function(p){var m=9.11e-31,q=p.q*1.602176634e-19;var r=m*p.v/(q*p.B);var T=2*Math.PI*m/(q*p.B);
    return[{k:'回旋半径 r',v:r.toExponential(2)+' m'},{k:'回旋周期 T',v:F(T*1e9,3)+' ns'},{k:'洛伦兹力 F',v:(q*p.v*p.B).toExponential(2)+' N'},{k:'速度 v',v:p.v.toExponential(2)+' m/s'},{k:'磁场 B',v:p.B+' T'},{k:'回旋频率',v:F(1/T/1e6,1)+' MHz'}];},
- tt:function(p){var m=9.11e-31,q=p.q*1.602e-19;var r=m*p.v/(q*p.B);
+ tt:function(p){var m=9.11e-31,q=p.q*1.602176634e-19;var r=m*p.v/(q*p.B);
    return'【模型】洛伦兹力 F=qvB，方向垂直于 v 和 B。\n\n【推演】\n· r=mv/(qB)='+r.toExponential(2)+' m\n· T=2πm/(qB)\n\n【结论】这是质谱仪、回旋加速器、磁约束核聚变的基本原理。';}},
 
 {id:'e5',name:'平行板电容器',cat:'物理',tags:['电学','电容'],br:'电容器电容与极板面积成正比，与间距成反比 C=εA/d。',
@@ -616,10 +616,10 @@ var C2=[
  p:[P('I','电流 I',0.01,10,0.01,1,'A'),P('B','磁场 B',0.01,2,0.01,0.1,'T'),P('n','载流子浓度',1e22,1e26,1e22,1e24,'/m³'),P('d','厚度 d',0.1,5,0.1,1,'mm')],
  f:['U_H=I·B/(n·e·d)','R_H=1/(n·e)'],
  xR:[0.01,2],yR:[0,0.1],xT:10,yT:5,xL:'磁场 B (T)',yL:'霍尔电压 (V)',col:'#22d3ee',
- fn:function(p,x){return p.I*x/(p.n*1.602e-19*p.d*1e-3);},
- ro:function(p){var U=p.I*p.B/(p.n*1.602e-19*p.d*1e-3);var RH=1/(p.n*1.602e-19);
+ fn:function(p,x){return p.I*x/(p.n*1.602176634e-19*p.d*1e-3);},
+ ro:function(p){var U=p.I*p.B/(p.n*1.602176634e-19*p.d*1e-3);var RH=1/(p.n*1.602176634e-19);
    return[{k:'霍尔电压 U_H',v:F(U*1000,4)+' mV'},{k:'霍尔系数 R_H',v:RH.toExponential(2)+' m³/C'},{k:'电流 I',v:p.I+' A'},{k:'磁场 B',v:p.B+' T'},{k:'载流子浓度',v:p.n.toExponential(1)+' /m³'},{k:'厚度 d',v:p.d+' mm'}];},
- tt:function(p){var U=p.I*p.B/(p.n*1.602e-19*p.d*1e-3);
+ tt:function(p){var U=p.I*p.B/(p.n*1.602176634e-19*p.d*1e-3);
    return'【模型】霍尔效应：运动载流子在磁场中受洛伦兹力偏转，产生横向电压。\n\n【推演】\n· U_H=IB/(n·e·d)='+F(U*1000,4)+' mV\n\n【延伸】霍尔传感器广泛用于测转速、磁场、位置——手机、汽车里都有。';}},
 
 {id:'e9',name:'通电螺线管磁场',cat:'物理',tags:['电磁','磁场'],br:'通电螺线管内部磁场近似均匀，B=μ₀nI。',
@@ -649,12 +649,12 @@ var C3=[
  p:[P('Ea','活化能 Ea',10,200,1,70,'kJ/mol'),P('T1','温度 T₁',273,373,1,298,'K'),P('T2','温度 T₂',273,373,1,308,'K')],
  f:['k=A·e^(−Ea/RT)','ln(k₂/k₁)=Ea/R·(1/T₁−1/T₂)','温度每升 10K 速率约×2-4'],
  xR:[273,500],yR:[0,1000],xT:10,yT:5,xL:'温度 T (K)',yL:'相对速率常数 k/k₂₉₈',col:'#fbbf24',
- fn:function(p,x){var R=8.314;var k0=Math.exp(-p.Ea*1000/(R*298));return Math.exp(-p.Ea*1000/(R*x))/k0;},
+ fn:function(p,x){var R=8.314462618;var k0=Math.exp(-p.Ea*1000/(R*298));return Math.exp(-p.Ea*1000/(R*x))/k0;},
  mk:[{x:298,l:'298K',c:'#22d3ee'},{x:308,l:'308K',c:'#34d399'}],
- ro:function(p){var R=8.314;
+ ro:function(p){var R=8.314462618;
    var k1=Math.exp(-p.Ea*1000/(R*p.T1));var k2=Math.exp(-p.Ea*1000/(R*p.T2));var ratio=k2/k1;
    return[{k:'k₂/k₁',v:F(ratio,3)},{k:'ln(k₂/k₁)',v:F(Math.log(ratio),3)},{k:'T₁',v:p.T1+' K'},{k:'T₂',v:p.T2+' K'},{k:'Ea',v:p.Ea+' kJ/mol'},{k:'ΔT',v:(p.T2-p.T1)+' K'}];},
- tt:function(p){var R=8.314;var k1=Math.exp(-p.Ea*1000/(R*p.T1));var k2=Math.exp(-p.Ea*1000/(R*p.T2));var ratio=k2/k1;
+ tt:function(p){var R=8.314462618;var k1=Math.exp(-p.Ea*1000/(R*p.T1));var k2=Math.exp(-p.Ea*1000/(R*p.T2));var ratio=k2/k1;
    return'【模型】阿伦尼乌斯方程 k=A·e^(−Ea/RT)。\n\n【推演】\n· Ea='+p.Ea+' kJ/mol\n· T₁='+p.T1+'K, T₂='+p.T2+'K\n· k₂/k₁='+F(ratio,3)+'\n\n【结论】'+(ratio>1?'温度升高，速率增大。':'温度降低，速率减小。')+'\n\n【延伸】多数反应温度每升 10K，速率约提高 2~4 倍（范特霍夫规则）。';}},
 
 {id:'ch2',name:'吉布斯自由能',cat:'化学',tags:['热力学','自发'],br:'ΔG=ΔH−TΔS，ΔG<0 时反应自发。',
@@ -673,21 +673,21 @@ var C3=[
  p:[P('dG0','标准 ΔG°',-100,100,1,-20,'kJ/mol'),P('T','温度 T',200,1000,10,298,'K')],
  f:['ΔG°=−RT·lnK','K=e^(−ΔG°/RT)','ΔG=ΔG°+RT·lnQ'],
  xR:[200,1000],yR:[0,100],xT:10,yT:5,xL:'温度 T (K)',yL:'平衡常数 K',col:'#f472b6',
- fn:function(p,x){return Math.exp(-p.dG0*1000/(8.314*x));},
- ro:function(p){var K=Math.exp(-p.dG0*1000/(8.314*p.T));var lnK=Math.log(K);
-   return[{k:'平衡常数 K',v:K.toExponential(3)},{k:'ln K',v:F(lnK,3)},{k:'ΔG°',v:p.dG0+' kJ/mol'},{k:'温度 T',v:p.T+' K'},{k:'反应倾向',v:p.dG0<0?'向右':p.dG0>0?'向左':'平衡'},{k:'R',v:'8.314 J/(mol·K)'}];},
- tt:function(p){var K=Math.exp(-p.dG0*1000/(8.314*p.T));
+ fn:function(p,x){return Math.exp(-p.dG0*1000/(8.314462618*x));},
+ ro:function(p){var K=Math.exp(-p.dG0*1000/(8.314462618*p.T));var lnK=Math.log(K);
+   return[{k:'平衡常数 K',v:K.toExponential(3)},{k:'ln K',v:F(lnK,3)},{k:'ΔG°',v:p.dG0+' kJ/mol'},{k:'温度 T',v:p.T+' K'},{k:'反应倾向',v:p.dG0<0?'向右':p.dG0>0?'向左':'平衡'},{k:'R',v:'8.314462618 J/(mol·K)'}];},
+ tt:function(p){var K=Math.exp(-p.dG0*1000/(8.314462618*p.T));
    return'【模型】ΔG°=−RT·lnK，K 只与温度有关。\n\n【推演】\n· ΔG°='+p.dG0+' kJ/mol\n· T='+p.T+'K\n· K='+K.toExponential(3)+'\n\n【结论】'+(p.dG0<0?'ΔG°<0，K>1，平衡偏向产物。':p.dG0>0?'ΔG°>0，K<1，平衡偏向反应物。':'ΔG°=0，K=1。');}},
 
 {id:'ch4',name:'勒夏特列原理',cat:'化学',tags:['平衡','移动'],br:'平衡体系受扰动时，平衡向减弱扰动的方向移动。',
  p:[P('K','初始 K',0.1,100,0.1,10,''),P('Q','反应商 Q',0.01,100,0.01,5,''),P('T','温度 T',200,1000,10,298,'K')],
  f:['Q<K 向右移动','Q>K 向左移动','Q=K 平衡'],
  xR:[0.01,100],yR:[0.01,100],xT:10,yT:10,xL:'反应商 Q',yL:'ΔG (kJ/mol)',col:'#34d399',
- fn:function(p,x){return 8.314*p.T/1000*Math.log(x/p.K);},
+ fn:function(p,x){return 8.314462618*p.T/1000*Math.log(x/p.K);},
  mk:[{x:function(p){return p.K;},l:'Q=K',c:'#fbbf24'}],
- ro:function(p){var dG=8.314*p.T/1000*Math.log(p.Q/p.K);
+ ro:function(p){var dG=8.314462618*p.T/1000*Math.log(p.Q/p.K);
    return[{k:'ΔG',v:F(dG,3)+' kJ/mol'},{k:'K',v:F(p.K,2)},{k:'Q',v:F(p.Q,3)},{k:'Q/K',v:F(p.Q/p.K,3)},{k:'移动方向',v:dG<0?'向右':dG>0?'向左':'平衡'},{k:'T',v:p.T+' K'}];},
- tt:function(p){var dG=8.314*p.T/1000*Math.log(p.Q/p.K);
+ tt:function(p){var dG=8.314462618*p.T/1000*Math.log(p.Q/p.K);
    return'【模型】勒夏特列原理：平衡向减弱扰动的方向移动。\n\n【推演】\n· Q/K='+F(p.Q/p.K,3)+'\n· ΔG=RT·ln(Q/K)='+F(dG,3)+' kJ/mol\n\n【结论】'+(dG<0?'Q<K，正反应方向移动。':dG>0?'Q>K，逆反应方向移动。':'Q=K，平衡状态。')+'\n\n【延伸】升温→吸热方向；加压→体积减小方向；加催化剂→不移动。';}},
 
 {id:'ch5',name:'亨利定律气体溶解度',cat:'化学',tags:['溶液','气体'],br:'气体溶解度与分压成正比，c=kH·P。',
@@ -716,12 +716,12 @@ var C3=[
 
 {id:'ch8',name:'渗透压(范特霍夫)',cat:'化学',tags:['溶液','渗透'],br:'渗透压 Π=cRT，与浓度和温度成正比。',
  p:[P('c','浓度 c',0.001,1,0.001,0.1,'mol/L'),P('T','温度 T',273,373,1,298,'K')],
- f:['Π=cRT','R=8.314 J/(mol·K)','生物细胞约 0.7 MPa'],
+ f:['Π=cRT','R=8.314462618 J/(mol·K)','生物细胞约 0.7 MPa'],
  xR:[0.001,1],yR:[0,3000],xT:10,yT:5,xL:'浓度 c (mol/L)',yL:'渗透压 Π (kPa)',col:'#22d3ee',
- fn:function(p,x){return x*8.314*p.T;},
- ro:function(p){var P=8.314*p.c*p.T;
+ fn:function(p,x){return x*8.314462618*p.T;},
+ ro:function(p){var P=8.314462618*p.c*p.T;
    return[{k:'渗透压 Π',v:F(P,2)+' kPa'},{k:'浓度 c',v:p.c+' mol/L'},{k:'温度 T',v:p.T+' K'},{k:'Π (atm)',v:F(P/101.325,4)+' atm'},{k:'Π (mOsm)',v:F(p.c*1000,1)+' mOsm/L'},{k:'生理盐水',v:'约 0.154 mol/L, 770 kPa'}];},
- tt:function(p){var P=8.314*p.c*p.T;
+ tt:function(p){var P=8.314462618*p.c*p.T;
    return'【模型】渗透压 Π=cRT，与理想气体方程形式相同。\n\n【推演】\n· Π='+F(P,2)+' kPa\n· 生理盐水约 770 kPa\n\n【结论】细胞膜是半透膜，水分子从低浓度侧流向高浓度侧——这就是渗透。静脉注射必须用等渗溶液，否则红细胞会涨破或皱缩。';}},
 
 {id:'ch9',name:'反应级数与速率方程',cat:'化学',tags:['动力学','级数'],br:'反应速率与浓度幂次成正比，级数由实验确定。',
@@ -761,14 +761,14 @@ var C3=[
 
 {id:'ch12',name:'能斯特方程',cat:'化学',tags:['电化学','电极'],br:'电极电势与浓度有关，E=E°−(RT/nF)·lnQ。',
  p:[P('E0','标准电势 E°',-2,2,0.05,1.1,'V'),P('n','转移电子数 n',1,4,1,2,''),P('Q','反应商 Q',1e-6,1e6,1e-6,1,'')],
- f:['E=E°−(0.0592/n)·lgQ（0.0592 为 25 °C 时取值）','ΔG=−nFE','半电池电势，需与另一电极配对构成电池后判断自发性'],
+ f:['E=E°−(0.05916/n)·lgQ（0.05916 为 25 °C 时取值）','ΔG=−nFE','半电池电势，需与另一电极配对构成电池后判断自发性'],
  xR:[-6,6],yR:[-2,2],xT:12,yT:5,xL:'lg Q',yL:'电极电势 E (V)',col:'#22d3ee',
- fn:function(p,x){return p.E0-0.0592/p.n*x;},
+ fn:function(p,x){return p.E0-0.05916/p.n*x;},
  mk:[{x:0,l:'Q=1',c:'#fbbf24'}],
- ro:function(p){var E=p.E0-0.0592/p.n*Math.log10(p.Q);
-   return[{k:'实际电势 E',v:F(E,3)+' V'},{k:'标准电势 E°',v:p.E0+' V'},{k:'lg Q',v:F(Math.log10(p.Q),3)},{k:'转移电子 n',v:p.n},{k:'ΔG',v:F(-p.n*96485*E/1000,2)+' kJ/mol'},{k:'自发性',v:'半电池电势，需与另一电极配对构成电池后判断自发性'}];},
- tt:function(p){var E=p.E0-0.0592/p.n*Math.log10(p.Q);
-   return'【模型】能斯特方程 E=E°−(0.0592/n)·lgQ（0.0592 为 25 °C 时取值）。\n\n【推演】\n· E='+F(E,3)+' V\n· ΔG=−nFE='+F(-p.n*96485*E/1000,2)+' kJ/mol\n\n【结论】此 E 为半电池电势，需与另一电极配对构成电池后判断自发性。\n\n【延伸】这是原电池、电解池、pH 电极、生物膜电位的基础。';}}
+ ro:function(p){var E=p.E0-0.05916/p.n*Math.log10(p.Q);
+   return[{k:'实际电势 E',v:F(E,3)+' V'},{k:'标准电势 E°',v:p.E0+' V'},{k:'lg Q',v:F(Math.log10(p.Q),3)},{k:'转移电子 n',v:p.n},{k:'ΔG',v:F(-p.n*96485.33212*E/1000,2)+' kJ/mol'},{k:'自发性',v:'半电池电势，需与另一电极配对构成电池后判断自发性'}];},
+ tt:function(p){var E=p.E0-0.05916/p.n*Math.log10(p.Q);
+   return'【模型】能斯特方程 E=E°−(0.05916/n)·lgQ（0.05916 为 25 °C 时取值）。\n\n【推演】\n· E='+F(E,3)+' V\n· ΔG=−nFE='+F(-p.n*96485.33212*E/1000,2)+' kJ/mol\n\n【结论】此 E 为半电池电势，需与另一电极配对构成电池后判断自发性。\n\n【延伸】这是原电池、电解池、pH 电极、生物膜电位的基础。';}}
 ];
 for(var i=0;i<C3.length;i++){EXP.push(mkCurve(C3[i]));}
 
@@ -780,8 +780,8 @@ var C4=[
  n:80,rMin:2,rMax:5,
  speed:function(p){return 0.2*Math.sqrt(p.T/300)/Math.sqrt(p.v);},
  hue:function(p){return 200+(p.T-200)/3;},
- ro:function(p){var D=1.381e-23*p.T/(6*Math.PI*p.v*1e-3*1e-6);
-   return[{k:'扩散系数 D',v:D.toExponential(2)+' m²/s'},{k:'温度 T',v:p.T+' K'},{k:'黏度 η',v:p.v+' mPa·s'},{k:'均方位移',v:F(Math.sqrt(2*D*1)*1e6,2)+' μm/s'},{k:'平均动能',v:F(1.5*1.381e-23*p.T*1e21,2)+'×10⁻²¹ J'},{k:'热运动速度',v:F(Math.sqrt(3*1.381e-23*p.T/1e-20),1)+' m/s'}];},
+ ro:function(p){var D=1.380649e-23*p.T/(6*Math.PI*p.v*1e-3*1e-6);
+   return[{k:'扩散系数 D',v:D.toExponential(2)+' m²/s'},{k:'温度 T',v:p.T+' K'},{k:'黏度 η',v:p.v+' mPa·s'},{k:'均方位移',v:F(Math.sqrt(2*D*1)*1e6,2)+' μm/s'},{k:'平均动能',v:F(1.5*1.380649e-23*p.T*1e21,2)+'×10⁻²¹ J'},{k:'热运动速度',v:F(Math.sqrt(3*1.380649e-23*p.T/1e-20),1)+' m/s'}];},
  tt:function(p){return'【模型】布朗运动：悬浮微粒受周围流体分子不平衡撞击产生的无规则运动。\n\n【推演】\n· D=kT/(6πηr)\n· T='+p.T+' K, η='+p.v+' mPa·s\n\n【结论】1905年爱因斯坦用布朗运动理论证实了分子的真实存在，佩兰因此获1926年诺贝尔物理学奖。';}},
 
 {id:'pt2',name:'气体扩散(格雷姆)',cat:'化学',tags:['扩散','气体'],br:'不同气体分子扩散速率与摩尔质量的平方根成反比。',
@@ -790,7 +790,7 @@ var C4=[
  n:60,rMin:2,rMax:4,
  speed:function(p){return 0.35*Math.sqrt(300/p.M2);},
  hue:function(p){return 280;},
- ro:function(p){var v1=Math.sqrt(3*8.314*p.T/(p.M1/1000));var v2=Math.sqrt(3*8.314*p.T/(p.M2/1000));
+ ro:function(p){var v1=Math.sqrt(3*8.314462618*p.T/(p.M1/1000));var v2=Math.sqrt(3*8.314462618*p.T/(p.M2/1000));
    return[{k:'气体1 v_rms',v:F(v1,1)+' m/s'},{k:'气体2 v_rms',v:F(v2,1)+' m/s'},{k:'扩散比 r₁/r₂',v:F(Math.sqrt(p.M2/p.M1),3)},{k:'摩尔质量比',v:F(p.M2/p.M1,2)},{k:'温度 T',v:p.T+' K'},{k:'平均动能比',v:'1.00'}];},
  tt:function(p){var r=Math.sqrt(p.M2/p.M1);return'【模型】格雷姆定律：气体扩散速率与摩尔质量平方根成反比。\n\n【推演】\n· r₁/r₂=√(M₂/M₁)='+F(r,3)+'\n· M₁='+p.M1+' g/mol, M₂='+p.M2+' g/mol\n\n【结论】氢气扩散最快，所以气球放几天就瘪了。铀同位素分离利用 UF₆ 的扩散速率差异。';}},
 
@@ -800,8 +800,8 @@ var C4=[
  n:100,rMin:1.5,rMax:4,
  speed:function(p){return 0.15*Math.sqrt(p.T/300);},
  hue:function(p){return 30+200*(p.T-100)/900;},
- ro:function(p){var M=0.028;return[{k:'v_rms',v:F(Math.sqrt(3*8.314*p.T/M),0)+' m/s'},{k:'v_p',v:F(Math.sqrt(2*8.314*p.T/M),0)+' m/s'},{k:'v̄',v:F(Math.sqrt(8*8.314*p.T/(Math.PI*M)),0)+' m/s'},{k:'温度 T',v:p.T+' K'},{k:'平均动能',v:F(1.5*1.381e-23*p.T*1e21,2)+'×10⁻²¹ J'},{k:'分子(N₂)',v:'28 g/mol'}];},
- tt:function(p){return'【模型】分子热运动：温度越高速率分布越宽。\n\n【推演】\n· v_rms='+F(Math.sqrt(3*8.314*p.T/0.028),0)+' m/s\n· T='+p.T+' K\n\n【结论】温度升高，分子碰撞频率和力度都增大，这就是升温加快反应速率的微观原因。';}},
+ ro:function(p){var M=0.028;return[{k:'v_rms',v:F(Math.sqrt(3*8.314462618*p.T/M),0)+' m/s'},{k:'v_p',v:F(Math.sqrt(2*8.314462618*p.T/M),0)+' m/s'},{k:'v̄',v:F(Math.sqrt(8*8.314462618*p.T/(Math.PI*M)),0)+' m/s'},{k:'温度 T',v:p.T+' K'},{k:'平均动能',v:F(1.5*1.380649e-23*p.T*1e21,2)+'×10⁻²¹ J'},{k:'分子(N₂)',v:'28 g/mol'}];},
+ tt:function(p){return'【模型】分子热运动：温度越高速率分布越宽。\n\n【推演】\n· v_rms='+F(Math.sqrt(3*8.314462618*p.T/0.028),0)+' m/s\n· T='+p.T+' K\n\n【结论】温度升高，分子碰撞频率和力度都增大，这就是升温加快反应速率的微观原因。';}},
 
 {id:'pt4',name:'荧光分子与激发态',cat:'化学',tags:['光化学','激发'],br:'分子吸收光子跃迁到激发态，回落到基态时释放荧光。',
  p:[P('lam','激发波长 λ',300,600,10,400,'nm'),P('kf','荧光速率 kf',1e6,1e9,1e6,1e8,'1/s'),P('knr','非辐射速率 knr',1e6,1e9,1e6,1e7,'1/s')],
@@ -829,7 +829,7 @@ var C4=[
  n:70,rMin:2,rMax:4,
  speed:function(p){return 0.1+Math.log10(p.D*1e11)/5;},
  hue:function(p){return 180;},
- ro:function(p){return[{k:'扩散系数 D',v:p.D.toExponential(2)+' m²/s'},{k:'浓度差 Δc',v:p.dc+' mol/L'},{k:'通量 J(1mm)',v:(p.D*p.dc/1e-3).toExponential(2)+' mol/(m²·s)'},{k:'扩散时间(1mm)',v:F(1e-6/(2*p.D),1)+' s'},{k:'渗透压',v:F(p.dc*8.314*298,1)+' kPa'},{k:'平衡状态',v:'动态平衡'}];},
+ ro:function(p){return[{k:'扩散系数 D',v:p.D.toExponential(2)+' m²/s'},{k:'浓度差 Δc',v:p.dc+' mol/L'},{k:'通量 J(1mm)',v:(p.D*p.dc/1e-3).toExponential(2)+' mol/(m²·s)'},{k:'扩散时间(1mm)',v:F(1e-6/(2*p.D),1)+' s'},{k:'渗透压',v:F(p.dc*8.314462618*298,1)+' kPa'},{k:'平衡状态',v:'动态平衡'}];},
  tt:function(p){return'【模型】菲克定律：J=−D·dc/dx。\n\n【推演】\n· D='+p.D.toExponential(2)+' m²/s\n· J='+(p.D*p.dc/1e-3).toExponential(2)+' mol/(m²·s)\n\n【结论】扩散是分子热运动的宏观表现。药物缓释、气体交换、膜分离都基于此。';}},
 
 {id:'pt7',name:'酶催化反应动力学',cat:'化学',tags:['酶','动力学'],br:'酶促反应速率与底物浓度呈饱和曲线——米氏方程。',
@@ -848,8 +848,8 @@ var C4=[
  n:100,rMin:1.5,rMax:3.5,
  speed:function(p){return 0.2*Math.sqrt(p.T/300);},
  hue:function(p){return 200+(p.T-300)/10;},
- ro:function(p){var f=Math.exp(-p.Ea*1000/(8.314*p.T));return[{k:'有效碰撞分数',v:f.toExponential(3)},{k:'温度 T',v:p.T+' K'},{k:'活化能 Ea',v:p.Ea+' kJ/mol'},{k:'RT (kJ/mol)',v:F(8.314*p.T/1000,2)},{k:'Ea/RT',v:F(p.Ea*1000/(8.314*p.T),2)},{k:'活化分子比例',v:F(f*100,4)+'%'}];},
- tt:function(p){var f=Math.exp(-p.Ea*1000/(8.314*p.T));
+ ro:function(p){var f=Math.exp(-p.Ea*1000/(8.314462618*p.T));return[{k:'有效碰撞分数',v:f.toExponential(3)},{k:'温度 T',v:p.T+' K'},{k:'活化能 Ea',v:p.Ea+' kJ/mol'},{k:'RT (kJ/mol)',v:F(8.314462618*p.T/1000,2)},{k:'Ea/RT',v:F(p.Ea*1000/(8.314462618*p.T),2)},{k:'活化分子比例',v:F(f*100,4)+'%'}];},
+ tt:function(p){var f=Math.exp(-p.Ea*1000/(8.314462618*p.T));
    return'【模型】碰撞理论：有效碰撞分数 f=exp(−Ea/RT)。\n\n【推演】\n· f='+f.toExponential(3)+'\n· 活化分子比例='+F(f*100,4)+'%\n\n【结论】只有极少数分子拥有超过 Ea 的能量。升温或加催化剂都能提高这一比例，加速反应。';}}
 ];
 for(var i=0;i<C4.length;i++){EXP.push(mkPart(C4[i]));}
@@ -858,12 +858,12 @@ for(var i=0;i<C4.length;i++){EXP.push(mkPart(C4[i]));}
 var C5=[
 {id:'k1',name:'玻尔兹曼分布因子',cat:'化学',tags:['统计','能量'],br:'分子在能级上的分布由玻尔兹曼因子决定。',
  p:[P('dE','能级差 ΔE',0.01,1,0.01,0.1,'eV'),P('T','温度 T',100,1000,10,298,'K')],
- f:['N₂/N₁=exp(−ΔE/kT)','k=1.381×10⁻²³ J/K','1 eV=1.602×10⁻¹⁹ J'],
+ f:['N₂/N₁=exp(−ΔE/kT)','k=1.380649×10⁻²³ J/K','1 eV=1.602176634×10⁻¹⁹ J'],
  xR:[100,1000],yR:[0,1],xT:10,yT:5,xL:'温度 T (K)',yL:'相对布居 N₂/N₁',col:'#22d3ee',
- fn:function(p,x){return Math.exp(-p.dE*1.602e-19/(1.381e-23*x));},
- ro:function(p){var r=Math.exp(-p.dE*1.602e-19/(1.381e-23*p.T));
-   return[{k:'N₂/N₁',v:r.toExponential(3)},{k:'能级差 ΔE',v:p.dE+' eV'},{k:'温度 T',v:p.T+' K'},{k:'ΔE (J)',v:(p.dE*1.602e-19).toExponential(2)+' J'},{k:'kT (eV)',v:F(1.381e-23*p.T/1.602e-19,4)+' eV'},{k:'ΔE/kT',v:F(p.dE*1.602e-19/(1.381e-23*p.T),2)}];},
- tt:function(p){var r=Math.exp(-p.dE*1.602e-19/(1.381e-23*p.T));
+ fn:function(p,x){return Math.exp(-p.dE*1.602176634e-19/(1.380649e-23*x));},
+ ro:function(p){var r=Math.exp(-p.dE*1.602176634e-19/(1.380649e-23*p.T));
+   return[{k:'N₂/N₁',v:r.toExponential(3)},{k:'能级差 ΔE',v:p.dE+' eV'},{k:'温度 T',v:p.T+' K'},{k:'ΔE (J)',v:(p.dE*1.602176634e-19).toExponential(2)+' J'},{k:'kT (eV)',v:F(1.380649e-23*p.T/1.602176634e-19,4)+' eV'},{k:'ΔE/kT',v:F(p.dE*1.602176634e-19/(1.380649e-23*p.T),2)}];},
+ tt:function(p){var r=Math.exp(-p.dE*1.602176634e-19/(1.380649e-23*p.T));
    return'【模型】玻尔兹曼分布：N₂/N₁=exp(−ΔE/kT)。\n\n【推演】\n· N₂/N₁='+r.toExponential(3)+'\n· ΔE='+p.dE+' eV, T='+p.T+'K\n\n【结论】温度越高，高能级分子越多。这是 NMR、光谱、反应动力学的核心。';}},
 
 {id:'k2',name:'范德华气体方程',cat:'化学',tags:['气体','真实气体'],br:'考虑分子体积和分子间作用力，修正理想气体。',
@@ -881,11 +881,11 @@ var C5=[
  p:[P('dHv','汽化焓 ΔHvap',10,80,1,40,'kJ/mol'),P('T','温度 T',273,500,1,373,'K')],
  f:['ln(P₂/P₁)=−ΔHvap/R·(1/T₂−1/T₁)','克-克方程','特鲁顿规则 ΔHvap≈88·Tb'],
  xR:[250,500],yR:[0,200],xT:10,yT:5,xL:'温度 T (K)',yL:'蒸气压 (kPa)',col:'#fbbf24',
- fn:function(p,x){var R=8.314;var P1=101.325;var T1=373;return P1*Math.exp(-p.dHv*1000/R*(1/x-1/T1));},
+ fn:function(p,x){var R=8.314462618;var P1=101.325;var T1=373;return P1*Math.exp(-p.dHv*1000/R*(1/x-1/T1));},
  mk:[{x:373,l:'100°C',c:'#22d3ee'}],
- ro:function(p){var R=8.314;var P1=101.325;var T1=373;var P=P1*Math.exp(-p.dHv*1000/R*(1/p.T-1/T1));
-   return[{k:'蒸气压 P',v:F(P,3)+' kPa'},{k:'ΔHvap',v:p.dHv+' kJ/mol'},{k:'温度 T',v:p.T+' K'},{k:'正常沸点',v:F(p.dHv*1000/(88*8.314),1)+' K（估算）'},{k:'P (atm)',v:F(P/101.325,4)+' atm'},{k:'ln(P)',v:F(Math.log(P),3)}];},
- tt:function(p){var R=8.314;var P1=101.325;var T1=373;var P=P1*Math.exp(-p.dHv*1000/R*(1/p.T-1/T1));
+ ro:function(p){var R=8.314462618;var P1=101.325;var T1=373;var P=P1*Math.exp(-p.dHv*1000/R*(1/p.T-1/T1));
+   return[{k:'蒸气压 P',v:F(P,3)+' kPa'},{k:'ΔHvap',v:p.dHv+' kJ/mol'},{k:'温度 T',v:p.T+' K'},{k:'正常沸点',v:F(p.dHv*1000/(88*8.314462618),1)+' K（估算）'},{k:'P (atm)',v:F(P/101.325,4)+' atm'},{k:'ln(P)',v:F(Math.log(P),3)}];},
+ tt:function(p){var R=8.314462618;var P1=101.325;var T1=373;var P=P1*Math.exp(-p.dHv*1000/R*(1/p.T-1/T1));
    return'【模型】克劳修斯-克拉珀龙方程：ln(P₂/P₁)=−ΔHvap/R·(1/T₂−1/T₁)。\n\n【推演】\n· 温度 '+p.T+' K 时蒸气压='+F(P,3)+' kPa\n· ΔHvap='+p.dHv+' kJ/mol\n\n【结论】这是"高压锅"原理——压力高沸点升高。也是"高原煮不熟饭"的原因。';}},
 
 {id:'k4',name:'一级反应动力学',cat:'化学',tags:['动力学','指数'],br:'反应物浓度随时间指数衰减，lnc=−kt+lnc₀。',
@@ -934,13 +934,13 @@ var C5=[
 
 {id:'k9',name:'原电池电动势(Nernst)',cat:'化学',tags:['电化学','电池'],br:'电池电动势随浓度变化，遵循 Nernst 方程。',
  p:[P('E0','标准电动势 E°',0.1,3,0.05,1.1,'V'),P('n','电子数 n',1,4,1,2,''),P('Q','反应商 Q',1e-6,1e6,1e-6,1,'')],
- f:['E=E°−(0.0592/n)·lgQ','ΔG=−nFE','E>0 电池自发'],
+ f:['E=E°−(0.05916/n)·lgQ','ΔG=−nFE','E>0 电池自发'],
  xR:[1e-6,1e6],yR:[0,2],xT:10,yT:5,xL:'lg Q',yL:'E (V)',col:'#34d399',
- fn:function(p,x){return p.E0-0.0592/p.n*Math.log10(x);},
- ro:function(p){var E=p.E0-0.0592/p.n*Math.log10(p.Q);
-   return[{k:'E',v:F(E,4)+' V'},{k:'E°',v:p.E0+' V'},{k:'n',v:p.n},{k:'lg Q',v:F(Math.log10(p.Q),2)},{k:'ΔG',v:F(-p.n*96485*E/1000,3)+' kJ/mol'},{k:'ΔG°',v:F(-p.n*96485*p.E0/1000,3)+' kJ/mol'}];},
- tt:function(p){var E=p.E0-0.0592/p.n*Math.log10(p.Q);
-   return'【模型】Nernst 方程 E=E°−(0.0592/n)lgQ。\n\n【推演】\n· E='+F(E,4)+' V\n· ΔG=−nFE='+F(-p.n*96485*E/1000,3)+' kJ/mol\n\n【结论】丹尼尔电池、燃料电池、pH 电极都遵循这个方程。';}},
+ fn:function(p,x){return p.E0-0.05916/p.n*Math.log10(x);},
+ ro:function(p){var E=p.E0-0.05916/p.n*Math.log10(p.Q);
+   return[{k:'E',v:F(E,4)+' V'},{k:'E°',v:p.E0+' V'},{k:'n',v:p.n},{k:'lg Q',v:F(Math.log10(p.Q),2)},{k:'ΔG',v:F(-p.n*96485.33212*E/1000,3)+' kJ/mol'},{k:'ΔG°',v:F(-p.n*96485.33212*p.E0/1000,3)+' kJ/mol'}];},
+ tt:function(p){var E=p.E0-0.05916/p.n*Math.log10(p.Q);
+   return'【模型】Nernst 方程 E=E°−(0.05916/n)lgQ。\n\n【推演】\n· E='+F(E,4)+' V\n· ΔG=−nFE='+F(-p.n*96485.33212*E/1000,3)+' kJ/mol\n\n【结论】丹尼尔电池、燃料电池、pH 电极都遵循这个方程。';}},
 
 {id:'k10',name:'反应进度与平衡',cat:'化学',tags:['平衡','转化率'],br:'反应进度 ξ 描述反应进行的程度，平衡时 ΔG=0。',
  p:[P('K','平衡常数 K',0.1,100,0.1,10,''),P('c0','初始浓度 c₀',0.1,5,0.1,1,'mol/L')],
@@ -953,13 +953,13 @@ var C5=[
 
 {id:'k11',name:'氧化还原电位-pH图',cat:'化学',tags:['电化学','pH'],br:'水溶液中氧化还原电位随 pH 变化。',
  p:[P('E0','标准电位 E°',-1,2,0.05,0.8,'V'),P('n','电子数 n',1,4,1,1,''),P('m','H⁺数 m',0,4,1,2,''),P('pH','pH',0,14,0.5,7,'')],
- f:['E=E°−(0.0592m/n)·pH','Pourbaix 图','水的稳定区'],
+ f:['E=E°−(0.05916m/n)·pH','Pourbaix 图','水的稳定区'],
  xR:[0,14],yR:[-1,2],xT:7,yT:6,xL:'pH',yL:'电位 E (V)',col:'#22d3ee',
- fn:function(p,x){return p.E0-0.0592*p.m/p.n*x;},
- ro:function(p){var E=p.E0-0.0592*p.m/p.n*p.pH;
-   return[{k:'实际电位 E',v:F(E,4)+' V'},{k:'E°',v:p.E0+' V'},{k:'pH',v:p.pH},{k:'斜率',v:F(-0.0592*p.m/p.n,4)+' V/pH'},{k:'n',v:p.n},{k:'m',v:p.m}];},
- tt:function(p){var E=p.E0-0.0592*p.m/p.n*p.pH;
-   return'【模型】Pourbaix 电位-pH 图：E=E°−(0.0592m/n)·pH。\n\n【推演】\n· pH='+p.pH+' 时 E='+F(E,4)+' V\n· 斜率='+F(-0.0592*p.m/p.n,4)+' V/pH\n\n【结论】用于判断金属在水中的腐蚀、钝化或免疫区，是腐蚀科学的基石。';}},
+ fn:function(p,x){return p.E0-0.05916*p.m/p.n*x;},
+ ro:function(p){var E=p.E0-0.05916*p.m/p.n*p.pH;
+   return[{k:'实际电位 E',v:F(E,4)+' V'},{k:'E°',v:p.E0+' V'},{k:'pH',v:p.pH},{k:'斜率',v:F(-0.05916*p.m/p.n,4)+' V/pH'},{k:'n',v:p.n},{k:'m',v:p.m}];},
+ tt:function(p){var E=p.E0-0.05916*p.m/p.n*p.pH;
+   return'【模型】Pourbaix 电位-pH 图：E=E°−(0.05916m/n)·pH。\n\n【推演】\n· pH='+p.pH+' 时 E='+F(E,4)+' V\n· 斜率='+F(-0.05916*p.m/p.n,4)+' V/pH\n\n【结论】用于判断金属在水中的腐蚀、钝化或免疫区，是腐蚀科学的基石。';}},
 
 {id:'k12',name:'摩尔电导率与温度',cat:'化学',tags:['电化学','温度'],br:'电导率随温度升高而增大。',
  p:[P('L25','25°C 电导率',0.001,0.1,0.001,0.01,'S/m'),P('a','温度系数',0.01,0.05,0.001,0.02,'1/K')],
@@ -982,11 +982,11 @@ var C5=[
  f:['浓度分布 c(h)=c₀·exp(−mgh/kT)','沉降速度 v=2r²Δρg/(9η)','高度分布'],
  xR:[0,10],yR:[0,1],xT:10,yT:5,xL:'高度 h (cm)',yL:'相对浓度 c/c₀',col:'#22d3ee',
  fn:function(p,x){var m=(4/3)*Math.PI*Math.pow(p.r*1e-9,3)*p.drho*1000;
-   var kT=1.381e-23*p.T;var h=x*0.01;return Math.exp(-m*9.8*h/kT);},
+   var kT=1.380649e-23*p.T;var h=x*0.01;return Math.exp(-m*9.8*h/kT);},
  ro:function(p){var m=(4/3)*Math.PI*Math.pow(p.r*1e-9,3)*p.drho*1000;
-   var kT=1.381e-23*p.T;
+   var kT=1.380649e-23*p.T;
    return[{k:'粒子质量 m',v:m.toExponential(2)+' kg'},{k:'mgh/kT (h=1cm)',v:F(m*9.8*0.01/kT,3)},{k:'10cm 相对浓度',v:F(Math.exp(-m*9.8*0.1/kT),4)},{k:'粒径 r',v:p.r+' nm'},{k:'Δρ',v:p.drho+' g/cm³'},{k:'温度 T',v:p.T+' K'}];},
- tt:function(p){var m=(4/3)*Math.PI*Math.pow(p.r*1e-9,3)*p.drho*1000;var kT=1.381e-23*p.T;
+ tt:function(p){var m=(4/3)*Math.PI*Math.pow(p.r*1e-9,3)*p.drho*1000;var kT=1.380649e-23*p.T;
    return'【模型】沉降平衡：浓度按玻尔兹曼分布 c(h)=c₀·exp(−mgh/kT)。\n\n【推演】\n· 粒子质量='+m.toExponential(2)+' kg\n· h=10cm 处浓度比='+F(Math.exp(-m*9.8*0.1/kT),4)+'\n\n【结论】粒子越小，沉降越不明显。这就是超速离心机可以分离蛋白质和病毒的原理。';}},
 
 {id:'k15',name:'超速离心沉降速度',cat:'化学',tags:['胶体','离心'],br:'离心力场中粒子以恒定速度沉降，与粒径平方成正比。',
@@ -1044,7 +1044,7 @@ var C5=[
  xR:[0,1],yR:[-150,150],xT:5,yT:6,xL:'反应坐标',yL:'能量 (kJ/mol)',col:'#f472b6',
  fn:function(p,x){var t=(x-0.5)*2;var E=p.Ea*Math.exp(-t*t*3)-p.dH*0.5*(1-Math.tanh(t*2));return E;},
  mk:[{x:0,l:'反应物',c:'#22d3ee'},{x:0.5,l:'过渡态',c:'#fbbf24'},{x:1,l:'产物',c:'#34d399'}],
- ro:function(p){var EaR=p.Ea-p.dH;return[{k:'正反应 Ea',v:F(p.Ea,1)+' kJ/mol'},{k:'逆反应 Ea',v:F(EaR,1)+' kJ/mol'},{k:'ΔH',v:p.dH+' kJ/mol'},{k:'ΔH 类型',v:p.dH<0?'放热':p.dH>0?'吸热':'热中性'},{k:'K (298K)',v:F(Math.exp(-p.dH*1000/(8.314*298)),3)},{k:'ΔG°',v:p.dH+' kJ/mol（近似）'}];},
+ ro:function(p){var EaR=p.Ea-p.dH;return[{k:'正反应 Ea',v:F(p.Ea,1)+' kJ/mol'},{k:'逆反应 Ea',v:F(EaR,1)+' kJ/mol'},{k:'ΔH',v:p.dH+' kJ/mol'},{k:'ΔH 类型',v:p.dH<0?'放热':p.dH>0?'吸热':'热中性'},{k:'K (298K)',v:F(Math.exp(-p.dH*1000/(8.314462618*298)),3)},{k:'ΔG°',v:p.dH+' kJ/mol（近似）'}];},
  tt:function(p){var EaR=p.Ea-p.dH;
    return'【模型】反应坐标图：Ea 决定反应速率，ΔH 决定热效应。\n\n【推演】\n· 正反应 Ea='+F(p.Ea,1)+' kJ/mol\n· 逆反应 Ea='+F(EaR,1)+' kJ/mol\n· ΔH='+p.dH+' kJ/mol\n\n【结论】'+(p.dH<0?'放热反应：正反应 Ea 低，更容易进行。':p.dH>0?'吸热反应：逆反应 Ea 低，产物稳定。':'热中性。')+'\n\n【延伸】催化剂降低 Ea，不改变 ΔH。';}},
 
@@ -1142,7 +1142,7 @@ var C5=[
  f:['V=VR+VA','VR=2πεaψ²·exp(−κh)','VA=−A/(12h)'],
  xR:[0,20],yR:[-1e-18,1e-17],xT:10,yT:5,xL:'距离 h (nm)',yL:'总势能 (J)',col:'#22d3ee',
  fn:function(p,x){var h=x*1e-9;var a=100e-9;var VA=-p.A/(12*h);var VR=2*Math.PI*8.854e-12*78*a*Math.pow(p.psi*1e-3,2)*Math.exp(-p.k*h);return (VA+VR);},
- ro:function(p){var a=100e-9;var d=Math.pow(p.k,2)*8.854e-12*78*1.381e-23*298/(2*Math.pow(1.602e-19,2)*(0.01*1e3));
+ ro:function(p){var a=100e-9;var d=Math.pow(p.k,2)*8.854e-12*78*1.380649e-23*298/(2*Math.pow(1.602176634e-19,2)*(0.01*1e3));
    return[{k:'DLVO 势能',v:'多极值'},{k:'κ',v:(p.k/1e8).toFixed(2)+'×10⁸ /m'},{k:'ψ',v:p.psi+' mV'},{k:'Hamaker 常数',v:p.A.toExponential(2)+' J'},{k:'双电层厚度',v:F(1/p.k*1e9,3)+' nm'},{k:'稳定性',v:p.psi>30?'稳定':'易聚集'}];},
  tt:function(p){return'【模型】DLVO 理论：总势能=范德华吸引+静电排斥。\n\n【推演】\n· A='+p.A.toExponential(2)+' J\n· ψ='+p.psi+' mV\n· 双电层厚度='+F(1/p.k*1e9,3)+' nm\n\n【结论】存在能垒时胶体稳定；加入电解质压缩双电层（Schulze-Hardy 规则），能垒消失则聚沉。这是胶体化学和纳米材料分散的核心。';}},
 
@@ -1192,16 +1192,16 @@ var C5=[
  xR:[0,1],yR:[-50,50],xT:10,yT:5,xL:'折叠坐标',yL:'自由能 (kJ/mol)',col:'#f472b6',
  fn:function(p,x){var t=(x-0.5)*2;return p.dGts*Math.exp(-Math.pow(t+0.3,2)*5)+p.dG*(0.5+0.5*Math.tanh(t*2));},
  mk:[{x:0,l:'伸展态',c:'#22d3ee'},{x:0.5,l:'过渡态',c:'#fbbf24'},{x:1,l:'天然态',c:'#34d399'}],
- ro:function(p){return[{k:'折叠 ΔG',v:p.dG+' kJ/mol'},{k:'势垒',v:p.dGts+' kJ/mol'},{k:'折叠方向',v:'向天然态'},{k:'K_fold',v:Math.exp(-p.dG*1000/(8.314*298)).toExponential(2)},{k:'折叠时间',v:'ms~s'},{k:'Levinthal 悖论',v:'漏斗模型解决'}];},
- tt:function(p){return'【模型】蛋白质折叠能量漏斗：多维景观，蛋白质沿漏斗下滑到天然态。\n\n【推演】\n· ΔG='+p.dG+' kJ/mol\n· 势垒='+p.dGts+' kJ/mol\n· K_fold='+Math.exp(-p.dG*1000/(8.314*298)).toExponential(2)+'\n\n【结论】Anfinsen 和 Levinthal 悖论的解决方案：不是随机搜索，而是沿漏斗定向折叠。2004 年诺贝尔化学奖。';}}
+ ro:function(p){return[{k:'折叠 ΔG',v:p.dG+' kJ/mol'},{k:'势垒',v:p.dGts+' kJ/mol'},{k:'折叠方向',v:'向天然态'},{k:'K_fold',v:Math.exp(-p.dG*1000/(8.314462618*298)).toExponential(2)},{k:'折叠时间',v:'ms~s'},{k:'Levinthal 悖论',v:'漏斗模型解决'}];},
+ tt:function(p){return'【模型】蛋白质折叠能量漏斗：多维景观，蛋白质沿漏斗下滑到天然态。\n\n【推演】\n· ΔG='+p.dG+' kJ/mol\n· 势垒='+p.dGts+' kJ/mol\n· K_fold='+Math.exp(-p.dG*1000/(8.314462618*298)).toExponential(2)+'\n\n【结论】Anfinsen 和 Levinthal 悖论的解决方案：不是随机搜索，而是沿漏斗定向折叠。2004 年诺贝尔化学奖。';}}
 ,
 {id:'k36',name:'范特霍夫方程-平衡常数温度效应',cat:'化学',tags:['热力学','化学平衡'],br:'在焓变近似恒定时，平衡常数随温度变化遵循范特霍夫方程。',
  p:[P('dH','反应焓变 ΔH',-80,80,1,40,'kJ/mol'),P('Kref','参考平衡常数 K₁',0.1,100,0.1,10,''),P('Tref','参考温度 T₁',250,500,1,298,'K'),P('T','当前温度 T₂',250,600,1,373,'K')],
  f:['ln(K₂/K₁)=−ΔH/R·(1/T₂−1/T₁)','ΔH>0：升温使 K 增大','ΔH<0：升温使 K 减小'],
  xR:[250,600],yR:[0,100000],xT:7,yT:5,xL:'温度 T (K)',yL:'平衡常数 K',col:'#34d399',
- fn:function(p,x){return p.Kref*Math.exp(-p.dH*1000/8.314*(1/x-1/p.Tref));},
- ro:function(p){var k=p.Kref*Math.exp(-p.dH*1000/8.314*(1/p.T-1/p.Tref));return[{k:'当前平衡常数 K₂',v:k.toExponential(4)},{k:'参考 K₁',v:p.Kref},{k:'ΔH',v:p.dH+' kJ/mol'},{k:'T₂',v:p.T+' K'},{k:'ln(K₂/K₁)',v:F(Math.log(k/p.Kref),4)},{k:'升温效应',v:p.dH>0?'吸热反应：K 增大':p.dH<0?'放热反应：K 减小':'ΔH≈0：K 近似不变'}];},
- tt:function(p){var k=p.Kref*Math.exp(-p.dH*1000/8.314*(1/p.T-1/p.Tref));return'【模型】范特霍夫方程描述平衡常数的温度依赖。\n\n【推演】\n· K₂='+k.toExponential(4)+'\n· ΔH='+p.dH+' kJ/mol\n· 温度由 '+p.Tref+' K 变为 '+p.T+' K\n\n【结论】'+(p.dH>0?'吸热反应升温有利于正向平衡。':p.dH<0?'放热反应升温使平衡常数减小。':'焓变为零时，近似模型中 K 不随温度变化。')+'\n\n【适用条件】假设研究温区内反应焓变近似恒定。';}},
+ fn:function(p,x){return p.Kref*Math.exp(-p.dH*1000/8.314462618*(1/x-1/p.Tref));},
+ ro:function(p){var k=p.Kref*Math.exp(-p.dH*1000/8.314462618*(1/p.T-1/p.Tref));return[{k:'当前平衡常数 K₂',v:k.toExponential(4)},{k:'参考 K₁',v:p.Kref},{k:'ΔH',v:p.dH+' kJ/mol'},{k:'T₂',v:p.T+' K'},{k:'ln(K₂/K₁)',v:F(Math.log(k/p.Kref),4)},{k:'升温效应',v:p.dH>0?'吸热反应：K 增大':p.dH<0?'放热反应：K 减小':'ΔH≈0：K 近似不变'}];},
+ tt:function(p){var k=p.Kref*Math.exp(-p.dH*1000/8.314462618*(1/p.T-1/p.Tref));return'【模型】范特霍夫方程描述平衡常数的温度依赖。\n\n【推演】\n· K₂='+k.toExponential(4)+'\n· ΔH='+p.dH+' kJ/mol\n· 温度由 '+p.Tref+' K 变为 '+p.T+' K\n\n【结论】'+(p.dH>0?'吸热反应升温有利于正向平衡。':p.dH<0?'放热反应升温使平衡常数减小。':'焓变为零时，近似模型中 K 不随温度变化。')+'\n\n【适用条件】假设研究温区内反应焓变近似恒定。';}},
 {id:'k37',name:'朗缪尔单分子层吸附',cat:'化学',tags:['表面化学','吸附'],br:'吸附位点逐渐饱和，吸附量随平衡浓度呈现饱和曲线。',
  p:[P('qmax','最大吸附量 qₘₐₓ',1,10,0.1,5,'mmol/g'),P('K','吸附平衡常数 K',0.01,10,0.01,0.5,'L/mmol'),P('C','平衡浓度 C',0.01,100,0.1,10,'mmol/L')],
  f:['q=qₘₐₓ·K·C/(1+K·C)','θ=K·C/(1+K·C)','高浓度时吸附位点趋于饱和'],
