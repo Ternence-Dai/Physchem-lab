@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#15384c">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="./icons/icon.svg">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <title>PhysChem Lab · 交互式物理化学实验工作台</title>
 <link rel="stylesheet" href="./assets/css/legacy-app.css">
 
@@ -95,5 +99,12 @@
   <script src="./assets/js/workspace-v5.js?v=20261021-ui-restoration-v1"></script>
   <script src="./assets/js/workspace-v5-context.js?v=20261022-context-mount-v3"></script>
 <script src="./assets/js/nist-webbook-reference-v1.js?v=20261022-nist-webbook-v1"></script>
+<script>
+if ((location.protocol === 'http:' || location.protocol === 'https:') && 'serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('./service-worker.js').catch(function () {});
+  });
+}
+</script>
 </body>
 </html>
