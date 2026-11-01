@@ -219,7 +219,7 @@ export function ohmsLaw({voltageV,resistanceOhm}) {
   );
   return Object.freeze(finiteResult({currentA,powerW,heatJPerMinute}, "Ohm's law result"));
 }
-export function inclinedPlaneForces({angleDeg,frictionCoefficient,massKg=1,gravity=9.8}) {
+export function inclinedPlaneForces({angleDeg,frictionCoefficient,massKg=1,gravity=9.80665}) {
   for (const [name,value] of Object.entries({angleDeg,frictionCoefficient,massKg,gravity})) {
     if (!Number.isFinite(value)) throw new TypeError(`${name} must be finite`);
   }
@@ -241,7 +241,7 @@ export function inclinedPlaneForces({angleDeg,frictionCoefficient,massKg=1,gravi
   return Object.freeze({...forces,slipping});
 }
 
-export function inclinedPlaneAcceleration({angleDeg,frictionCoefficient,gravity=9.8}) {
+export function inclinedPlaneAcceleration({angleDeg,frictionCoefficient,gravity=9.80665}) {
   for (const [name,value] of Object.entries({angleDeg,frictionCoefficient,gravity})) if (!Number.isFinite(value)) throw new TypeError(`${name} must be finite`);
   if (angleDeg < 0 || angleDeg > 90 || frictionCoefficient < 0 || gravity <= 0) throw new RangeError("inclined-plane parameters are outside their physical domain");
   // At 90° the normal force is exactly zero, so friction must contribute
