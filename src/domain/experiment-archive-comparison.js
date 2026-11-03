@@ -89,7 +89,7 @@ export function compareExperimentArchiveSnapshots(left, right) {
     leftValue: Object.prototype.hasOwnProperty.call(leftParams, key) ? leftParams[key] : null,
     rightValue: Object.prototype.hasOwnProperty.call(rightParams, key) ? rightParams[key] : null,
     changed: !Object.prototype.hasOwnProperty.call(leftParams, key) ||
-      !Object.prototype.hasOwnProperty.call(rightParams, key) || leftParams[key] !== rightParams[key]
+      !Object.prototype.hasOwnProperty.call(rightParams, key) || !sameSnapshotValue(leftParams[key], rightParams[key])
   }));
 
   function readoutMap(rows) {
