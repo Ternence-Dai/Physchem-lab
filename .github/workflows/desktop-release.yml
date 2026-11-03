@@ -145,7 +145,7 @@ jobs:
       - name: Publish versioned desktop release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: desktop-v1.0.0
-          name: 物理化学实验室 桌面版 v1.0.0
+          tag_name: desktop-v${{ needs.validate-package.outputs.app-version }}
+          name: 物理化学实验室 桌面版 v${{ needs.validate-package.outputs.app-version }}
           files: release/PhyschemLab-Windows-x64.zip
           fail_on_unmatched_files: true
