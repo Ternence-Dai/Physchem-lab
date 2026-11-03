@@ -100,13 +100,13 @@ jobs:
           $stage = Join-Path $env:RUNNER_TEMP 'physchemlab-package-inspect'
           $exe = Join-Path $stage 'PhyschemLab.exe'
           $shot = Join-Path $env:RUNNER_TEMP 'physchemlab-windows-smoke.png'
-          $env:PHYCHMELAB_SMOKE = $shot
+          $env:PHYSCHEMLAB_SMOKE = $shot
           $process = Start-Process -FilePath $exe -PassThru -Wait
           if ($process.ExitCode -ne 0) { throw "Packaged application exited with code $($process.ExitCode)" }
           if (!(Test-Path $shot) -or (Get-Item $shot).Length -lt 10000) {
             throw 'Packaged application did not produce a valid screenshot'
           }
-          Remove-Item Env:PHYCHMELAB_SMOKE -ErrorAction SilentlyContinue
+          Remove-Item Env:PHYSCHEMLAB_SMOKE -ErrorAction SilentlyContinue
           "Packaged desktop launch smoke passed; screenshot bytes: $((Get-Item $shot).Length)"
 
       - name: Upload validated Windows package
