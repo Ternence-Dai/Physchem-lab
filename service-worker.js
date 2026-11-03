@@ -1,16 +1,14 @@
 'use strict';
 
-// 物理化学实验室 PWA service worker: precache the app shell, then cache-first for
-// same-origin GET requests so the app opens offline from the home screen.
-const CACHE = 'physchem-v1';
+// Physchem Lab PWA: cache public application assets only. Experiment runs,
+// measurements, notebook content and future instrument/API payloads are network-only.
+const CACHE = 'physchem-v2';
 const PRECACHE = [
   './',
   './index.html',
   './manifest.webmanifest',
   './icons/icon.svg',
-  './icons/icon.svg',
   './icons/maskable.svg',
-  './icons/icon.svg',
   './assets/css/legacy-app.css',
   './assets/css/product-system.css',
   './assets/css/workspace-v5.css',
@@ -30,6 +28,25 @@ const PRECACHE = [
   './assets/js/nist-webbook-reference-v1.js'
 ];
 
+const STATIC_ASSET_PATH = /\.(?:css|js|mjs|svg|png|webp|ico|woff2?|webmanifest)$/i;
+
+function isCacheableStaticRequest(request) {
+  if (request.method !== 'GET') return false;
+  const url = new URL(request.url);
+  if (url.origin !== self.location.origin) return false;
+  if (url.pathname === '/api' || url.pathname.startsWith('/api/')) return false;
+  if (request.headers && request.headers.has('authorization')) return false;
+  return STATIC_ASSET_PATH.test(url.pathname);
+}
+
+function isPublicCacheableResponse(response) {
+  if (!response || !response.ok) return false;
+  const cacheControl = response.headers.get('Cache-Control') || '';
+  if (/(?:private|no-store|no-cache)/i.test(cacheControl)) return false;
+  const contentType = response.headers.get('Content-Type') || '';
+  return /(?:text\/(?:css|javascript)|application\/(?:javascript|manifest\+json)|image\/|font\/)/i.test(contentType);
+}
+
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE)
@@ -48,24 +65,23 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   const request = event.request;
-  if (request.method !== 'GET') return;
-  if (new URL(request.url).origin !== self.location.origin) return;
+  if (request.mode === 'navigate') {
+    event.respondWith(
+      fetch(request).catch(() => caches.match('./index.html', { ignoreSearch: true }))
+    );
+    return;
+  }
+  if (!isCacheableStaticRequest(request)) return;
+
   event.respondWith(
-    // ignoreSearch: index.html loads css/js with ?v= cache-busting queries,
-    // while the precache stores the bare paths.
     caches.match(request, { ignoreSearch: true }).then((cached) => {
       if (cached) return cached;
       return fetch(request).then((response) => {
-        if (response && response.ok) {
+        if (isPublicCacheableResponse(response)) {
           const copy = response.clone();
           caches.open(CACHE).then((cache) => cache.put(request, copy));
         }
         return response;
-      }).catch((error) => {
-        if (request.mode === 'navigate') {
-          return caches.match('./index.html', { ignoreSearch: true });
-        }
-        throw error;
       });
     })
   );
