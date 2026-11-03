@@ -498,3 +498,26 @@ test("archive comparison freezes detached parameter snapshots without freezing s
  assert.ok(Object.isFrozen(result.parameters[0].leftValue));
  assert.ok(Object.isFrozen(result.parameters[0].leftValue.calibration.points));
 });
+
+test("archive comparison compares nested JSON parameters by value, not object identity or key order",()=>{
+ const base={
+  experimentId:"nested-params",experimentSnapshotVersion:1,
+  modelVersion:"physchem-engine-v2",snapshotAt:"2026-10-23T01:00:00.000Z",
+  params:{conditions:{temperature:{value:300,unit:"K"},pressure:{unit:"Pa",value:101325}},steps:[1,{duration:30,unit:"s"}]},
+  readouts:[{label:"Pressure",value:"101325 Pa"}]
+ };
+ const reordered={
+  ...base,snapshotAt:"2026-10-23T01:10:00.000Z",
+  params:{steps:[1,{unit:"s",duration:30}],conditions:{pressure:{value:101325,unit:"Pa"},temperature:{unit:"K",value:300}}}
+ };
+ const equal=compareExperimentArchiveSnapshots(base,reordered);
+ assert.equal(equal.compatible,true);
+ assert.ok(equal.parameters.every(parameter=>parameter.changed===false),
+  "equivalent nested snapshots with different object key order must compare equal");
+ const changed=compareExperimentArchiveSnapshots(base,{
+  ...reordered,params:{...reordered.params,conditions:{...reordered.params.conditions,temperature:{value:310,unit:"K"}}}
+ });
+ assert.equal(changed.parameters.find(parameter=>parameter.key==="conditions").changed,true,
+  "a nested physical parameter change must be detected");
+ assert.equal(changed.parameters.find(parameter=>parameter.key==="steps").changed,false);
+});

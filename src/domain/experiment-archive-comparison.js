@@ -21,6 +21,22 @@ function isValidSnapshotTimestamp(value) {
   return normalizedYear >= 0 && normalizedYear <= 9999;
 }
 
+
+function sameSnapshotValue(left, right) {
+  if (Object.is(left, right)) return true;
+  if (!left || !right || typeof left !== "object" || typeof right !== "object") return false;
+  if (Array.isArray(left) || Array.isArray(right)) {
+    return Array.isArray(left) && Array.isArray(right) &&
+      left.length === right.length &&
+      left.every((value, index) => sameSnapshotValue(value, right[index]));
+  }
+  const leftKeys = Object.keys(left).sort();
+  const rightKeys = Object.keys(right).sort();
+  return leftKeys.length === rightKeys.length &&
+    leftKeys.every((key, index) =>
+      key === rightKeys[index] && sameSnapshotValue(left[key], right[key]));
+}
+
 function snapshotDate(snapshot) {
   return snapshot.snapshotAt || snapshot.time || "时间未知";
 }
@@ -73,7 +89,7 @@ export function compareExperimentArchiveSnapshots(left, right) {
     leftValue: Object.prototype.hasOwnProperty.call(leftParams, key) ? leftParams[key] : null,
     rightValue: Object.prototype.hasOwnProperty.call(rightParams, key) ? rightParams[key] : null,
     changed: !Object.prototype.hasOwnProperty.call(leftParams, key) ||
-      !Object.prototype.hasOwnProperty.call(rightParams, key) || leftParams[key] !== rightParams[key]
+      !Object.prototype.hasOwnProperty.call(rightParams, key) || !sameSnapshotValue(leftParams[key], rightParams[key])
   }));
 
   function readoutMap(rows) {
