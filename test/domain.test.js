@@ -164,7 +164,7 @@ test("Ohm heating avoids squaring a finite current into an intermediate overflow
  assert.ok(Number.isFinite(result.heatJPerMinute));
  assert.ok(Math.abs(result.heatJPerMinute/(result.powerW*60)-1)<1e-12);
 });
-test("inclined plane acceleration includes friction threshold and exact vertical-plane limit",()=>{ assert.ok(Math.abs(inclinedPlaneAcceleration({angleDeg:30,frictionCoefficient:Math.tan(Math.PI/6)}))<1e-12); assert.equal(inclinedPlaneAcceleration({angleDeg:30,frictionCoefficient:1}),0); assert.equal(inclinedPlaneAcceleration({angleDeg:90,frictionCoefficient:0}),9.8); assert.equal(inclinedPlaneAcceleration({angleDeg:90,frictionCoefficient:100}),9.8); assert.equal(inclinedPlaneAcceleration({angleDeg:0,frictionCoefficient:0}),0); assert.throws(()=>inclinedPlaneAcceleration({angleDeg:90.01,frictionCoefficient:0}),RangeError); assert.throws(()=>inclinedPlaneAcceleration({angleDeg:30,frictionCoefficient:-0.1}),RangeError); });
+test("inclined plane acceleration includes friction threshold and exact vertical-plane limit",()=>{ assert.ok(Math.abs(inclinedPlaneAcceleration({angleDeg:30,frictionCoefficient:Math.tan(Math.PI/6)}))<1e-12); assert.equal(inclinedPlaneAcceleration({angleDeg:30,frictionCoefficient:1}),0); assert.equal(inclinedPlaneAcceleration({angleDeg:90,frictionCoefficient:0,gravity:9.8}),9.8); assert.equal(inclinedPlaneAcceleration({angleDeg:90,frictionCoefficient:100,gravity:9.8}),9.8); assert.equal(inclinedPlaneAcceleration({angleDeg:0,frictionCoefficient:0}),0); assert.throws(()=>inclinedPlaneAcceleration({angleDeg:90.01,frictionCoefficient:0}),RangeError); assert.throws(()=>inclinedPlaneAcceleration({angleDeg:30,frictionCoefficient:-0.1}),RangeError); });
 test("inclined plane distinguishes static friction from kinetic friction",()=>{
  const held=inclinedPlaneForces({angleDeg:20,frictionCoefficient:0.5,massKg:3});
  assert.equal(held.slipping,false);
@@ -178,6 +178,13 @@ test("inclined plane distinguishes static friction from kinetic friction",()=>{
  assert.equal(inclinedPlaneForces({angleDeg:90,frictionCoefficient:0.5,massKg:2}).frictionForce,0);
  assert.throws(()=>inclinedPlaneForces({angleDeg:30,frictionCoefficient:0.2,massKg:0}),RangeError);
 });
+
+
+test("inclined-plane defaults use standard gravity",()=>{
+ assert.equal(inclinedPlaneAcceleration({angleDeg:90,frictionCoefficient:0}),9.80665);
+ assert.equal(inclinedPlaneForces({angleDeg:90,frictionCoefficient:0}).parallelGravity,9.80665);
+});
+
 test("spring oscillator shares acceleration, period and energy calculations",()=>{ const a=springOscillator({massKg:1,springConstantNPerM:4,displacementM:0.5,velocityMPerS:0}); assert.equal(a.acceleration,-2); assert.ok(Math.abs(a.angularFrequency-2)<1e-12); assert.ok(Math.abs(a.period-Math.PI)<1e-12); assert.equal(a.kineticEnergy,0); assert.equal(a.elasticPotentialEnergy,0.5); assert.equal(a.totalEnergy,0.5); const b=springOscillator({massKg:1,springConstantNPerM:4,displacementM:0,velocityMPerS:1}); assert.equal(b.totalEnergy,a.totalEnergy); assert.throws(()=>springOscillator({massKg:0,springConstantNPerM:4,displacementM:0,velocityMPerS:1}),RangeError); assert.throws(()=>springOscillator({massKg:1,springConstantNPerM:4,displacementM:Infinity,velocityMPerS:1}),TypeError); });
 test("spring oscillator frequency avoids overflowing a ratio before its square root",()=>{ const result=springOscillator({massKg:1e-200,springConstantNPerM:1e200,displacementM:0,velocityMPerS:0}); assert.ok(Number.isFinite(result.angularFrequency)); assert.ok(Math.abs(result.angularFrequency/1e200-1)<1e-12); assert.ok(Number.isFinite(result.period)); assert.equal(result.acceleration,0); });
 test("spring acceleration avoids intermediate ratio overflow when the final result is finite",()=>{ const result=springOscillator({massKg:1e-200,springConstantNPerM:1e200,displacementM:1e-200,velocityMPerS:0}); assert.ok(Number.isFinite(result.acceleration)); assert.ok(Math.abs(result.acceleration/(-1e200)-1)<1e-12); });
@@ -289,6 +296,52 @@ test("experiment archive comparison blocks different experiments, model versions
  ]}).compatible,false);
 });
 
+
+
+
+test("archive comparison blocks malformed readout rows instead of silently dropping them",()=>{
+ const base={
+  experimentId:"ideal-gas",experimentSnapshotVersion:1,
+  modelVersion:"physchem-engine-v2",snapshotAt:"2026-10-23T01:00:00.000Z",
+  params:{temperatureK:300},readouts:[{label:"Pressure",value:"1 Pa"}]
+ };
+ const malformedRows=[
+  [null],
+  [{}],
+  [{label:"",value:"1 Pa"}],
+  [{label:"Pressure",value:1}],
+  [["Pressure","1 Pa"]],
+  [{label:"Pressure",value:"1 Pa"},null]
+ ];
+ for(const readouts of malformedRows){
+  const result=compareExperimentArchiveSnapshots(base,{...base,readouts});
+  assert.equal(result.compatible,false,
+   "malformed archive rows must block comparison rather than disappear: "+String(readouts));
+  assert.match(result.reason,/缺失、无效或重复/);
+ }
+ const malformedLeft=compareExperimentArchiveSnapshots(
+  {...base,readouts:[{label:"Pressure",value:null}]},base
+ );
+ assert.equal(malformedLeft.compatible,false,
+  "malformed rows in either archive must block comparison");
+});
+
+test("archive comparison blocks malformed parameter containers instead of treating them as empty",()=>{
+ const base={
+  experimentId:"ideal-gas",experimentSnapshotVersion:1,
+  modelVersion:"physchem-engine-v2",snapshotAt:"2026-10-23T01:00:00.000Z",
+  params:{temperatureK:300},readouts:[{label:"Pressure",value:"1 Pa"}]
+ };
+ for(const params of [[], "corrupt", 42, true]){
+  const result=compareExperimentArchiveSnapshots(base,{...base,params});
+  assert.equal(result.compatible,false,
+   "malformed parameter containers must block comparison: "+String(params));
+  assert.match(result.reason,/有效的参数对象/);
+ }
+ const malformedLeft=compareExperimentArchiveSnapshots({...base,params:[]},base);
+ assert.equal(malformedLeft.compatible,false,
+  "malformed parameter containers in either archive must block comparison");
+});
 
 test("archive comparison preserves zero deltas and never mutates saved snapshots",()=>{
  const left={
