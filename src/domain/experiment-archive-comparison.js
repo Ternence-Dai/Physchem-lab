@@ -99,7 +99,7 @@ export function compareExperimentArchiveSnapshots(left, right) {
   }
   if (!isSafeSnapshotObject(left.params) || !isSafeSnapshotObject(right.params) ||
       !Array.isArray(left.readouts) || !Array.isArray(right.readouts)) {
-    return blocked("档案缺少有效的 JSON 参数对象或结果快照，或参数结构超出安全边界，无法完成对照。");
+    return blocked("档案缺少有效的参数对象（必须为安全的 JSON 参数对象）或结果快照，或参数结构超出安全边界，无法完成对照。");
   }
 
   const leftParams = left.params;
