@@ -54,11 +54,12 @@ function isSafeSnapshotObject(value, { maxDepth = 64, maxNodes = 10000 } = {}) {
   const active = new WeakSet();
   let nodes = 0;
   function visit(item, depth) {
+    nodes += 1;
+    if (nodes > maxNodes || depth > maxDepth) return false;
     if (item === null || typeof item === "string" || typeof item === "boolean") return true;
     if (typeof item === "number") return Number.isFinite(item);
-    if (typeof item !== "object" || depth > maxDepth) return false;
-    nodes += 1;
-    if (nodes > maxNodes || active.has(item)) return false;
+    if (typeof item !== "object") return false;
+    if (active.has(item)) return false;
     const prototype = Object.getPrototypeOf(item);
     if (!Array.isArray(item) && prototype !== Object.prototype && prototype !== null) return false;
     active.add(item);
