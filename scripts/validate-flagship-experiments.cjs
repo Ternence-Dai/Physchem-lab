@@ -108,7 +108,52 @@ async function main() {
     }
   }
 
-  console.log('PhysChem flagship lifecycle checks passed: ' +
+  // Exercise every declared parameter boundary independently, not just
+  // catalogue defaults. This catches formulas that look healthy at defaults
+  // but overflow, divide by zero, or leak invalid readouts at supported limits.
+  for (const model of flagship) {
+    const defaults = Object.fromEntries(model.params.map(parameter =>
+      [parameter.key, parameter.value]
+    ));
+    for (const parameter of model.params) {
+      for (const boundary of ['min', 'max']) {
+        const params = { ...defaults, [parameter.key]: parameter[boundary] };
+        const state = model.init ? model.init.call(model, params) : {};
+        assertFiniteTree(state, model.id + '.' + parameter.key + '.' + boundary + '.initialState');
+        if (typeof model.step === 'function') {
+          for (let frame = 0; frame < 12; frame++) {
+            model.step.call(model, params, 1 / 60, state);
+            assertFiniteTree(state,
+              model.id + '.' + parameter.key + '.' + boundary + '.stateAfterFrame' + frame);
+          }
+        }
+        if (typeof model.calc === 'function') {
+          assertFiniteTree(model.calc.call(model, params),
+            model.id + '.' + parameter.key + '.' + boundary + '.calculation');
+        }
+        if (typeof model.readout === 'function') {
+          const rows = model.readout.call(model, params, state);
+          assert.ok(Array.isArray(rows) && rows.length > 0,
+            model.id + ': boundary readout must contain rows');
+          for (const row of rows) {
+            assert.ok(typeof row.v === 'string' && row.v.trim(),
+              model.id + ': boundary readout values must be visible strings');
+            assert.doesNotMatch(row.v, /(?:NaN|Infinity|undefined)/,
+              model.id + ': boundary readout exposed invalid output: ' + row.k);
+          }
+        }
+        if (typeof model.tutor === 'function') {
+          const explanation = model.tutor.call(model, params, state);
+          assert.ok(typeof explanation === 'string' && explanation.trim(),
+            model.id + ': boundary tutor output must be non-empty');
+          assert.doesNotMatch(explanation, /(?:NaN|Infinity|undefined)/,
+            model.id + ': boundary tutor exposed invalid output');
+        }
+      }
+    }
+  }
+
+  console.log('PhysChem flagship default and parameter-boundary checks passed: ' +
     flagship.map(model => model.id).join(', '));
 }
 
