@@ -352,9 +352,11 @@ test("archive comparison rejects cyclic, non-JSON and excessively nested paramet
  const cyclic={};cyclic.self=cyclic;
  const tooDeep={};let cursor=tooDeep;
  for(let i=0;i<66;i++){cursor.next={};cursor=cursor.next;}
+ const tooManyEntries=Array.from({length:10001},(_,index)=>index);
  for(const params of [
   {metadata:cyclic},
   {metadata:tooDeep},
+  {metadata:tooManyEntries},
   {measurement:NaN},
   {measurement:Infinity},
   {callback:()=>true},
