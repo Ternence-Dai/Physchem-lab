@@ -50,6 +50,28 @@ function numericValueAndUnit(raw) {
   return { value, unit: match[2].trim() };
 }
 
+function isSafeSnapshotObject(value, { maxDepth = 64, maxNodes = 10000 } = {}) {
+  const active = new WeakSet();
+  let nodes = 0;
+  function visit(item, depth) {
+    nodes += 1;
+    if (nodes > maxNodes || depth > maxDepth) return false;
+    if (item === null || typeof item === "string" || typeof item === "boolean") return true;
+    if (typeof item === "number") return Number.isFinite(item);
+    if (typeof item !== "object") return false;
+    if (active.has(item)) return false;
+    const prototype = Object.getPrototypeOf(item);
+    if (!Array.isArray(item) && prototype !== Object.prototype && prototype !== null) return false;
+    active.add(item);
+    const valid = Array.isArray(item)
+      ? item.every(entry => visit(entry, depth + 1))
+      : Object.keys(item).every(key => visit(item[key], depth + 1));
+    active.delete(item);
+    return valid;
+  }
+  return !!value && typeof value === "object" && !Array.isArray(value) && visit(value, 0);
+}
+
 function frozen(value) {
   if (!value || typeof value !== "object") return value;
   const copy = Array.isArray(value)
@@ -75,10 +97,9 @@ export function compareExperimentArchiveSnapshots(left, right) {
       left.modelVersion !== right.modelVersion) {
     return blocked("两份档案的模型版本不同，不能直接比较计算结果。");
   }
-  if (!left.params || typeof left.params !== "object" || Array.isArray(left.params) ||
-      !right.params || typeof right.params !== "object" || Array.isArray(right.params) ||
+  if (!isSafeSnapshotObject(left.params) || !isSafeSnapshotObject(right.params) ||
       !Array.isArray(left.readouts) || !Array.isArray(right.readouts)) {
-    return blocked("档案缺少有效的参数对象或结果快照，无法完成对照。");
+    return blocked("档案缺少有效的参数对象（必须为安全的 JSON 参数对象）或结果快照，或参数结构超出安全边界，无法完成对照。");
   }
 
   const leftParams = left.params;

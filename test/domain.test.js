@@ -343,6 +343,38 @@ test("archive comparison blocks malformed parameter containers instead of treati
   "malformed parameter containers in either archive must block comparison");
 });
 
+test("archive comparison rejects cyclic, non-JSON and excessively nested parameter snapshots",()=>{
+ const base={
+  experimentId:"safe-json-archive",experimentSnapshotVersion:1,
+  modelVersion:"physchem-engine-v2",snapshotAt:"2026-10-23T01:00:00.000Z",
+  params:{temperatureK:300},readouts:[{label:"Pressure",value:"1 Pa"}]
+ };
+ const cyclic={};cyclic.self=cyclic;
+ const tooDeep={};let cursor=tooDeep;
+ for(let i=0;i<66;i++){cursor.next={};cursor=cursor.next;}
+ const tooManyEntries=Array.from({length:10001},(_,index)=>index);
+ for(const params of [
+  {metadata:cyclic},
+  {metadata:tooDeep},
+  {metadata:tooManyEntries},
+  {measurement:NaN},
+  {measurement:Infinity},
+  {callback:()=>true},
+  {timestamp:new Date("2026-01-01T00:00:00Z")}
+ ]){
+  const result=compareExperimentArchiveSnapshots(base,{...base,params});
+  assert.equal(result.compatible,false,
+   "non-JSON or unsafe recursive parameter graphs must be rejected without throwing");
+  assert.match(result.reason,/JSON 参数对象|安全边界/);
+ }
+ const shared={unit:"K",value:300};
+ const valid=compareExperimentArchiveSnapshots(base,{
+  ...base,params:{start:shared,end:shared}
+ });
+ assert.equal(valid.compatible,true,
+  "repeated references in a JSON-compatible object graph are safe and must not be mistaken for cycles");
+});
+
 test("archive comparison preserves zero deltas and never mutates saved snapshots",()=>{
  const left={
   name:"基准组",time:"2026/10/23 10:00",experimentId:"ideal-gas",
