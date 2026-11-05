@@ -153,6 +153,53 @@ async function main() {
     }
   }
 
+  // Validate interacting extremes as well: individually safe parameter bounds can
+  // still combine into singular denominators, unstable state transitions, or invalid
+  // displayed results when a model is operated at several limits simultaneously.
+  for (const model of flagship) {
+    const scenarios = [
+      ['all-min', Object.fromEntries(model.params.map(parameter => [parameter.key, parameter.min]))],
+      ['all-max', Object.fromEntries(model.params.map(parameter => [parameter.key, parameter.max]))],
+      ['alternating-extremes', Object.fromEntries(model.params.map((parameter, index) =>
+        [parameter.key, index % 2 === 0 ? parameter.min : parameter.max]
+      ))]
+    ];
+    for (const [scenario, params] of scenarios) {
+      const label = model.id + '.' + scenario;
+      const state = model.init ? model.init.call(model, params) : {};
+      assert.ok(state && typeof state === 'object' && !Array.isArray(state),
+        label + ': initialization must return a state object');
+      assertFiniteTree(state, label + '.initialState');
+      if (typeof model.step === 'function') {
+        for (let frame = 0; frame < 12; frame++) {
+          model.step.call(model, params, 1 / 60, state);
+          assertFiniteTree(state, label + '.stateAfterFrame' + frame);
+        }
+      }
+      if (typeof model.calc === 'function') {
+        assertFiniteTree(model.calc.call(model, params), label + '.calculation');
+      }
+      if (typeof model.readout === 'function') {
+        const rows = model.readout.call(model, params, state);
+        assert.ok(Array.isArray(rows) && rows.length > 0,
+          label + ': readout must return at least one row');
+        for (const row of rows) {
+          assert.ok(row && typeof row.v === 'string' && row.v.trim(),
+            label + ': readout values must be visible strings');
+          assert.doesNotMatch(row.v, /(?:NaN|Infinity|undefined)/,
+            label + ': readout exposed invalid output: ' + row.k);
+        }
+      }
+      if (typeof model.tutor === 'function') {
+        const explanation = model.tutor.call(model, params, state);
+        assert.ok(typeof explanation === 'string' && explanation.trim(),
+          label + ': tutor output must be non-empty');
+        assert.doesNotMatch(explanation, /(?:NaN|Infinity|undefined)/,
+          label + ': tutor exposed invalid output');
+      }
+    }
+  }
+
   console.log('PhysChem flagship default and parameter-boundary checks passed: ' +
     flagship.map(model => model.id).join(', '));
 }
