@@ -139,6 +139,16 @@ test("Arrhenius prefactor recovers a representable rate after exponential underf
  assert.ok(Number.isFinite(rate) && rate>0);
  assert.ok(Math.abs(rate/Math.exp(Math.log(1e308)-exponent)-1)<1e-12);
 });
+test("Arrhenius rate rejects positive inputs whose final rate underflows to zero",()=>{
+ assert.throws(()=>arrheniusRateConstant({
+  preExponentialFactor:Number.MIN_VALUE,
+  activationEnergyJPerMol:Number.MAX_VALUE,
+  temperatureK:1
+ }),/rate below the representable numeric range/);
+ assert.equal(arrheniusRateConstant({
+  preExponentialFactor:0,activationEnergyJPerMol:Number.MAX_VALUE,temperatureK:1
+ }),0,"an explicitly zero prefactor remains a valid zero rate");
+});
 test("Arrhenius exponent avoids underflow before division by a tiny temperature",()=>{
  const rate=arrheniusRateConstant({preExponentialFactor:1,activationEnergyJPerMol:Number.MIN_VALUE,temperatureK:Number.MIN_VALUE});
  const expected=Math.exp(-1/8.31446261815324);
