@@ -41,6 +41,10 @@ function snapshotDate(snapshot) {
   return snapshot.snapshotAt || snapshot.time || "时间未知";
 }
 
+const MAX_ARCHIVE_READOUTS = 30;
+const MAX_READOUT_LABEL_LENGTH = 120;
+const MAX_READOUT_VALUE_LENGTH = 180;
+
 function numericValueAndUnit(raw) {
   if (typeof raw !== "string") return null;
   const match = /^\s*([+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?)\s*(.*?)\s*$/i.exec(raw);
@@ -101,6 +105,10 @@ export function compareExperimentArchiveSnapshots(left, right) {
       !Array.isArray(left.readouts) || !Array.isArray(right.readouts)) {
     return blocked("档案缺少有效的参数对象（必须为安全的 JSON 参数对象）或结果快照，或参数结构超出安全边界，无法完成对照。");
   }
+  if (left.readouts.length > MAX_ARCHIVE_READOUTS ||
+      right.readouts.length > MAX_ARCHIVE_READOUTS) {
+    return blocked("实验档案结果行数超出 30 条限制，无法安全完成对照。");
+  }
 
   const leftParams = left.params;
   const rightParams = right.params;
@@ -118,7 +126,9 @@ export function compareExperimentArchiveSnapshots(left, right) {
     for (const row of rows) {
       if (!row || typeof row !== "object" || Array.isArray(row) ||
           typeof row.label !== "string" || !row.label.trim() ||
-          typeof row.value !== "string") return null;
+          row.label.length > MAX_READOUT_LABEL_LENGTH ||
+          typeof row.value !== "string" ||
+          row.value.length > MAX_READOUT_VALUE_LENGTH) return null;
       const key = row.label.trim();
       if (map.has(key)) return null;
       map.set(key, row.value);
