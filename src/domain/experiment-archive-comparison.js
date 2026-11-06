@@ -41,6 +41,15 @@ function snapshotDate(snapshot) {
   return snapshot.snapshotAt || snapshot.time || "时间未知";
 }
 
+const MAX_ARCHIVE_TEXT_LENGTH = 120;
+function optionalArchiveDisplayText(value) {
+  if (value === undefined || value === null) return undefined;
+  if (typeof value !== "string" || value.length > MAX_ARCHIVE_TEXT_LENGTH ||
+      /[\\x00-\\x1F\\x7F]/.test(value)) return null;
+  const normalized = value.trim();
+  return normalized || undefined;
+}
+
 const MAX_ARCHIVE_READOUTS = 30;
 const MAX_READOUT_LABEL_LENGTH = 120;
 const MAX_READOUT_VALUE_LENGTH = 180;
@@ -93,13 +102,22 @@ export function compareExperimentArchiveSnapshots(left, right) {
       !isValidSnapshotTimestamp(left.snapshotAt) || !isValidSnapshotTimestamp(right.snapshotAt)) {
     return blocked("旧版档案缺少稳定的实验 ID 或结果时间戳，不能保证模型与结果口径一致。");
   }
-  if (typeof left.experimentId !== "string" || !left.experimentId ||
+  if (typeof left.experimentId !== "string" || !left.experimentId.trim() ||
+      left.experimentId.length > MAX_ARCHIVE_TEXT_LENGTH || /[\\x00-\\x1F\\x7F]/.test(left.experimentId) ||
       left.experimentId !== right.experimentId) {
-    return blocked("两份档案不是同一个实验模型，已阻止跨实验比较。");
+    return blocked("两份档案不是同一个有效实验模型，已阻止跨实验比较。");
   }
-  if (typeof left.modelVersion !== "string" || !left.modelVersion ||
+  if (typeof left.modelVersion !== "string" || !left.modelVersion.trim() ||
+      left.modelVersion.length > MAX_ARCHIVE_TEXT_LENGTH || /[\\x00-\\x1F\\x7F]/.test(left.modelVersion) ||
       left.modelVersion !== right.modelVersion) {
-    return blocked("两份档案的模型版本不同，不能直接比较计算结果。");
+    return blocked("两份档案的模型版本无效或不同，不能直接比较计算结果。");
+  }
+  const leftName = optionalArchiveDisplayText(left.name);
+  const rightName = optionalArchiveDisplayText(right.name);
+  const leftTime = optionalArchiveDisplayText(left.time);
+  const rightTime = optionalArchiveDisplayText(right.time);
+  if ([leftName,rightName,leftTime,rightTime].includes(null)) {
+    return blocked("档案名称或时间标签必须是长度不超过 120 个字符的纯文本。");
   }
   if (!isSafeSnapshotObject(left.params) || !isSafeSnapshotObject(right.params) ||
       !Array.isArray(left.readouts) || !Array.isArray(right.readouts)) {
@@ -168,8 +186,8 @@ export function compareExperimentArchiveSnapshots(left, right) {
     compatible: true,
     experimentId: left.experimentId,
     modelVersion: left.modelVersion,
-    left: { name: left.name, time: left.time, snapshotAt: snapshotDate(left) },
-    right: { name: right.name, time: right.time, snapshotAt: snapshotDate(right) },
+    left: { name: leftName, time: leftTime, snapshotAt: snapshotDate(left) },
+    right: { name: rightName, time: rightTime, snapshotAt: snapshotDate(right) },
     parameters,
     readouts
   });
