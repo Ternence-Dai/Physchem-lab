@@ -589,6 +589,35 @@ test("archive comparison enforces readout count and field-length limits at the d
 });
 
 
+
+test("archive comparison rejects unsafe display metadata before freezing the result",()=>{
+ const base={
+  experimentId:"ideal-gas",experimentSnapshotVersion:1,
+  modelVersion:"physchem-engine-v2",snapshotAt:"2026-10-23T01:00:00.000Z",
+  params:{temperatureK:300},readouts:[{label:"Pressure",value:"1 Pa"}]
+ };
+ const deep={}; let cursor=deep;
+ for(let i=0;i<80;i++){ cursor.next={}; cursor=cursor.next; }
+ const malformed=[
+  {...base,name:deep},
+  {...base,time:["2026-10-23"]},
+  {...base,name:"x".repeat(121)},
+  {...base,time:"unsafe\\u0000label"},
+  {...base,experimentId:"x".repeat(121)}
+ ];
+ for(const snapshot of malformed){
+  assert.doesNotThrow(()=>compareExperimentArchiveSnapshots(snapshot,base));
+  const result=compareExperimentArchiveSnapshots(snapshot,base);
+  assert.equal(result.compatible,false,
+   "untrusted display metadata must block archive comparison without recursive traversal");
+  assert.match(result.reason,/名称|模型版本|有效实验模型/);
+ }
+ const accepted=compareExperimentArchiveSnapshots({...base,name:"基准实验",time:"09:00"},base);
+ assert.equal(accepted.compatible,true);
+ assert.equal(accepted.left.name,"基准实验");
+});
+
+
 test("archive comparison tables disclose horizontal scrolling and accept keyboard focus",()=>{
  const app=readFileSync(new URL("../assets/js/legacy-app.js",import.meta.url),"utf8");
  const css=readFileSync(new URL("../assets/css/archive-comparison-v1.css",import.meta.url),"utf8");
