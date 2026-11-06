@@ -49,6 +49,18 @@ test("ideal-gas particle properties preserve zero amount and reject invalid phys
  assert.throws(()=>idealGasParticleProperties({amountMol:1,temperatureK:300,volumeM3:0.01,molarMassKgPerMol:0}),RangeError);
  assert.throws(()=>idealGasParticleProperties({amountMol:1,temperatureK:300,volumeM3:0.01,molarMassKgPerMol:NaN}),TypeError);
 });
+test("ideal-gas particle properties reject positive kinetic energy that underflows to zero",()=>{
+ assert.throws(()=>idealGasParticleProperties({
+  amountMol:0,temperatureK:Number.MIN_VALUE,volumeM3:1,molarMassKgPerMol:0.02897
+ }),/mean translational kinetic energy is below the representable numeric range/);
+ const ordinary=idealGasParticleProperties({
+  amountMol:0,temperatureK:300,volumeM3:0.01,molarMassKgPerMol:0.02897
+ });
+ assert.ok(ordinary.averageKineticEnergyJ>0);
+ assert.equal(ordinary.numberDensityPerM3,0,
+  "zero molecules is a valid exact zero number density");
+});
+
 test("ideal-gas particle properties retain representable outputs across extreme finite scales",()=>{
  const tiny=idealGasParticleProperties({
   amountMol:Number.MIN_VALUE,temperatureK:300,volumeM3:1e23,molarMassKgPerMol:0.02897
