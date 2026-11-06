@@ -132,7 +132,12 @@ export function arrheniusRateConstant({ preExponentialFactor, activationEnergyJP
   // exponential with its prefactor before exp() to avoid premature underflow.
   const exponent = activationEnergyJPerMol === 0 ? 0
     : Math.exp(Math.log(activationEnergyJPerMol) - Math.log(GAS_CONSTANT) - Math.log(temperatureK));
-  return finiteResult(Math.exp(Math.log(preExponentialFactor) - exponent), "Arrhenius rate constant");
+  const logRate = Math.log(preExponentialFactor) - exponent;
+  const rate = Math.exp(logRate);
+  if (rate === 0) {
+    throw new RangeError("positive Arrhenius inputs produce a rate below the representable numeric range");
+  }
+  return finiteResult(rate, "Arrhenius rate constant");
 }
 
 
