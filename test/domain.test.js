@@ -1,4 +1,5 @@
 import test from "node:test";
+import { readFileSync } from "node:fs";
 import { compareExperimentArchiveSnapshots } from "../src/domain/experiment-archive-comparison.js";
 
 import assert from "node:assert/strict";
@@ -575,4 +576,15 @@ test("archive comparison enforces readout count and field-length limits at the d
    "oversized result labels and values must not be processed: "+JSON.stringify(row).slice(0,80));
   assert.match(result.reason,/缺失、无效或重复/);
  }
+});
+
+
+test("archive comparison tables disclose horizontal scrolling and accept keyboard focus",()=>{
+ const app=readFileSync(new URL("../assets/js/legacy-app.js",import.meta.url),"utf8");
+ const css=readFileSync(new URL("../assets/css/archive-comparison-v1.css",import.meta.url),"utf8");
+ assert.equal((app.match(/class="w9-archive-compare__table-wrap" tabindex="0" role="region"/g)||[]).length,2,
+  "both comparison tables must be keyboard-focusable named regions");
+ assert.equal((app.match(/class="w9-archive-compare__scroll-hint"/g)||[]).length,2,
+  "both comparison tables must explain how to reveal the remaining columns");
+ assert.match(css,/w9-archive-compare__table-wrap:focus-visible/);
 });
