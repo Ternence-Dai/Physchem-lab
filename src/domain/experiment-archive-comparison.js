@@ -41,11 +41,19 @@ function snapshotDate(snapshot) {
   return snapshot.snapshotAt || snapshot.time || "时间未知";
 }
 
+function hasUnsafeControlCharacters(value) {
+  for (let index = 0; index < value.length; index += 1) {
+    const code = value.charCodeAt(index);
+    if (code < 32 || code === 127) return true;
+  }
+  return false;
+}
+
 const MAX_ARCHIVE_TEXT_LENGTH = 120;
 function optionalArchiveDisplayText(value) {
   if (value === undefined || value === null) return undefined;
   if (typeof value !== "string" || value.length > MAX_ARCHIVE_TEXT_LENGTH ||
-      /[\\x00-\\x1F\\x7F]/.test(value)) return null;
+      hasUnsafeControlCharacters.test(value)) return null;
   const normalized = value.trim();
   return normalized || undefined;
 }
@@ -103,12 +111,12 @@ export function compareExperimentArchiveSnapshots(left, right) {
     return blocked("旧版档案缺少稳定的实验 ID 或结果时间戳，不能保证模型与结果口径一致。");
   }
   if (typeof left.experimentId !== "string" || !left.experimentId.trim() ||
-      left.experimentId.length > MAX_ARCHIVE_TEXT_LENGTH || /[\\x00-\\x1F\\x7F]/.test(left.experimentId) ||
+      left.experimentId.length > MAX_ARCHIVE_TEXT_LENGTH || hasUnsafeControlCharacters.test(left.experimentId) ||
       left.experimentId !== right.experimentId) {
     return blocked("两份档案不是同一个有效实验模型，已阻止跨实验比较。");
   }
   if (typeof left.modelVersion !== "string" || !left.modelVersion.trim() ||
-      left.modelVersion.length > MAX_ARCHIVE_TEXT_LENGTH || /[\\x00-\\x1F\\x7F]/.test(left.modelVersion) ||
+      left.modelVersion.length > MAX_ARCHIVE_TEXT_LENGTH || hasUnsafeControlCharacters.test(left.modelVersion) ||
       left.modelVersion !== right.modelVersion) {
     return blocked("两份档案的模型版本无效或不同，不能直接比较计算结果。");
   }
