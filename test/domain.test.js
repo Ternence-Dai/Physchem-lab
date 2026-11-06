@@ -553,3 +553,26 @@ test("archive comparison compares nested JSON parameters by value, not object id
   "a nested physical parameter change must be detected");
  assert.equal(changed.parameters.find(parameter=>parameter.key==="steps").changed,false);
 });
+
+
+test("archive comparison enforces readout count and field-length limits at the domain boundary",()=>{
+ const base={
+  experimentId:"ideal-gas",experimentSnapshotVersion:1,
+  modelVersion:"physchem-engine-v2",snapshotAt:"2026-10-23T01:00:00.000Z",
+  params:{temperatureK:300},readouts:[{label:"Pressure",value:"1 Pa"}]
+ };
+ const tooMany=Array.from({length:31},(_,index)=>({label:"Readout "+index,value:"1 Pa"}));
+ const countResult=compareExperimentArchiveSnapshots(base,{...base,readouts:tooMany});
+ assert.equal(countResult.compatible,false);
+ assert.match(countResult.reason,/结果行数超出 30 条限制/);
+
+ for(const row of [
+  {label:"L".repeat(121),value:"1 Pa"},
+  {label:"Pressure",value:"1".repeat(181)}
+ ]) {
+  const result=compareExperimentArchiveSnapshots(base,{...base,readouts:[row]});
+  assert.equal(result.compatible,false,
+   "oversized result labels and values must not be processed: "+JSON.stringify(row).slice(0,80));
+  assert.match(result.reason,/缺失、无效或重复/);
+ }
+});
