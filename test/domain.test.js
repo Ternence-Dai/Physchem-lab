@@ -602,7 +602,7 @@ test("archive comparison rejects unsafe display metadata before freezing the res
   {...base,name:deep},
   {...base,time:["2026-10-23"]},
   {...base,name:"x".repeat(121)},
-  {...base,time:"unsafe\\u0000label"},
+  {...base,time:"unsafe"+String.fromCharCode(0)+"label"},
   {...base,experimentId:"x".repeat(121)}
  ];
  for(const snapshot of malformed){
