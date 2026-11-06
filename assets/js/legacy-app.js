@@ -793,15 +793,15 @@ function renderArchiveComparison(){
       esc(comparison.experimentId)+'</strong></div><div><span>计算版本</span><strong>'+
       esc(comparison.modelVersion)+'</strong></div></div>'+
     '<section class="w9-archive-compare__table-section"><h5>输入参数变化</h5>'+
-      '<div class="w9-archive-compare__table-wrap"><table><thead><tr><th>参数键</th><th>'+leftTitle+
+      '<div class="w9-archive-compare__table-wrap" tabindex="0" role="region" aria-label="输入参数对照表，可横向滚动查看完整列"><table><thead><tr><th>参数键</th><th>'+leftTitle+
       '</th><th>'+rightTitle+'</th></tr></thead><tbody>'+
       (parameterRows||'<tr><td colspan="3">两份快照中的输入参数相同。</td></tr>')+
-      '</tbody></table></div><p>参数只展示保存值，不补写未随档案保存的单位，也不推测单位换算。</p></section>'+
+      '</tbody></table></div><p class="w9-archive-compare__scroll-hint">左右滑动查看完整列；使用键盘时先聚焦表格区域，再按方向键滚动。</p><p>参数只展示保存值，不补写未随档案保存的单位，也不推测单位换算。</p></section>'+
     '<section class="w9-archive-compare__table-section"><h5>计算结果对照</h5>'+
-      '<div class="w9-archive-compare__table-wrap"><table><thead><tr><th>结果项</th><th>'+leftTitle+
+      '<div class="w9-archive-compare__table-wrap" tabindex="0" role="region" aria-label="计算结果对照表，可横向滚动查看完整列"><table><thead><tr><th>结果项</th><th>'+leftTitle+
       '</th><th>'+rightTitle+'</th><th>差值（右 − 左）</th></tr></thead><tbody>'+
       (readoutRows||'<tr><td colspan="4">两份档案没有可对应的结果项。</td></tr>')+
-      '</tbody></table></div><p>差值仅在结果标签相同且单位完全一致时计算；其余保留原始文本并说明未比较原因。</p></section>';
+      '</tbody></table></div><p class="w9-archive-compare__scroll-hint">左右滑动查看完整列；使用键盘时先聚焦表格区域，再按方向键滚动。</p><p>差值仅在结果标签相同且单位完全一致时计算；其余保留原始文本并说明未比较原因。</p></section>';
 }
 
 function renderD(){
