@@ -172,3 +172,12 @@ body[data-workspace="physchem"] .archive-action-row{display:flex;flex-wrap:wrap;
     overflow-x:hidden
   }
 }
+
+
+/* Make the intentionally scrollable comparison tables discoverable and keyboard reachable. */
+body[data-workspace="physchem"] .w9-archive-compare__scroll-hint{
+  margin:0;color:#a8c4ce;font-size:9px;line-height:1.5
+}
+body[data-workspace="physchem"] .w9-archive-compare__table-wrap:focus-visible{
+  outline:3px solid #69c9c1;outline-offset:2px
+}
