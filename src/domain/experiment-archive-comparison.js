@@ -26,9 +26,14 @@ function sameSnapshotValue(left, right) {
   if (Object.is(left, right)) return true;
   if (!left || !right || typeof left !== "object" || typeof right !== "object") return false;
   if (Array.isArray(left) || Array.isArray(right)) {
-    return Array.isArray(left) && Array.isArray(right) &&
-      left.length === right.length &&
-      left.every((value, index) => sameSnapshotValue(value, right[index]));
+    if (!Array.isArray(left) || !Array.isArray(right) || left.length !== right.length) return false;
+    for (let index = 0; index < left.length; index += 1) {
+      const leftHas = Object.prototype.hasOwnProperty.call(left, index);
+      const rightHas = Object.prototype.hasOwnProperty.call(right, index);
+      if (leftHas !== rightHas) return false;
+      if (leftHas && !sameSnapshotValue(left[index], right[index])) return false;
+    }
+    return true;
   }
   const leftKeys = Object.keys(left).sort();
   const rightKeys = Object.keys(right).sort();
@@ -84,9 +89,25 @@ function isSafeSnapshotObject(value, { maxDepth = 64, maxNodes = 10000 } = {}) {
     const prototype = Object.getPrototypeOf(item);
     if (!Array.isArray(item) && prototype !== Object.prototype && prototype !== null) return false;
     active.add(item);
-    const valid = Array.isArray(item)
-      ? item.every(entry => visit(entry, depth + 1))
-      : Object.keys(item).every(key => visit(item[key], depth + 1));
+    let valid = true;
+    if (Array.isArray(item)) {
+      const keys = Object.keys(item);
+      // Count every array slot, including holes, against the same node budget.
+      // Otherwise a huge sparse array can bypass maxNodes and stall archive
+      // comparison while every()/map() walks its declared length.
+      valid = item.length <= maxNodes - nodes && keys.length === item.length;
+      if (valid) {
+        for (let index = 0; index < item.length; index += 1) {
+          if (!Object.prototype.hasOwnProperty.call(item, index) ||
+              !visit(item[index], depth + 1)) {
+            valid = false;
+            break;
+          }
+        }
+      }
+    } else {
+      valid = Object.keys(item).every(key => visit(item[key], depth + 1));
+    }
     active.delete(item);
     return valid;
   }
