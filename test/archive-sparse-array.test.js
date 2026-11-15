@@ -1,226 +1,74 @@
-function isValidSnapshotTimestamp(value) {
-  if (typeof value !== "string") return false;
-  const match = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.(\d{1,9}))?(Z|([+-])(\d{2}):(\d{2}))$/.exec(value);
-  if (!match) return false;
-  const [, yearText, monthText, dayText, hourText, minuteText, secondText, , zone, sign, offsetHourText, offsetMinuteText] = match;
-  const year = Number(yearText), month = Number(monthText), day = Number(dayText);
-  const hour = Number(hourText), minute = Number(minuteText), second = Number(secondText);
-  const leapYear = year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
-  const monthDays = [31, leapYear ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-  const daysInMonth = monthDays[month - 1] || 0;
-  if (month < 1 || month > 12 || day < 1 || day > daysInMonth ||
-      hour > 23 || minute > 59 || second > 59) return false;
-  if (zone !== "Z") {
-    const offsetHour = Number(offsetHourText), offsetMinute = Number(offsetMinuteText);
-    if (offsetMinute > 59 || offsetHour > 14 || (offsetHour === 14 && offsetMinute !== 0) ||
-        (sign === "-" && offsetHour === 0 && offsetMinute === 0)) return false;
-  }
-  const timestamp = Date.parse(value);
-  if (!Number.isFinite(timestamp)) return false;
-  const normalizedYear = new Date(timestamp).getUTCFullYear();
-  return normalizedYear >= 0 && normalizedYear <= 9999;
-}
+import test from "node:test";
+import assert from "node:assert/strict";
+import { compareExperimentArchiveSnapshots } from "../src/domain/experiment-archive-comparison.js";
 
+const base = Object.freeze({
+  experimentId: "archive-array-boundary",
+  experimentSnapshotVersion: 1,
+  modelVersion: "physchem-engine-v2",
+  snapshotAt: "2026-11-12T00:00:00.000Z",
+  params: { temperatureK: 300 },
+  readouts: [{ label: "Pressure", value: "1 Pa" }]
+});
 
-function sameSnapshotValue(left, right) {
-  if (Object.is(left, right)) return true;
-  if (!left || !right || typeof left !== "object" || typeof right !== "object") return false;
-  if (Array.isArray(left) || Array.isArray(right)) {
-    if (!Array.isArray(left) || !Array.isArray(right) || left.length !== right.length) return false;
-    for (let index = 0; index < left.length; index += 1) {
-      const leftHas = Object.prototype.hasOwnProperty.call(left, index);
-      const rightHas = Object.prototype.hasOwnProperty.call(right, index);
-      if (leftHas !== rightHas) return false;
-      if (leftHas && !sameSnapshotValue(left[index], right[index])) return false;
-    }
-    return true;
-  }
-  const leftKeys = Object.keys(left).sort();
-  const rightKeys = Object.keys(right).sort();
-  return leftKeys.length === rightKeys.length &&
-    leftKeys.every((key, index) =>
-      key === rightKeys[index] && sameSnapshotValue(left[key], right[key]));
-}
+test("archive comparison rejects sparse parameter arrays instead of silently skipping holes", () => {
+  const sparse = [];
+  sparse.length = 2;
+  sparse[1] = "x";
 
-function snapshotDate(snapshot) {
-  return snapshot.snapshotAt || snapshot.time || "时间未知";
-}
-
-function hasUnsafeControlCharacters(value) {
-  for (let index = 0; index < value.length; index += 1) {
-    const code = value.charCodeAt(index);
-    if (code < 32 || code === 127) return true;
-  }
-  return false;
-}
-
-const MAX_ARCHIVE_TEXT_LENGTH = 120;
-function optionalArchiveDisplayText(value) {
-  if (value === undefined || value === null) return undefined;
-  if (typeof value !== "string" || value.length > MAX_ARCHIVE_TEXT_LENGTH ||
-      hasUnsafeControlCharacters(value)) return null;
-  const normalized = value.trim();
-  return normalized || undefined;
-}
-
-const MAX_ARCHIVE_READOUTS = 30;
-const MAX_READOUT_LABEL_LENGTH = 120;
-const MAX_READOUT_VALUE_LENGTH = 180;
-
-function numericValueAndUnit(raw) {
-  if (typeof raw !== "string") return null;
-  const match = /^\s*([+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?)\s*(.*?)\s*$/i.exec(raw);
-  if (!match) return null;
-  const value = Number(match[1]);
-  if (!Number.isFinite(value)) return null;
-  return { value, unit: match[2].trim() };
-}
-
-function isSafeSnapshotObject(value, { maxDepth = 64, maxNodes = 10000 } = {}) {
-  const active = new WeakSet();
-  let nodes = 0;
-  function visit(item, depth) {
-    nodes += 1;
-    if (nodes > maxNodes || depth > maxDepth) return false;
-    if (item === null || typeof item === "string" || typeof item === "boolean") return true;
-    if (typeof item === "number") return Number.isFinite(item);
-    if (typeof item !== "object") return false;
-    if (active.has(item)) return false;
-    const prototype = Object.getPrototypeOf(item);
-    if (!Array.isArray(item) && prototype !== Object.prototype && prototype !== null) return false;
-    active.add(item);
-    let valid = true;
-    if (Array.isArray(item)) {
-      const keys = Object.keys(item);
-      // Count every array slot, including holes, against the same node budget.
-      // Otherwise a huge sparse array can bypass maxNodes and stall archive
-      // comparison while every()/map() walks its declared length.
-      valid = item.length <= maxNodes - nodes && keys.length === item.length;
-      if (valid) {
-        for (let index = 0; index < item.length; index += 1) {
-          if (!Object.prototype.hasOwnProperty.call(item, index) ||
-              !visit(item[index], depth + 1)) {
-            valid = false;
-            break;
-          }
-        }
-      }
-    } else {
-      valid = Object.keys(item).every(key => visit(item[key], depth + 1));
-    }
-    active.delete(item);
-    return valid;
-  }
-  return !!value && typeof value === "object" && !Array.isArray(value) && visit(value, 0);
-}
-
-function frozen(value) {
-  if (!value || typeof value !== "object") return value;
-  const copy = Array.isArray(value)
-    ? value.map(item => frozen(item))
-    : Object.fromEntries(Object.entries(value).map(([key, item]) => [key, frozen(item)]));
-  return Object.freeze(copy);
-}
-
-export function compareExperimentArchiveSnapshots(left, right) {
-  const blocked = reason => Object.freeze({ compatible: false, reason, readouts: [], parameters: [] });
-  if (!left || !right || typeof left !== "object" || typeof right !== "object") {
-    return blocked("请选择两份有效的实验档案快照。");
-  }
-  if (left.experimentSnapshotVersion !== 1 || right.experimentSnapshotVersion !== 1 ||
-      !isValidSnapshotTimestamp(left.snapshotAt) || !isValidSnapshotTimestamp(right.snapshotAt)) {
-    return blocked("旧版档案缺少稳定的实验 ID 或结果时间戳，不能保证模型与结果口径一致。");
-  }
-  if (typeof left.experimentId !== "string" || !left.experimentId.trim() ||
-      left.experimentId.length > MAX_ARCHIVE_TEXT_LENGTH || hasUnsafeControlCharacters(left.experimentId) ||
-      left.experimentId !== right.experimentId) {
-    return blocked("两份档案不是同一个有效实验模型，已阻止跨实验比较。");
-  }
-  if (typeof left.modelVersion !== "string" || !left.modelVersion.trim() ||
-      left.modelVersion.length > MAX_ARCHIVE_TEXT_LENGTH || hasUnsafeControlCharacters(left.modelVersion) ||
-      left.modelVersion !== right.modelVersion) {
-    return blocked("两份档案的模型版本无效或不同，不能直接比较计算结果。");
-  }
-  const leftName = optionalArchiveDisplayText(left.name);
-  const rightName = optionalArchiveDisplayText(right.name);
-  const leftTime = optionalArchiveDisplayText(left.time);
-  const rightTime = optionalArchiveDisplayText(right.time);
-  if ([leftName,rightName,leftTime,rightTime].includes(null)) {
-    return blocked("档案名称或时间标签必须是长度不超过 120 个字符的纯文本。");
-  }
-  if (!isSafeSnapshotObject(left.params) || !isSafeSnapshotObject(right.params) ||
-      !Array.isArray(left.readouts) || !Array.isArray(right.readouts)) {
-    return blocked("档案缺少有效的参数对象（必须为安全的 JSON 参数对象）或结果快照，或参数结构超出安全边界，无法完成对照。");
-  }
-  if (left.readouts.length > MAX_ARCHIVE_READOUTS ||
-      right.readouts.length > MAX_ARCHIVE_READOUTS) {
-    return blocked("实验档案结果行数超出 30 条限制，无法安全完成对照。");
-  }
-
-  const leftParams = left.params;
-  const rightParams = right.params;
-  const parameterKeys = [...new Set([...Object.keys(leftParams), ...Object.keys(rightParams)])].sort();
-  const parameters = parameterKeys.map(key => ({
-    key,
-    leftValue: Object.prototype.hasOwnProperty.call(leftParams, key) ? leftParams[key] : null,
-    rightValue: Object.prototype.hasOwnProperty.call(rightParams, key) ? rightParams[key] : null,
-    changed: !Object.prototype.hasOwnProperty.call(leftParams, key) ||
-      !Object.prototype.hasOwnProperty.call(rightParams, key) || !sameSnapshotValue(leftParams[key], rightParams[key])
-  }));
-
-  function readoutMap(rows) {
-    const map = new Map();
-    for (const row of rows) {
-      if (!row || typeof row !== "object" || Array.isArray(row) ||
-          typeof row.label !== "string" || !row.label.trim() ||
-          row.label.length > MAX_READOUT_LABEL_LENGTH ||
-          typeof row.value !== "string" ||
-          row.value.length > MAX_READOUT_VALUE_LENGTH) return null;
-      const key = row.label.trim();
-      if (map.has(key)) return null;
-      map.set(key, row.value);
-    }
-    return map;
-  }
-  const leftReadouts = readoutMap(left.readouts);
-  const rightReadouts = readoutMap(right.readouts);
-  if (!leftReadouts || !rightReadouts) return blocked("某份档案包含缺失、无效或重复的结果记录，无法保证一一对应。");
-
-  const labels = [...new Set([...leftReadouts.keys(), ...rightReadouts.keys()])].sort();
-  const readouts = labels.map(label => {
-    const hasLeft = leftReadouts.has(label);
-    const hasRight = rightReadouts.has(label);
-    const leftValue = hasLeft ? leftReadouts.get(label) : null;
-    const rightValue = hasRight ? rightReadouts.get(label) : null;
-    const leftParsed = hasLeft ? numericValueAndUnit(leftValue) : null;
-    const rightParsed = hasRight ? numericValueAndUnit(rightValue) : null;
-    const sameUnit = !!leftParsed && !!rightParsed && leftParsed.unit === rightParsed.unit;
-    const candidateDelta = sameUnit ? rightParsed.value - leftParsed.value : null;
-    const finiteDelta = sameUnit && Number.isFinite(candidateDelta);
-    return {
-      label,
-      leftValue,
-      rightValue,
-      unit: finiteDelta ? leftParsed.unit : "",
-      delta: finiteDelta ? candidateDelta : null,
-      comparable: finiteDelta,
-      reason: !hasLeft || !hasRight ? "仅一份档案记录此结果" :
-        !leftParsed || !rightParsed ? "非纯数值结果，不计算差值" :
-        !sameUnit ? "单位不同，不自动换算" :
-        !finiteDelta ? "差值超出数值范围，无法可靠比较" : ""
-    };
+  const result = compareExperimentArchiveSnapshots(base, {
+    ...base,
+    params: { values: sparse }
   });
 
-  return frozen({
-    compatible: true,
-    experimentId: left.experimentId,
-    modelVersion: left.modelVersion,
-    left: { name: leftName, time: leftTime, snapshotAt: snapshotDate(left) },
-    right: { name: rightName, time: rightTime, snapshotAt: snapshotDate(right) },
-    parameters,
-    readouts
+  assert.equal(result.compatible, false);
+  assert.match(result.reason, /安全边界/);
+});
+
+test("archive comparison rejects huge sparse arrays before traversing their declared length", () => {
+  const hugeSparse = [];
+  hugeSparse.length = 1_000_000_000;
+
+  const started = performance.now();
+  const result = compareExperimentArchiveSnapshots(base, {
+    ...base,
+    params: { values: hugeSparse }
   });
-}
+  const elapsed = performance.now() - started;
+
+  assert.equal(result.compatible, false);
+  assert.match(result.reason, /安全边界/);
+  assert.ok(elapsed < 1000, `sparse-array rejection took ${elapsed.toFixed(1)} ms`);
+});
+
+test("archive comparison preserves dense JSON arrays and detects nested value changes", () => {
+  const unchanged = compareExperimentArchiveSnapshots(base, {
+    ...base,
+    params: { values: [null, "x", { unit: "K", value: 300 }] }
+  });
+  assert.equal(unchanged.compatible, true);
+
+  const changed = compareExperimentArchiveSnapshots(
+    { ...base, params: { values: [null, "x", { unit: "K", value: 300 }] } },
+    { ...base, snapshotAt: "2026-11-12T00:10:00.000Z",
+      params: { values: [null, "x", { unit: "K", value: 310 }] } }
+  );
+  assert.equal(changed.compatible, true);
+  assert.equal(changed.parameters.find(parameter => parameter.key === "values").changed, true);
+});
+
+test("archive comparison rejects arrays with non-JSON enumerable properties", () => {
+  const values = [1, 2];
+  values.metadata = "not serialized as an array item";
+
+  const result = compareExperimentArchiveSnapshots(base, {
+    ...base,
+    params: { values }
+  });
+
+  assert.equal(result.compatible, false);
+  assert.match(result.reason, /安全边界/);
+});
 
 test("archive comparison rejects accessor properties without invoking getters", () => {
   let getterCalls = 0;
