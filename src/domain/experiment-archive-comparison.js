@@ -136,7 +136,9 @@ function isSafeSnapshotObject(value, { maxDepth = 64, maxNodes = 10000 } = {}) {
     // as unsafe input rather than allowing archive comparison to crash.
     return false;
   }
-}function frozen(value) {
+}
+
+function frozen(value) {
   if (!value || typeof value !== "object") return value;
   const copy = Array.isArray(value)
     ? value.map(item => frozen(item))
