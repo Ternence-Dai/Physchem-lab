@@ -69,3 +69,76 @@ test("archive comparison rejects arrays with non-JSON enumerable properties", ()
   assert.equal(result.compatible, false);
   assert.match(result.reason, /安全边界/);
 });
+
+test("archive comparison rejects accessor properties without invoking getters", () => {
+  let getterCalls = 0;
+  const params = {};
+  Object.defineProperty(params, "temperatureK", {
+    enumerable: true,
+    get() {
+      getterCalls += 1;
+      throw new Error("getter must not execute");
+    }
+  });
+
+  const result = compareExperimentArchiveSnapshots(base, {
+    ...base,
+    params
+  });
+
+  assert.equal(result.compatible, false);
+  assert.equal(getterCalls, 0);
+});
+
+test("archive comparison rejects symbol and non-enumerable parameter properties", () => {
+  const symbolParams = { temperatureK: 300 };
+  symbolParams[Symbol("hidden")] = "not JSON";
+
+  const hiddenParams = { temperatureK: 300 };
+  Object.defineProperty(hiddenParams, "hidden", {
+    value: "not JSON",
+    enumerable: false
+  });
+
+  for (const params of [symbolParams, hiddenParams]) {
+    const result = compareExperimentArchiveSnapshots(base, {
+      ...base,
+      params
+    });
+    assert.equal(result.compatible, false);
+  }
+});
+
+test("archive comparison converts revoked proxy reflection failures into a blocked result", () => {
+  const { proxy, revoke } = Proxy.revocable({ temperatureK: 300 }, {});
+  revoke();
+
+  const result = compareExperimentArchiveSnapshots(base, {
+    ...base,
+    params: proxy
+  });
+
+  assert.equal(result.compatible, false);
+});
+
+
+test("archive comparison rejects arrays with replaced prototypes without invoking inherited getters", () => {
+  let getterCalls = 0;
+  const values = [1, 2];
+  const customPrototype = Object.create(Array.prototype);
+  Object.defineProperty(customPrototype, "map", {
+    get() {
+      getterCalls += 1;
+      throw new Error("inherited map getter must not execute");
+    }
+  });
+  Object.setPrototypeOf(values, customPrototype);
+
+  const result = compareExperimentArchiveSnapshots(base, {
+    ...base,
+    params: { values }
+  });
+
+  assert.equal(result.compatible, false);
+  assert.equal(getterCalls, 0);
+});

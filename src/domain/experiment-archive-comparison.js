@@ -87,39 +87,82 @@ function isSafeSnapshotObject(value, { maxDepth = 64, maxNodes = 10000 } = {}) {
     if (typeof item !== "object") return false;
     if (active.has(item)) return false;
     const prototype = Object.getPrototypeOf(item);
-    if (!Array.isArray(item) && prototype !== Object.prototype && prototype !== null) return false;
+    if (Array.isArray(item)) {
+      if (prototype !== Array.prototype) return false;
+    } else if (prototype !== Object.prototype && prototype !== null) {
+      return false;
+    }
     active.add(item);
     let valid = true;
     if (Array.isArray(item)) {
-      const keys = Object.keys(item);
-      // Count every array slot, including holes, against the same node budget.
-      // Otherwise a huge sparse array can bypass maxNodes and stall archive
-      // comparison while every()/map() walks its declared length.
-      valid = item.length <= maxNodes - nodes && keys.length === item.length;
+      // JSON arrays may only carry dense enumerable data properties plus the
+      // built-in non-enumerable length. Reject symbols, accessors and custom
+      // properties rather than silently dropping them during archive cloning.
+      const ownKeys = Reflect.ownKeys(item);
+      valid = ownKeys.length === item.length + 1 &&
+        item.length <= maxNodes - nodes;
       if (valid) {
         for (let index = 0; index < item.length; index += 1) {
-          if (!Object.prototype.hasOwnProperty.call(item, index) ||
-              !visit(item[index], depth + 1)) {
+          const descriptor = Object.getOwnPropertyDescriptor(item, String(index));
+          if (!descriptor || !descriptor.enumerable ||
+              !Object.prototype.hasOwnProperty.call(descriptor, "value") ||
+              !visit(descriptor.value, depth + 1)) {
             valid = false;
             break;
           }
         }
       }
     } else {
-      valid = Object.keys(item).every(key => visit(item[key], depth + 1));
+      // Read descriptor values, never item[key]: an accessor on an imported
+      // in-memory snapshot must not execute while the archive is being checked.
+      const ownKeys = Reflect.ownKeys(item);
+      for (const key of ownKeys) {
+        if (typeof key !== "string") {
+          valid = false;
+          break;
+        }
+        const descriptor = Object.getOwnPropertyDescriptor(item, key);
+        if (!descriptor || !descriptor.enumerable ||
+            !Object.prototype.hasOwnProperty.call(descriptor, "value") ||
+            !visit(descriptor.value, depth + 1)) {
+          valid = false;
+          break;
+        }
+      }
     }
     active.delete(item);
     return valid;
   }
-  return !!value && typeof value === "object" && !Array.isArray(value) && visit(value, 0);
+  try {
+    return !!value && typeof value === "object" && !Array.isArray(value) && visit(value, 0);
+  } catch {
+    // Proxies and revoked proxies can throw from reflection traps. Treat them
+    // as unsafe input rather than allowing archive comparison to crash.
+    return false;
+  }
 }
 
 function frozen(value) {
   if (!value || typeof value !== "object") return value;
-  const copy = Array.isArray(value)
-    ? value.map(item => frozen(item))
-    : Object.fromEntries(Object.entries(value).map(([key, item]) => [key, frozen(item)]));
-  return Object.freeze(copy);
+  if (Array.isArray(value)) {
+    const copy = [];
+    for (let index = 0; index < value.length; index += 1) {
+      const descriptor = Object.getOwnPropertyDescriptor(value, String(index));
+      if (!descriptor || !Object.prototype.hasOwnProperty.call(descriptor, "value")) {
+        throw new TypeError("Cannot freeze a non-JSON array entry");
+      }
+      copy.push(frozen(descriptor.value));
+    }
+    return Object.freeze(copy);
+  }
+  const entries = Object.keys(value).map(key => {
+    const descriptor = Object.getOwnPropertyDescriptor(value, key);
+    if (!descriptor || !Object.prototype.hasOwnProperty.call(descriptor, "value")) {
+      throw new TypeError("Cannot freeze a non-JSON object property");
+    }
+    return [key, frozen(descriptor.value)];
+  });
+  return Object.freeze(Object.fromEntries(entries));
 }
 
 export function compareExperimentArchiveSnapshots(left, right) {
