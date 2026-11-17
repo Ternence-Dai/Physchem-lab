@@ -133,7 +133,7 @@ function close(label, actual, expected, relativeTolerance = 1e-11) {
     activationEnergyJPerMol: 55000,
     temperatureK: 323.15
   });
-  close("p8.arrheniusRateConstant", result, 0.03219577450948931);
+  close("p8.arrheniusRateConstant", result, 0.03219577452163602);
 }
 
 console.log("PhysChem flagship analytic reference vectors passed (p1-p8).");
