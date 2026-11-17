@@ -1,0 +1,5968 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditType": "experiment_evidence_inventory",
+  "warning": "This is an evidence-gap register generated from the current catalogue. Candidate references are research starting points only; no item-level formula citation, assumption review, laboratory benchmark or experimental-data validation is claimed.",
+  "sourceCatalogue": {
+    "path": "assets/js/experiment-catalogue.js",
+    "gitBlobSha": "643ce227a214eea776c0e83849bc27d85ba930a5",
+    "experimentCount": 108
+  },
+  "statusDefinitions": {
+    "formulaReferenceStatus": {
+      "not_yet_item_verified": "No chapter/section/page has yet been checked against this exact implementation."
+    },
+    "assumptionsStatus": {
+      "not_structured": "Model assumptions are not yet recorded in a structured, item-level form."
+    },
+    "independentBenchmarkStatus": {
+      "not_supplied": "No independent analytical or published reference vector has been attached to this experiment record."
+    },
+    "measuredDatasetStatus": {
+      "not_supplied": "No physical laboratory dataset is supplied by this catalogue record."
+    },
+    "candidateReferences": "Candidate sources are not citations until exact chapter/section, equation and applicability are checked."
+  },
+  "referenceRegistry": {
+    "openstax-university-physics-v1": {
+      "title": "University Physics Volume 1",
+      "organization": "OpenStax / Rice University",
+      "url": "https://openstax.org/books/university-physics-volume-1/pages/preface",
+      "scope": "Mechanics, motion, Newton's laws, work-energy, momentum, rotation, gravitation, oscillations and waves.",
+      "usageStatus": "candidate_reference_not_item_verified"
+    },
+    "openstax-university-physics-v2": {
+      "title": "University Physics Volume 2",
+      "organization": "OpenStax / Rice University",
+      "url": "https://openstax.org/books/university-physics-volume-2/pages/preface",
+      "scope": "Thermodynamics, gases, electricity and magnetism, DC/AC circuits and induction.",
+      "usageStatus": "candidate_reference_not_item_verified"
+    },
+    "openstax-university-physics-v3": {
+      "title": "University Physics Volume 3",
+      "organization": "OpenStax / Rice University",
+      "url": "https://openstax.org/books/university-physics-volume-3/pages/preface",
+      "scope": "Optics, interference, diffraction, modern physics and quantum topics.",
+      "usageStatus": "candidate_reference_not_item_verified"
+    },
+    "openstax-chemistry-2e": {
+      "title": "Chemistry 2e",
+      "organization": "OpenStax / Rice University",
+      "url": "https://openstax.org/books/chemistry-2e/pages/preface",
+      "scope": "General chemistry, thermochemistry, gases, kinetics, equilibrium, acid-base chemistry and electrochemistry.",
+      "usageStatus": "candidate_reference_not_item_verified"
+    },
+    "nist-codata-2022": {
+      "title": "CODATA Recommended Values of the Fundamental Physical Constants: 2022",
+      "organization": "NIST / CODATA Task Group",
+      "url": "https://physics.nist.gov/cuu/Constants/index.html",
+      "doi": "10.1103/RevModPhys.97.025002",
+      "scope": "Fundamental physical constants and conversion factors.",
+      "usageStatus": "candidate_reference_not_item_verified"
+    },
+    "iupac-green-book-4e": {
+      "title": "Quantities, Units, and Symbols in Physical Chemistry (IUPAC Green Book), 4th edition",
+      "organization": "IUPAC / RSC Publishing",
+      "url": "https://iupac.org/what-we-do/books/greenbook/",
+      "doi": "10.1039/9781839163180",
+      "scope": "Physical-chemistry quantities, symbols, units and conventions.",
+      "usageStatus": "candidate_reference_not_item_verified"
+    },
+    "nist-chemistry-webbook-srd69": {
+      "title": "NIST Chemistry WebBook, Standard Reference Database 69",
+      "organization": "NIST",
+      "url": "https://webbook.nist.gov/chemistry/",
+      "doi": "10.18434/T4D303",
+      "scope": "Compound-specific thermochemical, thermophysical, spectral and ion-energetics reference data.",
+      "usageStatus": "candidate_reference_not_item_verified"
+    }
+  },
+  "experiments": [
+    {
+      "id": "p1",
+      "name": "抛体运动轨迹",
+      "category": "物理",
+      "sourceGroup": "flagship",
+      "tags": [
+        "力学",
+        "运动学"
+      ],
+      "formulaCount": 5,
+      "parameters": [
+        {
+          "key": "v0",
+          "label": "初速度 v₀",
+          "minExpression": "5",
+          "maxExpression": "60",
+          "stepExpression": "1",
+          "defaultExpression": "32",
+          "unit": "m/s",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "ang",
+          "label": "发射角 θ",
+          "minExpression": "5",
+          "maxExpression": "85",
+          "stepExpression": "1",
+          "defaultExpression": "45",
+          "unit": "°",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "g",
+          "label": "重力加速度 g",
+          "minExpression": "1.6",
+          "maxExpression": "20",
+          "stepExpression": "0.1",
+          "defaultExpression": "9.8",
+          "unit": "m/s²",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-university-physics-v1"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "default_parameter_and_combined_boundary_checks"
+      }
+    },
+    {
+      "id": "p2",
+      "name": "单摆与简谐振动",
+      "category": "物理",
+      "sourceGroup": "flagship",
+      "tags": [
+        "力学",
+        "振动"
+      ],
+      "formulaCount": 4,
+      "parameters": [
+        {
+          "key": "L",
+          "label": "摆长 L",
+          "minExpression": "0.3",
+          "maxExpression": "2",
+          "stepExpression": "0.05",
+          "defaultExpression": "1",
+          "unit": "m",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "g",
+          "label": "重力加速度 g",
+          "minExpression": "1.6",
+          "maxExpression": "20",
+          "stepExpression": "0.1",
+          "defaultExpression": "9.8",
+          "unit": "m/s²",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "b",
+          "label": "阻尼系数 b",
+          "minExpression": "0",
+          "maxExpression": "0.6",
+          "stepExpression": "0.02",
+          "defaultExpression": "0",
+          "unit": "s⁻¹",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-university-physics-v1"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "default_parameter_and_combined_boundary_checks"
+      }
+    },
+    {
+      "id": "p3",
+      "name": "弹簧振子与能量转化",
+      "category": "物理",
+      "sourceGroup": "flagship",
+      "tags": [
+        "力学",
+        "能量"
+      ],
+      "formulaCount": 5,
+      "parameters": [
+        {
+          "key": "m",
+          "label": "质量 m",
+          "minExpression": "0.2",
+          "maxExpression": "3",
+          "stepExpression": "0.1",
+          "defaultExpression": "1",
+          "unit": "kg",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "k",
+          "label": "劲度系数 k",
+          "minExpression": "5",
+          "maxExpression": "80",
+          "stepExpression": "1",
+          "defaultExpression": "30",
+          "unit": "N/m",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-university-physics-v1"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "default_parameter_and_combined_boundary_checks"
+      }
+    },
+    {
+      "id": "p4",
+      "name": "欧姆定律电路",
+      "category": "物理",
+      "sourceGroup": "flagship",
+      "tags": [
+        "电学",
+        "电流"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "U",
+          "label": "电源电压 U",
+          "minExpression": "1",
+          "maxExpression": "24",
+          "stepExpression": "0.5",
+          "defaultExpression": "12",
+          "unit": "V",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "R",
+          "label": "电阻 R",
+          "minExpression": "1",
+          "maxExpression": "60",
+          "stepExpression": "1",
+          "defaultExpression": "12",
+          "unit": "Ω",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-university-physics-v2"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "default_parameter_and_combined_boundary_checks"
+      }
+    },
+    {
+      "id": "p5",
+      "name": "斜面滑动与摩擦力",
+      "category": "物理",
+      "sourceGroup": "flagship",
+      "tags": [
+        "力学",
+        "摩擦"
+      ],
+      "formulaCount": 4,
+      "parameters": [
+        {
+          "key": "theta",
+          "label": "斜面倾角 θ",
+          "minExpression": "8",
+          "maxExpression": "60",
+          "stepExpression": "1",
+          "defaultExpression": "30",
+          "unit": "°",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "mu",
+          "label": "动摩擦因数 μ",
+          "minExpression": "0",
+          "maxExpression": "0.8",
+          "stepExpression": "0.02",
+          "defaultExpression": "0.2",
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "m",
+          "label": "物体质量 m",
+          "minExpression": "1",
+          "maxExpression": "10",
+          "stepExpression": "0.5",
+          "defaultExpression": "3",
+          "unit": "kg",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-university-physics-v1"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "default_parameter_and_combined_boundary_checks"
+      }
+    },
+    {
+      "id": "p6",
+      "name": "理想气体分子运动",
+      "category": "化学",
+      "sourceGroup": "flagship",
+      "tags": [
+        "气体",
+        "热力学"
+      ],
+      "formulaCount": 4,
+      "parameters": [
+        {
+          "key": "T",
+          "label": "热力学温度 T",
+          "minExpression": "100",
+          "maxExpression": "900",
+          "stepExpression": "10",
+          "defaultExpression": "300",
+          "unit": "K",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "V",
+          "label": "体积 V",
+          "minExpression": "2",
+          "maxExpression": "20",
+          "stepExpression": "0.5",
+          "defaultExpression": "10",
+          "unit": "L",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "n",
+          "label": "物质的量 n",
+          "minExpression": "0.2",
+          "maxExpression": "2",
+          "stepExpression": "0.1",
+          "defaultExpression": "1",
+          "unit": "mol",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-university-physics-v1",
+          "nist-codata-2022"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "default_parameter_and_combined_boundary_checks"
+      }
+    },
+    {
+      "id": "p7",
+      "name": "酸碱滴定曲线",
+      "category": "化学",
+      "sourceGroup": "ps",
+      "tags": [
+        "分析化学",
+        "pH"
+      ],
+      "formulaCount": 4,
+      "parameters": [
+        {
+          "key": "ca",
+          "label": "酸的浓度 c(酸)",
+          "minExpression": "0.01",
+          "maxExpression": "0.5",
+          "stepExpression": "0.01",
+          "defaultExpression": "0.1",
+          "unit": "mol/L",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "va",
+          "label": "酸的体积 V(酸)",
+          "minExpression": "10",
+          "maxExpression": "50",
+          "stepExpression": "1",
+          "defaultExpression": "20",
+          "unit": "mL",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "cb",
+          "label": "碱的浓度 c(碱)",
+          "minExpression": "0.01",
+          "maxExpression": "1",
+          "stepExpression": "0.01",
+          "defaultExpression": "0.1",
+          "unit": "mol/L",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e",
+          "iupac-green-book-4e"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "default_parameter_and_combined_boundary_checks"
+      }
+    },
+    {
+      "id": "p8",
+      "name": "化学反应速率与活化能",
+      "category": "化学",
+      "sourceGroup": "ps",
+      "tags": [
+        "动力学",
+        "阿伦尼乌斯"
+      ],
+      "formulaCount": 5,
+      "parameters": [
+        {
+          "key": "T",
+          "label": "温度 T",
+          "minExpression": "20",
+          "maxExpression": "90",
+          "stepExpression": "1",
+          "defaultExpression": "25",
+          "unit": "°C",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "c",
+          "label": "反应物浓度 c",
+          "minExpression": "0.1",
+          "maxExpression": "2",
+          "stepExpression": "0.05",
+          "defaultExpression": "1",
+          "unit": "mol/L",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e",
+          "iupac-green-book-4e"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "default_parameter_and_combined_boundary_checks"
+      }
+    },
+    {
+      "id": "m1",
+      "name": "自由落体运动",
+      "category": "物理",
+      "sourceGroup": "M",
+      "tags": [
+        "力学",
+        "重力"
+      ],
+      "formulaCount": 4,
+      "parameters": [
+        {
+          "key": "h",
+          "label": "初始高度 h",
+          "minExpression": "5",
+          "maxExpression": "100",
+          "stepExpression": "1",
+          "defaultExpression": "45",
+          "unit": "m",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "g",
+          "label": "重力加速度 g",
+          "minExpression": "1.6",
+          "maxExpression": "20",
+          "stepExpression": "0.1",
+          "defaultExpression": "9.8",
+          "unit": "m/s²",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-university-physics-v1"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "m2",
+      "name": "竖直上抛运动",
+      "category": "物理",
+      "sourceGroup": "M",
+      "tags": [
+        "力学",
+        "抛体"
+      ],
+      "formulaCount": 4,
+      "parameters": [
+        {
+          "key": "v0",
+          "label": "初速度 v₀",
+          "minExpression": "5",
+          "maxExpression": "50",
+          "stepExpression": "1",
+          "defaultExpression": "20",
+          "unit": "m/s",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "g",
+          "label": "重力加速度 g",
+          "minExpression": "1.6",
+          "maxExpression": "20",
+          "stepExpression": "0.1",
+          "defaultExpression": "9.8",
+          "unit": "m/s²",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-university-physics-v1"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "m3",
+      "name": "圆周运动与向心力",
+      "category": "物理",
+      "sourceGroup": "M",
+      "tags": [
+        "力学",
+        "圆周"
+      ],
+      "formulaCount": 4,
+      "parameters": [
+        {
+          "key": "v",
+          "label": "线速度 v",
+          "minExpression": "1",
+          "maxExpression": "15",
+          "stepExpression": "0.5",
+          "defaultExpression": "5",
+          "unit": "m/s",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "r",
+          "label": "半径 r",
+          "minExpression": "0.3",
+          "maxExpression": "2",
+          "stepExpression": "0.05",
+          "defaultExpression": "1",
+          "unit": "m",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-university-physics-v1"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "m4",
+      "name": "平抛运动",
+      "category": "物理",
+      "sourceGroup": "M",
+      "tags": [
+        "力学",
+        "抛体"
+      ],
+      "formulaCount": 4,
+      "parameters": [
+        {
+          "key": "v0",
+          "label": "水平速度 v₀",
+          "minExpression": "2",
+          "maxExpression": "30",
+          "stepExpression": "1",
+          "defaultExpression": "15",
+          "unit": "m/s",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "h",
+          "label": "抛出高度 h",
+          "minExpression": "5",
+          "maxExpression": "60",
+          "stepExpression": "1",
+          "defaultExpression": "30",
+          "unit": "m",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "g",
+          "label": "重力加速度 g",
+          "minExpression": "1.6",
+          "maxExpression": "20",
+          "stepExpression": "0.1",
+          "defaultExpression": "9.8",
+          "unit": "m/s²",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-university-physics-v1"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "m5",
+      "name": "斜抛运动",
+      "category": "物理",
+      "sourceGroup": "M",
+      "tags": [
+        "力学",
+        "抛体"
+      ],
+      "formulaCount": 4,
+      "parameters": [
+        {
+          "key": "v0",
+          "label": "初速度 v₀",
+          "minExpression": "5",
+          "maxExpression": "50",
+          "stepExpression": "1",
+          "defaultExpression": "25",
+          "unit": "m/s",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "ang",
+          "label": "发射角 θ",
+          "minExpression": "10",
+          "maxExpression": "80",
+          "stepExpression": "1",
+          "defaultExpression": "60",
+          "unit": "°",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "g",
+          "label": "重力加速度 g",
+          "minExpression": "1.6",
+          "maxExpression": "20",
+          "stepExpression": "0.1",
+          "defaultExpression": "9.8",
+          "unit": "m/s²",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-university-physics-v1"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "m6",
+      "name": "匀速直线运动",
+      "category": "物理",
+      "sourceGroup": "M",
+      "tags": [
+        "力学",
+        "运动"
+      ],
+      "formulaCount": 2,
+      "parameters": [
+        {
+          "key": "v",
+          "label": "速度 v",
+          "minExpression": "1",
+          "maxExpression": "30",
+          "stepExpression": "0.5",
+          "defaultExpression": "10",
+          "unit": "m/s",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "L",
+          "label": "总路程 L",
+          "minExpression": "10",
+          "maxExpression": "200",
+          "stepExpression": "5",
+          "defaultExpression": "100",
+          "unit": "m",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-university-physics-v1"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "m7",
+      "name": "匀加速直线运动",
+      "category": "物理",
+      "sourceGroup": "M",
+      "tags": [
+        "力学",
+        "运动"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "v0",
+          "label": "初速度 v₀",
+          "minExpression": "0",
+          "maxExpression": "20",
+          "stepExpression": "0.5",
+          "defaultExpression": "0",
+          "unit": "m/s",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "a",
+          "label": "加速度 a",
+          "minExpression": "0.5",
+          "maxExpression": "10",
+          "stepExpression": "0.1",
+          "defaultExpression": "2",
+          "unit": "m/s²",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "T",
+          "label": "总时间 T",
+          "minExpression": "1",
+          "maxExpression": "20",
+          "stepExpression": "0.5",
+          "defaultExpression": "5",
+          "unit": "s",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-university-physics-v1"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "m8",
+      "name": "竖直下抛运动",
+      "category": "物理",
+      "sourceGroup": "M",
+      "tags": [
+        "力学",
+        "抛体"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "v0",
+          "label": "初速度 v₀",
+          "minExpression": "1",
+          "maxExpression": "20",
+          "stepExpression": "0.5",
+          "defaultExpression": "5",
+          "unit": "m/s",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "h",
+          "label": "下落高度 h",
+          "minExpression": "5",
+          "maxExpression": "80",
+          "stepExpression": "1",
+          "defaultExpression": "40",
+          "unit": "m",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "g",
+          "label": "重力加速度 g",
+          "minExpression": "1.6",
+          "maxExpression": "20",
+          "stepExpression": "0.1",
+          "defaultExpression": "9.8",
+          "unit": "m/s²",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-university-physics-v1"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "m9",
+      "name": "简谐运动(SHM)",
+      "category": "物理",
+      "sourceGroup": "M",
+      "tags": [
+        "力学",
+        "振动"
+      ],
+      "formulaCount": 4,
+      "parameters": [
+        {
+          "key": "A",
+          "label": "振幅 A",
+          "minExpression": "0.2",
+          "maxExpression": "3",
+          "stepExpression": "0.1",
+          "defaultExpression": "1",
+          "unit": "m",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "w",
+          "label": "角频率 ω",
+          "minExpression": "0.5",
+          "maxExpression": "5",
+          "stepExpression": "0.1",
+          "defaultExpression": "2",
+          "unit": "rad/s",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-university-physics-v1"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "m10",
+      "name": "胡克定律弹簧",
+      "category": "物理",
+      "sourceGroup": "M",
+      "tags": [
+        "力学",
+        "弹性"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "k",
+          "label": "劲度系数 k",
+          "minExpression": "5",
+          "maxExpression": "100",
+          "stepExpression": "1",
+          "defaultExpression": "30",
+          "unit": "N/m",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "F",
+          "label": "拉力 F",
+          "minExpression": "0.5",
+          "maxExpression": "30",
+          "stepExpression": "0.5",
+          "defaultExpression": "10",
+          "unit": "N",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-university-physics-v1"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "m11",
+      "name": "动量守恒碰撞",
+      "category": "物理",
+      "sourceGroup": "M",
+      "tags": [
+        "力学",
+        "动量"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "m1",
+          "label": "质量 m₁",
+          "minExpression": "0.5",
+          "maxExpression": "5",
+          "stepExpression": "0.1",
+          "defaultExpression": "1",
+          "unit": "kg",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "v1",
+          "label": "初速 v₁",
+          "minExpression": "0",
+          "maxExpression": "10",
+          "stepExpression": "0.5",
+          "defaultExpression": "5",
+          "unit": "m/s",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "m2",
+          "label": "质量 m₂",
+          "minExpression": "0.5",
+          "maxExpression": "5",
+          "stepExpression": "0.1",
+          "defaultExpression": "2",
+          "unit": "kg",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "v2",
+          "label": "初速 v₂",
+          "minExpression": "-5",
+          "maxExpression": "5",
+          "stepExpression": "0.5",
+          "defaultExpression": "0",
+          "unit": "m/s",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-university-physics-v1"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "m12",
+      "name": "功与功率",
+      "category": "物理",
+      "sourceGroup": "M",
+      "tags": [
+        "力学",
+        "能量"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "F",
+          "label": "力 F",
+          "minExpression": "1",
+          "maxExpression": "100",
+          "stepExpression": "1",
+          "defaultExpression": "20",
+          "unit": "N",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "s",
+          "label": "位移 s",
+          "minExpression": "1",
+          "maxExpression": "50",
+          "stepExpression": "1",
+          "defaultExpression": "10",
+          "unit": "m",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "t",
+          "label": "时间 t",
+          "minExpression": "1",
+          "maxExpression": "60",
+          "stepExpression": "1",
+          "defaultExpression": "5",
+          "unit": "s",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-university-physics-v1"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "m13",
+      "name": "动能与势能转化",
+      "category": "物理",
+      "sourceGroup": "M",
+      "tags": [
+        "力学",
+        "能量"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "h",
+          "label": "初始高度 h",
+          "minExpression": "5",
+          "maxExpression": "60",
+          "stepExpression": "1",
+          "defaultExpression": "30",
+          "unit": "m",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "m",
+          "label": "质量 m",
+          "minExpression": "0.5",
+          "maxExpression": "10",
+          "stepExpression": "0.1",
+          "defaultExpression": "2",
+          "unit": "kg",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "g",
+          "label": "重力加速度 g",
+          "minExpression": "1.6",
+          "maxExpression": "20",
+          "stepExpression": "0.1",
+          "defaultExpression": "9.8",
+          "unit": "m/s²",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-university-physics-v1"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "m14",
+      "name": "牛顿第二定律",
+      "category": "物理",
+      "sourceGroup": "M",
+      "tags": [
+        "力学",
+        "动力学"
+      ],
+      "formulaCount": 4,
+      "parameters": [
+        {
+          "key": "F",
+          "label": "合外力 F",
+          "minExpression": "1",
+          "maxExpression": "100",
+          "stepExpression": "1",
+          "defaultExpression": "20",
+          "unit": "N",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "m",
+          "label": "质量 m",
+          "minExpression": "0.5",
+          "maxExpression": "20",
+          "stepExpression": "0.5",
+          "defaultExpression": "5",
+          "unit": "kg",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "v0",
+          "label": "初速度 v₀",
+          "minExpression": "0",
+          "maxExpression": "10",
+          "stepExpression": "0.5",
+          "defaultExpression": "0",
+          "unit": "m/s",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-university-physics-v1"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "m15",
+      "name": "斜抛水平射程优化",
+      "category": "物理",
+      "sourceGroup": "M",
+      "tags": [
+        "力学",
+        "抛体"
+      ],
+      "formulaCount": 2,
+      "parameters": [
+        {
+          "key": "v0",
+          "label": "初速度 v₀",
+          "minExpression": "10",
+          "maxExpression": "50",
+          "stepExpression": "1",
+          "defaultExpression": "25",
+          "unit": "m/s",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "ang",
+          "label": "发射角 θ",
+          "minExpression": "5",
+          "maxExpression": "85",
+          "stepExpression": "1",
+          "defaultExpression": "30",
+          "unit": "°",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "g",
+          "label": "重力加速度 g",
+          "minExpression": "1.6",
+          "maxExpression": "20",
+          "stepExpression": "0.1",
+          "defaultExpression": "9.8",
+          "unit": "m/s²",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-university-physics-v1"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "o1",
+      "name": "光的折射(Snell)",
+      "category": "物理",
+      "sourceGroup": "C1",
+      "tags": [
+        "光学",
+        "折射"
+      ],
+      "formulaCount": 2,
+      "parameters": [
+        {
+          "key": "n1",
+          "label": "介质1折射率 n₁",
+          "minExpression": "1",
+          "maxExpression": "2.5",
+          "stepExpression": "0.05",
+          "defaultExpression": "1",
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "n2",
+          "label": "介质2折射率 n₂",
+          "minExpression": "1",
+          "maxExpression": "2.5",
+          "stepExpression": "0.05",
+          "defaultExpression": "1.5",
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "a",
+          "label": "入射角 θ₁",
+          "minExpression": "0",
+          "maxExpression": "80",
+          "stepExpression": "1",
+          "defaultExpression": "45",
+          "unit": "°",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-university-physics-v3"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "o2",
+      "name": "杨氏双缝干涉",
+      "category": "物理",
+      "sourceGroup": "C1",
+      "tags": [
+        "光学",
+        "干涉"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "lam",
+          "label": "波长 λ",
+          "minExpression": "400",
+          "maxExpression": "750",
+          "stepExpression": "10",
+          "defaultExpression": "550",
+          "unit": "nm",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "d",
+          "label": "缝间距 d",
+          "minExpression": "0.1",
+          "maxExpression": "1",
+          "stepExpression": "0.02",
+          "defaultExpression": "0.3",
+          "unit": "mm",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "D",
+          "label": "屏距离 D",
+          "minExpression": "0.5",
+          "maxExpression": "3",
+          "stepExpression": "0.1",
+          "defaultExpression": "1.5",
+          "unit": "m",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-university-physics-v3"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "o3",
+      "name": "单缝衍射",
+      "category": "物理",
+      "sourceGroup": "C1",
+      "tags": [
+        "光学",
+        "衍射"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "lam",
+          "label": "波长 λ",
+          "minExpression": "400",
+          "maxExpression": "750",
+          "stepExpression": "10",
+          "defaultExpression": "550",
+          "unit": "nm",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "a",
+          "label": "缝宽 a",
+          "minExpression": "0.05",
+          "maxExpression": "0.5",
+          "stepExpression": "0.01",
+          "defaultExpression": "0.1",
+          "unit": "mm",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "D",
+          "label": "屏距离 D",
+          "minExpression": "0.5",
+          "maxExpression": "3",
+          "stepExpression": "0.1",
+          "defaultExpression": "1.5",
+          "unit": "m",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-university-physics-v3"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "o4",
+      "name": "黑体辐射(维恩位移)",
+      "category": "物理",
+      "sourceGroup": "C1",
+      "tags": [
+        "热力学",
+        "量子"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "T",
+          "label": "温度 T",
+          "minExpression": "1000",
+          "maxExpression": "8000",
+          "stepExpression": "100",
+          "defaultExpression": "5000",
+          "unit": "K",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-university-physics-v3",
+          "openstax-university-physics-v1",
+          "nist-codata-2022"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "o5",
+      "name": "光电效应",
+      "category": "物理",
+      "sourceGroup": "C1",
+      "tags": [
+        "量子",
+        "光电"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "lam",
+          "label": "波长 λ",
+          "minExpression": "200",
+          "maxExpression": "700",
+          "stepExpression": "10",
+          "defaultExpression": "400",
+          "unit": "nm",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "W",
+          "label": "逸出功 W",
+          "minExpression": "1",
+          "maxExpression": "5",
+          "stepExpression": "0.1",
+          "defaultExpression": "2.3",
+          "unit": "eV",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-university-physics-v3",
+          "openstax-university-physics-v2",
+          "nist-codata-2022"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "o6",
+      "name": "康普顿散射",
+      "category": "物理",
+      "sourceGroup": "C1",
+      "tags": [
+        "量子",
+        "散射"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "lam",
+          "label": "入射波长 λ",
+          "minExpression": "0.01",
+          "maxExpression": "0.1",
+          "stepExpression": "0.005",
+          "defaultExpression": "0.05",
+          "unit": "nm",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "ang",
+          "label": "散射角 θ",
+          "minExpression": "0",
+          "maxExpression": "180",
+          "stepExpression": "5",
+          "defaultExpression": "60",
+          "unit": "°",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-university-physics-v3",
+          "nist-codata-2022"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "o7",
+      "name": "德布罗意波长",
+      "category": "物理",
+      "sourceGroup": "C1",
+      "tags": [
+        "量子",
+        "波粒二象性"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "m",
+          "label": "质量 m",
+          "minExpression": "1",
+          "maxExpression": "1000",
+          "stepExpression": "1",
+          "defaultExpression": "9.11",
+          "unit": "×10⁻³¹ kg",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "v",
+          "label": "速度 v",
+          "minExpression": "1",
+          "maxExpression": "10000",
+          "stepExpression": "100",
+          "defaultExpression": "1000",
+          "unit": "m/s",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-university-physics-v3",
+          "nist-codata-2022"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "o8",
+      "name": "单摆波速",
+      "category": "物理",
+      "sourceGroup": "C1",
+      "tags": [
+        "波动",
+        "摆"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "T",
+          "label": "张力 T",
+          "minExpression": "1",
+          "maxExpression": "100",
+          "stepExpression": "1",
+          "defaultExpression": "20",
+          "unit": "N",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "mu",
+          "label": "线密度 μ",
+          "minExpression": "0.01",
+          "maxExpression": "1",
+          "stepExpression": "0.01",
+          "defaultExpression": "0.1",
+          "unit": "kg/m",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-university-physics-v3"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "o9",
+      "name": "多普勒效应",
+      "category": "物理",
+      "sourceGroup": "C1",
+      "tags": [
+        "波动",
+        "多普勒"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "f0",
+          "label": "波源频率 f₀",
+          "minExpression": "100",
+          "maxExpression": "2000",
+          "stepExpression": "10",
+          "defaultExpression": "440",
+          "unit": "Hz",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "vs",
+          "label": "声速 v",
+          "minExpression": "300",
+          "maxExpression": "400",
+          "stepExpression": "5",
+          "defaultExpression": "340",
+          "unit": "m/s",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "v",
+          "label": "相对速度 v",
+          "minExpression": "-100",
+          "maxExpression": "100",
+          "stepExpression": "5",
+          "defaultExpression": "30",
+          "unit": "m/s",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-university-physics-v3"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "o10",
+      "name": "布儒斯特角",
+      "category": "物理",
+      "sourceGroup": "C1",
+      "tags": [
+        "光学",
+        "偏振"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "n1",
+          "label": "介质1 n₁",
+          "minExpression": "1",
+          "maxExpression": "2",
+          "stepExpression": "0.05",
+          "defaultExpression": "1",
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "n2",
+          "label": "介质2 n₂",
+          "minExpression": "1",
+          "maxExpression": "2",
+          "stepExpression": "0.05",
+          "defaultExpression": "1.5",
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "ang",
+          "label": "入射角 θ",
+          "minExpression": "0",
+          "maxExpression": "89",
+          "stepExpression": "1",
+          "defaultExpression": "56",
+          "unit": "°",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-university-physics-v3"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "o11",
+      "name": "薄膜干涉",
+      "category": "物理",
+      "sourceGroup": "C1",
+      "tags": [
+        "光学",
+        "干涉"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "n",
+          "label": "薄膜折射率 n",
+          "minExpression": "1.2",
+          "maxExpression": "2",
+          "stepExpression": "0.05",
+          "defaultExpression": "1.5",
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "d",
+          "label": "膜厚 d",
+          "minExpression": "100",
+          "maxExpression": "1000",
+          "stepExpression": "10",
+          "defaultExpression": "500",
+          "unit": "nm",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "lam",
+          "label": "波长 λ",
+          "minExpression": "400",
+          "maxExpression": "750",
+          "stepExpression": "10",
+          "defaultExpression": "550",
+          "unit": "nm",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-university-physics-v3"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "o12",
+      "name": "麦克斯韦-玻尔兹曼分布",
+      "category": "化学",
+      "sourceGroup": "C1",
+      "tags": [
+        "统计",
+        "分子"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "T",
+          "label": "温度 T",
+          "minExpression": "100",
+          "maxExpression": "1500",
+          "stepExpression": "10",
+          "defaultExpression": "300",
+          "unit": "K",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "M",
+          "label": "摩尔质量 M",
+          "minExpression": "2",
+          "maxExpression": "100",
+          "stepExpression": "1",
+          "defaultExpression": "28",
+          "unit": "g/mol",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "e1",
+      "name": "RC电路充放电",
+      "category": "物理",
+      "sourceGroup": "C2",
+      "tags": [
+        "电学",
+        "瞬态"
+      ],
+      "formulaCount": 4,
+      "parameters": [
+        {
+          "key": "R",
+          "label": "电阻 R",
+          "minExpression": "100",
+          "maxExpression": "10000",
+          "stepExpression": "100",
+          "defaultExpression": "1000",
+          "unit": "Ω",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "Cc",
+          "label": "电容 C",
+          "minExpression": "1",
+          "maxExpression": "100",
+          "stepExpression": "1",
+          "defaultExpression": "10",
+          "unit": "μF",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-university-physics-v2"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "e2",
+      "name": "RL电路瞬态",
+      "category": "物理",
+      "sourceGroup": "C2",
+      "tags": [
+        "电学",
+        "瞬态"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "R",
+          "label": "电阻 R",
+          "minExpression": "1",
+          "maxExpression": "1000",
+          "stepExpression": "1",
+          "defaultExpression": "100",
+          "unit": "Ω",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "L",
+          "label": "电感 L",
+          "minExpression": "0.01",
+          "maxExpression": "1",
+          "stepExpression": "0.01",
+          "defaultExpression": "0.1",
+          "unit": "H",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-university-physics-v2"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "e3",
+      "name": "RLC谐振电路",
+      "category": "物理",
+      "sourceGroup": "C2",
+      "tags": [
+        "电学",
+        "谐振"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "L",
+          "label": "电感 L",
+          "minExpression": "0.001",
+          "maxExpression": "0.1",
+          "stepExpression": "0.001",
+          "defaultExpression": "0.01",
+          "unit": "H",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "C",
+          "label": "电容 C",
+          "minExpression": "1",
+          "maxExpression": "100",
+          "stepExpression": "1",
+          "defaultExpression": "10",
+          "unit": "μF",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "R",
+          "label": "电阻 R",
+          "minExpression": "1",
+          "maxExpression": "100",
+          "stepExpression": "1",
+          "defaultExpression": "10",
+          "unit": "Ω",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-university-physics-v2"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "e4",
+      "name": "洛伦兹力与回旋运动",
+      "category": "物理",
+      "sourceGroup": "C2",
+      "tags": [
+        "电磁",
+        "带电粒子"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "v",
+          "label": "速度 v",
+          "minExpression": "1e5",
+          "maxExpression": "1e7",
+          "stepExpression": "1e5",
+          "defaultExpression": "1e6",
+          "unit": "m/s",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "B",
+          "label": "磁场 B",
+          "minExpression": "0.01",
+          "maxExpression": "1",
+          "stepExpression": "0.01",
+          "defaultExpression": "0.1",
+          "unit": "T",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "q",
+          "label": "电荷量(×e)",
+          "minExpression": "1",
+          "maxExpression": "10",
+          "stepExpression": "1",
+          "defaultExpression": "1",
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-university-physics-v2",
+          "openstax-university-physics-v1"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "e5",
+      "name": "平行板电容器",
+      "category": "物理",
+      "sourceGroup": "C2",
+      "tags": [
+        "电学",
+        "电容"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "A",
+          "label": "面积 A",
+          "minExpression": "0.01",
+          "maxExpression": "1",
+          "stepExpression": "0.01",
+          "defaultExpression": "0.1",
+          "unit": "m²",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "d",
+          "label": "间距 d",
+          "minExpression": "0.001",
+          "maxExpression": "0.01",
+          "stepExpression": "0.001",
+          "defaultExpression": "0.002",
+          "unit": "m",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "er",
+          "label": "相对介电常数 εr",
+          "minExpression": "1",
+          "maxExpression": "10",
+          "stepExpression": "0.1",
+          "defaultExpression": "1",
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-university-physics-v2"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "e6",
+      "name": "电磁感应(法拉第)",
+      "category": "物理",
+      "sourceGroup": "C2",
+      "tags": [
+        "电磁",
+        "感应"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "B",
+          "label": "磁场 B",
+          "minExpression": "0.1",
+          "maxExpression": "5",
+          "stepExpression": "0.1",
+          "defaultExpression": "1",
+          "unit": "T",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "A",
+          "label": "线圈面积 A",
+          "minExpression": "0.01",
+          "maxExpression": "1",
+          "stepExpression": "0.01",
+          "defaultExpression": "0.1",
+          "unit": "m²",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "n",
+          "label": "匝数 n",
+          "minExpression": "1",
+          "maxExpression": "1000",
+          "stepExpression": "1",
+          "defaultExpression": "100",
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "dt",
+          "label": "时间 dt",
+          "minExpression": "0.01",
+          "maxExpression": "1",
+          "stepExpression": "0.01",
+          "defaultExpression": "0.1",
+          "unit": "s",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-university-physics-v2"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "e7",
+      "name": "库仑定律",
+      "category": "物理",
+      "sourceGroup": "C2",
+      "tags": [
+        "电磁",
+        "静电"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "q1",
+          "label": "电荷 q₁ (μC)",
+          "minExpression": "0.1",
+          "maxExpression": "10",
+          "stepExpression": "0.1",
+          "defaultExpression": "1",
+          "unit": "μC",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "q2",
+          "label": "电荷 q₂ (μC)",
+          "minExpression": "-10",
+          "maxExpression": "10",
+          "stepExpression": "0.1",
+          "defaultExpression": "-2",
+          "unit": "μC",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "r",
+          "label": "距离 r",
+          "minExpression": "0.01",
+          "maxExpression": "1",
+          "stepExpression": "0.01",
+          "defaultExpression": "0.1",
+          "unit": "m",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-university-physics-v2"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "e8",
+      "name": "霍尔效应",
+      "category": "物理",
+      "sourceGroup": "C2",
+      "tags": [
+        "电磁",
+        "霍尔"
+      ],
+      "formulaCount": 2,
+      "parameters": [
+        {
+          "key": "I",
+          "label": "电流 I",
+          "minExpression": "0.01",
+          "maxExpression": "10",
+          "stepExpression": "0.01",
+          "defaultExpression": "1",
+          "unit": "A",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "B",
+          "label": "磁场 B",
+          "minExpression": "0.01",
+          "maxExpression": "2",
+          "stepExpression": "0.01",
+          "defaultExpression": "0.1",
+          "unit": "T",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "n",
+          "label": "载流子浓度",
+          "minExpression": "1e22",
+          "maxExpression": "1e26",
+          "stepExpression": "1e22",
+          "defaultExpression": "1e24",
+          "unit": "/m³",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "d",
+          "label": "厚度 d",
+          "minExpression": "0.1",
+          "maxExpression": "5",
+          "stepExpression": "0.1",
+          "defaultExpression": "1",
+          "unit": "mm",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-university-physics-v2"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "e9",
+      "name": "通电螺线管磁场",
+      "category": "物理",
+      "sourceGroup": "C2",
+      "tags": [
+        "电磁",
+        "磁场"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "I",
+          "label": "电流 I",
+          "minExpression": "0.1",
+          "maxExpression": "10",
+          "stepExpression": "0.1",
+          "defaultExpression": "2",
+          "unit": "A",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "n",
+          "label": "单位长匝数 n",
+          "minExpression": "100",
+          "maxExpression": "5000",
+          "stepExpression": "100",
+          "defaultExpression": "1000",
+          "unit": "/m",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "L",
+          "label": "螺线管长度 L",
+          "minExpression": "0.1",
+          "maxExpression": "1",
+          "stepExpression": "0.05",
+          "defaultExpression": "0.3",
+          "unit": "m",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-university-physics-v2"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "e10",
+      "name": "安培环路定理",
+      "category": "物理",
+      "sourceGroup": "C2",
+      "tags": [
+        "电磁",
+        "安培"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "I",
+          "label": "电流 I",
+          "minExpression": "0.1",
+          "maxExpression": "100",
+          "stepExpression": "0.1",
+          "defaultExpression": "10",
+          "unit": "A",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "r",
+          "label": "半径 r",
+          "minExpression": "0.01",
+          "maxExpression": "1",
+          "stepExpression": "0.01",
+          "defaultExpression": "0.1",
+          "unit": "m",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-university-physics-v2"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "ch1",
+      "name": "阿伦尼乌斯方程",
+      "category": "化学",
+      "sourceGroup": "C3",
+      "tags": [
+        "动力学",
+        "温度"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "Ea",
+          "label": "活化能 Ea",
+          "minExpression": "10",
+          "maxExpression": "200",
+          "stepExpression": "1",
+          "defaultExpression": "70",
+          "unit": "kJ/mol",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "T1",
+          "label": "温度 T₁",
+          "minExpression": "273",
+          "maxExpression": "373",
+          "stepExpression": "1",
+          "defaultExpression": "298",
+          "unit": "K",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "T2",
+          "label": "温度 T₂",
+          "minExpression": "273",
+          "maxExpression": "373",
+          "stepExpression": "1",
+          "defaultExpression": "308",
+          "unit": "K",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e",
+          "iupac-green-book-4e"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "ch2",
+      "name": "吉布斯自由能",
+      "category": "化学",
+      "sourceGroup": "C3",
+      "tags": [
+        "热力学",
+        "自发"
+      ],
+      "formulaCount": 4,
+      "parameters": [
+        {
+          "key": "dH",
+          "label": "焓变 ΔH",
+          "minExpression": "-200",
+          "maxExpression": "200",
+          "stepExpression": "1",
+          "defaultExpression": "-50",
+          "unit": "kJ/mol",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "dS",
+          "label": "熵变 ΔS",
+          "minExpression": "-500",
+          "maxExpression": "500",
+          "stepExpression": "5",
+          "defaultExpression": "100",
+          "unit": "J/(mol·K)",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "T",
+          "label": "温度 T",
+          "minExpression": "200",
+          "maxExpression": "1000",
+          "stepExpression": "10",
+          "defaultExpression": "298",
+          "unit": "K",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e",
+          "iupac-green-book-4e",
+          "nist-chemistry-webbook-srd69"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "ch3",
+      "name": "化学平衡常数",
+      "category": "化学",
+      "sourceGroup": "C3",
+      "tags": [
+        "平衡",
+        "平衡常数"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "dG0",
+          "label": "标准 ΔG°",
+          "minExpression": "-100",
+          "maxExpression": "100",
+          "stepExpression": "1",
+          "defaultExpression": "-20",
+          "unit": "kJ/mol",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "T",
+          "label": "温度 T",
+          "minExpression": "200",
+          "maxExpression": "1000",
+          "stepExpression": "10",
+          "defaultExpression": "298",
+          "unit": "K",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e",
+          "iupac-green-book-4e"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "ch4",
+      "name": "勒夏特列原理",
+      "category": "化学",
+      "sourceGroup": "C3",
+      "tags": [
+        "平衡",
+        "移动"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "K",
+          "label": "初始 K",
+          "minExpression": "0.1",
+          "maxExpression": "100",
+          "stepExpression": "0.1",
+          "defaultExpression": "10",
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "Q",
+          "label": "反应商 Q",
+          "minExpression": "0.01",
+          "maxExpression": "100",
+          "stepExpression": "0.01",
+          "defaultExpression": "5",
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "T",
+          "label": "温度 T",
+          "minExpression": "200",
+          "maxExpression": "1000",
+          "stepExpression": "10",
+          "defaultExpression": "298",
+          "unit": "K",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e",
+          "iupac-green-book-4e"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "ch5",
+      "name": "亨利定律气体溶解度",
+      "category": "化学",
+      "sourceGroup": "C3",
+      "tags": [
+        "溶液",
+        "气体"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "kH",
+          "label": "亨利常数 kH",
+          "minExpression": "0.0001",
+          "maxExpression": "0.1",
+          "stepExpression": "0.0001",
+          "defaultExpression": "0.034",
+          "unit": "mol/(L·atm)",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "P",
+          "label": "分压 P",
+          "minExpression": "0.1",
+          "maxExpression": "10",
+          "stepExpression": "0.1",
+          "defaultExpression": "1",
+          "unit": "atm",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e",
+          "iupac-green-book-4e",
+          "nist-chemistry-webbook-srd69"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "ch6",
+      "name": "拉乌尔定律",
+      "category": "化学",
+      "sourceGroup": "C3",
+      "tags": [
+        "溶液",
+        "蒸气压"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "P0",
+          "label": "纯溶剂蒸气压 P°",
+          "minExpression": "1",
+          "maxExpression": "100",
+          "stepExpression": "1",
+          "defaultExpression": "30",
+          "unit": "kPa",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "xs",
+          "label": "溶质摩尔分数 xs",
+          "minExpression": "0",
+          "maxExpression": "1",
+          "stepExpression": "0.01",
+          "defaultExpression": "0.2",
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e",
+          "iupac-green-book-4e",
+          "nist-chemistry-webbook-srd69"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "ch7",
+      "name": "依数性-沸点升高",
+      "category": "化学",
+      "sourceGroup": "C3",
+      "tags": [
+        "溶液",
+        "依数性"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "Kb",
+          "label": "沸点升高常数 Kb",
+          "minExpression": "0.1",
+          "maxExpression": "5",
+          "stepExpression": "0.1",
+          "defaultExpression": "0.512",
+          "unit": "K·kg/mol",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "b",
+          "label": "质量摩尔浓度 b",
+          "minExpression": "0.1",
+          "maxExpression": "5",
+          "stepExpression": "0.1",
+          "defaultExpression": "1",
+          "unit": "mol/kg",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e",
+          "iupac-green-book-4e"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "ch8",
+      "name": "渗透压(范特霍夫)",
+      "category": "化学",
+      "sourceGroup": "C3",
+      "tags": [
+        "溶液",
+        "渗透"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "c",
+          "label": "浓度 c",
+          "minExpression": "0.001",
+          "maxExpression": "1",
+          "stepExpression": "0.001",
+          "defaultExpression": "0.1",
+          "unit": "mol/L",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "T",
+          "label": "温度 T",
+          "minExpression": "273",
+          "maxExpression": "373",
+          "stepExpression": "1",
+          "defaultExpression": "298",
+          "unit": "K",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e",
+          "iupac-green-book-4e"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "ch9",
+      "name": "反应级数与速率方程",
+      "category": "化学",
+      "sourceGroup": "C3",
+      "tags": [
+        "动力学",
+        "级数"
+      ],
+      "formulaCount": 5,
+      "parameters": [
+        {
+          "key": "k",
+          "label": "速率常数 k",
+          "minExpression": "0.001",
+          "maxExpression": "1",
+          "stepExpression": "0.001",
+          "defaultExpression": "0.1",
+          "unit": "(mol/L)^(1−n)·s⁻¹",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "c0",
+          "label": "初始浓度 c₀",
+          "minExpression": "0.1",
+          "maxExpression": "5",
+          "stepExpression": "0.1",
+          "defaultExpression": "1",
+          "unit": "mol/L",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "n",
+          "label": "反应级数 n",
+          "minExpression": "0",
+          "maxExpression": "3",
+          "stepExpression": "1",
+          "defaultExpression": "1",
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e",
+          "iupac-green-book-4e"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "ch10",
+      "name": "pH 与缓冲溶液",
+      "category": "化学",
+      "sourceGroup": "C3",
+      "tags": [
+        "酸碱",
+        "缓冲"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "pKa",
+          "label": "pKa",
+          "minExpression": "2",
+          "maxExpression": "12",
+          "stepExpression": "0.1",
+          "defaultExpression": "4.76",
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "cA",
+          "label": "酸浓度 [HA]",
+          "minExpression": "0.01",
+          "maxExpression": "1",
+          "stepExpression": "0.01",
+          "defaultExpression": "0.1",
+          "unit": "mol/L",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "cB",
+          "label": "共轭碱 [A⁻]",
+          "minExpression": "0.01",
+          "maxExpression": "1",
+          "stepExpression": "0.01",
+          "defaultExpression": "0.1",
+          "unit": "mol/L",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e",
+          "iupac-green-book-4e"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "ch11",
+      "name": "溶度积与沉淀",
+      "category": "化学",
+      "sourceGroup": "C3",
+      "tags": [
+        "沉淀",
+        "Ksp"
+      ],
+      "formulaCount": 5,
+      "parameters": [
+        {
+          "key": "Ksp",
+          "label": "溶度积 Ksp",
+          "minExpression": "1e-15",
+          "maxExpression": "1e-3",
+          "stepExpression": "1e-15",
+          "defaultExpression": "1.8e-10",
+          "unit": "(mol/L)²",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "cA",
+          "label": "阳离子浓度",
+          "minExpression": "1e-6",
+          "maxExpression": "0.1",
+          "stepExpression": "1e-6",
+          "defaultExpression": "0.01",
+          "unit": "mol/L",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "cB",
+          "label": "阴离子浓度",
+          "minExpression": "1e-6",
+          "maxExpression": "0.1",
+          "stepExpression": "1e-6",
+          "defaultExpression": "0.01",
+          "unit": "mol/L",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e",
+          "iupac-green-book-4e"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "ch12",
+      "name": "能斯特方程",
+      "category": "化学",
+      "sourceGroup": "C3",
+      "tags": [
+        "电化学",
+        "电极"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "E0",
+          "label": "标准电势 E°",
+          "minExpression": "-2",
+          "maxExpression": "2",
+          "stepExpression": "0.05",
+          "defaultExpression": "1.1",
+          "unit": "V",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "n",
+          "label": "转移电子数 n",
+          "minExpression": "1",
+          "maxExpression": "4",
+          "stepExpression": "1",
+          "defaultExpression": "2",
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "Q",
+          "label": "反应商 Q",
+          "minExpression": "1e-6",
+          "maxExpression": "1e6",
+          "stepExpression": "1e-6",
+          "defaultExpression": "1",
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e",
+          "iupac-green-book-4e",
+          "nist-codata-2022"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "pt1",
+      "name": "布朗运动",
+      "category": "化学",
+      "sourceGroup": "C4",
+      "tags": [
+        "热运动",
+        "分子"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "T",
+          "label": "温度 T",
+          "minExpression": "200",
+          "maxExpression": "500",
+          "stepExpression": "10",
+          "defaultExpression": "300",
+          "unit": "K",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "v",
+          "label": "黏度 η",
+          "minExpression": "0.5",
+          "maxExpression": "5",
+          "stepExpression": "0.1",
+          "defaultExpression": "1",
+          "unit": "mPa·s",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e",
+          "nist-chemistry-webbook-srd69"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "pt2",
+      "name": "气体扩散(格雷姆)",
+      "category": "化学",
+      "sourceGroup": "C4",
+      "tags": [
+        "扩散",
+        "气体"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "M1",
+          "label": "气体1摩尔质量",
+          "minExpression": "2",
+          "maxExpression": "100",
+          "stepExpression": "1",
+          "defaultExpression": "2",
+          "unit": "g/mol",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "M2",
+          "label": "气体2摩尔质量",
+          "minExpression": "2",
+          "maxExpression": "100",
+          "stepExpression": "1",
+          "defaultExpression": "32",
+          "unit": "g/mol",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "T",
+          "label": "温度 T",
+          "minExpression": "200",
+          "maxExpression": "600",
+          "stepExpression": "10",
+          "defaultExpression": "300",
+          "unit": "K",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e",
+          "nist-chemistry-webbook-srd69"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "pt3",
+      "name": "分子热运动速率分布",
+      "category": "化学",
+      "sourceGroup": "C4",
+      "tags": [
+        "统计",
+        "分子"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "T",
+          "label": "温度 T",
+          "minExpression": "100",
+          "maxExpression": "1000",
+          "stepExpression": "10",
+          "defaultExpression": "300",
+          "unit": "K",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e",
+          "nist-chemistry-webbook-srd69"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "pt4",
+      "name": "荧光分子与激发态",
+      "category": "化学",
+      "sourceGroup": "C4",
+      "tags": [
+        "光化学",
+        "激发"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "lam",
+          "label": "激发波长 λ",
+          "minExpression": "300",
+          "maxExpression": "600",
+          "stepExpression": "10",
+          "defaultExpression": "400",
+          "unit": "nm",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "kf",
+          "label": "荧光速率 kf",
+          "minExpression": "1e6",
+          "maxExpression": "1e9",
+          "stepExpression": "1e6",
+          "defaultExpression": "1e8",
+          "unit": "1/s",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "knr",
+          "label": "非辐射速率 knr",
+          "minExpression": "1e6",
+          "maxExpression": "1e9",
+          "stepExpression": "1e6",
+          "defaultExpression": "1e7",
+          "unit": "1/s",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "pt5",
+      "name": "纳米颗粒表面等离子体",
+      "category": "化学",
+      "sourceGroup": "C4",
+      "tags": [
+        "纳米",
+        "等离子体"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "d",
+          "label": "粒径 d",
+          "minExpression": "5",
+          "maxExpression": "100",
+          "stepExpression": "1",
+          "defaultExpression": "20",
+          "unit": "nm",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "n",
+          "label": "介质折射率 n",
+          "minExpression": "1",
+          "maxExpression": "2",
+          "stepExpression": "0.05",
+          "defaultExpression": "1.33",
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "pt6",
+      "name": "扩散与渗透(膜)",
+      "category": "化学",
+      "sourceGroup": "C4",
+      "tags": [
+        "渗透",
+        "膜"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "D",
+          "label": "扩散系数 D",
+          "minExpression": "1e-11",
+          "maxExpression": "1e-8",
+          "stepExpression": "1e-11",
+          "defaultExpression": "1e-9",
+          "unit": "m²/s",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "dc",
+          "label": "浓度差 Δc",
+          "minExpression": "0.01",
+          "maxExpression": "1",
+          "stepExpression": "0.01",
+          "defaultExpression": "0.5",
+          "unit": "mol/L",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "pt7",
+      "name": "酶催化反应动力学",
+      "category": "化学",
+      "sourceGroup": "C4",
+      "tags": [
+        "酶",
+        "动力学"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "Vmax",
+          "label": "最大速率 Vmax",
+          "minExpression": "1",
+          "maxExpression": "100",
+          "stepExpression": "1",
+          "defaultExpression": "10",
+          "unit": "μmol/min",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "Km",
+          "label": "米氏常数 Km",
+          "minExpression": "0.01",
+          "maxExpression": "10",
+          "stepExpression": "0.01",
+          "defaultExpression": "1",
+          "unit": "mmol/L",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "S",
+          "label": "底物浓度 [S]",
+          "minExpression": "0.01",
+          "maxExpression": "50",
+          "stepExpression": "0.01",
+          "defaultExpression": "5",
+          "unit": "mmol/L",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e",
+          "iupac-green-book-4e"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "pt8",
+      "name": "化学反应碰撞理论",
+      "category": "化学",
+      "sourceGroup": "C4",
+      "tags": [
+        "动力学",
+        "碰撞"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "T",
+          "label": "温度 T",
+          "minExpression": "300",
+          "maxExpression": "1000",
+          "stepExpression": "10",
+          "defaultExpression": "500",
+          "unit": "K",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "Ea",
+          "label": "活化能 Ea",
+          "minExpression": "10",
+          "maxExpression": "200",
+          "stepExpression": "5",
+          "defaultExpression": "50",
+          "unit": "kJ/mol",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e",
+          "iupac-green-book-4e"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "k1",
+      "name": "玻尔兹曼分布因子",
+      "category": "化学",
+      "sourceGroup": "C5",
+      "tags": [
+        "统计",
+        "能量"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "dE",
+          "label": "能级差 ΔE",
+          "minExpression": "0.01",
+          "maxExpression": "1",
+          "stepExpression": "0.01",
+          "defaultExpression": "0.1",
+          "unit": "eV",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "T",
+          "label": "温度 T",
+          "minExpression": "100",
+          "maxExpression": "1000",
+          "stepExpression": "10",
+          "defaultExpression": "298",
+          "unit": "K",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "k2",
+      "name": "范德华气体方程",
+      "category": "化学",
+      "sourceGroup": "C5",
+      "tags": [
+        "气体",
+        "真实气体"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "a",
+          "label": "分子间引力常数 a",
+          "minExpression": "0.01",
+          "maxExpression": "1",
+          "stepExpression": "0.01",
+          "defaultExpression": "0.14",
+          "unit": "L²·bar/mol²",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "b",
+          "label": "分子体积常数 b",
+          "minExpression": "0.01",
+          "maxExpression": "0.1",
+          "stepExpression": "0.001",
+          "defaultExpression": "0.039",
+          "unit": "L/mol",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "T",
+          "label": "温度 T",
+          "minExpression": "200",
+          "maxExpression": "1000",
+          "stepExpression": "10",
+          "defaultExpression": "300",
+          "unit": "K",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "V",
+          "label": "体积 V",
+          "minExpression": "0.1",
+          "maxExpression": "10",
+          "stepExpression": "0.1",
+          "defaultExpression": "1",
+          "unit": "L",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e",
+          "nist-chemistry-webbook-srd69"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "k3",
+      "name": "克拉珀龙-克劳修斯方程",
+      "category": "化学",
+      "sourceGroup": "C5",
+      "tags": [
+        "相变",
+        "蒸气压"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "dHv",
+          "label": "汽化焓 ΔHvap",
+          "minExpression": "10",
+          "maxExpression": "80",
+          "stepExpression": "1",
+          "defaultExpression": "40",
+          "unit": "kJ/mol",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "T",
+          "label": "温度 T",
+          "minExpression": "273",
+          "maxExpression": "500",
+          "stepExpression": "1",
+          "defaultExpression": "373",
+          "unit": "K",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e",
+          "nist-chemistry-webbook-srd69"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "k4",
+      "name": "一级反应动力学",
+      "category": "化学",
+      "sourceGroup": "C5",
+      "tags": [
+        "动力学",
+        "指数"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "k",
+          "label": "速率常数 k",
+          "minExpression": "0.01",
+          "maxExpression": "1",
+          "stepExpression": "0.01",
+          "defaultExpression": "0.1",
+          "unit": "1/s",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "c0",
+          "label": "初始浓度 c₀",
+          "minExpression": "0.1",
+          "maxExpression": "5",
+          "stepExpression": "0.1",
+          "defaultExpression": "1",
+          "unit": "mol/L",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e",
+          "iupac-green-book-4e"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "k5",
+      "name": "二级反应动力学",
+      "category": "化学",
+      "sourceGroup": "C5",
+      "tags": [
+        "动力学",
+        "倒数"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "k",
+          "label": "速率常数 k",
+          "minExpression": "0.01",
+          "maxExpression": "1",
+          "stepExpression": "0.01",
+          "defaultExpression": "0.05",
+          "unit": "L/(mol·s)",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "c0",
+          "label": "初始浓度 c₀",
+          "minExpression": "0.1",
+          "maxExpression": "5",
+          "stepExpression": "0.1",
+          "defaultExpression": "1",
+          "unit": "mol/L",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e",
+          "iupac-green-book-4e"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "k6",
+      "name": "米氏方程(酶动力学)",
+      "category": "化学",
+      "sourceGroup": "C5",
+      "tags": [
+        "酶",
+        "动力学"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "Vmax",
+          "label": "Vmax",
+          "minExpression": "1",
+          "maxExpression": "100",
+          "stepExpression": "1",
+          "defaultExpression": "10",
+          "unit": "μmol/min",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "Km",
+          "label": "Km",
+          "minExpression": "0.01",
+          "maxExpression": "10",
+          "stepExpression": "0.01",
+          "defaultExpression": "1",
+          "unit": "mmol/L",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e",
+          "iupac-green-book-4e"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "k7",
+      "name": "竞争性抑制",
+      "category": "化学",
+      "sourceGroup": "C5",
+      "tags": [
+        "酶",
+        "抑制"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "Vmax",
+          "label": "Vmax",
+          "minExpression": "1",
+          "maxExpression": "100",
+          "stepExpression": "1",
+          "defaultExpression": "10",
+          "unit": "μmol/min",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "Km",
+          "label": "Km",
+          "minExpression": "0.01",
+          "maxExpression": "10",
+          "stepExpression": "0.01",
+          "defaultExpression": "1",
+          "unit": "mmol/L",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "I",
+          "label": "抑制剂 [I]",
+          "minExpression": "0",
+          "maxExpression": "10",
+          "stepExpression": "0.1",
+          "defaultExpression": "2",
+          "unit": "mmol/L",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "Ki",
+          "label": "抑制常数 Ki",
+          "minExpression": "0.01",
+          "maxExpression": "10",
+          "stepExpression": "0.01",
+          "defaultExpression": "1",
+          "unit": "mmol/L",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "k8",
+      "name": "电导率与浓度",
+      "category": "化学",
+      "sourceGroup": "C5",
+      "tags": [
+        "电化学",
+        "电导"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "L0",
+          "label": "极限摩尔电导率 Λ°",
+          "minExpression": "0.001",
+          "maxExpression": "0.1",
+          "stepExpression": "0.001",
+          "defaultExpression": "0.012",
+          "unit": "S·m²/mol",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "K",
+          "label": "解离常数 K",
+          "minExpression": "1e-6",
+          "maxExpression": "1e-1",
+          "stepExpression": "1e-6",
+          "defaultExpression": "1e-3",
+          "unit": "mol/L",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e",
+          "nist-codata-2022"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "k9",
+      "name": "原电池电动势(Nernst)",
+      "category": "化学",
+      "sourceGroup": "C5",
+      "tags": [
+        "电化学",
+        "电池"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "E0",
+          "label": "标准电动势 E°",
+          "minExpression": "0.1",
+          "maxExpression": "3",
+          "stepExpression": "0.05",
+          "defaultExpression": "1.1",
+          "unit": "V",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "n",
+          "label": "电子数 n",
+          "minExpression": "1",
+          "maxExpression": "4",
+          "stepExpression": "1",
+          "defaultExpression": "2",
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "Q",
+          "label": "反应商 Q",
+          "minExpression": "1e-6",
+          "maxExpression": "1e6",
+          "stepExpression": "1e-6",
+          "defaultExpression": "1",
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e",
+          "nist-codata-2022"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "k10",
+      "name": "反应进度与平衡",
+      "category": "化学",
+      "sourceGroup": "C5",
+      "tags": [
+        "平衡",
+        "转化率"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "K",
+          "label": "平衡常数 K",
+          "minExpression": "0.1",
+          "maxExpression": "100",
+          "stepExpression": "0.1",
+          "defaultExpression": "10",
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "c0",
+          "label": "初始浓度 c₀",
+          "minExpression": "0.1",
+          "maxExpression": "5",
+          "stepExpression": "0.1",
+          "defaultExpression": "1",
+          "unit": "mol/L",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e",
+          "iupac-green-book-4e"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "k11",
+      "name": "氧化还原电位-pH图",
+      "category": "化学",
+      "sourceGroup": "C5",
+      "tags": [
+        "电化学",
+        "pH"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "E0",
+          "label": "标准电位 E°",
+          "minExpression": "-1",
+          "maxExpression": "2",
+          "stepExpression": "0.05",
+          "defaultExpression": "0.8",
+          "unit": "V",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "n",
+          "label": "电子数 n",
+          "minExpression": "1",
+          "maxExpression": "4",
+          "stepExpression": "1",
+          "defaultExpression": "1",
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "m",
+          "label": "H⁺数 m",
+          "minExpression": "0",
+          "maxExpression": "4",
+          "stepExpression": "1",
+          "defaultExpression": "2",
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "pH",
+          "label": "pH",
+          "minExpression": "0",
+          "maxExpression": "14",
+          "stepExpression": "0.5",
+          "defaultExpression": "7",
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e",
+          "nist-codata-2022"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "k12",
+      "name": "摩尔电导率与温度",
+      "category": "化学",
+      "sourceGroup": "C5",
+      "tags": [
+        "电化学",
+        "温度"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "L25",
+          "label": "25°C 电导率",
+          "minExpression": "0.001",
+          "maxExpression": "0.1",
+          "stepExpression": "0.001",
+          "defaultExpression": "0.01",
+          "unit": "S/m",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "a",
+          "label": "温度系数",
+          "minExpression": "0.01",
+          "maxExpression": "0.05",
+          "stepExpression": "0.001",
+          "defaultExpression": "0.02",
+          "unit": "1/K",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e",
+          "nist-codata-2022"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "k13",
+      "name": "比表面与催化",
+      "category": "化学",
+      "sourceGroup": "C5",
+      "tags": [
+        "催化",
+        "表面"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "d",
+          "label": "催化剂粒径 d",
+          "minExpression": "1",
+          "maxExpression": "1000",
+          "stepExpression": "1",
+          "defaultExpression": "10",
+          "unit": "nm",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "A",
+          "label": "比表面积系数",
+          "minExpression": "1",
+          "maxExpression": "100",
+          "stepExpression": "1",
+          "defaultExpression": "3",
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "k",
+          "label": "本征活性 k",
+          "minExpression": "0.001",
+          "maxExpression": "1",
+          "stepExpression": "0.001",
+          "defaultExpression": "0.1",
+          "unit": "",
+          "unitEvidence": "not_specified_requires_review"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "k14",
+      "name": "沉降平衡",
+      "category": "化学",
+      "sourceGroup": "C5",
+      "tags": [
+        "胶体",
+        "沉降"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "r",
+          "label": "粒子半径 r",
+          "minExpression": "1",
+          "maxExpression": "1000",
+          "stepExpression": "1",
+          "defaultExpression": "100",
+          "unit": "nm",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "drho",
+          "label": "密度差 Δρ",
+          "minExpression": "0.1",
+          "maxExpression": "5",
+          "stepExpression": "0.1",
+          "defaultExpression": "1",
+          "unit": "g/cm³",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "T",
+          "label": "温度 T",
+          "minExpression": "273",
+          "maxExpression": "373",
+          "stepExpression": "1",
+          "defaultExpression": "298",
+          "unit": "K",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e",
+          "iupac-green-book-4e"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "k15",
+      "name": "超速离心沉降速度",
+      "category": "化学",
+      "sourceGroup": "C5",
+      "tags": [
+        "胶体",
+        "离心"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "r",
+          "label": "粒子半径 r",
+          "minExpression": "1",
+          "maxExpression": "100",
+          "stepExpression": "1",
+          "defaultExpression": "10",
+          "unit": "nm",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "drho",
+          "label": "密度差 Δρ",
+          "minExpression": "0.1",
+          "maxExpression": "5",
+          "stepExpression": "0.1",
+          "defaultExpression": "0.5",
+          "unit": "g/cm³",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "omega",
+          "label": "角速度 ω",
+          "minExpression": "1000",
+          "maxExpression": "100000",
+          "stepExpression": "100",
+          "defaultExpression": "10000",
+          "unit": "rpm",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "eta",
+          "label": "黏度 η",
+          "minExpression": "1",
+          "maxExpression": "10",
+          "stepExpression": "0.1",
+          "defaultExpression": "1",
+          "unit": "mPa·s",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "k16",
+      "name": "光散射与瑞利散射",
+      "category": "化学",
+      "sourceGroup": "C5",
+      "tags": [
+        "光学",
+        "散射"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "lam",
+          "label": "波长 λ",
+          "minExpression": "300",
+          "maxExpression": "800",
+          "stepExpression": "10",
+          "defaultExpression": "550",
+          "unit": "nm",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "d",
+          "label": "粒子直径 d",
+          "minExpression": "1",
+          "maxExpression": "100",
+          "stepExpression": "1",
+          "defaultExpression": "20",
+          "unit": "nm",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "k17",
+      "name": "X射线衍射布拉格",
+      "category": "化学",
+      "sourceGroup": "C5",
+      "tags": [
+        "晶体",
+        "衍射"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "d",
+          "label": "晶面间距 d",
+          "minExpression": "1",
+          "maxExpression": "10",
+          "stepExpression": "0.1",
+          "defaultExpression": "3",
+          "unit": "Å",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "lam",
+          "label": "X射线波长 λ",
+          "minExpression": "0.5",
+          "maxExpression": "2.5",
+          "stepExpression": "0.01",
+          "defaultExpression": "1.54",
+          "unit": "Å",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "k18",
+      "name": "量子隧穿概率",
+      "category": "化学",
+      "sourceGroup": "C5",
+      "tags": [
+        "量子",
+        "隧穿"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "k",
+          "label": "衰减常数 κ",
+          "minExpression": "0.1",
+          "maxExpression": "10",
+          "stepExpression": "0.1",
+          "defaultExpression": "1",
+          "unit": "Å⁻¹",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "a",
+          "label": "势垒宽度 a",
+          "minExpression": "0.1",
+          "maxExpression": "5",
+          "stepExpression": "0.1",
+          "defaultExpression": "1",
+          "unit": "Å",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "k19",
+      "name": "势能曲线-双原子分子",
+      "category": "化学",
+      "sourceGroup": "C5",
+      "tags": [
+        "分子",
+        "势能"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "eps",
+          "label": "势阱深度 ε",
+          "minExpression": "0.01",
+          "maxExpression": "1",
+          "stepExpression": "0.01",
+          "defaultExpression": "0.1",
+          "unit": "eV",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "sig",
+          "label": "平衡距离 σ",
+          "minExpression": "1",
+          "maxExpression": "5",
+          "stepExpression": "0.1",
+          "defaultExpression": "3",
+          "unit": "Å",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "k20",
+      "name": "反应坐标与能垒",
+      "category": "化学",
+      "sourceGroup": "C5",
+      "tags": [
+        "动力学",
+        "过渡态"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "dH",
+          "label": "反应焓变 ΔH",
+          "minExpression": "-100",
+          "maxExpression": "100",
+          "stepExpression": "5",
+          "defaultExpression": "-30",
+          "unit": "kJ/mol",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "Ea",
+          "label": "活化能 Ea",
+          "minExpression": "20",
+          "maxExpression": "200",
+          "stepExpression": "5",
+          "defaultExpression": "80",
+          "unit": "kJ/mol",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e",
+          "iupac-green-book-4e"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "k21",
+      "name": "微波旋转光谱",
+      "category": "化学",
+      "sourceGroup": "C5",
+      "tags": [
+        "光谱",
+        "转动"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "B",
+          "label": "转动常数 B",
+          "minExpression": "0.1",
+          "maxExpression": "20",
+          "stepExpression": "0.1",
+          "defaultExpression": "2",
+          "unit": "cm⁻¹",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "J",
+          "label": "转动量子数 J",
+          "minExpression": "0",
+          "maxExpression": "20",
+          "stepExpression": "1",
+          "defaultExpression": "5",
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e",
+          "nist-chemistry-webbook-srd69"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "k22",
+      "name": "振动光谱(谐振子)",
+      "category": "化学",
+      "sourceGroup": "C5",
+      "tags": [
+        "光谱",
+        "振动"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "nu",
+          "label": "振动频率 ν̃",
+          "minExpression": "100",
+          "maxExpression": "4000",
+          "stepExpression": "10",
+          "defaultExpression": "1500",
+          "unit": "cm⁻¹",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "v",
+          "label": "振动量子数 v",
+          "minExpression": "0",
+          "maxExpression": "10",
+          "stepExpression": "1",
+          "defaultExpression": "3",
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e",
+          "nist-chemistry-webbook-srd69"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "k23",
+      "name": "荧光共振能量转移(FRET)",
+      "category": "化学",
+      "sourceGroup": "C5",
+      "tags": [
+        "光谱",
+        "FRET"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "R0",
+          "label": "Förster 半径 R₀",
+          "minExpression": "1",
+          "maxExpression": "10",
+          "stepExpression": "0.1",
+          "defaultExpression": "5",
+          "unit": "nm",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "r",
+          "label": "供体-受体距离 r",
+          "minExpression": "1",
+          "maxExpression": "20",
+          "stepExpression": "0.1",
+          "defaultExpression": "5",
+          "unit": "nm",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e",
+          "nist-chemistry-webbook-srd69"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "k24",
+      "name": "核磁共振化学位移",
+      "category": "化学",
+      "sourceGroup": "C5",
+      "tags": [
+        "NMR",
+        "化学位移"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "B0",
+          "label": "磁场 B₀",
+          "minExpression": "1",
+          "maxExpression": "20",
+          "stepExpression": "0.1",
+          "defaultExpression": "7",
+          "unit": "T",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "gamma",
+          "label": "磁旋比 γ",
+          "minExpression": "1",
+          "maxExpression": "30",
+          "stepExpression": "0.1",
+          "defaultExpression": "26.75",
+          "unit": "×10⁷ rad/(T·s)",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "delta",
+          "label": "化学位移 δ",
+          "minExpression": "0",
+          "maxExpression": "15",
+          "stepExpression": "0.1",
+          "defaultExpression": "3",
+          "unit": "ppm",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "k25",
+      "name": "质谱分辨率",
+      "category": "化学",
+      "sourceGroup": "C5",
+      "tags": [
+        "质谱",
+        "分辨"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "m",
+          "label": "质量 m",
+          "minExpression": "100",
+          "maxExpression": "10000",
+          "stepExpression": "10",
+          "defaultExpression": "1000",
+          "unit": "Da",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "z",
+          "label": "电荷 z",
+          "minExpression": "1",
+          "maxExpression": "5",
+          "stepExpression": "1",
+          "defaultExpression": "1",
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "R",
+          "label": "分辨率 R",
+          "minExpression": "1000",
+          "maxExpression": "100000",
+          "stepExpression": "1000",
+          "defaultExpression": "10000",
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e",
+          "nist-chemistry-webbook-srd69"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "k26",
+      "name": "Raman散射",
+      "category": "化学",
+      "sourceGroup": "C5",
+      "tags": [
+        "光谱",
+        "拉曼"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "nu",
+          "label": "入射波数 ν̃",
+          "minExpression": "5000",
+          "maxExpression": "20000",
+          "stepExpression": "100",
+          "defaultExpression": "15000",
+          "unit": "cm⁻¹",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "dvib",
+          "label": "振动频率",
+          "minExpression": "100",
+          "maxExpression": "3000",
+          "stepExpression": "10",
+          "defaultExpression": "1000",
+          "unit": "cm⁻¹",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e",
+          "nist-chemistry-webbook-srd69"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "k27",
+      "name": "圆二色性与手性",
+      "category": "化学",
+      "sourceGroup": "C5",
+      "tags": [
+        "光学",
+        "手性"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "A",
+          "label": "吸收强度 A",
+          "minExpression": "0.1",
+          "maxExpression": "5",
+          "stepExpression": "0.1",
+          "defaultExpression": "1",
+          "unit": "",
+          "unitEvidence": "not_specified_requires_review"
+        },
+        {
+          "key": "lam",
+          "label": "波长 λ",
+          "minExpression": "200",
+          "maxExpression": "500",
+          "stepExpression": "5",
+          "defaultExpression": "220",
+          "unit": "nm",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "k28",
+      "name": "XPS 光电子能谱",
+      "category": "化学",
+      "sourceGroup": "C5",
+      "tags": [
+        "表面",
+        "XPS"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "hnu",
+          "label": "X射线能量 hν",
+          "minExpression": "1000",
+          "maxExpression": "2000",
+          "stepExpression": "10",
+          "defaultExpression": "1486.6",
+          "unit": "eV",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "BE",
+          "label": "结合能 BE",
+          "minExpression": "50",
+          "maxExpression": "1000",
+          "stepExpression": "1",
+          "defaultExpression": "285",
+          "unit": "eV",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "phi",
+          "label": "功函数 φ",
+          "minExpression": "3",
+          "maxExpression": "6",
+          "stepExpression": "0.1",
+          "defaultExpression": "4.5",
+          "unit": "eV",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e",
+          "nist-codata-2022"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "k29",
+      "name": "晶体场分裂",
+      "category": "化学",
+      "sourceGroup": "C5",
+      "tags": [
+        "配位",
+        "晶体场"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "Dq",
+          "label": "分裂能 Δo",
+          "minExpression": "5000",
+          "maxExpression": "30000",
+          "stepExpression": "100",
+          "defaultExpression": "20000",
+          "unit": "cm⁻¹",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "P",
+          "label": "成对能 P",
+          "minExpression": "10000",
+          "maxExpression": "30000",
+          "stepExpression": "100",
+          "defaultExpression": "15000",
+          "unit": "cm⁻¹",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "k30",
+      "name": "胶体稳定性 DLVO",
+      "category": "化学",
+      "sourceGroup": "C5",
+      "tags": [
+        "胶体",
+        "DLVO"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "A",
+          "label": "Hamaker 常数",
+          "minExpression": "1e-21",
+          "maxExpression": "1e-19",
+          "stepExpression": "1e-21",
+          "defaultExpression": "1e-20",
+          "unit": "J",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "psi",
+          "label": "表面电位 ψ",
+          "minExpression": "10",
+          "maxExpression": "100",
+          "stepExpression": "1",
+          "defaultExpression": "30",
+          "unit": "mV",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "k",
+          "label": "Debye 参数 κ",
+          "minExpression": "1e7",
+          "maxExpression": "1e9",
+          "stepExpression": "1e7",
+          "defaultExpression": "1e8",
+          "unit": "1/m",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "k31",
+      "name": "反应-扩散方程",
+      "category": "化学",
+      "sourceGroup": "C5",
+      "tags": [
+        "反应",
+        "扩散"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "D",
+          "label": "扩散系数 D",
+          "minExpression": "1e-6",
+          "maxExpression": "1e-3",
+          "stepExpression": "1e-6",
+          "defaultExpression": "1e-4",
+          "unit": "m²/s",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "k",
+          "label": "反应速率 k",
+          "minExpression": "0.1",
+          "maxExpression": "10",
+          "stepExpression": "0.1",
+          "defaultExpression": "1",
+          "unit": "1/s",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "L",
+          "label": "空间尺度 L",
+          "minExpression": "0.001",
+          "maxExpression": "0.1",
+          "stepExpression": "0.001",
+          "defaultExpression": "0.01",
+          "unit": "m",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "k32",
+      "name": "自催化与振荡反应",
+      "category": "化学",
+      "sourceGroup": "C5",
+      "tags": [
+        "动力学",
+        "振荡"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "k",
+          "label": "速率常数 k",
+          "minExpression": "0.1",
+          "maxExpression": "5",
+          "stepExpression": "0.1",
+          "defaultExpression": "1",
+          "unit": "(mol/L)^(1−n)·s⁻¹",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "c0",
+          "label": "初始浓度",
+          "minExpression": "0.1",
+          "maxExpression": "2",
+          "stepExpression": "0.1",
+          "defaultExpression": "0.5",
+          "unit": "mol/L",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "n",
+          "label": "自催化级数 n",
+          "minExpression": "1",
+          "maxExpression": "3",
+          "stepExpression": "1",
+          "defaultExpression": "2",
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e",
+          "iupac-green-book-4e"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "k33",
+      "name": "闪烁荧光寿命成像",
+      "category": "化学",
+      "sourceGroup": "C5",
+      "tags": [
+        "荧光",
+        "成像"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "tau0",
+          "label": "本征寿命 τ₀",
+          "minExpression": "0.1",
+          "maxExpression": "10",
+          "stepExpression": "0.1",
+          "defaultExpression": "2",
+          "unit": "ns",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "Q",
+          "label": "淬灭效率",
+          "minExpression": "0",
+          "maxExpression": "1",
+          "stepExpression": "0.01",
+          "defaultExpression": "0.3",
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "k34",
+      "name": "光声效应",
+      "category": "化学",
+      "sourceGroup": "C5",
+      "tags": [
+        "光声",
+        "成像"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "mu_a",
+          "label": "吸收系数 μa",
+          "minExpression": "0.1",
+          "maxExpression": "100",
+          "stepExpression": "0.1",
+          "defaultExpression": "10",
+          "unit": "1/cm",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "F",
+          "label": "光通量 F",
+          "minExpression": "0.1",
+          "maxExpression": "100",
+          "stepExpression": "0.1",
+          "defaultExpression": "10",
+          "unit": "mJ/cm²",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "G",
+          "label": "Grüneisen 参数",
+          "minExpression": "0.1",
+          "maxExpression": "1",
+          "stepExpression": "0.01",
+          "defaultExpression": "0.2",
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "k35",
+      "name": "蛋白质折叠能量漏斗",
+      "category": "化学",
+      "sourceGroup": "C5",
+      "tags": [
+        "生物",
+        "折叠"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "dG",
+          "label": "折叠自由能 ΔG",
+          "minExpression": "-100",
+          "maxExpression": "0",
+          "stepExpression": "1",
+          "defaultExpression": "-30",
+          "unit": "kJ/mol",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "dGts",
+          "label": "过渡态势垒",
+          "minExpression": "5",
+          "maxExpression": "100",
+          "stepExpression": "1",
+          "defaultExpression": "20",
+          "unit": "kJ/mol",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "k36",
+      "name": "范特霍夫方程-平衡常数温度效应",
+      "category": "化学",
+      "sourceGroup": "C5",
+      "tags": [
+        "热力学",
+        "化学平衡"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "dH",
+          "label": "反应焓变 ΔH",
+          "minExpression": "-80",
+          "maxExpression": "80",
+          "stepExpression": "1",
+          "defaultExpression": "40",
+          "unit": "kJ/mol",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "Kref",
+          "label": "参考平衡常数 K₁",
+          "minExpression": "0.1",
+          "maxExpression": "100",
+          "stepExpression": "0.1",
+          "defaultExpression": "10",
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "Tref",
+          "label": "参考温度 T₁",
+          "minExpression": "250",
+          "maxExpression": "500",
+          "stepExpression": "1",
+          "defaultExpression": "298",
+          "unit": "K",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "T",
+          "label": "当前温度 T₂",
+          "minExpression": "250",
+          "maxExpression": "600",
+          "stepExpression": "1",
+          "defaultExpression": "373",
+          "unit": "K",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e",
+          "iupac-green-book-4e",
+          "nist-chemistry-webbook-srd69"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "k37",
+      "name": "朗缪尔单分子层吸附",
+      "category": "化学",
+      "sourceGroup": "C5",
+      "tags": [
+        "表面化学",
+        "吸附"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "qmax",
+          "label": "最大吸附量 qₘₐₓ",
+          "minExpression": "1",
+          "maxExpression": "10",
+          "stepExpression": "0.1",
+          "defaultExpression": "5",
+          "unit": "mmol/g",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "K",
+          "label": "吸附平衡常数 K",
+          "minExpression": "0.01",
+          "maxExpression": "10",
+          "stepExpression": "0.01",
+          "defaultExpression": "0.5",
+          "unit": "L/mmol",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "C",
+          "label": "平衡浓度 C",
+          "minExpression": "0.01",
+          "maxExpression": "100",
+          "stepExpression": "0.1",
+          "defaultExpression": "10",
+          "unit": "mmol/L",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "k38",
+      "name": "吉布斯自由能与自发性",
+      "category": "化学",
+      "sourceGroup": "C5",
+      "tags": [
+        "热力学",
+        "自发过程"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "dH",
+          "label": "焓变 ΔH",
+          "minExpression": "-100",
+          "maxExpression": "100",
+          "stepExpression": "1",
+          "defaultExpression": "-40",
+          "unit": "kJ/mol",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "dS",
+          "label": "熵变 ΔS",
+          "minExpression": "-300",
+          "maxExpression": "300",
+          "stepExpression": "1",
+          "defaultExpression": "-100",
+          "unit": "J/(mol·K)",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "T",
+          "label": "温度 T",
+          "minExpression": "200",
+          "maxExpression": "1000",
+          "stepExpression": "1",
+          "defaultExpression": "298",
+          "unit": "K",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-chemistry-2e",
+          "iupac-green-book-4e",
+          "nist-chemistry-webbook-srd69"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "mv1",
+      "name": "陀螺进动",
+      "category": "物理",
+      "sourceGroup": "C6",
+      "tags": [
+        "力学",
+        "进动"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "L",
+          "label": "角动量 L",
+          "minExpression": "0.1",
+          "maxExpression": "10",
+          "stepExpression": "0.1",
+          "defaultExpression": "1",
+          "unit": "kg·m²/s",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "tau",
+          "label": "外力矩 τ",
+          "minExpression": "0.1",
+          "maxExpression": "10",
+          "stepExpression": "0.1",
+          "defaultExpression": "1",
+          "unit": "N·m",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-university-physics-v1"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "mv2",
+      "name": "开普勒行星运动",
+      "category": "物理",
+      "sourceGroup": "C6",
+      "tags": [
+        "天文",
+        "轨道"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "a",
+          "label": "半长轴 a",
+          "minExpression": "0.5",
+          "maxExpression": "5",
+          "stepExpression": "0.1",
+          "defaultExpression": "1",
+          "unit": "AU",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "e",
+          "label": "离心率 e",
+          "minExpression": "0",
+          "maxExpression": "0.9",
+          "stepExpression": "0.01",
+          "defaultExpression": "0.2",
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-university-physics-v1"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "mv3",
+      "name": "混沌-双摆",
+      "category": "物理",
+      "sourceGroup": "C6",
+      "tags": [
+        "混沌",
+        "非线性"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "L1",
+          "label": "摆长1",
+          "minExpression": "0.3",
+          "maxExpression": "1.5",
+          "stepExpression": "0.05",
+          "defaultExpression": "0.8",
+          "unit": "m",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "L2",
+          "label": "摆长2",
+          "minExpression": "0.3",
+          "maxExpression": "1.5",
+          "stepExpression": "0.05",
+          "defaultExpression": "0.8",
+          "unit": "m",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "th1",
+          "label": "初始角1",
+          "minExpression": "0",
+          "maxExpression": "3.14",
+          "stepExpression": "0.05",
+          "defaultExpression": "2.5",
+          "unit": "rad",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "th2",
+          "label": "初始角2",
+          "minExpression": "0",
+          "maxExpression": "3.14",
+          "stepExpression": "0.05",
+          "defaultExpression": "2.5",
+          "unit": "rad",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-university-physics-v1"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "mv4",
+      "name": "傅科摆证明地球自转",
+      "category": "物理",
+      "sourceGroup": "C6",
+      "tags": [
+        "力学",
+        "地球自转"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "L",
+          "label": "摆长 L",
+          "minExpression": "1",
+          "maxExpression": "67",
+          "stepExpression": "1",
+          "defaultExpression": "67",
+          "unit": "m",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "lat",
+          "label": "纬度 φ",
+          "minExpression": "0",
+          "maxExpression": "90",
+          "stepExpression": "1",
+          "defaultExpression": "48.86",
+          "unit": "°",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-university-physics-v1"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    },
+    {
+      "id": "mv5",
+      "name": "洛伦兹吸引子",
+      "category": "物理",
+      "sourceGroup": "C6",
+      "tags": [
+        "混沌",
+        "非线性"
+      ],
+      "formulaCount": 3,
+      "parameters": [
+        {
+          "key": "sigma",
+          "label": "σ",
+          "minExpression": "1",
+          "maxExpression": "20",
+          "stepExpression": "0.5",
+          "defaultExpression": "10",
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "rho",
+          "label": "ρ",
+          "minExpression": "1",
+          "maxExpression": "50",
+          "stepExpression": "0.5",
+          "defaultExpression": "28",
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
+        },
+        {
+          "key": "beta",
+          "label": "β",
+          "minExpression": "0.5",
+          "maxExpression": "5",
+          "stepExpression": "0.1",
+          "defaultExpression": "2.67",
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
+        }
+      ],
+      "scientificEvidence": {
+        "formulaReferenceStatus": "not_yet_item_verified",
+        "candidateReferences": [
+          "openstax-university-physics-v2"
+        ],
+        "itemLevelCitations": [],
+        "assumptionsStatus": "not_structured",
+        "declaredAssumptions": [],
+        "independentBenchmarkStatus": "not_supplied",
+        "measuredDatasetStatus": "not_supplied"
+      },
+      "softwareValidation": {
+        "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
+        "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
+      }
+    }
+  ],
+  "unitAudit": {
+    "totalParameterFields": 279,
+    "explicitUnitLabels": 277,
+    "stillUnspecified": [
+      {
+        "experimentId": "k13",
+        "experimentName": "比表面与催化",
+        "key": "k",
+        "label": "本征活性 k"
+      },
+      {
+        "experimentId": "k27",
+        "experimentName": "圆二色性与手性",
+        "key": "A",
+        "label": "吸收强度 A"
+      }
+    ],
+    "reviewNote": "43 previously blank unit fields now have explicit SI/derived or dimensionless labels. Two fields remain pending because this prototype does not establish a physical unit for their scale parameters."
+  }
+}

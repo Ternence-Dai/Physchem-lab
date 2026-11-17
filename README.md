@@ -35,3 +35,7 @@ See [the rebuild plan](docs/REBUILD_PLAN.md) and [domain equations, units, and v
 ## 开源项目深度对标
 
 本项目采用的上游参考、架构借鉴、实现边界与后续验收要求见 [docs/OPEN_SOURCE_BENCHMARKS.md](docs/OPEN_SOURCE_BENCHMARKS.md)。
+
+## 科学证据溯源
+
+108 项实验现已建立逐项公式引用、假设、独立基准与实验数据的证据登记表。候选参考来源不会被误记为已验证引用；空缺和待核查单位会保留明确状态。参见 [实验科学证据登记册](docs/EXPERIMENT_EVIDENCE_REGISTER.md) 与 [机器可检验清单](data/experiment-evidence-manifest.json)。

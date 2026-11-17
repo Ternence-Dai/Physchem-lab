@@ -40,3 +40,6 @@ For each dependency or reference project, record its repository URL, license, ma
 - [ ] CI and security checks passing
 - [ ] Deployment and backup procedure verified
 - [ ] Release candidate reviewed
+
+- [x] Build a 108-experiment evidence-gap register and CI integrity validator; keep item-level citations, assumptions, and independent benchmarks explicitly pending until reviewed.
+- [ ] Complete exact source-to-equation citations and independent benchmark datasets for all 108 experiments.
