@@ -43,3 +43,7 @@ See [the rebuild plan](docs/REBUILD_PLAN.md) and [domain equations, units, and v
 ## 旗舰实验解析参考向量
 
 p1–p8 已增加逐输出字段的闭式解析参考向量，CI 对照公式推导值与代码结果；该层是方程实现回归，不是实测数据或模型标定。详见 [实验科学证据登记册](docs/EXPERIMENT_EVIDENCE_REGISTER.md)。
+
+## 第二批运动学公式溯源
+
+自由落体、竖直上抛/下抛、圆周、平抛、斜抛、匀速与匀加速直线运动（m1–m8）已补充 OpenStax 精确章节引用和逐项假设。公式出处不等于实验验证。详见 [科学证据登记册](docs/EXPERIMENT_EVIDENCE_REGISTER.md)。
