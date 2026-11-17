@@ -943,10 +943,10 @@
         "benchmarkCases": [
           {
             "field": "arrheniusRateConstant",
-            "expected": 0.03219577450948931,
+            "expected": 0.03219577452163602,
             "tolerance": 1e-11,
             "sourceId": "openstax-chem2e-12-5-arrhenius",
-            "locator": "§12.5, k=A exp(−Ea/RT) with illustrative A and Ea input"
+            "locator": "§12.5, k=A exp(−Ea/(RT)) using implementation GAS_CONSTANT=8.31446261815324 J/(mol·K), A=2.5e7 s⁻¹, Ea=55000 J/mol and T=323.15 K"
           }
         ],
         "benchmarkScope": "Analytical closed-form reference vectors only. These confirm code-to-equation consistency for the declared input case; they are not measured data, calibration, uncertainty quantification or validation of real-world predictive accuracy."
