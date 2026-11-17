@@ -56,7 +56,7 @@
       "organization": "NIST / CODATA Task Group",
       "url": "https://physics.nist.gov/cuu/Constants/index.html",
       "doi": "10.1103/RevModPhys.97.025002",
-      "scope": "Fundamental physical constants and conversion factors.",
+      "scope": "Fundamental physical constants and conversion factors. The software currently uses the molar gas constant constant in src/domain/index.js and derives its Boltzmann constant as R/NA; benchmark values follow those exact declared implementation constants.",
       "usageStatus": "candidate_reference_not_item_verified"
     },
     "iupac-green-book-4e": {
@@ -217,9 +217,48 @@
           "Horizontal and vertical motions are independent; horizontal acceleration is zero.",
           "The displayed range and total flight-time formulas assume landing at the launch elevation; the current parameterization models launch and landing at the same ground level."
         ],
-        "independentBenchmarkStatus": "not_supplied",
+        "independentBenchmarkStatus": "verified",
         "measuredDatasetStatus": "not_supplied",
-        "verificationScope": "formula_provenance_only_not_software_or_experimental_validation"
+        "verificationScope": "formula_provenance_only_not_software_or_experimental_validation",
+        "benchmarkEvidenceType": "closed_form_analytic_reference_vector",
+        "benchmarkCases": [
+          {
+            "field": "horizontalVelocity",
+            "expected": 17.320508075688775,
+            "tolerance": 1e-11,
+            "sourceId": "openstax-up-v1-4-3-projectile",
+            "locator": "§4.3, horizontal velocity component v0 cos(theta)"
+          },
+          {
+            "field": "verticalVelocity",
+            "expected": 10,
+            "tolerance": 1e-11,
+            "sourceId": "openstax-up-v1-4-3-projectile",
+            "locator": "§4.3, vertical velocity component v0 sin(theta)"
+          },
+          {
+            "field": "flightTime",
+            "expected": 2.040816326530612,
+            "tolerance": 1e-11,
+            "sourceId": "openstax-up-v1-4-3-projectile",
+            "locator": "§4.3, same-elevation total flight time 2v0 sin(theta)/g"
+          },
+          {
+            "field": "range",
+            "expected": 35.34797566467096,
+            "tolerance": 1e-11,
+            "sourceId": "openstax-up-v1-4-3-projectile",
+            "locator": "§4.3, same-elevation range v0² sin(2theta)/g"
+          },
+          {
+            "field": "maxHeight",
+            "expected": 5.102040816326529,
+            "tolerance": 1e-11,
+            "sourceId": "openstax-up-v1-4-3-projectile",
+            "locator": "§4.3, maximum height v0² sin²(theta)/(2g)"
+          }
+        ],
+        "benchmarkScope": "Analytical closed-form reference vectors only. These confirm code-to-equation consistency for the declared input case; they are not measured data, calibration, uncertainty quantification or validation of real-world predictive accuracy."
       },
       "softwareValidation": {
         "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
@@ -297,9 +336,20 @@
           "The displayed T0 and omega0 are explicitly undamped small-angle reference quantities; they are not the damped nonlinear animation period.",
           "The integrator is a numerical fourth-order Runge-Kutta scheme with bounded internal time steps."
         ],
-        "independentBenchmarkStatus": "not_supplied",
+        "independentBenchmarkStatus": "verified",
         "measuredDatasetStatus": "not_supplied",
-        "verificationScope": "formula_provenance_partial_damping_extension_not_independently_validated"
+        "verificationScope": "formula_provenance_partial_damping_extension_not_independently_validated",
+        "benchmarkEvidenceType": "closed_form_analytic_reference_vector",
+        "benchmarkCases": [
+          {
+            "field": "undampedSmallAnglePeriod",
+            "expected": 1.7945870275665439,
+            "tolerance": 1e-11,
+            "sourceId": "openstax-up-v1-15-4-pendulums",
+            "locator": "§15.4, small-angle undamped period 2pi sqrt(L/g)"
+          }
+        ],
+        "benchmarkScope": "Analytical closed-form reference vectors only. These confirm code-to-equation consistency for the declared input case; they are not measured data, calibration, uncertainty quantification or validation of real-world predictive accuracy."
       },
       "softwareValidation": {
         "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
@@ -366,9 +416,55 @@
           "Damping, friction, air resistance and spring mass are neglected.",
           "Total mechanical energy remains constant only under the conservative idealization."
         ],
-        "independentBenchmarkStatus": "not_supplied",
+        "independentBenchmarkStatus": "verified",
         "measuredDatasetStatus": "not_supplied",
-        "verificationScope": "formula_provenance_only_not_software_or_experimental_validation"
+        "verificationScope": "formula_provenance_only_not_software_or_experimental_validation",
+        "benchmarkEvidenceType": "closed_form_analytic_reference_vector",
+        "benchmarkCases": [
+          {
+            "field": "angularFrequency",
+            "expected": 4.47213595499958,
+            "tolerance": 1e-11,
+            "sourceId": "openstax-up-v1-15-1-shm",
+            "locator": "§15.1, omega=sqrt(k/m)"
+          },
+          {
+            "field": "period",
+            "expected": 1.4049629462081452,
+            "tolerance": 1e-11,
+            "sourceId": "openstax-up-v1-15-1-shm",
+            "locator": "§15.1, period 2pi sqrt(m/k)"
+          },
+          {
+            "field": "acceleration",
+            "expected": -8,
+            "tolerance": 1e-11,
+            "sourceId": "openstax-up-v1-15-1-shm",
+            "locator": "§15.1, a=−(k/m)x"
+          },
+          {
+            "field": "kineticEnergy",
+            "expected": 0.48,
+            "tolerance": 1e-11,
+            "sourceId": "openstax-up-v1-15-2-energy-shm",
+            "locator": "§15.2, kinetic energy mv²/2"
+          },
+          {
+            "field": "elasticPotentialEnergy",
+            "expected": 2.4,
+            "tolerance": 1e-11,
+            "sourceId": "openstax-up-v1-15-2-energy-shm",
+            "locator": "§15.2, spring potential energy kx²/2"
+          },
+          {
+            "field": "totalEnergy",
+            "expected": 2.88,
+            "tolerance": 1e-11,
+            "sourceId": "openstax-up-v1-15-2-energy-shm",
+            "locator": "§15.2, conservation of mechanical energy"
+          }
+        ],
+        "benchmarkScope": "Analytical closed-form reference vectors only. These confirm code-to-equation consistency for the declared input case; they are not measured data, calibration, uncertainty quantification or validation of real-world predictive accuracy."
       },
       "softwareValidation": {
         "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
@@ -435,9 +531,34 @@
           "The readout's one-minute heat is P multiplied by 60 seconds at constant power.",
           "The particle-flow animation is illustrative and is not a microscopic charge-transport simulation."
         ],
-        "independentBenchmarkStatus": "not_supplied",
+        "independentBenchmarkStatus": "verified",
         "measuredDatasetStatus": "not_supplied",
-        "verificationScope": "formula_provenance_only_not_software_or_experimental_validation"
+        "verificationScope": "formula_provenance_only_not_software_or_experimental_validation",
+        "benchmarkEvidenceType": "closed_form_analytic_reference_vector",
+        "benchmarkCases": [
+          {
+            "field": "currentA",
+            "expected": 2,
+            "tolerance": 1e-11,
+            "sourceId": "openstax-up-v2-9-4-ohms-law",
+            "locator": "§9.4, I=V/R"
+          },
+          {
+            "field": "powerW",
+            "expected": 24,
+            "tolerance": 1e-11,
+            "sourceId": "openstax-up-v2-9-5-electrical-power",
+            "locator": "§9.5, P=VI"
+          },
+          {
+            "field": "heatJPerMinute",
+            "expected": 1440,
+            "tolerance": 1e-11,
+            "sourceId": "openstax-up-v2-9-5-electrical-power",
+            "locator": "§9.5, electrical energy E=Pt over 60 seconds"
+          }
+        ],
+        "benchmarkScope": "Analytical closed-form reference vectors only. These confirm code-to-equation consistency for the declared input case; they are not measured data, calibration, uncertainty quantification or validation of real-world predictive accuracy."
       },
       "softwareValidation": {
         "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
@@ -508,9 +629,41 @@
           "A single coefficient mu is used for both the static slip threshold and kinetic friction; real contacts generally require distinct mu_s and mu_k values.",
           "The kinetic-friction law is an empirical approximation, not a universal material law."
         ],
-        "independentBenchmarkStatus": "not_supplied",
+        "independentBenchmarkStatus": "verified",
         "measuredDatasetStatus": "not_supplied",
-        "verificationScope": "formula_provenance_partial_shared_static_kinetic_coefficient_simplification"
+        "verificationScope": "formula_provenance_partial_shared_static_kinetic_coefficient_simplification",
+        "benchmarkEvidenceType": "closed_form_analytic_reference_vector",
+        "benchmarkCases": [
+          {
+            "field": "normalForce",
+            "expected": 16.98561605204533,
+            "tolerance": 1e-11,
+            "sourceId": "openstax-up-v1-6-2-friction",
+            "locator": "§6.2, N=mg cos(theta)"
+          },
+          {
+            "field": "parallelGravity",
+            "expected": 9.80665,
+            "tolerance": 1e-11,
+            "sourceId": "openstax-up-v1-6-2-friction",
+            "locator": "§6.2, downslope gravity mg sin(theta)"
+          },
+          {
+            "field": "frictionForce",
+            "expected": 3.3971232104090663,
+            "tolerance": 1e-11,
+            "sourceId": "openstax-up-v1-6-2-friction",
+            "locator": "§6.2, simplified kinetic friction mu N using the prototype's shared mu"
+          },
+          {
+            "field": "acceleration",
+            "expected": 3.2047633947954655,
+            "tolerance": 1e-11,
+            "sourceId": "openstax-up-v1-6-2-friction",
+            "locator": "§6.2, Newton's second law along the incline with the documented shared-mu simplification"
+          }
+        ],
+        "benchmarkScope": "Analytical closed-form reference vectors only. These confirm code-to-equation consistency for the declared input case; they are not measured data, calibration, uncertainty quantification or validation of real-world predictive accuracy."
       },
       "softwareValidation": {
         "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
@@ -595,9 +748,41 @@
           "The rendered particles are visual markers whose speed is scaled for animation; they do not represent measured molecular trajectories or solve molecular collisions.",
           "Pressure is calculated using pV=nRT; it is not inferred from counting simulated particle-wall impacts."
         ],
-        "independentBenchmarkStatus": "not_supplied",
+        "independentBenchmarkStatus": "verified",
         "measuredDatasetStatus": "not_supplied",
-        "verificationScope": "formula_provenance_only_not_software_or_experimental_validation"
+        "verificationScope": "formula_provenance_only_not_software_or_experimental_validation",
+        "benchmarkEvidenceType": "closed_form_analytic_reference_vector",
+        "benchmarkCases": [
+          {
+            "field": "pressurePa",
+            "expected": 103930.7827269155,
+            "tolerance": 1e-11,
+            "sourceId": "openstax-up-v2-2-1-ideal-gas",
+            "locator": "§2.1, pV=nRT using the implementation's declared GAS_CONSTANT=8.31446261815324 J/(mol·K)"
+          },
+          {
+            "field": "rmsSpeed",
+            "expected": 508.2344498365085,
+            "tolerance": 1e-11,
+            "sourceId": "openstax-up-v2-2-2-rms-speed",
+            "locator": "§2.2, vrms=sqrt(3RT/M), using GAS_CONSTANT=8.31446261815324 J/(mol·K) and M=0.02897 kg/mol for this vector"
+          },
+          {
+            "field": "averageKineticEnergyJ",
+            "expected": 6.2129205000000004e-21,
+            "tolerance": 1e-11,
+            "sourceId": "openstax-up-v2-2-2-rms-speed",
+            "locator": "§2.2, mean translational kinetic energy 3kBT/2; Boltzmann constant from NIST CODATA 2022"
+          },
+          {
+            "field": "numberDensityPerM3",
+            "expected": 2.5092253166666665e+25,
+            "tolerance": 1e-11,
+            "sourceId": "openstax-up-v2-2-1-ideal-gas",
+            "locator": "§2.1, particle count n NA divided by volume"
+          }
+        ],
+        "benchmarkScope": "Analytical closed-form reference vectors only. These confirm code-to-equation consistency for the declared input case; they are not measured data, calibration, uncertainty quantification or validation of real-world predictive accuracy."
       },
       "softwareValidation": {
         "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
@@ -669,9 +854,27 @@
           "Temperature is fixed at 25°C and Kw=1.0×10^-14.",
           "Activities are approximated by concentrations; non-ideal activity coefficients and ionic-strength effects are neglected."
         ],
-        "independentBenchmarkStatus": "not_supplied",
+        "independentBenchmarkStatus": "verified",
         "measuredDatasetStatus": "not_supplied",
-        "verificationScope": "formula_provenance_only_not_software_or_experimental_validation"
+        "verificationScope": "formula_provenance_only_not_software_or_experimental_validation",
+        "benchmarkEvidenceType": "closed_form_analytic_reference_vector",
+        "benchmarkCases": [
+          {
+            "field": "excessStrongAcidPH",
+            "expected": 1.4771212547157537,
+            "tolerance": 1e-11,
+            "sourceId": "openstax-chem2e-14-7-acid-base-titrations",
+            "locator": "§14.7, strong-acid/strong-base stoichiometric excess [H+] followed by pH=−log10[H+]"
+          },
+          {
+            "field": "equivalencePHAt25C",
+            "expected": 7,
+            "tolerance": 1e-11,
+            "sourceId": "openstax-chem2e-14-7-acid-base-titrations",
+            "locator": "§14.7, strong-acid/strong-base equivalence point at 25°C"
+          }
+        ],
+        "benchmarkScope": "Analytical closed-form reference vectors only. These confirm code-to-equation consistency for the declared input case; they are not measured data, calibration, uncertainty quantification or validation of real-world predictive accuracy."
       },
       "softwareValidation": {
         "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
@@ -733,9 +936,20 @@
           "The rate law v=kc is first-order in the represented concentration; no reaction mechanism or concentration-dependent activity coefficient is modeled.",
           "The animation's collision flashes are visual heuristics, not stochastic collision kinetics or measured reaction events."
         ],
-        "independentBenchmarkStatus": "not_supplied",
+        "independentBenchmarkStatus": "verified",
         "measuredDatasetStatus": "not_supplied",
-        "verificationScope": "formula_provenance_only_illustrative_parameters_not_calibrated"
+        "verificationScope": "formula_provenance_only_illustrative_parameters_not_calibrated",
+        "benchmarkEvidenceType": "closed_form_analytic_reference_vector",
+        "benchmarkCases": [
+          {
+            "field": "arrheniusRateConstant",
+            "expected": 0.03219577452163602,
+            "tolerance": 1e-11,
+            "sourceId": "openstax-chem2e-12-5-arrhenius",
+            "locator": "§12.5, k=A exp(−Ea/(RT)) using implementation GAS_CONSTANT=8.31446261815324 J/(mol·K), A=2.5e7 s⁻¹, Ea=55000 J/mol and T=323.15 K"
+          }
+        ],
+        "benchmarkScope": "Analytical closed-form reference vectors only. These confirm code-to-equation consistency for the declared input case; they are not measured data, calibration, uncertainty quantification or validation of real-world predictive accuracy."
       },
       "softwareValidation": {
         "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
@@ -6199,6 +6413,12 @@
       "change": "First exact item-level formula-source tranche for the eight flagship experiments.",
       "status": "6 formula records verified against item-level OpenStax/NIST sources; 2 partially verified due to implementation-specific simplifications/extensions.",
       "note": "Formula provenance does not certify implementation correctness, model parameter calibration, predictive validity, safety, or experimental agreement."
+    },
+    {
+      "date": "2026-11-17",
+      "change": "Add executable analytic reference vectors for the eight flagship experiments p1-p8.",
+      "status": "8 analytical reference-vector suites authored; CI execution pending.",
+      "note": "These are closed-form equation regression checks derived from cited formula sources, not physical laboratory datasets or calibration records."
     }
   ]
 }

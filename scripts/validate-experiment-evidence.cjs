@@ -198,14 +198,29 @@ for (const record of declared) {
     assert.equal(evidence.verificationScope && typeof evidence.verificationScope, 'string',
       record.id + ': formula verification must declare its scope and limitations');
   }
+  assert.ok(['not_supplied', 'verified'].includes(evidence.independentBenchmarkStatus),
+    record.id + ': unsupported independent benchmark state');
   if (evidence.independentBenchmarkStatus === 'verified') {
+    assert.equal(evidence.benchmarkEvidenceType, 'closed_form_analytic_reference_vector',
+      record.id + ': this register only promotes closed-form analytical reference vectors');
     assert.ok(Array.isArray(evidence.benchmarkCases) && evidence.benchmarkCases.length > 0,
       record.id + ': benchmark verification requires one or more evidence-backed cases');
+    const benchmarkFields = new Set();
     for (const item of evidence.benchmarkCases) {
+      assert.ok(typeof item.field === 'string' && item.field.trim() &&
+        !benchmarkFields.has(item.field),
+        record.id + ': benchmark fields must be non-empty and unique');
+      benchmarkFields.add(item.field);
       assert.ok(Number.isFinite(item.expected) && Number.isFinite(item.tolerance) &&
-        item.tolerance >= 0 && typeof item.locator === 'string' && item.locator.trim(),
-        record.id + ': benchmark cases require expected values, tolerances and exact locators');
+        item.tolerance > 0 && item.tolerance <= 1e-6 &&
+        typeof item.locator === 'string' && item.locator.trim(),
+        record.id + ': benchmark cases require finite expected values, a bounded positive tolerance, and exact locators');
+      assert.ok(typeof item.sourceId === 'string' &&
+        manifest.referenceRegistry[item.sourceId],
+        record.id + ': benchmark source must exist in the reference registry');
     }
+    assert.ok(typeof evidence.benchmarkScope === 'string' && evidence.benchmarkScope.trim(),
+      record.id + ': benchmark scope must disclose limitations');
   }
   if (evidence.measuredDatasetStatus === 'verified') {
     assert.ok(evidence.measuredDataset && typeof evidence.measuredDataset.sha256 === 'string' &&
@@ -278,6 +293,8 @@ const pendingAssumptions = declared.filter(item =>
   item.scientificEvidence.assumptionsStatus !== 'documented').length;
 const pendingBenchmarks = declared.filter(item =>
   item.scientificEvidence.independentBenchmarkStatus !== 'verified').length;
+const analyticBenchmarks = declared.filter(item =>
+  item.scientificEvidence.independentBenchmarkStatus === 'verified').length;
 const unitNotSpecified = declared.reduce((total, item) =>
   total + item.parameters.filter(parameter => parameter.unitEvidence === 'not_specified_requires_review').length, 0);
 
@@ -287,6 +304,7 @@ console.log('Experiments: ' + declared.length +
   '; formula references partially verified: ' + partialReferences +
   '; item-level formula references pending: ' + pendingReferences +
   '; structured assumptions pending: ' + pendingAssumptions +
+  '; analytic reference-vector suites: ' + analyticBenchmarks +
   '; independent benchmark cases pending: ' + pendingBenchmarks +
   '; parameter labels requiring unit-semantic review: ' + unitNotSpecified + '.');
 console.log('Candidate source IDs are discovery aids only, not verified citations or model validation.');
