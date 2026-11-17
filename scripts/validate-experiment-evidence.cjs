@@ -126,6 +126,11 @@ const declared = manifest.experiments;
 assert.equal(manifest.schemaVersion, '1.0.0');
 assert.equal(manifest.auditType, 'experiment_evidence_inventory');
 assert.equal(manifest.sourceCatalogue.path, cataloguePath);
+const actualGitBlobSha = crypto.createHash('sha1')
+  .update('blob ' + Buffer.byteLength(source, 'utf8') + '\\0')
+  .update(source, 'utf8').digest('hex');
+assert.equal(manifest.sourceCatalogue.gitBlobSha, actualGitBlobSha,
+  'evidence manifest must be regenerated when the catalogue source changes');
 assert.equal(actual.length, 108, 'runtime catalogue source must expose exactly 108 experiments');
 assert.equal(declared.length, actual.length, 'manifest must contain exactly one record per experiment');
 
@@ -143,15 +148,24 @@ for (const record of declared) {
   assert.equal(record.sourceGroup, model.sourceGroup, record.id + ': source group must match the catalogue');
   assert.deepEqual(record.tags, model.tags, record.id + ': tags must match the catalogue');
   assert.equal(record.formulaCount, model.formulaCount, record.id + ': formula count must match the catalogue');
-  assert.deepEqual(record.parameters, model.parameters, record.id + ': parameter bounds and units must match the catalogue');
+  const comparableParameters = record.parameters.map(({ unitEvidence, ...parameter }) => parameter);
+  assert.deepEqual(comparableParameters, model.parameters,
+    record.id + ': parameter bounds and unit labels must match the catalogue');
+  for (const parameter of record.parameters) {
+    const expectedUnitEvidence = parameter.unit.trim()
+      ? 'explicit_label_in_catalogue'
+      : 'not_specified_requires_review';
+    assert.equal(parameter.unitEvidence, expectedUnitEvidence,
+      record.id + ': unit evidence state must match its displayed unit');
+  }
 
   const evidence = record.scientificEvidence;
   assert.ok(evidence && Array.isArray(evidence.candidateReferences) &&
     Array.isArray(evidence.itemLevelCitations) && Array.isArray(evidence.declaredAssumptions));
-  assert.equal(evidence.formulaReferenceStatus, 'not_yet_item_verified');
-  assert.equal(evidence.assumptionsStatus, 'not_structured');
-  assert.equal(evidence.independentBenchmarkStatus, 'not_supplied');
-  assert.equal(evidence.measuredDatasetStatus, 'not_supplied');
+  assert.ok(['not_yet_item_verified', 'verified'].includes(evidence.formulaReferenceStatus));
+  assert.ok(['not_structured', 'documented'].includes(evidence.assumptionsStatus));
+  assert.ok(['not_supplied', 'verified'].includes(evidence.independentBenchmarkStatus));
+  assert.ok(['not_supplied', 'verified'].includes(evidence.measuredDatasetStatus));
   for (const referenceId of evidence.candidateReferences) {
     assert.ok(manifest.referenceRegistry[referenceId],
       record.id + ': unknown candidate reference ' + referenceId);
@@ -169,6 +183,24 @@ for (const record of declared) {
   if (evidence.assumptionsStatus === 'documented') {
     assert.ok(evidence.declaredAssumptions.length > 0,
       record.id + ': documented assumptions must not be empty');
+    assert.ok(evidence.declaredAssumptions.every(value =>
+      typeof value === 'string' && value.trim()),
+      record.id + ': assumptions must be non-empty statements');
+  }
+  if (evidence.independentBenchmarkStatus === 'verified') {
+    assert.ok(Array.isArray(evidence.benchmarkCases) && evidence.benchmarkCases.length > 0,
+      record.id + ': benchmark verification requires one or more evidence-backed cases');
+    for (const item of evidence.benchmarkCases) {
+      assert.ok(Number.isFinite(item.expected) && Number.isFinite(item.tolerance) &&
+        item.tolerance >= 0 && typeof item.locator === 'string' && item.locator.trim(),
+        record.id + ': benchmark cases require expected values, tolerances and exact locators');
+    }
+  }
+  if (evidence.measuredDatasetStatus === 'verified') {
+    assert.ok(evidence.measuredDataset && typeof evidence.measuredDataset.sha256 === 'string' &&
+      /^[0-9a-f]{64}$/.test(evidence.measuredDataset.sha256) &&
+      typeof evidence.measuredDataset.locator === 'string' && evidence.measuredDataset.locator.trim(),
+      record.id + ': verified measured data requires a SHA-256 digest and locator');
   }
 }
 assert.equal(declaredIds.size, actualById.size, 'manifest must cover every catalogue model');
