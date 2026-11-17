@@ -87,7 +87,11 @@ function isSafeSnapshotObject(value, { maxDepth = 64, maxNodes = 10000 } = {}) {
     if (typeof item !== "object") return false;
     if (active.has(item)) return false;
     const prototype = Object.getPrototypeOf(item);
-    if (!Array.isArray(item) && prototype !== Object.prototype && prototype !== null) return false;
+    if (Array.isArray(item)) {
+      if (prototype !== Array.prototype) return false;
+    } else if (prototype !== Object.prototype && prototype !== null) {
+      return false;
+    }
     active.add(item);
     let valid = true;
     if (Array.isArray(item)) {
@@ -140,10 +144,25 @@ function isSafeSnapshotObject(value, { maxDepth = 64, maxNodes = 10000 } = {}) {
 
 function frozen(value) {
   if (!value || typeof value !== "object") return value;
-  const copy = Array.isArray(value)
-    ? value.map(item => frozen(item))
-    : Object.fromEntries(Object.entries(value).map(([key, item]) => [key, frozen(item)]));
-  return Object.freeze(copy);
+  if (Array.isArray(value)) {
+    const copy = [];
+    for (let index = 0; index < value.length; index += 1) {
+      const descriptor = Object.getOwnPropertyDescriptor(value, String(index));
+      if (!descriptor || !Object.prototype.hasOwnProperty.call(descriptor, "value")) {
+        throw new TypeError("Cannot freeze a non-JSON array entry");
+      }
+      copy.push(frozen(descriptor.value));
+    }
+    return Object.freeze(copy);
+  }
+  const entries = Object.keys(value).map(key => {
+    const descriptor = Object.getOwnPropertyDescriptor(value, key);
+    if (!descriptor || !Object.prototype.hasOwnProperty.call(descriptor, "value")) {
+      throw new TypeError("Cannot freeze a non-JSON object property");
+    }
+    return [key, frozen(descriptor.value)];
+  });
+  return Object.freeze(Object.fromEntries(entries));
 }
 
 export function compareExperimentArchiveSnapshots(left, right) {
