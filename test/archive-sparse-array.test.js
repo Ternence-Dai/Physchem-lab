@@ -120,3 +120,25 @@ test("archive comparison converts revoked proxy reflection failures into a block
 
   assert.equal(result.compatible, false);
 });
+
+
+test("archive comparison rejects arrays with replaced prototypes without invoking inherited getters", () => {
+  let getterCalls = 0;
+  const values = [1, 2];
+  const customPrototype = Object.create(Array.prototype);
+  Object.defineProperty(customPrototype, "map", {
+    get() {
+      getterCalls += 1;
+      throw new Error("inherited map getter must not execute");
+    }
+  });
+  Object.setPrototypeOf(values, customPrototype);
+
+  const result = compareExperimentArchiveSnapshots(base, {
+    ...base,
+    params: { values }
+  });
+
+  assert.equal(result.compatible, false);
+  assert.equal(getterCalls, 0);
+});
