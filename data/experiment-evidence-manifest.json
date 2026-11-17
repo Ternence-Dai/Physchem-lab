@@ -56,7 +56,7 @@
       "organization": "NIST / CODATA Task Group",
       "url": "https://physics.nist.gov/cuu/Constants/index.html",
       "doi": "10.1103/RevModPhys.97.025002",
-      "scope": "Fundamental physical constants and conversion factors.",
+      "scope": "Fundamental physical constants and conversion factors. The software currently uses the molar gas constant constant in src/domain/index.js and derives its Boltzmann constant as R/NA; benchmark values follow those exact declared implementation constants.",
       "usageStatus": "candidate_reference_not_item_verified"
     },
     "iupac-green-book-4e": {
@@ -755,17 +755,17 @@
         "benchmarkCases": [
           {
             "field": "pressurePa",
-            "expected": 103930.78272500001,
+            "expected": 103930.7827269155,
             "tolerance": 1e-11,
             "sourceId": "openstax-up-v2-2-1-ideal-gas",
-            "locator": "§2.1, pV=nRT"
+            "locator": "§2.1, pV=nRT using the implementation's declared GAS_CONSTANT=8.31446261815324 J/(mol·K)"
           },
           {
             "field": "rmsSpeed",
-            "expected": 508.234449831825,
+            "expected": 508.2344498365085,
             "tolerance": 1e-11,
             "sourceId": "openstax-up-v2-2-2-rms-speed",
-            "locator": "§2.2, vrms=sqrt(3RT/M), M=0.02897 kg/mol for this vector"
+            "locator": "§2.2, vrms=sqrt(3RT/M), using GAS_CONSTANT=8.31446261815324 J/(mol·K) and M=0.02897 kg/mol for this vector"
           },
           {
             "field": "averageKineticEnergyJ",
