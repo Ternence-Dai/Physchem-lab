@@ -4,7 +4,7 @@
   "warning": "This is an evidence-gap register generated from the current catalogue. Candidate references are research starting points only; no item-level formula citation, assumption review, laboratory benchmark or experimental-data validation is claimed.",
   "sourceCatalogue": {
     "path": "assets/js/experiment-catalogue.js",
-    "gitBlobSha": "91a642d0ed54dfba4f543df9c89202311eeb8ea8",
+    "gitBlobSha": "643ce227a214eea776c0e83849bc27d85ba930a5",
     "experimentCount": 108
   },
   "statusDefinitions": {
@@ -173,8 +173,8 @@
           "maxExpression": "0.6",
           "stepExpression": "0.02",
           "defaultExpression": "0",
-          "unit": "",
-          "unitEvidence": "not_specified_requires_review"
+          "unit": "s⁻¹",
+          "unitEvidence": "explicit_label_in_catalogue"
         }
       ],
       "scientificEvidence": {
@@ -317,8 +317,8 @@
           "maxExpression": "0.8",
           "stepExpression": "0.02",
           "defaultExpression": "0.2",
-          "unit": "",
-          "unitEvidence": "not_specified_requires_review"
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
         },
         {
           "key": "m",
@@ -1352,8 +1352,8 @@
           "maxExpression": "2.5",
           "stepExpression": "0.05",
           "defaultExpression": "1",
-          "unit": "",
-          "unitEvidence": "not_specified_requires_review"
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
         },
         {
           "key": "n2",
@@ -1362,8 +1362,8 @@
           "maxExpression": "2.5",
           "stepExpression": "0.05",
           "defaultExpression": "1.5",
-          "unit": "",
-          "unitEvidence": "not_specified_requires_review"
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
         },
         {
           "key": "a",
@@ -1820,8 +1820,8 @@
           "maxExpression": "2",
           "stepExpression": "0.05",
           "defaultExpression": "1",
-          "unit": "",
-          "unitEvidence": "not_specified_requires_review"
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
         },
         {
           "key": "n2",
@@ -1830,8 +1830,8 @@
           "maxExpression": "2",
           "stepExpression": "0.05",
           "defaultExpression": "1.5",
-          "unit": "",
-          "unitEvidence": "not_specified_requires_review"
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
         },
         {
           "key": "ang",
@@ -1878,8 +1878,8 @@
           "maxExpression": "2",
           "stepExpression": "0.05",
           "defaultExpression": "1.5",
-          "unit": "",
-          "unitEvidence": "not_specified_requires_review"
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
         },
         {
           "key": "d",
@@ -2158,8 +2158,8 @@
           "maxExpression": "10",
           "stepExpression": "1",
           "defaultExpression": "1",
-          "unit": "",
-          "unitEvidence": "not_specified_requires_review"
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
         }
       ],
       "scientificEvidence": {
@@ -2217,8 +2217,8 @@
           "maxExpression": "10",
           "stepExpression": "0.1",
           "defaultExpression": "1",
-          "unit": "",
-          "unitEvidence": "not_specified_requires_review"
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
         }
       ],
       "scientificEvidence": {
@@ -2275,8 +2275,8 @@
           "maxExpression": "1000",
           "stepExpression": "1",
           "defaultExpression": "100",
-          "unit": "",
-          "unitEvidence": "not_specified_requires_review"
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
         },
         {
           "key": "dt",
@@ -2323,8 +2323,8 @@
           "maxExpression": "10",
           "stepExpression": "0.1",
           "defaultExpression": "1",
-          "unit": "",
-          "unitEvidence": "not_specified_requires_review"
+          "unit": "μC",
+          "unitEvidence": "explicit_label_in_catalogue"
         },
         {
           "key": "q2",
@@ -2333,8 +2333,8 @@
           "maxExpression": "10",
           "stepExpression": "0.1",
           "defaultExpression": "-2",
-          "unit": "",
-          "unitEvidence": "not_specified_requires_review"
+          "unit": "μC",
+          "unitEvidence": "explicit_label_in_catalogue"
         },
         {
           "key": "r",
@@ -2723,8 +2723,8 @@
           "maxExpression": "100",
           "stepExpression": "0.1",
           "defaultExpression": "10",
-          "unit": "",
-          "unitEvidence": "not_specified_requires_review"
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
         },
         {
           "key": "Q",
@@ -2733,8 +2733,8 @@
           "maxExpression": "100",
           "stepExpression": "0.01",
           "defaultExpression": "5",
-          "unit": "",
-          "unitEvidence": "not_specified_requires_review"
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
         },
         {
           "key": "T",
@@ -2842,8 +2842,8 @@
           "maxExpression": "1",
           "stepExpression": "0.01",
           "defaultExpression": "0.2",
-          "unit": "",
-          "unitEvidence": "not_specified_requires_review"
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
         }
       ],
       "scientificEvidence": {
@@ -2980,8 +2980,8 @@
           "maxExpression": "1",
           "stepExpression": "0.001",
           "defaultExpression": "0.1",
-          "unit": "",
-          "unitEvidence": "not_specified_requires_review"
+          "unit": "(mol/L)^(1−n)·s⁻¹",
+          "unitEvidence": "explicit_label_in_catalogue"
         },
         {
           "key": "c0",
@@ -3000,8 +3000,8 @@
           "maxExpression": "3",
           "stepExpression": "1",
           "defaultExpression": "1",
-          "unit": "",
-          "unitEvidence": "not_specified_requires_review"
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
         }
       ],
       "scientificEvidence": {
@@ -3039,8 +3039,8 @@
           "maxExpression": "12",
           "stepExpression": "0.1",
           "defaultExpression": "4.76",
-          "unit": "",
-          "unitEvidence": "not_specified_requires_review"
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
         },
         {
           "key": "cA",
@@ -3098,8 +3098,8 @@
           "maxExpression": "1e-3",
           "stepExpression": "1e-15",
           "defaultExpression": "1.8e-10",
-          "unit": "",
-          "unitEvidence": "not_specified_requires_review"
+          "unit": "(mol/L)²",
+          "unitEvidence": "explicit_label_in_catalogue"
         },
         {
           "key": "cA",
@@ -3167,8 +3167,8 @@
           "maxExpression": "4",
           "stepExpression": "1",
           "defaultExpression": "2",
-          "unit": "",
-          "unitEvidence": "not_specified_requires_review"
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
         },
         {
           "key": "Q",
@@ -3177,8 +3177,8 @@
           "maxExpression": "1e6",
           "stepExpression": "1e-6",
           "defaultExpression": "1",
-          "unit": "",
-          "unitEvidence": "not_specified_requires_review"
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
         }
       ],
       "scientificEvidence": {
@@ -3432,8 +3432,8 @@
           "maxExpression": "2",
           "stepExpression": "0.05",
           "defaultExpression": "1.33",
-          "unit": "",
-          "unitEvidence": "not_specified_requires_review"
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
         }
       ],
       "scientificEvidence": {
@@ -4017,8 +4017,8 @@
           "maxExpression": "1e-1",
           "stepExpression": "1e-6",
           "defaultExpression": "1e-3",
-          "unit": "",
-          "unitEvidence": "not_specified_requires_review"
+          "unit": "mol/L",
+          "unitEvidence": "explicit_label_in_catalogue"
         }
       ],
       "scientificEvidence": {
@@ -4066,8 +4066,8 @@
           "maxExpression": "4",
           "stepExpression": "1",
           "defaultExpression": "2",
-          "unit": "",
-          "unitEvidence": "not_specified_requires_review"
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
         },
         {
           "key": "Q",
@@ -4076,8 +4076,8 @@
           "maxExpression": "1e6",
           "stepExpression": "1e-6",
           "defaultExpression": "1",
-          "unit": "",
-          "unitEvidence": "not_specified_requires_review"
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
         }
       ],
       "scientificEvidence": {
@@ -4115,8 +4115,8 @@
           "maxExpression": "100",
           "stepExpression": "0.1",
           "defaultExpression": "10",
-          "unit": "",
-          "unitEvidence": "not_specified_requires_review"
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
         },
         {
           "key": "c0",
@@ -4174,8 +4174,8 @@
           "maxExpression": "4",
           "stepExpression": "1",
           "defaultExpression": "1",
-          "unit": "",
-          "unitEvidence": "not_specified_requires_review"
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
         },
         {
           "key": "m",
@@ -4184,8 +4184,8 @@
           "maxExpression": "4",
           "stepExpression": "1",
           "defaultExpression": "2",
-          "unit": "",
-          "unitEvidence": "not_specified_requires_review"
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
         },
         {
           "key": "pH",
@@ -4194,8 +4194,8 @@
           "maxExpression": "14",
           "stepExpression": "0.5",
           "defaultExpression": "7",
-          "unit": "",
-          "unitEvidence": "not_specified_requires_review"
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
         }
       ],
       "scientificEvidence": {
@@ -4292,8 +4292,8 @@
           "maxExpression": "100",
           "stepExpression": "1",
           "defaultExpression": "3",
-          "unit": "",
-          "unitEvidence": "not_specified_requires_review"
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
         },
         {
           "key": "k",
@@ -4718,8 +4718,8 @@
           "maxExpression": "20",
           "stepExpression": "1",
           "defaultExpression": "5",
-          "unit": "",
-          "unitEvidence": "not_specified_requires_review"
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
         }
       ],
       "scientificEvidence": {
@@ -4767,8 +4767,8 @@
           "maxExpression": "10",
           "stepExpression": "1",
           "defaultExpression": "3",
-          "unit": "",
-          "unitEvidence": "not_specified_requires_review"
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
         }
       ],
       "scientificEvidence": {
@@ -4923,8 +4923,8 @@
           "maxExpression": "5",
           "stepExpression": "1",
           "defaultExpression": "1",
-          "unit": "",
-          "unitEvidence": "not_specified_requires_review"
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
         },
         {
           "key": "R",
@@ -4933,8 +4933,8 @@
           "maxExpression": "100000",
           "stepExpression": "1000",
           "defaultExpression": "10000",
-          "unit": "",
-          "unitEvidence": "not_specified_requires_review"
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
         }
       ],
       "scientificEvidence": {
@@ -5292,8 +5292,8 @@
           "maxExpression": "5",
           "stepExpression": "0.1",
           "defaultExpression": "1",
-          "unit": "",
-          "unitEvidence": "not_specified_requires_review"
+          "unit": "(mol/L)^(1−n)·s⁻¹",
+          "unitEvidence": "explicit_label_in_catalogue"
         },
         {
           "key": "c0",
@@ -5312,8 +5312,8 @@
           "maxExpression": "3",
           "stepExpression": "1",
           "defaultExpression": "2",
-          "unit": "",
-          "unitEvidence": "not_specified_requires_review"
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
         }
       ],
       "scientificEvidence": {
@@ -5361,8 +5361,8 @@
           "maxExpression": "1",
           "stepExpression": "0.01",
           "defaultExpression": "0.3",
-          "unit": "",
-          "unitEvidence": "not_specified_requires_review"
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
         }
       ],
       "scientificEvidence": {
@@ -5419,8 +5419,8 @@
           "maxExpression": "1",
           "stepExpression": "0.01",
           "defaultExpression": "0.2",
-          "unit": "",
-          "unitEvidence": "not_specified_requires_review"
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
         }
       ],
       "scientificEvidence": {
@@ -5515,8 +5515,8 @@
           "maxExpression": "100",
           "stepExpression": "0.1",
           "defaultExpression": "10",
-          "unit": "",
-          "unitEvidence": "not_specified_requires_review"
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
         },
         {
           "key": "Tref",
@@ -5751,8 +5751,8 @@
           "maxExpression": "0.9",
           "stepExpression": "0.01",
           "defaultExpression": "0.2",
-          "unit": "",
-          "unitEvidence": "not_specified_requires_review"
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
         }
       ],
       "scientificEvidence": {
@@ -5905,8 +5905,8 @@
           "maxExpression": "20",
           "stepExpression": "0.5",
           "defaultExpression": "10",
-          "unit": "",
-          "unitEvidence": "not_specified_requires_review"
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
         },
         {
           "key": "rho",
@@ -5915,8 +5915,8 @@
           "maxExpression": "50",
           "stepExpression": "0.5",
           "defaultExpression": "28",
-          "unit": "",
-          "unitEvidence": "not_specified_requires_review"
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
         },
         {
           "key": "beta",
@@ -5925,8 +5925,8 @@
           "maxExpression": "5",
           "stepExpression": "0.1",
           "defaultExpression": "2.67",
-          "unit": "",
-          "unitEvidence": "not_specified_requires_review"
+          "unit": "1",
+          "unitEvidence": "explicit_label_in_catalogue"
         }
       ],
       "scientificEvidence": {
@@ -5945,5 +5945,24 @@
         "flagshipBoundaryCoverage": "not_in_flagship_boundary_suite"
       }
     }
-  ]
+  ],
+  "unitAudit": {
+    "totalParameterFields": 279,
+    "explicitUnitLabels": 277,
+    "stillUnspecified": [
+      {
+        "experimentId": "k13",
+        "experimentName": "比表面与催化",
+        "key": "k",
+        "label": "本征活性 k"
+      },
+      {
+        "experimentId": "k27",
+        "experimentName": "圆二色性与手性",
+        "key": "A",
+        "label": "吸收强度 A"
+      }
+    ],
+    "reviewNote": "43 previously blank unit fields now have explicit SI/derived or dimensionless labels. Two fields remain pending because this prototype does not establish a physical unit for their scale parameters."
+  }
 }
