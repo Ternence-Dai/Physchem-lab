@@ -151,6 +151,27 @@
       "url": "https://openstax.org/books/chemistry-2e/pages/12-5-collision-theory",
       "locator": "Section 12.5, Arrhenius equation, linearized form and two-temperature form",
       "scope": "Empirical Arrhenius dependence of rate constant on activation energy and absolute temperature; frequency factor depends on reaction."
+    },
+    "openstax-up-v1-3-4-constant-acceleration": {
+      "title": "3.4 Motion with Constant Acceleration — University Physics Volume 1",
+      "organization": "OpenStax / Rice University",
+      "url": "https://openstax.org/books/university-physics-volume-1/pages/3-4-motion-with-constant-acceleration",
+      "locator": "Section 3.4, equations 3.10–3.14; constant-acceleration kinematics",
+      "scope": "One-dimensional motion with constant acceleration; coordinate direction and sign convention must be stated."
+    },
+    "openstax-up-v1-3-5-freefall": {
+      "title": "3.5 Free Fall — University Physics Volume 1",
+      "organization": "OpenStax / Rice University",
+      "url": "https://openstax.org/books/university-physics-volume-1/pages/3-5-free-fall",
+      "locator": "Section 3.5, equations 3.15–3.17; free fall under constant gravitational acceleration",
+      "scope": "Vertical motion with negligible air resistance; the same equations apply to upward and downward motion. g is approximately constant for the local region."
+    },
+    "openstax-up-v1-4-4-circular-motion": {
+      "title": "4.4 Uniform and Nonuniform Circular Motion — University Physics Volume 1",
+      "organization": "OpenStax / Rice University",
+      "url": "https://openstax.org/books/university-physics-volume-1/pages/4-4-uniform-and-nonuniform-circular-motion",
+      "locator": "Section 4.4, equations 4.27–4.30; centripetal acceleration and angular-frequency description",
+      "scope": "Uniform circular motion at constant speed; acceleration points radially inward. The centripetal force is the net inward force, not an additional independent force."
     }
   },
   "experiments": [
@@ -989,15 +1010,30 @@
         }
       ],
       "scientificEvidence": {
-        "formulaReferenceStatus": "not_yet_item_verified",
+        "formulaReferenceStatus": "verified",
         "candidateReferences": [
-          "openstax-university-physics-v1"
+          "openstax-university-physics-v1",
+          "openstax-up-v1-3-5-freefall"
         ],
-        "itemLevelCitations": [],
-        "assumptionsStatus": "not_structured",
-        "declaredAssumptions": [],
+        "itemLevelCitations": [
+          {
+            "sourceId": "openstax-up-v1-3-5-freefall",
+            "locator": "§3.5, equations 3.15–3.17; set initial vertical velocity to zero and solve the constant-g equations for the ground-impact time and speed",
+            "formulaCoverage": "v=gt; h=(1/2)gt²; t=sqrt(2h/g); impact speed=sqrt(2gh)",
+            "limitations": "The equations assume negligible air resistance and approximately constant g. Contact with the ground ends free fall."
+          }
+        ],
+        "assumptionsStatus": "documented",
+        "declaredAssumptions": [
+          "The body is released from rest with zero initial vertical velocity.",
+          "Motion is one-dimensional and vertical.",
+          "Gravity is constant over the fall and air resistance, wind and buoyancy are neglected.",
+          "The object stops being in free fall at ground contact; the model does not simulate impact or rebound.",
+          "The displayed kinetic-energy readout assumes a reference mass of 1 kg rather than a user-supplied physical object mass."
+        ],
         "independentBenchmarkStatus": "not_supplied",
-        "measuredDatasetStatus": "not_supplied"
+        "measuredDatasetStatus": "not_supplied",
+        "verificationScope": "formula_provenance_only_not_software_or_experimental_validation"
       },
       "softwareValidation": {
         "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
@@ -1037,15 +1073,30 @@
         }
       ],
       "scientificEvidence": {
-        "formulaReferenceStatus": "not_yet_item_verified",
+        "formulaReferenceStatus": "verified",
         "candidateReferences": [
-          "openstax-university-physics-v1"
+          "openstax-university-physics-v1",
+          "openstax-up-v1-3-5-freefall"
         ],
-        "itemLevelCitations": [],
-        "assumptionsStatus": "not_structured",
-        "declaredAssumptions": [],
+        "itemLevelCitations": [
+          {
+            "sourceId": "openstax-up-v1-3-5-freefall",
+            "locator": "§3.5, equations 3.15–3.17; upward-positive sign convention with constant acceleration −g",
+            "formulaCoverage": "v(t)=v0−gt; y(t)=v0t−(1/2)gt²; t_up=v0/g; Hmax=v0²/(2g); same-elevation flight time=2v0/g",
+            "limitations": "The total flight-time formula assumes return to the launch elevation. Air resistance is neglected."
+          }
+        ],
+        "assumptionsStatus": "documented",
+        "declaredAssumptions": [
+          "The object is launched vertically upward and returns to the same elevation from which it was launched.",
+          "The only acceleration during flight is a constant downward gravitational acceleration g.",
+          "Air resistance, wind, buoyancy and lift are neglected.",
+          "The highest point is an instantaneous zero-vertical-velocity state, not a period of hovering.",
+          "The animation is one-dimensional and does not model launch mechanics or impact."
+        ],
         "independentBenchmarkStatus": "not_supplied",
-        "measuredDatasetStatus": "not_supplied"
+        "measuredDatasetStatus": "not_supplied",
+        "verificationScope": "formula_provenance_only_not_software_or_experimental_validation"
       },
       "softwareValidation": {
         "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
@@ -1085,15 +1136,30 @@
         }
       ],
       "scientificEvidence": {
-        "formulaReferenceStatus": "not_yet_item_verified",
+        "formulaReferenceStatus": "verified",
         "candidateReferences": [
-          "openstax-university-physics-v1"
+          "openstax-university-physics-v1",
+          "openstax-up-v1-4-4-circular-motion"
         ],
-        "itemLevelCitations": [],
-        "assumptionsStatus": "not_structured",
-        "declaredAssumptions": [],
+        "itemLevelCitations": [
+          {
+            "sourceId": "openstax-up-v1-4-4-circular-motion",
+            "locator": "§4.4, equations 4.27–4.30; centripetal acceleration ac=v²/r and angular-frequency parameterization",
+            "formulaCoverage": "ac=v²/r; Fc=mac; period T=2πr/v; angular speed omega=v/r",
+            "limitations": "The equations describe ideal circular motion. The displayed Fc value uses a fixed illustrative mass of 1 kg; actual inward force depends on the real system and may be supplied by tension, gravity, friction, contact force, or their resultant."
+          }
+        ],
+        "assumptionsStatus": "documented",
+        "declaredAssumptions": [
+          "The object follows a circle with fixed radius and constant tangential speed.",
+          "The path is planar and no radial displacement or change in radius is modeled.",
+          "The force readout uses a fixed illustrative mass of 1 kg because mass is not an input parameter.",
+          "Centripetal force denotes the net inward force component; it is not an extra force to be added to real force diagrams.",
+          "Tangential acceleration is zero in the uniform-speed mode."
+        ],
         "independentBenchmarkStatus": "not_supplied",
-        "measuredDatasetStatus": "not_supplied"
+        "measuredDatasetStatus": "not_supplied",
+        "verificationScope": "formula_provenance_only_not_software_or_experimental_validation"
       },
       "softwareValidation": {
         "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
@@ -1143,15 +1209,30 @@
         }
       ],
       "scientificEvidence": {
-        "formulaReferenceStatus": "not_yet_item_verified",
+        "formulaReferenceStatus": "verified",
         "candidateReferences": [
-          "openstax-university-physics-v1"
+          "openstax-university-physics-v1",
+          "openstax-up-v1-4-3-projectile"
         ],
-        "itemLevelCitations": [],
-        "assumptionsStatus": "not_structured",
-        "declaredAssumptions": [],
+        "itemLevelCitations": [
+          {
+            "sourceId": "openstax-up-v1-4-3-projectile",
+            "locator": "§4.3, horizontal launch from a nonzero height; combine constant horizontal velocity with vertical free fall and solve for impact time",
+            "formulaCoverage": "x=v0t; h=(1/2)gt²; t=sqrt(2h/g); R=v0 sqrt(2h/g); impact speed=sqrt(vx²+vy²)",
+            "limitations": "Assumes negligible air resistance and constant g. Unlike the standard same-level range formula, this case lands below the launch elevation."
+          }
+        ],
+        "assumptionsStatus": "documented",
+        "declaredAssumptions": [
+          "The launch is horizontal, so the initial vertical velocity is zero.",
+          "Horizontal acceleration is zero and vertical acceleration is constant downward at g.",
+          "The projectile lands on a flat horizontal surface at a vertical drop equal to h.",
+          "Air resistance, wind, spin, lift and obstacles are neglected.",
+          "The animation does not model the launch device or impact dynamics."
+        ],
         "independentBenchmarkStatus": "not_supplied",
-        "measuredDatasetStatus": "not_supplied"
+        "measuredDatasetStatus": "not_supplied",
+        "verificationScope": "formula_provenance_only_not_software_or_experimental_validation"
       },
       "softwareValidation": {
         "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
@@ -1201,15 +1282,30 @@
         }
       ],
       "scientificEvidence": {
-        "formulaReferenceStatus": "not_yet_item_verified",
+        "formulaReferenceStatus": "verified",
         "candidateReferences": [
-          "openstax-university-physics-v1"
+          "openstax-university-physics-v1",
+          "openstax-up-v1-4-3-projectile"
         ],
-        "itemLevelCitations": [],
-        "assumptionsStatus": "not_structured",
-        "declaredAssumptions": [],
+        "itemLevelCitations": [
+          {
+            "sourceId": "openstax-up-v1-4-3-projectile",
+            "locator": "§4.3, equations 4.24–4.26; time of flight, parabolic trajectory and range for launch and impact at the same elevation",
+            "formulaCoverage": "x=v0 cos(theta)t; y=v0 sin(theta)t−(1/2)gt²; T=2v0 sin(theta)/g; R=v0² sin(2theta)/g; Hmax=v0² sin²(theta)/(2g)",
+            "limitations": "Same-elevation range and 45° maximum apply only when launch and impact heights are equal and air resistance is neglected."
+          }
+        ],
+        "assumptionsStatus": "documented",
+        "declaredAssumptions": [
+          "The projectile is launched and lands at the same vertical elevation.",
+          "Gravity is uniform and constant during the trajectory.",
+          "Air resistance, wind, spin, lift and buoyancy are neglected.",
+          "Horizontal and vertical components are independent; horizontal velocity remains constant.",
+          "The 45° maximum-range statement is conditional on same-level landing and the no-drag idealization."
+        ],
         "independentBenchmarkStatus": "not_supplied",
-        "measuredDatasetStatus": "not_supplied"
+        "measuredDatasetStatus": "not_supplied",
+        "verificationScope": "formula_provenance_only_not_software_or_experimental_validation"
       },
       "softwareValidation": {
         "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
@@ -1249,15 +1345,29 @@
         }
       ],
       "scientificEvidence": {
-        "formulaReferenceStatus": "not_yet_item_verified",
+        "formulaReferenceStatus": "verified",
         "candidateReferences": [
-          "openstax-university-physics-v1"
+          "openstax-university-physics-v1",
+          "openstax-up-v1-3-4-constant-acceleration"
         ],
-        "itemLevelCitations": [],
-        "assumptionsStatus": "not_structured",
-        "declaredAssumptions": [],
+        "itemLevelCitations": [
+          {
+            "sourceId": "openstax-up-v1-3-4-constant-acceleration",
+            "locator": "§3.4, constant-acceleration kinematics with a=0; average velocity equals constant velocity",
+            "formulaCoverage": "x=vt; t=L/v for a one-dimensional constant-speed trajectory of length L",
+            "limitations": "This is the zero-acceleration limiting case of the kinematic equations; the model assumes the direction remains fixed and does not describe acceleration phases."
+          }
+        ],
+        "assumptionsStatus": "documented",
+        "declaredAssumptions": [
+          "Velocity is constant in both magnitude and direction throughout the represented path.",
+          "Acceleration is zero; start-up, braking and turning transients are not modeled.",
+          "The route is one-dimensional and its length L is measured along the path.",
+          "The displayed average velocity equals the constant signed velocity only because direction does not change."
+        ],
         "independentBenchmarkStatus": "not_supplied",
-        "measuredDatasetStatus": "not_supplied"
+        "measuredDatasetStatus": "not_supplied",
+        "verificationScope": "formula_provenance_only_not_software_or_experimental_validation"
       },
       "softwareValidation": {
         "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
@@ -1307,15 +1417,29 @@
         }
       ],
       "scientificEvidence": {
-        "formulaReferenceStatus": "not_yet_item_verified",
+        "formulaReferenceStatus": "verified",
         "candidateReferences": [
-          "openstax-university-physics-v1"
+          "openstax-university-physics-v1",
+          "openstax-up-v1-3-4-constant-acceleration"
         ],
-        "itemLevelCitations": [],
-        "assumptionsStatus": "not_structured",
-        "declaredAssumptions": [],
+        "itemLevelCitations": [
+          {
+            "sourceId": "openstax-up-v1-3-4-constant-acceleration",
+            "locator": "§3.4, equations 3.12–3.14; velocity-time relation and displacement for constant acceleration",
+            "formulaCoverage": "v=v0+at; x=v0t+(1/2)at²; v²=v0²+2ax",
+            "limitations": "The equations require constant acceleration over the modeled time interval and a consistent one-dimensional sign convention."
+          }
+        ],
+        "assumptionsStatus": "documented",
+        "declaredAssumptions": [
+          "Motion is one-dimensional with constant acceleration a over the entire interval.",
+          "The acceleration sign follows the chosen positive coordinate direction; the current default is positive.",
+          "The model does not include velocity-dependent drag, changing net force, mass variation or staged acceleration.",
+          "The displacement formula assumes the initial position is the zero reference for the displayed distance."
+        ],
         "independentBenchmarkStatus": "not_supplied",
-        "measuredDatasetStatus": "not_supplied"
+        "measuredDatasetStatus": "not_supplied",
+        "verificationScope": "formula_provenance_only_not_software_or_experimental_validation"
       },
       "softwareValidation": {
         "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
@@ -1365,15 +1489,30 @@
         }
       ],
       "scientificEvidence": {
-        "formulaReferenceStatus": "not_yet_item_verified",
+        "formulaReferenceStatus": "verified",
         "candidateReferences": [
-          "openstax-university-physics-v1"
+          "openstax-university-physics-v1",
+          "openstax-up-v1-3-5-freefall"
         ],
-        "itemLevelCitations": [],
-        "assumptionsStatus": "not_structured",
-        "declaredAssumptions": [],
+        "itemLevelCitations": [
+          {
+            "sourceId": "openstax-up-v1-3-5-freefall",
+            "locator": "§3.5, equations 3.15–3.17; apply constant-g vertical kinematics with the positive coordinate chosen downward",
+            "formulaCoverage": "v=v0+gt; h=v0t+(1/2)gt²; positive impact time t=(sqrt(v0²+2gh)−v0)/g",
+            "limitations": "The equations assume negligible air resistance, constant g and motion only until the object reaches the lower reference surface."
+          }
+        ],
+        "assumptionsStatus": "documented",
+        "declaredAssumptions": [
+          "The object is launched vertically downward with initial speed v0.",
+          "The positive coordinate is selected downward, so gravity contributes +g.",
+          "Gravity is constant and air resistance, wind, buoyancy and lift are neglected.",
+          "The object is evaluated only until it has fallen through the specified vertical distance h.",
+          "Impact, deformation, rebound and energy dissipation on contact are not modeled."
+        ],
         "independentBenchmarkStatus": "not_supplied",
-        "measuredDatasetStatus": "not_supplied"
+        "measuredDatasetStatus": "not_supplied",
+        "verificationScope": "formula_provenance_only_not_software_or_experimental_validation"
       },
       "softwareValidation": {
         "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
@@ -6419,6 +6558,12 @@
       "change": "Add executable analytic reference vectors for the eight flagship experiments p1-p8.",
       "status": "8 analytical reference-vector suites authored; CI execution pending.",
       "note": "These are closed-form equation regression checks derived from cited formula sources, not physical laboratory datasets or calibration records."
+    },
+    {
+      "date": "2026-11-17",
+      "change": "Second exact item-level formula source tranche for kinematics experiments m1-m8.",
+      "status": "8 formula families mapped to exact OpenStax University Physics Volume 1 sections; 8 model assumption sets documented.",
+      "note": "Formula provenance only; no analytical reference vectors or experimental datasets are claimed for m1-m8 by this tranche."
     }
   ]
 }

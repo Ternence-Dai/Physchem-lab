@@ -96,3 +96,21 @@ A second validation layer now accompanies the formula citations. The new \`scrip
 - p8 Arrhenius: one rate-constant vector with illustrative, non-fitted prefactor and activation-energy inputs.
 
 The manifest records the exact tested output field, expected value, relative tolerance, source and equation locator for every vector. These are analytical equation-regression checks only. They do not count as laboratory measurements, parameter calibration, uncertainty quantification, or proof of predictive validity for a physical experiment.
+
+
+## Second item-level source verification tranche (kinematics m1–m8)
+
+The next eight mechanics models now carry exact section-level OpenStax University Physics Volume 1 references and item-specific assumptions:
+
+| ID | Experiment | Source locator | Model boundary |
+|---|---|---|---|
+| m1 | Free fall | §3.5, equations 3.15–3.17 | Released from rest; constant g; no drag; 1 kg is only the illustrative kinetic-energy readout mass |
+| m2 | Vertical upward throw | §3.5, equations 3.15–3.17 | Returns to same elevation; no drag; same-level total flight time |
+| m3 | Circular motion | §4.4, equations 4.27–4.30 | Constant speed and radius; 1 kg illustrative force readout; centripetal force is the net inward force |
+| m4 | Horizontal projectile | §4.3, horizontal launch from nonzero height | Zero initial vertical velocity; lands below launch; no air resistance |
+| m5 | Oblique projectile | §4.3, equations 4.24–4.26 | Same-level landing; 45° maximum range only under no-drag assumptions |
+| m6 | Uniform linear motion | §3.4, constant-acceleration equations with a=0 | Fixed direction, constant velocity; start-up and braking omitted |
+| m7 | Uniformly accelerated motion | §3.4, equations 3.12–3.14 | One-dimensional constant acceleration and consistent sign convention |
+| m8 | Downward vertical throw | §3.5, equations 3.15–3.17 | Positive coordinate downward; constant g; no drag; stops at impact surface |
+
+These eight records now have \`formulaReferenceStatus=verified\` at formula-provenance level and \`assumptionsStatus=documented\`. They remain separate from numerical implementation verification: independent analytic vectors, real measurements and calibration evidence are not claimed by this tranche.
