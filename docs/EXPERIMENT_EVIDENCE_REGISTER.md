@@ -91,7 +91,7 @@ A second validation layer now accompanies the formula citations. The new \`scrip
 - p3 spring oscillator: angular frequency, period, acceleration, kinetic energy, elastic potential and total energy.
 - p4 Ohm's law: current, power and constant-power heat over one minute.
 - p5 inclined plane: normal force, gravity component, simplified friction force and acceleration; the single shared friction coefficient is explicitly part of the prototype model assumption.
-- p6 ideal gas: ideal-gas pressure, dry-air RMS speed, mean translational kinetic energy and number density.
+- p6 ideal gas: ideal-gas pressure, dry-air RMS speed, mean translational kinetic energy and number density. Expected values use the exact declared GAS_CONSTANT=8.31446261815324 J/(mol·K) and AVOGADRO_CONSTANT=6.02214076e23 mol⁻¹ from the production domain module; the module derives kB as R/NA.
 - p7 strong-acid/strong-base titration: excess-acid pH and the equivalence-point pH at 25 °C.
 - p8 Arrhenius: one rate-constant vector with illustrative, non-fitted prefactor and activation-energy inputs.
 
