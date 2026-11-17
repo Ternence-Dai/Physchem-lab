@@ -60,3 +60,23 @@ The initial validator passes as an inventory integrity check while explicitly pr
 6. Only then promote the corresponding status in the manifest.
 
 Do not bulk-mark all 108 entries verified based on a single general textbook citation.
+
+
+## First item-level source verification tranche (8 flagship experiments)
+
+On 2026-11-17, exact section-level sources were attached to flagship experiments p1–p8:
+
+| ID | Experiment | Formula-source state | Primary locator | Boundary |
+|---|---|---|---|---|
+| p1 | Projectile trajectory | verified | OpenStax University Physics 1, §4.3 | No air resistance; range assumes same launch/landing elevation |
+| p2 | Pendulum | partially verified | OpenStax University Physics 1, §15.4 | Source supports the gravity restoring term and small-angle period; the prototype's added linear damping term is not independently validated |
+| p3 | Spring oscillator | verified | OpenStax University Physics 1, §§15.1–15.2 | Ideal Hookean, undamped, conservative oscillator |
+| p4 | Ohm's law circuit | verified | OpenStax University Physics 2, §§9.4–9.5 | Fixed ohmic resistance; temperature feedback neglected |
+| p5 | Inclined plane/friction | partially verified | OpenStax University Physics 1, §6.2 | Prototype uses one shared coefficient for static threshold and kinetic friction; source uses distinct coefficients |
+| p6 | Ideal-gas molecular model | verified | OpenStax University Physics 2, §§2.1–2.2; NIST CODATA 2022 | Ideal gas; translational kinetic energy; fixed approximate dry-air molar mass; particle animation is illustrative |
+| p7 | Strong-acid/strong-base titration | verified | OpenStax Chemistry 2e, §14.7, Example 14.21 / Fig. 14.18 | Strong monoprotic acid/base, additive volumes, fixed 25°C and Kw |
+| p8 | Arrhenius rate model | verified | OpenStax Chemistry 2e, §12.5 | Formula sourced; A and Ea values are illustrative and not calibrated to a named reaction |
+
+The 6 records marked \`verified\` indicate that the represented formula family has an exact textbook/reference locator. They do **not** mean that the executable code, numerical parameter values, uncertainty, or physical prediction has been independently validated. p2 and p5 remain partially verified because their implementation adds or simplifies behavior not validated by the cited formula.
+
+The 8 records all include explicit model assumptions. No independent experimental dataset or benchmark tolerance is supplied by this source tranche. Those states remain \`not_supplied\`; this prevents a source citation from being mistaken for validation data.
