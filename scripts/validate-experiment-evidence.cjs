@@ -126,9 +126,12 @@ const declared = manifest.experiments;
 assert.equal(manifest.schemaVersion, '1.0.0');
 assert.equal(manifest.auditType, 'experiment_evidence_inventory');
 assert.equal(manifest.sourceCatalogue.path, cataloguePath);
+// Windows checkouts may convert LF to CRLF. Git blob identity is based on
+// repository bytes, so normalize working-tree line endings before hashing.
+const normalizedSource = source.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
 const actualGitBlobSha = crypto.createHash('sha1')
-  .update('blob ' + Buffer.byteLength(source, 'utf8') + '\0')
-  .update(source, 'utf8').digest('hex');
+  .update('blob ' + Buffer.byteLength(normalizedSource, 'utf8') + '\0')
+  .update(normalizedSource, 'utf8').digest('hex');
 assert.equal(manifest.sourceCatalogue.gitBlobSha, actualGitBlobSha,
   'evidence manifest must be regenerated when the catalogue source changes');
 assert.equal(actual.length, 108, 'runtime catalogue source must expose exactly 108 experiments');
