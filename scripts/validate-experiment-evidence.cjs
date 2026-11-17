@@ -165,7 +165,7 @@ for (const record of declared) {
   const evidence = record.scientificEvidence;
   assert.ok(evidence && Array.isArray(evidence.candidateReferences) &&
     Array.isArray(evidence.itemLevelCitations) && Array.isArray(evidence.declaredAssumptions));
-  assert.ok(['not_yet_item_verified', 'verified'].includes(evidence.formulaReferenceStatus));
+  assert.ok(['not_yet_item_verified', 'partially_verified', 'verified'].includes(evidence.formulaReferenceStatus));
   assert.ok(['not_structured', 'documented'].includes(evidence.assumptionsStatus));
   assert.ok(['not_supplied', 'verified'].includes(evidence.independentBenchmarkStatus));
   assert.ok(['not_supplied', 'verified'].includes(evidence.measuredDatasetStatus));
@@ -173,7 +173,7 @@ for (const record of declared) {
     assert.ok(manifest.referenceRegistry[referenceId],
       record.id + ': unknown candidate reference ' + referenceId);
   }
-  if (evidence.formulaReferenceStatus === 'verified') {
+  if (['partially_verified', 'verified'].includes(evidence.formulaReferenceStatus)) {
     assert.ok(evidence.itemLevelCitations.length > 0,
       record.id + ': verified formula status requires item-level citations');
     for (const citation of evidence.itemLevelCitations) {
@@ -181,6 +181,10 @@ for (const record of declared) {
         manifest.referenceRegistry[citation.sourceId], record.id + ': citation source must exist');
       assert.ok(typeof citation.locator === 'string' && citation.locator.trim(),
         record.id + ': citation requires an exact chapter/section/page locator');
+      assert.ok(typeof citation.formulaCoverage === 'string' && citation.formulaCoverage.trim(),
+        record.id + ': citation must state the exact formula coverage');
+      assert.ok(typeof citation.limitations === 'string' && citation.limitations.trim(),
+        record.id + ': citation must disclose what it does not validate');
     }
   }
   if (evidence.assumptionsStatus === 'documented') {
@@ -189,6 +193,10 @@ for (const record of declared) {
     assert.ok(evidence.declaredAssumptions.every(value =>
       typeof value === 'string' && value.trim()),
       record.id + ': assumptions must be non-empty statements');
+  }
+  if (evidence.formulaReferenceStatus !== 'not_yet_item_verified') {
+    assert.equal(evidence.verificationScope && typeof evidence.verificationScope, 'string',
+      record.id + ': formula verification must declare its scope and limitations');
   }
   if (evidence.independentBenchmarkStatus === 'verified') {
     assert.ok(Array.isArray(evidence.benchmarkCases) && evidence.benchmarkCases.length > 0,
@@ -261,7 +269,11 @@ assert.deepEqual(unresolvedUnitFields, ['k13.k', 'k27.A'],
   'only the two explicitly unresolved model-scale inputs may remain without unit labels');
 
 const pendingReferences = declared.filter(item =>
-  item.scientificEvidence.formulaReferenceStatus !== 'verified').length;
+  item.scientificEvidence.formulaReferenceStatus === 'not_yet_item_verified').length;
+const partialReferences = declared.filter(item =>
+  item.scientificEvidence.formulaReferenceStatus === 'partially_verified').length;
+const verifiedReferences = declared.filter(item =>
+  item.scientificEvidence.formulaReferenceStatus === 'verified').length;
 const pendingAssumptions = declared.filter(item =>
   item.scientificEvidence.assumptionsStatus !== 'documented').length;
 const pendingBenchmarks = declared.filter(item =>
@@ -271,6 +283,8 @@ const unitNotSpecified = declared.reduce((total, item) =>
 
 console.log('Experiment evidence manifest integrity passed.');
 console.log('Experiments: ' + declared.length +
+  '; formula references verified: ' + verifiedReferences +
+  '; formula references partially verified: ' + partialReferences +
   '; item-level formula references pending: ' + pendingReferences +
   '; structured assumptions pending: ' + pendingAssumptions +
   '; independent benchmark cases pending: ' + pendingBenchmarks +
