@@ -114,3 +114,20 @@ The next eight mechanics models now carry exact section-level OpenStax Universit
 | m8 | Downward vertical throw | §3.5, equations 3.15–3.17 | Positive coordinate downward; constant g; no drag; stops at impact surface |
 
 These eight records now have \`formulaReferenceStatus=verified\` at formula-provenance level and \`assumptionsStatus=documented\`. They remain separate from numerical implementation verification: independent analytic vectors, real measurements and calibration evidence are not claimed by this tranche.
+
+
+## Third item-level source verification tranche (m9–m15)
+
+The next seven models now carry item-level formula sources and explicit assumptions:
+
+| ID | Experiment | Source locator | Model boundary |
+|---|---|---|---|
+| m9 | Simple harmonic motion | University Physics 1 §15.1 | Ideal undamped sinusoid; angular frequency is entered directly, not derived from a physical spring/mass |
+| m10 | Hooke's-law spring | §§15.1–15.2 | Linear elastic range, signed restoring force −kx; the UI inputs force/extension magnitudes |
+| m11 | Momentum and collisions | §§9.3–9.4 | Closed system with negligible external impulse; readouts are initial-state only, no final-state collision solver |
+| m12 | Work and power | §§7.1 and 7.4 | Constant force parallel to displacement; average power W/t |
+| m13 | Kinetic/potential energy conversion | §§7.2, 8.1 and 8.3 | Uniform g, no air resistance/friction or other non-conservative work |
+| m14 | Newton's second law | §5.3 and §3.4 | Constant net force, constant mass, one-dimensional positive axis |
+| m15 | Projectile range optimization | §4.3 | Fixed launch speed; same-height landing; 45° optimum only without drag |
+
+All seven records now have formula-source status \`verified\` at formula-provenance level and documented assumptions. These citations do not certify the executable implementation or physical prediction. No new analytical reference vectors, calibration records or laboratory datasets are claimed for m9–m15 by this tranche.
