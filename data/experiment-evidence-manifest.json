@@ -74,6 +74,83 @@
       "doi": "10.18434/T4D303",
       "scope": "Compound-specific thermochemical, thermophysical, spectral and ion-energetics reference data.",
       "usageStatus": "candidate_reference_not_item_verified"
+    },
+    "openstax-up-v1-4-3-projectile": {
+      "title": "4.3 Projectile Motion — University Physics Volume 1",
+      "organization": "OpenStax / Rice University",
+      "url": "https://openstax.org/books/university-physics-volume-1/pages/4-3-projectile-motion",
+      "locator": "Section 4.3, equations and examples on horizontal/vertical decomposition, trajectory, flight time, maximum height and range",
+      "scope": "Constant-gravity, no-air-resistance projectile motion; range formula assumes launch and landing at the same elevation."
+    },
+    "openstax-up-v1-15-1-shm": {
+      "title": "15.1 Simple Harmonic Motion — University Physics Volume 1",
+      "organization": "OpenStax / Rice University",
+      "url": "https://openstax.org/books/university-physics-volume-1/pages/15-1-simple-harmonic-motion",
+      "locator": "Section 15.1, Hooke's law and mass-spring simple harmonic motion",
+      "scope": "Linear restoring force and undamped ideal simple harmonic motion."
+    },
+    "openstax-up-v1-15-2-energy-shm": {
+      "title": "15.2 Energy in Simple Harmonic Motion — University Physics Volume 1",
+      "organization": "OpenStax / Rice University",
+      "url": "https://openstax.org/books/university-physics-volume-1/pages/15-2-energy-in-simple-harmonic-motion",
+      "locator": "Section 15.2, elastic potential energy and conservation of total energy for a mass-spring oscillator",
+      "scope": "Ideal conservative Hookean oscillator without dissipative losses."
+    },
+    "openstax-up-v1-15-4-pendulums": {
+      "title": "15.4 Pendulums — University Physics Volume 1",
+      "organization": "OpenStax / Rice University",
+      "url": "https://openstax.org/books/university-physics-volume-1/pages/15-4-pendulums",
+      "locator": "Section 15.4, nonlinear pendulum equation and small-angle approximation; equations 15.17–15.19",
+      "scope": "Simple pendulum; small-angle approximation for the period, with sin(theta) approximately theta for small angular displacement."
+    },
+    "openstax-up-v1-6-2-friction": {
+      "title": "6.2 Friction — University Physics Volume 1",
+      "organization": "OpenStax / Rice University",
+      "url": "https://openstax.org/books/university-physics-volume-1/pages/6-2-friction",
+      "locator": "Section 6.2, static/kinetic friction and friction on an inclined plane (Example 6.11)",
+      "scope": "Empirical approximate friction model; static and kinetic coefficients are distinct physical parameters in the reference."
+    },
+    "openstax-up-v2-9-4-ohms-law": {
+      "title": "9.4 Ohm's Law — University Physics Volume 2",
+      "organization": "OpenStax / Rice University",
+      "url": "https://openstax.org/books/university-physics-volume-2/pages/9-4-ohms-law",
+      "locator": "Section 9.4, V=IR and conditions for ohmic behavior",
+      "scope": "Linear current-voltage relation for ohmic materials/components; not all devices are ohmic."
+    },
+    "openstax-up-v2-9-5-electrical-power": {
+      "title": "9.5 Electrical Energy and Power — University Physics Volume 2",
+      "organization": "OpenStax / Rice University",
+      "url": "https://openstax.org/books/university-physics-volume-2/pages/9-5-electrical-energy-and-power",
+      "locator": "Section 9.5, equations 9.12–9.13 for P=IV=I²R=V²/R",
+      "scope": "Electrical power transfer and dissipation in a resistor."
+    },
+    "openstax-up-v2-2-1-ideal-gas": {
+      "title": "2.1 Molecular Model of an Ideal Gas — University Physics Volume 2",
+      "organization": "OpenStax / Rice University",
+      "url": "https://openstax.org/books/university-physics-volume-2/pages/2-1-molecular-model-of-an-ideal-gas",
+      "locator": "Section 2.1, ideal gas law pV=NkBT and pV=nRT",
+      "scope": "Ideal-gas approximation at sufficiently low density or sufficiently high temperature away from liquefaction."
+    },
+    "openstax-up-v2-2-2-rms-speed": {
+      "title": "2.2 Pressure, Temperature, and RMS Speed — University Physics Volume 2",
+      "organization": "OpenStax / Rice University",
+      "url": "https://openstax.org/books/university-physics-volume-2/pages/2-2-pressure-temperature-and-rms-speed",
+      "locator": "Section 2.2, equations 2.6, 2.8 and 2.9 for average translational kinetic energy and RMS speed",
+      "scope": "Kinetic-theory ideal-gas assumptions include large molecule count, isotropic random motion, negligible molecular volume and elastic collisions."
+    },
+    "openstax-chem2e-14-7-acid-base-titrations": {
+      "title": "14.7 Acid-Base Titrations — Chemistry 2e",
+      "organization": "OpenStax / Rice University",
+      "url": "https://openstax.org/books/chemistry-2e/pages/14-7-acid-base-titrations",
+      "locator": "Section 14.7, Example 14.21 and Figure 14.18 for strong-acid/strong-base pH across titration stages",
+      "scope": "Stoichiometric strong-acid/strong-base titration with complete dissociation and water autoionization."
+    },
+    "openstax-chem2e-12-5-arrhenius": {
+      "title": "12.5 Collision Theory — Chemistry 2e",
+      "organization": "OpenStax / Rice University",
+      "url": "https://openstax.org/books/chemistry-2e/pages/12-5-collision-theory",
+      "locator": "Section 12.5, Arrhenius equation, linearized form and two-temperature form",
+      "scope": "Empirical Arrhenius dependence of rate constant on activation energy and absolute temperature; frequency factor depends on reaction."
     }
   },
   "experiments": [
@@ -120,15 +197,29 @@
         }
       ],
       "scientificEvidence": {
-        "formulaReferenceStatus": "not_yet_item_verified",
+        "formulaReferenceStatus": "verified",
         "candidateReferences": [
-          "openstax-university-physics-v1"
+          "openstax-university-physics-v1",
+          "openstax-up-v1-4-3-projectile"
         ],
-        "itemLevelCitations": [],
-        "assumptionsStatus": "not_structured",
-        "declaredAssumptions": [],
+        "itemLevelCitations": [
+          {
+            "sourceId": "openstax-up-v1-4-3-projectile",
+            "locator": "Section 4.3; horizontal and vertical components, trajectory equation, maximum height and same-level range",
+            "formulaCoverage": "x=v0 cos(theta)t; y=v0 sin(theta)t−(1/2)gt²; H=v0²sin²(theta)/(2g); T=2v0sin(theta)/g; R=v0²sin(2theta)/g",
+            "limitations": "Range and full-flight-time expressions assume return to launch elevation; no air resistance or wind."
+          }
+        ],
+        "assumptionsStatus": "documented",
+        "declaredAssumptions": [
+          "Gravity is constant and acts vertically downward.",
+          "Air resistance, wind, buoyancy and spin are neglected.",
+          "Horizontal and vertical motions are independent; horizontal acceleration is zero.",
+          "The displayed range and total flight-time formulas assume landing at the launch elevation; the current parameterization models launch and landing at the same ground level."
+        ],
         "independentBenchmarkStatus": "not_supplied",
-        "measuredDatasetStatus": "not_supplied"
+        "measuredDatasetStatus": "not_supplied",
+        "verificationScope": "formula_provenance_only_not_software_or_experimental_validation"
       },
       "softwareValidation": {
         "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
@@ -178,15 +269,37 @@
         }
       ],
       "scientificEvidence": {
-        "formulaReferenceStatus": "not_yet_item_verified",
+        "formulaReferenceStatus": "partially_verified",
         "candidateReferences": [
-          "openstax-university-physics-v1"
+          "openstax-university-physics-v1",
+          "openstax-up-v1-15-4-pendulums",
+          "openstax-up-v1-15-1-shm"
         ],
-        "itemLevelCitations": [],
-        "assumptionsStatus": "not_structured",
-        "declaredAssumptions": [],
+        "itemLevelCitations": [
+          {
+            "sourceId": "openstax-up-v1-15-4-pendulums",
+            "locator": "Section 15.4, nonlinear pendulum equation and equations 15.17–15.19",
+            "formulaCoverage": "The gravity restoring term −(g/L)sin(theta), small-angle approximation and undamped T0=2pi sqrt(L/g), omega0=sqrt(g/L)",
+            "limitations": "The reference section does not validate the prototype's added linear angular-velocity damping term −b theta-dot or its fitted/numerical behavior."
+          },
+          {
+            "sourceId": "openstax-up-v1-15-1-shm",
+            "locator": "Section 15.1, simple harmonic motion and linear restoring-force discussion",
+            "formulaCoverage": "Small-angle linearization as a harmonic oscillator",
+            "limitations": "General SHM material is not a calibration or validation source for the nonlinear damped pendulum implementation."
+          }
+        ],
+        "assumptionsStatus": "documented",
+        "declaredAssumptions": [
+          "The bob is treated as a point mass on a massless, inextensible rod/string of fixed length with a frictionless pivot.",
+          "The gravity torque is represented by the exact nonlinear sin(theta) term.",
+          "Damping is represented phenomenologically as a linear angular-velocity term b times theta-dot; b is not calibrated to a physical pendulum.",
+          "The displayed T0 and omega0 are explicitly undamped small-angle reference quantities; they are not the damped nonlinear animation period.",
+          "The integrator is a numerical fourth-order Runge-Kutta scheme with bounded internal time steps."
+        ],
         "independentBenchmarkStatus": "not_supplied",
-        "measuredDatasetStatus": "not_supplied"
+        "measuredDatasetStatus": "not_supplied",
+        "verificationScope": "formula_provenance_partial_damping_extension_not_independently_validated"
       },
       "softwareValidation": {
         "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
@@ -226,15 +339,36 @@
         }
       ],
       "scientificEvidence": {
-        "formulaReferenceStatus": "not_yet_item_verified",
+        "formulaReferenceStatus": "verified",
         "candidateReferences": [
-          "openstax-university-physics-v1"
+          "openstax-university-physics-v1",
+          "openstax-up-v1-15-1-shm",
+          "openstax-up-v1-15-2-energy-shm"
         ],
-        "itemLevelCitations": [],
-        "assumptionsStatus": "not_structured",
-        "declaredAssumptions": [],
+        "itemLevelCitations": [
+          {
+            "sourceId": "openstax-up-v1-15-1-shm",
+            "locator": "Section 15.1, Hooke's law and mass-spring oscillator",
+            "formulaCoverage": "F=−kx; omega=sqrt(k/m); T=2pi sqrt(m/k)",
+            "limitations": "Applies to an ideal linear spring and small enough deformation for Hooke's law."
+          },
+          {
+            "sourceId": "openstax-up-v1-15-2-energy-shm",
+            "locator": "Section 15.2, elastic potential energy and total mechanical energy",
+            "formulaCoverage": "U=(1/2)kx² and E=(1/2)mv²+(1/2)kx²=constant",
+            "limitations": "Conservation applies to the undamped conservative mass-spring system; not to a real oscillator with friction or material hysteresis."
+          }
+        ],
+        "assumptionsStatus": "documented",
+        "declaredAssumptions": [
+          "The spring obeys a linear Hooke's-law force over the full declared displacement range.",
+          "The oscillator is one-dimensional with fixed mass and spring constant.",
+          "Damping, friction, air resistance and spring mass are neglected.",
+          "Total mechanical energy remains constant only under the conservative idealization."
+        ],
         "independentBenchmarkStatus": "not_supplied",
-        "measuredDatasetStatus": "not_supplied"
+        "measuredDatasetStatus": "not_supplied",
+        "verificationScope": "formula_provenance_only_not_software_or_experimental_validation"
       },
       "softwareValidation": {
         "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
@@ -274,15 +408,36 @@
         }
       ],
       "scientificEvidence": {
-        "formulaReferenceStatus": "not_yet_item_verified",
+        "formulaReferenceStatus": "verified",
         "candidateReferences": [
-          "openstax-university-physics-v2"
+          "openstax-university-physics-v2",
+          "openstax-up-v2-9-4-ohms-law",
+          "openstax-up-v2-9-5-electrical-power"
         ],
-        "itemLevelCitations": [],
-        "assumptionsStatus": "not_structured",
-        "declaredAssumptions": [],
+        "itemLevelCitations": [
+          {
+            "sourceId": "openstax-up-v2-9-4-ohms-law",
+            "locator": "Section 9.4, Ohm's law V=IR and ohmic-material discussion",
+            "formulaCoverage": "I=U/R for a resistor with a linear current-voltage relation",
+            "limitations": "Ohm's law is not universal; resistance can vary with temperature and device operating point."
+          },
+          {
+            "sourceId": "openstax-up-v2-9-5-electrical-power",
+            "locator": "Section 9.5, equations 9.12–9.13",
+            "formulaCoverage": "P=IV=I²R=V²/R; heat/energy over a fixed time follows E=Pt for constant power",
+            "limitations": "The model holds R constant and therefore does not model temperature-dependent resistance or thermal feedback."
+          }
+        ],
+        "assumptionsStatus": "documented",
+        "declaredAssumptions": [
+          "The circuit is a DC ideal voltage source in series with a fixed ohmic resistor.",
+          "Resistance remains constant over the modeled operating range; self-heating does not feed back into resistance.",
+          "The readout's one-minute heat is P multiplied by 60 seconds at constant power.",
+          "The particle-flow animation is illustrative and is not a microscopic charge-transport simulation."
+        ],
         "independentBenchmarkStatus": "not_supplied",
-        "measuredDatasetStatus": "not_supplied"
+        "measuredDatasetStatus": "not_supplied",
+        "verificationScope": "formula_provenance_only_not_software_or_experimental_validation"
       },
       "softwareValidation": {
         "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
@@ -332,15 +487,30 @@
         }
       ],
       "scientificEvidence": {
-        "formulaReferenceStatus": "not_yet_item_verified",
+        "formulaReferenceStatus": "partially_verified",
         "candidateReferences": [
-          "openstax-university-physics-v1"
+          "openstax-university-physics-v1",
+          "openstax-up-v1-6-2-friction"
         ],
-        "itemLevelCitations": [],
-        "assumptionsStatus": "not_structured",
-        "declaredAssumptions": [],
+        "itemLevelCitations": [
+          {
+            "sourceId": "openstax-up-v1-6-2-friction",
+            "locator": "Section 6.2, static/kinetic friction on an inclined plane and Example 6.11",
+            "formulaCoverage": "Normal force mg cos(theta), downslope gravity mg sin(theta), and kinetic-friction magnitude fk=mu_k N",
+            "limitations": "The reference treats static and kinetic coefficients as distinct; the prototype uses one shared mu for both the slip threshold and sliding friction, which is a deliberate simplifying assumption rather than a fully validated friction law."
+          }
+        ],
+        "assumptionsStatus": "documented",
+        "declaredAssumptions": [
+          "The incline is rigid and planar, with constant gravitational acceleration.",
+          "The object is treated as a rigid body with no rotation or rolling.",
+          "Air resistance, vibration and contact compliance are neglected.",
+          "A single coefficient mu is used for both the static slip threshold and kinetic friction; real contacts generally require distinct mu_s and mu_k values.",
+          "The kinetic-friction law is an empirical approximation, not a universal material law."
+        ],
         "independentBenchmarkStatus": "not_supplied",
-        "measuredDatasetStatus": "not_supplied"
+        "measuredDatasetStatus": "not_supplied",
+        "verificationScope": "formula_provenance_partial_shared_static_kinetic_coefficient_simplification"
       },
       "softwareValidation": {
         "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
@@ -390,16 +560,44 @@
         }
       ],
       "scientificEvidence": {
-        "formulaReferenceStatus": "not_yet_item_verified",
+        "formulaReferenceStatus": "verified",
         "candidateReferences": [
           "openstax-university-physics-v1",
-          "nist-codata-2022"
+          "nist-codata-2022",
+          "openstax-up-v2-2-1-ideal-gas",
+          "openstax-up-v2-2-2-rms-speed"
         ],
-        "itemLevelCitations": [],
-        "assumptionsStatus": "not_structured",
-        "declaredAssumptions": [],
+        "itemLevelCitations": [
+          {
+            "sourceId": "openstax-up-v2-2-1-ideal-gas",
+            "locator": "Section 2.1, equation 2.1 and mole-form ideal gas law",
+            "formulaCoverage": "pV=NkBT and pV=nRT",
+            "limitations": "Ideal-gas behavior requires sufficiently low density or sufficiently high temperature away from liquefaction."
+          },
+          {
+            "sourceId": "openstax-up-v2-2-2-rms-speed",
+            "locator": "Section 2.2, equations 2.6, 2.8 and 2.9",
+            "formulaCoverage": "average translational kinetic energy=(3/2)kBT and vrms=sqrt(3RT/M)",
+            "limitations": "RMS speed depends on the selected molar mass; the prototype uses a fixed approximate dry-air molar mass of 0.02897 kg/mol."
+          },
+          {
+            "sourceId": "nist-codata-2022",
+            "locator": "CODATA 2022 recommended value for the Boltzmann constant",
+            "formulaCoverage": "Exact SI value kB=1.380649×10^-23 J/K used by the molecular-energy calculation",
+            "limitations": "This constant does not validate the ideal-gas approximation or the air molar-mass choice."
+          }
+        ],
+        "assumptionsStatus": "documented",
+        "declaredAssumptions": [
+          "The thermodynamic calculations use the ideal-gas approximation.",
+          "The average kinetic energy is translational kinetic energy per molecule, not total molecular internal energy including rotations or vibrations.",
+          "The fixed molar mass 0.02897 kg/mol is an approximate dry-air value, not a universal gas parameter.",
+          "The rendered particles are visual markers whose speed is scaled for animation; they do not represent measured molecular trajectories or solve molecular collisions.",
+          "Pressure is calculated using pV=nRT; it is not inferred from counting simulated particle-wall impacts."
+        ],
         "independentBenchmarkStatus": "not_supplied",
-        "measuredDatasetStatus": "not_supplied"
+        "measuredDatasetStatus": "not_supplied",
+        "verificationScope": "formula_provenance_only_not_software_or_experimental_validation"
       },
       "softwareValidation": {
         "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
@@ -449,16 +647,31 @@
         }
       ],
       "scientificEvidence": {
-        "formulaReferenceStatus": "not_yet_item_verified",
+        "formulaReferenceStatus": "verified",
         "candidateReferences": [
           "openstax-chemistry-2e",
-          "iupac-green-book-4e"
+          "iupac-green-book-4e",
+          "openstax-chem2e-14-7-acid-base-titrations"
         ],
-        "itemLevelCitations": [],
-        "assumptionsStatus": "not_structured",
-        "declaredAssumptions": [],
+        "itemLevelCitations": [
+          {
+            "sourceId": "openstax-chem2e-14-7-acid-base-titrations",
+            "locator": "Section 14.7, Example 14.21 and Figure 14.18; strong-acid/strong-base titration",
+            "formulaCoverage": "Stoichiometric excess H+ or OH− concentration after neutralization; pH=−log10[H+]; equivalence point at pH 7 for a strong-acid/strong-base titration",
+            "limitations": "The prototype is limited to a strong-acid/strong-base titration and fixed 25°C water ion-product Kw=10^-14; it is not a weak-acid buffer or polyprotic titration model."
+          }
+        ],
+        "assumptionsStatus": "documented",
+        "declaredAssumptions": [
+          "Both acid and base are treated as strong electrolytes with complete dissociation.",
+          "Neutralization stoichiometry is one mole H+ per mole OH− for the represented monoprotic pair.",
+          "Solution volumes are assumed additive.",
+          "Temperature is fixed at 25°C and Kw=1.0×10^-14.",
+          "Activities are approximated by concentrations; non-ideal activity coefficients and ionic-strength effects are neglected."
+        ],
         "independentBenchmarkStatus": "not_supplied",
-        "measuredDatasetStatus": "not_supplied"
+        "measuredDatasetStatus": "not_supplied",
+        "verificationScope": "formula_provenance_only_not_software_or_experimental_validation"
       },
       "softwareValidation": {
         "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
@@ -498,16 +711,31 @@
         }
       ],
       "scientificEvidence": {
-        "formulaReferenceStatus": "not_yet_item_verified",
+        "formulaReferenceStatus": "verified",
         "candidateReferences": [
           "openstax-chemistry-2e",
-          "iupac-green-book-4e"
+          "iupac-green-book-4e",
+          "openstax-chem2e-12-5-arrhenius"
         ],
-        "itemLevelCitations": [],
-        "assumptionsStatus": "not_structured",
-        "declaredAssumptions": [],
+        "itemLevelCitations": [
+          {
+            "sourceId": "openstax-chem2e-12-5-arrhenius",
+            "locator": "Section 12.5, Arrhenius equation and two-temperature form",
+            "formulaCoverage": "k=A exp(−Ea/RT), with activation energy in J/mol, gas constant in J/(mol·K) and absolute temperature in kelvin",
+            "limitations": "The prototype's A=1 s^-1 and Ea values of 70/40 kJ mol^-1 are illustrative model settings, not experimentally fitted parameters; reaction-specific mechanism and rate law are not established."
+          }
+        ],
+        "assumptionsStatus": "documented",
+        "declaredAssumptions": [
+          "The rate constant follows a single Arrhenius expression over the represented temperature interval.",
+          "The pre-exponential factor is fixed at A=1 s^-1 for an illustrative first-order model, not fitted from experimental data.",
+          "Activation energies 70 kJ/mol without catalyst and 40 kJ/mol with catalyst are illustrative chosen values, not measured or literature-derived for a named reaction.",
+          "The rate law v=kc is first-order in the represented concentration; no reaction mechanism or concentration-dependent activity coefficient is modeled.",
+          "The animation's collision flashes are visual heuristics, not stochastic collision kinetics or measured reaction events."
+        ],
         "independentBenchmarkStatus": "not_supplied",
-        "measuredDatasetStatus": "not_supplied"
+        "measuredDatasetStatus": "not_supplied",
+        "verificationScope": "formula_provenance_only_illustrative_parameters_not_calibrated"
       },
       "softwareValidation": {
         "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
@@ -5964,5 +6192,13 @@
       }
     ],
     "reviewNote": "43 previously blank unit fields now have explicit SI/derived or dimensionless labels. Two fields remain pending because this prototype does not establish a physical unit for their scale parameters."
-  }
+  },
+  "auditHistory": [
+    {
+      "date": "2026-11-17",
+      "change": "First exact item-level formula-source tranche for the eight flagship experiments.",
+      "status": "6 formula records verified against item-level OpenStax/NIST sources; 2 partially verified due to implementation-specific simplifications/extensions.",
+      "note": "Formula provenance does not certify implementation correctness, model parameter calibration, predictive validity, safety, or experimental agreement."
+    }
+  ]
 }
