@@ -221,6 +221,13 @@
       "url": "https://openstax.org/books/university-physics-volume-1/pages/9-4-types-of-collisions",
       "locator": "Section 9.4, elastic/inelastic/perfectly inelastic collision discussion and one-dimensional two-body equations",
       "scope": "Momentum is conserved for a closed collision system; kinetic energy is conserved only in elastic collisions. Perfectly inelastic objects stick together."
+    },
+    "openstax-up-v1-5-3-newtons-second-law": {
+      "title": "5.3 Newton's Second Law — University Physics Volume 1",
+      "organization": "OpenStax / Rice University",
+      "url": "https://openstax.org/books/university-physics-volume-1/pages/5-3-newtons-second-law",
+      "locator": "Section 5.3, equations 5.3–5.4; vector form ΣF=ma and scalar form Fnet=ma",
+      "scope": "Newton's second law relates the net external force to acceleration for a system of constant mass; the force must be the net external force, not one isolated applied force."
     }
   },
   "experiments": [
