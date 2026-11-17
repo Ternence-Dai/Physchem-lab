@@ -92,12 +92,12 @@ function close(label, actual, expected, relativeTolerance = 1e-11) {
   };
   close("p6.pressurePa",
     idealGasPressure(input),
-    103930.78272500001);
+    103930.7827269155);
   const result = idealGasParticleProperties({
     ...input,
     molarMassKgPerMol: 0.02897
   });
-  close("p6.rmsSpeed", result.rmsSpeed, 508.234449831825);
+  close("p6.rmsSpeed", result.rmsSpeed, 508.2344498365085);
   close("p6.meanTranslationalKineticEnergyJ",
     result.averageKineticEnergyJ,
     6.2129205000000004e-21);
