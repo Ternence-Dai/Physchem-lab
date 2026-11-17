@@ -127,7 +127,7 @@ assert.equal(manifest.schemaVersion, '1.0.0');
 assert.equal(manifest.auditType, 'experiment_evidence_inventory');
 assert.equal(manifest.sourceCatalogue.path, cataloguePath);
 const actualGitBlobSha = crypto.createHash('sha1')
-  .update('blob ' + Buffer.byteLength(source, 'utf8') + '\\0')
+  .update('blob ' + Buffer.byteLength(source, 'utf8') + '\0')
   .update(source, 'utf8').digest('hex');
 assert.equal(manifest.sourceCatalogue.gitBlobSha, actualGitBlobSha,
   'evidence manifest must be regenerated when the catalogue source changes');
