@@ -80,3 +80,19 @@ On 2026-11-17, exact section-level sources were attached to flagship experiments
 The 6 records marked \`verified\` indicate that the represented formula family has an exact textbook/reference locator. They do **not** mean that the executable code, numerical parameter values, uncertainty, or physical prediction has been independently validated. p2 and p5 remain partially verified because their implementation adds or simplifies behavior not validated by the cited formula.
 
 The 8 records all include explicit model assumptions. No independent experimental dataset or benchmark tolerance is supplied by this source tranche. Those states remain \`not_supplied\`; this prevents a source citation from being mistaken for validation data.
+
+
+## Closed-form analytical reference vectors for p1–p8
+
+A second validation layer now accompanies the formula citations. The new \`scripts/validate-flagship-reference-vectors.mjs\` computes fixed input cases and compares the domain implementation to independently evaluated closed-form reference values:
+
+- p1 projectile: velocity components, flight time, same-elevation range and maximum height.
+- p2 pendulum: the undamped small-angle reference period only; it does not claim to validate the damped nonlinear animation integrator.
+- p3 spring oscillator: angular frequency, period, acceleration, kinetic energy, elastic potential and total energy.
+- p4 Ohm's law: current, power and constant-power heat over one minute.
+- p5 inclined plane: normal force, gravity component, simplified friction force and acceleration; the single shared friction coefficient is explicitly part of the prototype model assumption.
+- p6 ideal gas: ideal-gas pressure, dry-air RMS speed, mean translational kinetic energy and number density.
+- p7 strong-acid/strong-base titration: excess-acid pH and the equivalence-point pH at 25 °C.
+- p8 Arrhenius: one rate-constant vector with illustrative, non-fitted prefactor and activation-energy inputs.
+
+The manifest records the exact tested output field, expected value, relative tolerance, source and equation locator for every vector. These are analytical equation-regression checks only. They do not count as laboratory measurements, parameter calibration, uncertainty quantification, or proof of predictive validity for a physical experiment.
