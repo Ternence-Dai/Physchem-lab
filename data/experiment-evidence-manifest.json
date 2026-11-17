@@ -172,6 +172,55 @@
       "url": "https://openstax.org/books/university-physics-volume-1/pages/4-4-uniform-and-nonuniform-circular-motion",
       "locator": "Section 4.4, equations 4.27–4.30; centripetal acceleration and angular-frequency description",
       "scope": "Uniform circular motion at constant speed; acceleration points radially inward. The centripetal force is the net inward force, not an additional independent force."
+    },
+    "openstax-up-v1-7-1-work": {
+      "title": "7.1 Work — University Physics Volume 1",
+      "organization": "OpenStax / Rice University",
+      "url": "https://openstax.org/books/university-physics-volume-1/pages/7-1-work",
+      "locator": "Section 7.1, equations 7.1–7.2; constant-force work W=F·d=Fd cos(theta)",
+      "scope": "Work depends on the displacement component parallel to the force. The prototype has no angle parameter and therefore assumes force and displacement are parallel."
+    },
+    "openstax-up-v1-7-2-kinetic-energy": {
+      "title": "7.2 Kinetic Energy — University Physics Volume 1",
+      "organization": "OpenStax / Rice University",
+      "url": "https://openstax.org/books/university-physics-volume-1/pages/7-2-kinetic-energy",
+      "locator": "Section 7.2, equations 7.6–7.7; non-relativistic kinetic energy K=(1/2)mv²",
+      "scope": "Classical, non-relativistic particle speeds; kinetic energy depends on the selected reference frame."
+    },
+    "openstax-up-v1-7-4-power": {
+      "title": "7.4 Power — University Physics Volume 1",
+      "organization": "OpenStax / Rice University",
+      "url": "https://openstax.org/books/university-physics-volume-1/pages/7-4-power",
+      "locator": "Section 7.4, equations 7.10–7.11; average power ΔW/Δt and instantaneous power dW/dt",
+      "scope": "For constant power, W=PΔt. The vector relation P=F·v is reduced to Fv when force and velocity are parallel."
+    },
+    "openstax-up-v1-8-1-potential-energy": {
+      "title": "8.1 Potential Energy of a System — University Physics Volume 1",
+      "organization": "OpenStax / Rice University",
+      "url": "https://openstax.org/books/university-physics-volume-1/pages/8-1-potential-energy-of-a-system",
+      "locator": "Section 8.1, equations 8.4–8.5; gravitational potential energy near Earth's surface U=mgy+constant",
+      "scope": "Uniform gravitational field near Earth's surface; potential-energy zero is a freely chosen reference."
+    },
+    "openstax-up-v1-8-3-conservation-energy": {
+      "title": "8.3 Conservation of Energy — University Physics Volume 1",
+      "organization": "OpenStax / Rice University",
+      "url": "https://openstax.org/books/university-physics-volume-1/pages/8-3-conservation-of-energy",
+      "locator": "Section 8.3, equations 8.12–8.13; mechanical energy conservation when non-conservative work is zero",
+      "scope": "Mechanical energy K+U is conserved only when non-conservative forces do no work; friction and air resistance must otherwise be accounted for."
+    },
+    "openstax-up-v1-9-3-momentum": {
+      "title": "9.3 Conservation of Linear Momentum — University Physics Volume 1",
+      "organization": "OpenStax / Rice University",
+      "url": "https://openstax.org/books/university-physics-volume-1/pages/9-3-conservation-of-linear-momentum",
+      "locator": "Section 9.3, conservation of total momentum for a closed/isolated system with zero net external force",
+      "scope": "System momentum is conserved only when the system is closed and net external force is zero over the interaction."
+    },
+    "openstax-up-v1-9-4-collisions": {
+      "title": "9.4 Types of Collisions — University Physics Volume 1",
+      "organization": "OpenStax / Rice University",
+      "url": "https://openstax.org/books/university-physics-volume-1/pages/9-4-types-of-collisions",
+      "locator": "Section 9.4, elastic/inelastic/perfectly inelastic collision discussion and one-dimensional two-body equations",
+      "scope": "Momentum is conserved for a closed collision system; kinetic energy is conserved only in elastic collisions. Perfectly inelastic objects stick together."
     }
   },
   "experiments": [
@@ -1552,15 +1601,30 @@
         }
       ],
       "scientificEvidence": {
-        "formulaReferenceStatus": "not_yet_item_verified",
+        "formulaReferenceStatus": "verified",
         "candidateReferences": [
-          "openstax-university-physics-v1"
+          "openstax-university-physics-v1",
+          "openstax-up-v1-15-1-shm"
         ],
-        "itemLevelCitations": [],
-        "assumptionsStatus": "not_structured",
-        "declaredAssumptions": [],
+        "itemLevelCitations": [
+          {
+            "sourceId": "openstax-up-v1-15-1-shm",
+            "locator": "§15.1, simple harmonic motion definitions and sinusoidal mass-spring solution; x=A sin(ωt+φ), v and a are its derivatives",
+            "formulaCoverage": "x=A sin(ωt); v=Aω cos(ωt); a=−Aω² sin(ωt); T=2π/ω",
+            "limitations": "The cited section's mass-spring example is undamped and ideal. The prototype accepts ω directly and does not model a specific mass, spring, forcing function, or damping coefficient."
+          }
+        ],
+        "assumptionsStatus": "documented",
+        "declaredAssumptions": [
+          "The motion is ideal one-dimensional simple harmonic motion with a fixed angular frequency and fixed amplitude.",
+          "The phase is set to zero by the implementation, so the initial state is x=0 and positive maximum velocity.",
+          "The model assumes no damping, friction, external forcing or change in amplitude.",
+          "The angular frequency is a user-supplied parameter and is not derived from a physical mass and spring constant in this experiment.",
+          "The sinusoidal position animation and readouts are kinematic outputs, not measured oscillation data."
+        ],
         "independentBenchmarkStatus": "not_supplied",
-        "measuredDatasetStatus": "not_supplied"
+        "measuredDatasetStatus": "not_supplied",
+        "verificationScope": "formula_provenance_only_not_software_or_experimental_validation"
       },
       "softwareValidation": {
         "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
@@ -1600,15 +1664,37 @@
         }
       ],
       "scientificEvidence": {
-        "formulaReferenceStatus": "not_yet_item_verified",
+        "formulaReferenceStatus": "verified",
         "candidateReferences": [
-          "openstax-university-physics-v1"
+          "openstax-university-physics-v1",
+          "openstax-up-v1-15-1-shm",
+          "openstax-up-v1-15-2-energy-shm"
         ],
-        "itemLevelCitations": [],
-        "assumptionsStatus": "not_structured",
-        "declaredAssumptions": [],
+        "itemLevelCitations": [
+          {
+            "sourceId": "openstax-up-v1-15-1-shm",
+            "locator": "§15.1, Hooke's law Fs=−kx for an ideal spring and linear restoring force",
+            "formulaCoverage": "Magnitude relation F=kx and linear spring stiffness k",
+            "limitations": "The spring force is restoring and signed as −kx. The prototype displays applied force and extension magnitudes, and assumes linear response within the spring's elastic range."
+          },
+          {
+            "sourceId": "openstax-up-v1-15-2-energy-shm",
+            "locator": "§15.2, elastic spring potential energy U=(1/2)kx²",
+            "formulaCoverage": "Elastic potential energy E=½kx² when x=F/k",
+            "limitations": "Energy expression applies to an ideal conservative Hookean spring; hysteresis, damping, permanent deformation and spring mass are not modeled."
+          }
+        ],
+        "assumptionsStatus": "documented",
+        "declaredAssumptions": [
+          "The spring force is linear with extension or compression over the full displayed parameter range.",
+          "The input F is the magnitude of the applied force and x=F/k is a static extension magnitude; the signed restoring spring force is −kx.",
+          "The spring remains within its elastic/Hookean limit; yielding, plastic deformation, coil contact and fatigue are not modeled.",
+          "The elastic energy calculation assumes an ideal conservative spring with zero energy at the unstretched reference position.",
+          "The animation is a visual illustration and does not numerically integrate a mass-spring transient."
+        ],
         "independentBenchmarkStatus": "not_supplied",
-        "measuredDatasetStatus": "not_supplied"
+        "measuredDatasetStatus": "not_supplied",
+        "verificationScope": "formula_provenance_only_not_software_or_experimental_validation"
       },
       "softwareValidation": {
         "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
@@ -1668,15 +1754,37 @@
         }
       ],
       "scientificEvidence": {
-        "formulaReferenceStatus": "not_yet_item_verified",
+        "formulaReferenceStatus": "verified",
         "candidateReferences": [
-          "openstax-university-physics-v1"
+          "openstax-university-physics-v1",
+          "openstax-up-v1-9-3-momentum",
+          "openstax-up-v1-9-4-collisions"
         ],
-        "itemLevelCitations": [],
-        "assumptionsStatus": "not_structured",
-        "declaredAssumptions": [],
+        "itemLevelCitations": [
+          {
+            "sourceId": "openstax-up-v1-9-3-momentum",
+            "locator": "§9.3, law of conservation of momentum for a closed system with zero net external force",
+            "formulaCoverage": "Total momentum p=m1v1+m2v2 remains constant for the isolated two-body system",
+            "limitations": "The experiment reports initial total momentum and center-of-mass velocity; it does not solve a collision trajectory or final individual velocities."
+          },
+          {
+            "sourceId": "openstax-up-v1-9-4-collisions",
+            "locator": "§9.4, elastic collision discussion and perfectly inelastic common-velocity result",
+            "formulaCoverage": "Elastic collisions also conserve kinetic energy; perfectly inelastic collision common final velocity is total initial momentum divided by total mass",
+            "limitations": "The catalogue's displayed perfectly inelastic formula is a reference relation only. Its animation and readout do not calculate post-collision velocities or a coefficient of restitution."
+          }
+        ],
+        "assumptionsStatus": "documented",
+        "declaredAssumptions": [
+          "The two-body system is one-dimensional; velocities are signed along a common axis.",
+          "Total momentum conservation assumes the pair forms a closed system with negligible net external impulse during the collision interval.",
+          "The readout computes initial total momentum, initial kinetic energy, total mass and center-of-mass velocity only.",
+          "The displayed elastic and perfectly inelastic formulas are explanatory reference cases; no final-state solver is implemented in this experiment.",
+          "Momentum conservation applies to elastic and inelastic collisions, but kinetic energy is conserved only in the elastic case."
+        ],
         "independentBenchmarkStatus": "not_supplied",
-        "measuredDatasetStatus": "not_supplied"
+        "measuredDatasetStatus": "not_supplied",
+        "verificationScope": "formula_provenance_only_collision_final_state_not_implemented"
       },
       "softwareValidation": {
         "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
@@ -1726,15 +1834,37 @@
         }
       ],
       "scientificEvidence": {
-        "formulaReferenceStatus": "not_yet_item_verified",
+        "formulaReferenceStatus": "verified",
         "candidateReferences": [
-          "openstax-university-physics-v1"
+          "openstax-university-physics-v1",
+          "openstax-up-v1-7-1-work",
+          "openstax-up-v1-7-4-power"
         ],
-        "itemLevelCitations": [],
-        "assumptionsStatus": "not_structured",
-        "declaredAssumptions": [],
+        "itemLevelCitations": [
+          {
+            "sourceId": "openstax-up-v1-7-1-work",
+            "locator": "§7.1, equations 7.1–7.2; constant-force work W=F·d=Fd cos(theta)",
+            "formulaCoverage": "W=F·s for the model's force-parallel-to-displacement assumption",
+            "limitations": "The general equation includes cos(theta); the catalogue has no force angle parameter and does not model negative or perpendicular work."
+          },
+          {
+            "sourceId": "openstax-up-v1-7-4-power",
+            "locator": "§7.4, equations 7.10–7.11; average power ΔW/Δt and instantaneous power dW/dt",
+            "formulaCoverage": "Average power P=W/t and the parallel-force relation P=Fv",
+            "limitations": "The model reports a time-averaged power from a fixed total work and duration; it does not model time-varying force, speed or instantaneous power fluctuations."
+          }
+        ],
+        "assumptionsStatus": "documented",
+        "declaredAssumptions": [
+          "The applied force is constant and parallel to the displacement, so W=Fs rather than the general W=Fs cos(theta).",
+          "The displacement is a straight-line distance along the positive force direction.",
+          "Power is average power W/t over the selected interval; it equals instantaneous power only under constant power conditions.",
+          "The average velocity s/t is used as a scalar speed; direction changes and nonuniform motion are not modeled.",
+          "The example contains no explicit object mass, friction, efficiency loss or motor/drive dynamics."
+        ],
         "independentBenchmarkStatus": "not_supplied",
-        "measuredDatasetStatus": "not_supplied"
+        "measuredDatasetStatus": "not_supplied",
+        "verificationScope": "formula_provenance_only_not_software_or_experimental_validation"
       },
       "softwareValidation": {
         "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
@@ -1784,15 +1914,44 @@
         }
       ],
       "scientificEvidence": {
-        "formulaReferenceStatus": "not_yet_item_verified",
+        "formulaReferenceStatus": "verified",
         "candidateReferences": [
-          "openstax-university-physics-v1"
+          "openstax-university-physics-v1",
+          "openstax-up-v1-7-2-kinetic-energy",
+          "openstax-up-v1-8-1-potential-energy",
+          "openstax-up-v1-8-3-conservation-energy"
         ],
-        "itemLevelCitations": [],
-        "assumptionsStatus": "not_structured",
-        "declaredAssumptions": [],
+        "itemLevelCitations": [
+          {
+            "sourceId": "openstax-up-v1-7-2-kinetic-energy",
+            "locator": "§7.2, equation 7.6; non-relativistic kinetic energy K=½mv²",
+            "formulaCoverage": "Ek=½mv²",
+            "limitations": "Classical non-relativistic speeds; kinetic energy is reference-frame dependent."
+          },
+          {
+            "sourceId": "openstax-up-v1-8-1-potential-energy",
+            "locator": "§8.1, equations 8.4–8.5; gravitational potential energy near Earth's surface U=mgy+constant",
+            "formulaCoverage": "Ep=mgh using a chosen zero-height reference",
+            "limitations": "Assumes a uniform gravitational field near Earth's surface; potential-energy zero is arbitrary."
+          },
+          {
+            "sourceId": "openstax-up-v1-8-3-conservation-energy",
+            "locator": "§8.3, equations 8.12–8.13; no non-conservative work",
+            "formulaCoverage": "K+U is constant when friction and air resistance do no work",
+            "limitations": "Mechanical energy is not conserved if non-conservative forces do work; the model neglects such losses."
+          }
+        ],
+        "assumptionsStatus": "documented",
+        "declaredAssumptions": [
+          "The object starts from rest at height h above the selected zero-potential reference.",
+          "Gravity is uniform and constant over the vertical drop.",
+          "Air resistance, friction, deformation, sound and other non-conservative energy transfers are neglected.",
+          "The model assumes all initial gravitational potential energy is converted to translational kinetic energy at the lowest point.",
+          "The animation time scaling is illustrative; it is not a physical time-resolved measurement."
+        ],
         "independentBenchmarkStatus": "not_supplied",
-        "measuredDatasetStatus": "not_supplied"
+        "measuredDatasetStatus": "not_supplied",
+        "verificationScope": "formula_provenance_only_not_software_or_experimental_validation"
       },
       "softwareValidation": {
         "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
@@ -1842,15 +2001,37 @@
         }
       ],
       "scientificEvidence": {
-        "formulaReferenceStatus": "not_yet_item_verified",
+        "formulaReferenceStatus": "verified",
         "candidateReferences": [
-          "openstax-university-physics-v1"
+          "openstax-university-physics-v1",
+          "openstax-up-v1-5-3-newtons-second-law",
+          "openstax-up-v1-3-4-constant-acceleration"
         ],
-        "itemLevelCitations": [],
-        "assumptionsStatus": "not_structured",
-        "declaredAssumptions": [],
+        "itemLevelCitations": [
+          {
+            "sourceId": "openstax-up-v1-5-3-newtons-second-law",
+            "locator": "§5.3, equations 5.3–5.4; vector form ΣF=ma and scalar form Fnet=ma",
+            "formulaCoverage": "a=Fnet/m; constant-acceleration kinematics v=v0+at and x=v0t+½at²",
+            "limitations": "The experiment treats F as a constant net force aligned with a one-dimensional positive axis; force components and changing forces are not modeled."
+          },
+          {
+            "sourceId": "openstax-up-v1-3-4-constant-acceleration",
+            "locator": "§3.4, equations 3.12–3.14; constant-acceleration kinematic relations",
+            "formulaCoverage": "v=v0+at and x=v0t+½at²",
+            "limitations": "Valid for constant acceleration and a consistent one-dimensional sign convention."
+          }
+        ],
+        "assumptionsStatus": "documented",
+        "declaredAssumptions": [
+          "The input F represents the net external force, not one arbitrarily selected applied force.",
+          "Mass is constant and positive.",
+          "Force is constant in time and aligned with the one-dimensional positive direction.",
+          "Acceleration is constant a=F/m over the full four-second reporting interval.",
+          "The motion model omits friction, drag, changing external forces, rotation and mass loss."
+        ],
         "independentBenchmarkStatus": "not_supplied",
-        "measuredDatasetStatus": "not_supplied"
+        "measuredDatasetStatus": "not_supplied",
+        "verificationScope": "formula_provenance_only_not_software_or_experimental_validation"
       },
       "softwareValidation": {
         "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
@@ -1900,15 +2081,30 @@
         }
       ],
       "scientificEvidence": {
-        "formulaReferenceStatus": "not_yet_item_verified",
+        "formulaReferenceStatus": "verified",
         "candidateReferences": [
-          "openstax-university-physics-v1"
+          "openstax-university-physics-v1",
+          "openstax-up-v1-4-3-projectile"
         ],
-        "itemLevelCitations": [],
-        "assumptionsStatus": "not_structured",
-        "declaredAssumptions": [],
+        "itemLevelCitations": [
+          {
+            "sourceId": "openstax-up-v1-4-3-projectile",
+            "locator": "§4.3, same-level projectile range expression R=v0² sin(2theta)/g and Figure 4.15; maximum range at 45 degrees when air resistance is neglected",
+            "formulaCoverage": "R=v0² sin(2theta)/g; Rmax=v0²/g at theta=45 degrees; complementary launch angles produce equal ranges",
+            "limitations": "The 45-degree maximum and complementary-angle symmetry require launch and impact at the same elevation with negligible air resistance; real drag changes the optimum."
+          }
+        ],
+        "assumptionsStatus": "documented",
+        "declaredAssumptions": [
+          "Launch speed is fixed while launch angle varies.",
+          "The launch and landing elevations are identical, on a level landing plane.",
+          "Gravity is constant and air resistance, wind, spin and lift are neglected.",
+          "The maximum-range angle is 45 degrees only under these same-level and no-drag assumptions.",
+          "The optimization readout compares the current angle with the ideal maximum; it does not search for a maximum under drag or obstacles."
+        ],
         "independentBenchmarkStatus": "not_supplied",
-        "measuredDatasetStatus": "not_supplied"
+        "measuredDatasetStatus": "not_supplied",
+        "verificationScope": "formula_provenance_only_not_software_or_experimental_validation"
       },
       "softwareValidation": {
         "catalogueSmokeCoverage": "catalogue_runtime_domain_checks",
@@ -6564,6 +6760,12 @@
       "change": "Second exact item-level formula source tranche for kinematics experiments m1-m8.",
       "status": "8 formula families mapped to exact OpenStax University Physics Volume 1 sections; 8 model assumption sets documented.",
       "note": "Formula provenance only; no analytical reference vectors or experimental datasets are claimed for m1-m8 by this tranche."
+    },
+    {
+      "date": "2026-11-17",
+      "change": "Third exact item-level source tranche for oscillation, collisions, work/energy and Newtonian dynamics m9-m15.",
+      "status": "7 formula families mapped to OpenStax University Physics Volume 1 sections; 7 item-specific assumption sets documented.",
+      "note": "m11 only reports initial momentum/energy and does not implement a final-state collision solver; m12 assumes force parallel to displacement; m15's 45-degree optimum is same-level/no-drag only."
     }
   ]
 }
