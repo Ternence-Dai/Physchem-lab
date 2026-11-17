@@ -209,6 +209,57 @@ for (const record of declared) {
 assert.equal(declaredIds.size, actualById.size, 'manifest must cover every catalogue model');
 for (const id of actualById.keys()) assert.ok(declaredIds.has(id), 'missing evidence record for ' + id);
 
+// Lock the unit semantics corrected during the catalogue audit. These checks
+// prevent a future catalogue edit from reintroducing blank units or changing
+// an input to an incompatible basis without an explicit reviewed update.
+const expectedUnits = {
+  p2: { b: 's⁻¹' },
+  p5: { mu: '1' },
+  o1: { n1: '1', n2: '1' },
+  o10: { n1: '1', n2: '1' },
+  o11: { n: '1' },
+  e4: { q: '1' },
+  e5: { er: '1' },
+  e6: { n: '1' },
+  e7: { q1: 'μC', q2: 'μC' },
+  ch4: { K: '1', Q: '1' },
+  ch6: { xs: '1' },
+  ch9: { k: '(mol/L)^(1−n)·s⁻¹', n: '1' },
+  ch10: { pKa: '1' },
+  ch11: { Ksp: '(mol/L)²' },
+  ch12: { n: '1', Q: '1' },
+  pt5: { n: '1' },
+  k8: { K: 'mol/L' },
+  k9: { n: '1', Q: '1' },
+  k10: { K: '1' },
+  k11: { n: '1', m: '1', pH: '1' },
+  k13: { A: '1' },
+  k21: { J: '1' },
+  k22: { v: '1' },
+  k25: { z: '1', R: '1' },
+  k32: { k: '(mol/L)^(1−n)·s⁻¹', n: '1' },
+  k33: { Q: '1' },
+  k34: { G: '1' },
+  k36: { Kref: '1' },
+  mv2: { e: '1' },
+  mv5: { sigma: '1', rho: '1', beta: '1' }
+};
+for (const [experimentId, expected] of Object.entries(expectedUnits)) {
+  const record = declared.find(item => item.id === experimentId);
+  assert.ok(record, 'unit contract references missing experiment ' + experimentId);
+  for (const [key, unit] of Object.entries(expected)) {
+    const parameter = record.parameters.find(item => item.key === key);
+    assert.ok(parameter, experimentId + ': unit contract parameter missing: ' + key);
+    assert.equal(parameter.unit, unit, experimentId + '.' + key + ' unit contract drifted');
+  }
+}
+const unresolvedUnitFields = declared.flatMap(item =>
+  item.parameters.filter(parameter => parameter.unitEvidence === 'not_specified_requires_review')
+    .map(parameter => item.id + '.' + parameter.key)
+).sort();
+assert.deepEqual(unresolvedUnitFields, ['k13.k', 'k27.A'],
+  'only the two explicitly unresolved model-scale inputs may remain without unit labels');
+
 const pendingReferences = declared.filter(item =>
   item.scientificEvidence.formulaReferenceStatus !== 'verified').length;
 const pendingAssumptions = declared.filter(item =>
