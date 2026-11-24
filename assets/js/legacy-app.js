@@ -54,7 +54,7 @@ function drawCurve(c,W,H,p,st,g){
 function mkCurve(g){
   return {id:g.id,name:g.name,cat:g.cat,tags:g.tags,brief:g.brief,params:g.p,formulas:g.f,
     resetOnChange:!!g.rc,init:function(){return{t:0};},step:function(p,dt,st){st.t=(st.t||0)+dt;},
-    draw:function(c,W,H,p,st){drawCurve(c,W,H,p,st,g);},readout:g.ro,tutor:g.tt};
+    draw:function(c,W,H,p,st){drawCurve(c,W,H,p,st,g);},readout:g.ro,tutor:g.tt,video:g.mv||null};
 }
 function mkMotion(g){
   return {id:g.id,name:g.name,cat:g.cat,tags:g.tags,brief:g.brief,params:g.p,formulas:g.f,resetOnChange:!!g.rc,
@@ -75,7 +75,7 @@ function mkMotion(g){
       if(g.ex)g.ex(c,W,H,p,st,pt);
       if(g.bd)for(var b=0;b<g.bd.length;b++){var bd=g.bd[b];pl(c,bd.t(p,st),26,22+b*30,bd.bg,bd.fg);}
     },
-    readout:g.ro,tutor:g.tt};
+    readout:g.ro,tutor:g.tt,video:g.mv||null};
 }
 function mkPart(g){
   return {id:g.id,name:g.name,cat:g.cat,tags:g.tags,brief:g.brief,params:g.p,formulas:g.f,resetOnChange:!!g.rc,
@@ -97,7 +97,7 @@ function mkPart(g){
         c.fillStyle='hsl('+hue+',95%,84%)';c.beginPath();c.arc(x,y,pt.r,0,7);c.fill();}
       if(g.bd)for(var b=0;b<g.bd.length;b++){var bd=g.bd[b];pl(c,bd.t(p,st),20,20+b*30,bd.bg,bd.fg);}
     },
-    readout:g.ro,tutor:g.tt};
+    readout:g.ro,tutor:g.tt,video:g.mv||null};
 }
 
 // The catalogue is loaded after this engine file and uses these factories to register models.
@@ -422,6 +422,7 @@ function buildPanel(){
   if(ro.length){h+='<div class="ro">';
     for(var j=0;j<ro.length;j++)h+='<div class="r"><div class="k">'+ro[j].k+'</div><div class="v" id="ro_'+j+'">'+ro[j].v+'</div></div>';
     h+='</div>';}
+  if(cur.video){h+='<div class="mvwrap"><div class="fi">\U0001F3AC 讲解动画(按默认参数渲染)</div><video controls preload="metadata" src="'+cur.video+'" onerror="this.parentNode.remove()" style="width:100%;border-radius:10px;background:#000;margin-top:6px"></video></div>';}
   fb.innerHTML=h;
 }
 function updateRO(){

@@ -32,7 +32,7 @@ EXP.push({id:'p1',name:'抛体运动轨迹',cat:'物理',tags:['力学','运动�
 });
 
 /* 2. 单摆 */
-EXP.push({id:'p2',name:'单摆与简谐振动',cat:'物理',tags:['力学','振动'],brief:'动画按含阻尼的非线性方程演化；读数中的 T₀、f₀、ω₀ 是小角度无阻尼近似量，不是阻尼动画的逐周期测量值。',resetOnChange:true,
+EXP.push({id:'p2',video:'assets/media/p2_pendulum.mp4',name:'单摆与简谐振动',cat:'物理',tags:['力学','振动'],brief:'动画按含阻尼的非线性方程演化；读数中的 T₀、f₀、ω₀ 是小角度无阻尼近似量，不是阻尼动画的逐周期测量值。',resetOnChange:true,
   params:[P('L','摆长 L',0.3,2,0.05,1,'m'),P('g','重力加速度 g',1.6,20,0.1,9.8,'m/s²'),P('b','阻尼系数 b',0,0.6,0.02,0,'s⁻¹')],
   formulas:['θ″=−(g/L)·sinθ−b·θ′','小角度近似 sinθ≈θ','T₀=2π√(L/g)（无阻尼近似）','ω₀=√(g/L)'],
   init:function(){return{th:0.17,w:0,t:0};},
@@ -54,7 +54,7 @@ EXP.push({id:'p2',name:'单摆与简谐振动',cat:'物理',tags:['力学','振�
 });
 
 /* 3. 弹簧振子 */
-EXP.push({id:'p3',name:'弹簧振子与能量转化',cat:'物理',tags:['力学','能量'],brief:'弹性回复力 F=−kx 驱动的简谐振动，动能与弹性势能此消彼长。',resetOnChange:false,
+EXP.push({id:'p3',video:'assets/media/p3_spring_oscillator.mp4',name:'弹簧振子与能量转化',cat:'物理',tags:['力学','能量'],brief:'弹性回复力 F=−kx 驱动的简谐振动，动能与弹性势能此消彼长。',resetOnChange:false,
   params:[P('m','质量 m',0.2,3,0.1,1,'kg'),P('k','劲度系数 k',5,80,1,30,'N/m')],
   formulas:['F=−k·x','a=−(k/m)·x','ω=√(k/m)','T=2π√(m/k)','E=½mv²+½kx²=常数'],
   init:function(){return{x:0.6,v:0,t:0};},
@@ -265,7 +265,7 @@ EXP.push({id:'p8',name:'化学反应速率与活化能',cat:'化学',tags:['动�
 
 /* -------- 力学/运动（15个）-------- */
 var M=[
-{id:'m1',name:'自由落体运动',tags:['力学','重力'],br:'在重力作用下，物体从静止开始的下落运动——伽利略的经典发现。',
+{id:'m1',mv:'assets/media/m1_free_fall.mp4',name:'自由落体运动',tags:['力学','重力'],br:'在重力作用下，物体从静止开始的下落运动——伽利略的经典发现。',
  p:[P('h','初始高度 h',5,100,1,45,'m'),P('g','重力加速度 g',1.6,20,0.1,9.8,'m/s²')],
  f:['v=g·t','h=½g·t²','落地速度 v=√(2gh)','下落时间 t=√(2h/g)'],
  dur:function(p){return Math.sqrt(2*p.h/p.g);},
@@ -274,7 +274,7 @@ var M=[
  ro:function(p){var T=Math.sqrt(2*p.h/p.g);return[{k:'下落时间 t',v:F(T,2)+' s'},{k:'落地速度 v',v:F(p.g*T,1)+' m/s'},{k:'初始高度',v:F(p.h,1)+' m'},{k:'加速度 g',v:F(p.g,1)+' m/s²'},{k:'落地动能(1kg)',v:F(0.5*p.g*p.g*T*T,1)+' J'},{k:'总路程',v:F(p.h,1)+' m'}];},
  tt:function(p){var T=Math.sqrt(2*p.h/p.g);return'【模型】自由落体：初速为零、加速度 g 的匀加速直线运动。\n\n【参数】h='+p.h+' m, g='+p.g+' m/s²\n\n【推演】\n· t=√(2h/g)='+F(T,2)+' s\n· v=g·t='+F(p.g*T,1)+' m/s\n\n【结论】伽利略用斜面"冲淡"重力，证明轻重物体下落加速度相同。真空中羽毛和铁球同时落地！';}},
 
-{id:'m2',name:'竖直上抛运动',tags:['力学','抛体'],br:'竖直上抛是匀减速上升和自由落体下降的组合，最高点速度为零。',
+{id:'m2',mv:'assets/media/m2_vertical_throw.mp4',name:'竖直上抛运动',tags:['力学','抛体'],br:'竖直上抛是匀减速上升和自由落体下降的组合，最高点速度为零。',
  p:[P('v0','初速度 v₀',5,50,1,20,'m/s'),P('g','重力加速度 g',1.6,20,0.1,9.8,'m/s²')],
  f:['v(t)=v₀−g·t','h(t)=v₀·t−½g·t²','上升时间 t=v₀/g','最大高度 H=v₀²/(2g)'],
  dur:function(p){return 2*p.v0/p.g;},
@@ -283,7 +283,7 @@ var M=[
  ro:function(p){var T=p.v0/p.g;return[{k:'上升时间 t',v:F(T,2)+' s'},{k:'最大高度 H',v:F(p.v0*p.v0/(2*p.g),2)+' m'},{k:'总飞行时间',v:F(2*T,2)+' s'},{k:'初速度 v₀',v:p.v0+' m/s'},{k:'落地速度',v:F(p.v0,1)+' m/s'},{k:'重力加速度',v:F(p.g,1)+' m/s²'}];},
  tt:function(p){var T=p.v0/p.g;return'【模型】上升阶段匀减速，下降阶段自由落体。\n\n【参数】v₀='+p.v0+' m/s, g='+p.g+' m/s²\n\n【推演】\n· 上升时间='+F(T,2)+' s\n· 最大高度='+F(p.v0*p.v0/(2*p.g),2)+' m\n· 总飞行时间='+F(2*T,2)+' s\n\n【结论】上升和下降过程完全对称。';}},
 
-{id:'m3',name:'圆周运动与向心力',tags:['力学','圆周'],br:'物体做圆周运动需要指向圆心的向心力 F=mv²/r。',
+{id:'m3',mv:'assets/media/m3_circular_motion.mp4',name:'圆周运动与向心力',tags:['力学','圆周'],br:'物体做圆周运动需要指向圆心的向心力 F=mv²/r。',
  p:[P('v','线速度 v',1,15,0.5,5,'m/s'),P('r','半径 r',0.3,2,0.05,1,'m')],
  f:['F=mv²/r','a=v²/r','T=2πr/v','ω=v/r'],
  dur:function(p){return 2*Math.PI*p.r/p.v;},
@@ -296,7 +296,7 @@ var M=[
  ro:function(p){return[{k:'向心加速度 a',v:F(p.v*p.v/p.r,2)+' m/s²'},{k:'向心力(1kg)',v:F(p.v*p.v/p.r,2)+' N'},{k:'周期 T',v:F(2*Math.PI*p.r/p.v,2)+' s'},{k:'角速度 ω',v:F(p.v/p.r,2)+' rad/s'},{k:'频率 f',v:F(p.v/(2*Math.PI*p.r),2)+' Hz'},{k:'半径 r',v:F(p.r,2)+' m'}];},
  tt:function(p){return'【模型】圆周运动加速度总指向圆心，a=v²/r。\n\n【推演】\n· a=v²/r='+F(p.v*p.v/p.r,2)+' m/s²\n· F=ma='+F(p.v*p.v/p.r,2)+' N (1kg)\n· T=2πr/v='+F(2*Math.PI*p.r/p.v,2)+' s\n\n【结论】向心力不是"额外的力"，而是由重力、支持力、摩擦力、拉力等提供的合力的法向分量。';}},
 
-{id:'m4',name:'平抛运动',tags:['力学','抛体'],br:'水平抛出的物体做平抛运动，水平匀速、竖直自由落体。',
+{id:'m4',mv:'assets/media/m4_horizontal_projectile.mp4',name:'平抛运动',tags:['力学','抛体'],br:'水平抛出的物体做平抛运动，水平匀速、竖直自由落体。',
  p:[P('v0','水平速度 v₀',2,30,1,15,'m/s'),P('h','抛出高度 h',5,60,1,30,'m'),P('g','重力加速度 g',1.6,20,0.1,9.8,'m/s²')],
  f:['x=v₀·t','y=½g·t²','t=√(2h/g)','R=v₀·√(2h/g)'],
  dur:function(p){return Math.sqrt(2*p.h/p.g)*1.5;},
@@ -308,7 +308,7 @@ var M=[
  ro:function(p){var T=Math.sqrt(2*p.h/p.g);return[{k:'下落时间 t',v:F(T,2)+' s'},{k:'水平射程 R',v:F(p.v0*T,2)+' m'},{k:'落地 vx',v:p.v0+' m/s'},{k:'落地 vy',v:F(p.g*T,1)+' m/s'},{k:'合速度',v:F(Math.sqrt(p.v0*p.v0+p.g*p.g*T*T),1)+' m/s'},{k:'抛出高度',v:F(p.h,1)+' m'}];},
  tt:function(p){var T=Math.sqrt(2*p.h/p.g);return'【模型】平抛=水平匀速⊕竖直自由落体。\n\n【推演】\n· t=√(2h/g)='+F(T,2)+' s\n· R=v₀·t='+F(p.v0*T,2)+' m\n· vx='+p.v0+' m/s（恒定）\n· vy=g·t='+F(p.g*T,1)+' m/s\n\n【结论】子弹水平射出和同时自由落体，会同时落地。';}},
 
-{id:'m5',name:'斜抛运动',tags:['力学','抛体'],br:'斜抛运动是水平匀速与竖直匀变速的组合，45°时射程最大。',
+{id:'m5',mv:'assets/media/m5_projectile.mp4',name:'斜抛运动',tags:['力学','抛体'],br:'斜抛运动是水平匀速与竖直匀变速的组合，45°时射程最大。',
  p:[P('v0','初速度 v₀',5,50,1,25,'m/s'),P('ang','发射角 θ',10,80,1,60,'°'),P('g','重力加速度 g',1.6,20,0.1,9.8,'m/s²')],
  f:['x=v₀cosθ·t','y=v₀sinθ·t−½g·t²','R=v₀²sin2θ/g','H=v₀²sin²θ/(2g)'],
  dur:function(p){var r=p.ang*Math.PI/180;return 2*p.v0*Math.sin(r)/p.g;},
@@ -321,7 +321,7 @@ var M=[
  ro:function(p){var r=p.ang*Math.PI/180;var T=2*p.v0*Math.sin(r)/p.g;return[{k:'飞行时间 T',v:F(T,2)+' s'},{k:'射程 R',v:F(p.v0*p.v0*Math.sin(2*r)/p.g,2)+' m'},{k:'最大高度 H',v:F(p.v0*p.v0*Math.sin(r)*Math.sin(r)/(2*p.g),2)+' m'},{k:'水平分速度',v:F(p.v0*Math.cos(r),2)+' m/s'},{k:'竖直分速度',v:F(p.v0*Math.sin(r),2)+' m/s'},{k:'发射角 θ',v:p.ang+'°'}];},
  tt:function(p){var r=p.ang*Math.PI/180;var T=2*p.v0*Math.sin(r)/p.g;return'【模型】斜抛=水平匀速⊕竖直上抛。\n\n【推演】\n· T='+F(T,2)+' s\n· R='+F(p.v0*p.v0*Math.sin(2*r)/p.g,2)+' m\n· H='+F(p.v0*p.v0*Math.sin(r)*Math.sin(r)/(2*p.g),2)+' m\n\n【结论】θ=45°射程最大；30°和60°射程相同但高度不同。';}},
 
-{id:'m6',name:'匀速直线运动',tags:['力学','运动'],br:'速度恒定的直线运动，位移与时间成正比。',
+{id:'m6',mv:'assets/media/m6_uniform_motion.mp4',name:'匀速直线运动',tags:['力学','运动'],br:'速度恒定的直线运动，位移与时间成正比。',
  p:[P('v','速度 v',1,30,0.5,10,'m/s'),P('L','总路程 L',10,200,5,100,'m')],
  f:['x=v·t','t=L/v'],
  dur:function(p){return p.L/p.v;},
@@ -330,7 +330,7 @@ var M=[
  ro:function(p){var T=p.L/p.v;return[{k:'总时间 T',v:F(T,2)+' s'},{k:'速度 v',v:p.v+' m/s'},{k:'总路程 L',v:p.L+' m'},{k:'每秒位移',v:F(p.v,2)+' m'},{k:'平均速度',v:F(p.v,2)+' m/s'},{k:'加速度',v:'0 m/s²'}];},
  tt:function(p){return'【模型】匀速直线运动：速度恒定，位移与时间成正比。\n\n【推演】\n· T=L/v='+F(p.L/p.v,2)+' s\n· x(t)=v·t\n\n【延伸】这是牛顿第一定律的直接体现。';}},
 
-{id:'m7',name:'匀加速直线运动',tags:['力学','运动'],br:'加速度恒定，速度随时间线性增加，位移与时间平方成正比。',
+{id:'m7',mv:'assets/media/m7_uniform_accel.mp4',name:'匀加速直线运动',tags:['力学','运动'],br:'加速度恒定，速度随时间线性增加，位移与时间平方成正比。',
  p:[P('v0','初速度 v₀',0,20,0.5,0,'m/s'),P('a','加速度 a',0.5,10,0.1,2,'m/s²'),P('T','总时间 T',1,20,0.5,5,'s')],
  f:['v=v₀+a·t','x=v₀·t+½a·t²','v²=v₀²+2ax'],
  dur:function(p){return p.T;},
@@ -339,7 +339,7 @@ var M=[
  ro:function(p){var mx=p.v0*p.T+0.5*p.a*p.T*p.T;return[{k:'总位移',v:F(mx,2)+' m'},{k:'末速度',v:F(p.v0+p.a*p.T,2)+' m/s'},{k:'平均速度',v:F(mx/p.T,2)+' m/s'},{k:'初速度',v:F(p.v0,2)+' m/s'},{k:'加速度',v:F(p.a,2)+' m/s²'},{k:'总时间',v:F(p.T,2)+' s'}];},
  tt:function(p){var mx=p.v0*p.T+0.5*p.a*p.T*p.T;return'【模型】匀加速直线运动。\n\n【推演】\n· 总位移='+F(mx,2)+' m\n· 末速度='+F(p.v0+p.a*p.T,2)+' m/s\n· 平均速度='+F(mx/p.T,2)+' m/s\n\n【延伸】v-t 图像面积等于位移。';}},
 
-{id:'m8',name:'竖直下抛运动',tags:['力学','抛体'],br:'初速度方向竖直向下的抛体运动，末速度比自由落体大。',
+{id:'m8',mv:'assets/media/m8_downward_throw.mp4',name:'竖直下抛运动',tags:['力学','抛体'],br:'初速度方向竖直向下的抛体运动，末速度比自由落体大。',
  p:[P('v0','初速度 v₀',1,20,0.5,5,'m/s'),P('h','下落高度 h',5,80,1,40,'m'),P('g','重力加速度 g',1.6,20,0.1,9.8,'m/s²')],
  f:['v=v₀+g·t','h=v₀·t+½g·t²','t=(−v₀+√(v₀²+2gh))/g'],
  dur:function(p){return (-p.v0+Math.sqrt(p.v0*p.v0+2*p.g*p.h))/p.g;},
@@ -349,7 +349,7 @@ var M=[
  ro:function(p){var T=(-p.v0+Math.sqrt(p.v0*p.v0+2*p.g*p.h))/p.g;return[{k:'下落时间 t',v:F(T,2)+' s'},{k:'末速度 v',v:F(p.v0+p.g*T,2)+' m/s'},{k:'初速度 v₀',v:p.v0+' m/s'},{k:'下落高度 h',v:p.h+' m'},{k:'加速度 g',v:F(p.g,1)+' m/s²'},{k:'末动能(1kg)',v:F(0.5*Math.pow(p.v0+p.g*T,2),1)+' J'}];},
  tt:function(p){var T=(-p.v0+Math.sqrt(p.v0*p.v0+2*p.g*p.h))/p.g;return'【模型】竖直下抛=有初速度的自由落体。\n\n【推演】\n· t='+F(T,2)+' s\n· v=v₀+g·t='+F(p.v0+p.g*T,2)+' m/s\n\n【结论】竖直下抛比自由落体多了一段"初速度"贡献的位移。';}},
 
-{id:'m9',name:'简谐运动(SHM)',tags:['力学','振动'],br:'回复力与位移成正比且反向，是最基本的振动模型。',
+{id:'m9',mv:'assets/media/m9_shm.mp4',name:'简谐运动(SHM)',tags:['力学','振动'],br:'回复力与位移成正比且反向，是最基本的振动模型。',
  p:[P('A','振幅 A',0.2,3,0.1,1,'m'),P('w','角频率 ω',0.5,5,0.1,2,'rad/s')],
  f:['x=A·sin(ω·t)','v=Aω·cos(ω·t)','a=−Aω²·sin(ω·t)','T=2π/ω'],
  dur:function(p){return 2*Math.PI/p.w;},
@@ -358,7 +358,7 @@ var M=[
  ro:function(p){return[{k:'周期 T',v:F(2*Math.PI/p.w,2)+' s'},{k:'频率 f',v:F(p.w/(2*Math.PI),2)+' Hz'},{k:'振幅 A',v:F(p.A,2)+' m'},{k:'角频率 ω',v:F(p.w,2)+' rad/s'},{k:'最大速度',v:F(p.A*p.w,2)+' m/s'},{k:'最大加速度',v:F(p.A*p.w*p.w,2)+' m/s²'}];},
  tt:function(p){return'【模型】简谐运动：x=A·sin(ωt)，回复力 F=−kx。\n\n【推演】\n· T=2π/ω='+F(2*Math.PI/p.w,2)+' s\n· 最大速度=Aω='+F(p.A*p.w,2)+' m/s\n· 最大加速度=Aω²='+F(p.A*p.w*p.w,2)+' m/s²\n\n【结论】SHM 是自然界最普遍的振动形式。';}},
 
-{id:'m10',name:'胡克定律弹簧',tags:['力学','弹性'],br:'弹簧伸长量与所受拉力成正比，比例系数为劲度系数 k。',
+{id:'m10',mv:'assets/media/m10_hooke.mp4',name:'胡克定律弹簧',tags:['力学','弹性'],br:'弹簧伸长量与所受拉力成正比，比例系数为劲度系数 k。',
  p:[P('k','劲度系数 k',5,100,1,30,'N/m'),P('F','拉力 F',0.5,30,0.5,10,'N')],
  f:['F=k·x','x=F/k','弹性势能 E=½kx²'],
  dur:function(p){return 3;},
@@ -367,7 +367,7 @@ var M=[
  ro:function(p){var x=p.F/p.k;return[{k:'伸长量 x',v:F(x,3)+' m'},{k:'劲度系数 k',v:F(p.k,1)+' N/m'},{k:'拉力 F',v:F(p.F,2)+' N'},{k:'弹性势能',v:F(0.5*p.k*x*x,3)+' J'},{k:'应力比 F/k',v:F(x,4)+' m'},{k:'每牛伸长',v:F(1/p.k,4)+' m/N'}];},
  tt:function(p){var x=p.F/p.k;return'【模型】胡克定律 F=kx，在弹性限度内成立。\n\n【推演】\n· x=F/k='+F(x,3)+' m\n· E=½kx²='+F(0.5*p.k*x*x,3)+' J\n\n【延伸】"弹簧串并联"：串联 1/k=1/k₁+1/k₂，并联 k=k₁+k₂。';}},
 
-{id:'m11',name:'动量守恒碰撞',tags:['力学','动量'],br:'两物体碰撞前后总动量守恒。',
+{id:'m11',mv:'assets/media/m11_collision.mp4',name:'动量守恒碰撞',tags:['力学','动量'],br:'两物体碰撞前后总动量守恒。',
  p:[P('m1','质量 m₁',0.5,5,0.1,1,'kg'),P('v1','初速 v₁',0,10,0.5,5,'m/s'),P('m2','质量 m₂',0.5,5,0.1,2,'kg'),P('v2','初速 v₂',-5,5,0.5,0,'m/s')],
  f:['m₁v₁+m₂v₂ = m₁v₁′+m₂v₂′','弹性碰撞动能守恒','完全非弹性 v′=(m₁v₁+m₂v₂)/(m₁+m₂)'],
  dur:function(p){return 4;},
@@ -376,7 +376,7 @@ var M=[
  ro:function(p){var p1=p.m1*p.v1,p2=p.m2*p.v2;return[{k:'总动量 P',v:F(p1+p2,2)+' kg·m/s'},{k:'动量 p₁',v:F(p1,2)+' kg·m/s'},{k:'动量 p₂',v:F(p2,2)+' kg·m/s'},{k:'总动能',v:F(0.5*p.m1*p.v1*p.v1+0.5*p.m2*p.v2*p.v2,2)+' J'},{k:'总质量',v:F(p.m1+p.m2,2)+' kg'},{k:'质心速度',v:F((p1+p2)/(p.m1+p.m2),2)+' m/s'}];},
  tt:function(p){var P=p.m1*p.v1+p.m2*p.v2;return'【模型】动量守恒定律：系统不受外力或合外力为零时，总动量保持不变。\n\n【推演】\n· P=m₁v₁+m₂v₂='+F(P,2)+' kg·m/s\n· 弹性碰撞：动能守恒\n· 非弹性：动能损失\n\n【延伸】火箭反冲、爆炸都遵循动量守恒。';}},
 
-{id:'m12',name:'功与功率',tags:['力学','能量'],br:'功等于力与位移的标积，功率是做功的快慢。',
+{id:'m12',mv:'assets/media/m12_work_power.mp4',name:'功与功率',tags:['力学','能量'],br:'功等于力与位移的标积，功率是做功的快慢。',
  p:[P('F','力 F',1,100,1,20,'N'),P('s','位移 s',1,50,1,10,'m'),P('t','时间 t',1,60,1,5,'s')],
  f:['W=F·s','P=W/t=F·v','平均速度 v=s/t'],
  dur:function(p){return 4;},
@@ -385,7 +385,7 @@ var M=[
  ro:function(p){var W2=p.F*p.s,P2=W2/p.t;return[{k:'做功 W',v:F(W2,2)+' J'},{k:'功率 P',v:F(P2,2)+' W'},{k:'平均速度 v',v:F(p.s/p.t,2)+' m/s'},{k:'力 F',v:F(p.F,1)+' N'},{k:'位移 s',v:F(p.s,1)+' m'},{k:'时间 t',v:F(p.t,1)+' s'}];},
  tt:function(p){var W2=p.F*p.s;return'【模型】W=Fs（力与位移同向），P=W/t。\n\n【推演】\n· W='+F(W2,2)+' J\n· P='+F(W2/p.t,2)+' W\n\n【延伸】1 kWh=3.6×10⁶ J；家用空调约 1-2 kW。';}},
 
-{id:'m13',name:'动能与势能转化',tags:['力学','能量'],br:'物体下落时重力势能转化为动能，总机械能守恒。',
+{id:'m13',mv:'assets/media/m13_energy_conversion.mp4',name:'动能与势能转化',tags:['力学','能量'],br:'物体下落时重力势能转化为动能，总机械能守恒。',
  p:[P('h','初始高度 h',5,60,1,30,'m'),P('m','质量 m',0.5,10,0.1,2,'kg'),P('g','重力加速度 g',1.6,20,0.1,9.8,'m/s²')],
  f:['Ep=mgh','Ek=½mv²','E=Ep+Ek=常数'],
  dur:function(p){return 3;},
@@ -394,7 +394,7 @@ var M=[
  ro:function(p){return[{k:'初始势能 Ep',v:F(p.m*p.g*p.h,2)+' J'},{k:'初始动能',v:'0 J'},{k:'总机械能',v:F(p.m*p.g*p.h,2)+' J'},{k:'落地动能',v:F(p.m*p.g*p.h,2)+' J'},{k:'落地速度',v:F(Math.sqrt(2*p.g*p.h),2)+' m/s'},{k:'质量 m',v:F(p.m,2)+' kg'}];},
  tt:function(p){return'【模型】机械能守恒：Ep=mgh，Ek=½mv²，总量恒定。\n\n【推演】\n· 初始 Ep='+F(p.m*p.g*p.h,2)+' J\n· 落地 Ek='+F(p.m*p.g*p.h,2)+' J\n· 落地速度='+F(Math.sqrt(2*p.g*p.h),2)+' m/s\n\n【结论】在无摩擦、无空气阻力的理想情况下，机械能严格守恒。';}},
 
-{id:'m14',name:'牛顿第二定律',tags:['力学','动力学'],br:'物体加速度与合外力成正比，与质量成反比。',
+{id:'m14',mv:'assets/media/m14_newton2.mp4',name:'牛顿第二定律',tags:['力学','动力学'],br:'物体加速度与合外力成正比，与质量成反比。',
  p:[P('F','合外力 F',1,100,1,20,'N'),P('m','质量 m',0.5,20,0.5,5,'kg'),P('v0','初速度 v₀',0,10,0.5,0,'m/s')],
  f:['F=m·a','a=F/m','v=v₀+a·t','x=v₀t+½at²'],
  dur:function(p){return 4;},
@@ -403,7 +403,7 @@ var M=[
  ro:function(p){var a=p.F/p.m;return[{k:'加速度 a',v:F(a,3)+' m/s²'},{k:'合外力 F',v:F(p.F,1)+' N'},{k:'质量 m',v:F(p.m,1)+' kg'},{k:'4s 后速度',v:F(p.v0+a*4,2)+' m/s'},{k:'4s 位移',v:F(p.v0*4+0.5*a*16,2)+' m'},{k:'动量变化',v:F(p.F*4,2)+' kg·m/s'}];},
  tt:function(p){var a=p.F/p.m;return'【模型】牛顿第二定律 F=ma 是经典力学的核心。\n\n【推演】\n· a=F/m='+F(a,3)+' m/s²\n· 4s 后速度 v='+F(p.v0+a*4,2)+' m/s\n· 4s 位移 x='+F(p.v0*4+0.5*a*16,2)+' m\n\n【延伸】F=ma 是矢量式，加速度方向与合外力方向一致。';}},
 
-{id:'m15',name:'斜抛水平射程优化',tags:['力学','抛体'],br:'探究发射角对斜抛射程的影响，45°时取得最大值。',
+{id:'m15',mv:'assets/media/m15_range_optimization.mp4',name:'斜抛水平射程优化',tags:['力学','抛体'],br:'探究发射角对斜抛射程的影响，45°时取得最大值。',
  p:[P('v0','初速度 v₀',10,50,1,25,'m/s'),P('ang','发射角 θ',5,85,1,30,'°'),P('g','重力加速度 g',1.6,20,0.1,9.8,'m/s²')],
  f:['R=v₀²·sin2θ/g','θ=45°时 R_max=v₀²/g'],
  dur:function(p){var r=p.ang*Math.PI/180;return 2*p.v0*Math.sin(r)/p.g;},
