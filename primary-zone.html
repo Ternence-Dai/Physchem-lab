@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#15384c">
+<title>小学演示专区 · PhysChem Lab</title>
+<link rel="stylesheet" href="./assets/css/primary-zone.css?v=20261124-primary-zone-v1">
+</head>
+<body class="pz-page">
+<header class="pz-hero">
+  <p class="pz-eyebrow">PHYSCHEM LAB · PRIMARY DEMO ZONE</p>
+  <h1>小学演示专区</h1>
+  <p class="pz-lede">给家长带五年级孩子做的家庭演示：每个约 <b>10 分钟</b>，材料都是家里常见的东西，步骤里标清了哪一步由家长做。</p>
+  <div class="pz-scope">
+    <p><b>专区和完整实验库的区别：</b>本站完整实验库面向<b>中学以上</b>，带公式和读数面板，不适合孩子自己浏览。本专区的 21 个演示，是从完整库中经适配度评级筛出的可降阶实验，逐一改编成家庭动手版——只看现象、不读公式、不下原实验没有的结论。</p>
+    <p>每个演示末尾有「原实验（虚拟模拟）」链接，那是家长在完整库里对应的模拟动画，只建议家长陪同时看现象。专区内不提供其他实验的入口。</p>
+  </div>
+  <nav class="pz-toc" id="pzToc" aria-label="演示主题目录"></nav>
+</header>
+<main class="pz-main" id="pzMain"></main>
+<footer class="pz-foot">
+  <p>演示内容改编自 PhysChem Lab 对应原实验的现象与定性结论；个别演示（如布朗运动、傅科摆）为帮助理解的模型示意，条目内已注明。</p>
+  <p><a class="pz-exit" href="./index.html">家长出口：返回完整实验库（中学以上）→</a></p>
+</footer>
+<script src="./assets/js/primary-demos.js?v=20261124-primary-zone-v1"></script>
+<script>
+(function () {
+  var WHO = { parent: '家长做', child: '孩子做', together: '一起做' };
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  var themes = window.PRIMARY_DEMO_THEMES || [];
+  var demos = window.PRIMARY_DEMOS || [];
+  var toc = document.getElementById('pzToc');
+  var main = document.getElementById('pzMain');
+  if (!demos.length) { main.innerHTML = '<p class="pz-empty">演示数据加载失败，请稍后再试。</p>'; return; }
+  var tocHtml = '';
+  themes.forEach(function (t) {
+    var list = demos.filter(function (d) { return d.theme === t.key; });
+    if (list.length) tocHtml += '<a href="#theme-' + esc(t.key) + '">' + esc(t.name) + '（' + list.length + '）</a>';
+  });
+  toc.innerHTML = tocHtml;
+  var html = '';
+  themes.forEach(function (t) {
+    var list = demos.filter(function (d) { return d.theme === t.key; });
+    if (!list.length) return;
+    html += '<section class="pz-theme" id="theme-' + esc(t.key) + '"><h2>' + esc(t.name) + '</h2>';
+    if (t.note) html += '<p class="pz-theme-note">' + esc(t.note) + '</p>';
+    list.forEach(function (d) {
+      html += '<article class="pz-card" id="demo-' + esc(d.id) + '">';
+      html += '<header class="pz-card-head"><h3>' + esc(d.title) + '</h3><span class="pz-mins">约 ' + esc(d.minutes) + ' 分钟</span></header>';
+      html += '<p class="pz-hook">' + esc(d.hook) + '</p>';
+      html += '<div class="pz-block"><h4>准备材料（家里找）</h4><ul>' + d.materials.map(function (m) { return '<li>' + esc(m) + '</li>'; }).join('') + '</ul></div>';
+      html += '<div class="pz-block"><h4>分步操作</h4><ol class="pz-steps">' + d.steps.map(function (s) { return '<li><span class="pz-who pz-who-' + esc(s.who) + '">' + esc(WHO[s.who] || '') + '</span>' + esc(s.text) + '</li>'; }).join('') + '</ol></div>';
+      html += '<div class="pz-block pz-safety"><h4>安全提示</h4><ul>' + d.safety.map(function (m) { return '<li>' + esc(m) + '</li>'; }).join('') + '</ul></div>';
+      html += '<div class="pz-block"><h4>想一想（观察问题，不是考试）</h4><ul>' + d.questions.map(function (m) { return '<li>' + esc(m) + '</li>'; }).join('') + '</ul></div>';
+      html += '<p class="pz-takeaway"><b>只记住这一句：</b>' + esc(d.takeaway) + '</p>';
+      html += '<p class="pz-src">改编自原实验「' + esc(d.sourceName) + '」 · <a href="./index.html#exp=' + esc(d.id) + '">打开原实验（虚拟模拟，家长陪同看现象）→</a></p>';
+      html += '</article>';
+    });
+    html += '</section>';
+  });
+  main.innerHTML = html;
+  if (location.hash && document.querySelector(location.hash)) {
+    document.querySelector(location.hash).scrollIntoView();
+  }
+})();
+</script>
+</body>
+</html>

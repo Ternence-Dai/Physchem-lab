@@ -1,0 +1,43 @@
+/* 小学演示专区样式（专区页 + 主站入口卡/横幅共用） */
+.pz-page{margin:0;font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;background:#f4f7f5;color:#1c2b26;line-height:1.65}
+.pz-hero{max-width:860px;margin:0 auto;padding:32px 20px 8px}
+.pz-eyebrow{font-size:12px;letter-spacing:.18em;color:#2e7d5b;font-weight:700;margin:0 0 6px}
+.pz-hero h1{margin:0 0 10px;font-size:32px;color:#123528}
+.pz-lede{font-size:17px;margin:0 0 14px}
+.pz-scope{background:#e8f2ec;border:1px solid #bcd8c8;border-radius:12px;padding:14px 16px;font-size:14px}
+.pz-scope p{margin:0 0 8px}.pz-scope p:last-child{margin-bottom:0}
+.pz-toc{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 4px}
+.pz-toc a{background:#fff;border:1px solid #bcd8c8;color:#1d5c40;border-radius:999px;padding:5px 12px;font-size:13px;text-decoration:none}
+.pz-main{max-width:860px;margin:0 auto;padding:8px 20px 24px}
+.pz-theme h2{font-size:22px;color:#123528;border-bottom:3px solid #2e7d5b;padding-bottom:6px;margin:28px 0 6px}
+.pz-theme-note{font-size:14px;color:#47635a;margin:0 0 12px}
+.pz-card{background:#fff;border:1px solid #d7e3dc;border-radius:14px;padding:18px 20px;margin:0 0 16px;box-shadow:0 2px 8px rgba(18,53,40,.05)}
+.pz-card-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.pz-card-head h3{margin:0;font-size:20px;color:#173f2f}
+.pz-mins{background:#fdf3e0;color:#8a5a00;border:1px solid #ecd9a8;border-radius:999px;padding:2px 10px;font-size:12px;white-space:nowrap}
+.pz-hook{font-size:16px;color:#2c5546;margin:8px 0 12px}
+.pz-block h4{margin:12px 0 4px;font-size:14px;color:#2e7d5b}
+.pz-block ul,.pz-block ol{margin:4px 0 8px;padding-left:22px}
+.pz-block li{margin:3px 0}
+.pz-steps li{margin:6px 0}
+.pz-who{display:inline-block;border-radius:6px;padding:0 7px;margin-right:8px;font-size:12px;font-weight:700;vertical-align:1px}
+.pz-who-parent{background:#fde8e8;color:#9b2226}
+.pz-who-child{background:#e3f0ff;color:#144a86}
+.pz-who-together{background:#e9f7ee;color:#1d5c40}
+.pz-safety{background:#fff8ec;border:1px solid #ecd9a8;border-radius:10px;padding:8px 12px;margin-top:10px}
+.pz-safety h4{color:#8a5a00;margin-top:2px}
+.pz-takeaway{background:#eef6f1;border-left:4px solid #2e7d5b;border-radius:0 10px 10px 0;padding:10px 14px;margin:12px 0 8px}
+.pz-src{font-size:13px;color:#5a7268;margin:6px 0 0}
+.pz-src a{color:#1d5c40}
+.pz-foot{max-width:860px;margin:0 auto;padding:0 20px 40px;font-size:13px;color:#5a7268}
+.pz-exit{display:inline-block;margin-top:8px;color:#47635a}
+.pz-empty{color:#9b2226}
+
+/* 主站（index.html）侧栏入口卡 */
+.pz-entry{display:block;margin:10px 12px 2px;padding:12px 14px;border-radius:12px;background:linear-gradient(135deg,#14532d,#2e7d5b);color:#fff;text-decoration:none;font-weight:700;font-size:15px;line-height:1.4}
+.pz-entry span{display:block;font-weight:400;font-size:12px;opacity:.92;margin-top:3px}
+.pz-entry-note{margin:2px 14px 8px;font-size:11px;color:#8fa8a0}
+
+/* 主站实验页演示版横幅 */
+.pz-banner{margin:10px 16px 0;padding:10px 14px;border-radius:10px;background:#e9f7ee;border:1px solid #bcd8c8;color:#173f2f;font-size:14px}
+.pz-banner a{color:#1d5c40;font-weight:700}

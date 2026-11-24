@@ -24,6 +24,7 @@
 <link rel="stylesheet" href="./assets/css/archive-comparison-v1.css?v=20261023-archive-compare-v2">
 <link rel="stylesheet" href="./assets/css/readability-accessibility-v10.css?v=20261021-ui-v2">
 
+<link rel="stylesheet" href="./assets/css/primary-zone.css?v=20261124-primary-zone-v1">
 <link rel="stylesheet" href="./assets/css/physchem-authoritative-control-room.css?v=20261024-instrument-room-v1">
 </head>
 <body data-workspace="physchem" data-ui="scientific-instrument-room"><a class="skip-link" href="#main-content">跳过导航，进入主要内容</a>
@@ -31,6 +32,8 @@
   <div class="br"><div class="lg">⚛</div><div><h1>PhysChem Lab</h1><p><span id="catalogueTotal">模型加载中…</span> 个可交互实验</p></div></div>
   <div class="sc"><input id="search" placeholder="🔍 检索实验 / 标签 / 公式" autocomplete="off"></div>
   <div class="fl"><button data-c="全部" class="on">全部</button><button data-c="物理">物理</button><button data-c="化学">化学</button></div>
+  <a class="pz-entry" href="./primary-zone.html">🧒 小学演示专区<span>家长带做 · 21 个家庭演示 · 约 10 分钟/个</span></a>
+  <p class="pz-entry-note">本站完整实验库面向中学以上；给孩子用请走上面的演示专区。</p>
   <div class="cnt" aria-live="polite">当前筛选：<b id="cnt">0</b> / <b id="catalogueTotalInline">0</b> 个实验 · 目录完整加载</div>
   <div class="lst" id="lst"></div>
   <div class="ft"><div id="si">📁 存档：0 条</div><div style="margin-top:6px">署名：<b>Ternence Dai</b></div><div>邮箱：<span class="em">18662613315@163.com</span></div></div>
@@ -40,7 +43,7 @@
   <header class="tb"><button class="bt mobile-menu" type="button" id="mobileMenu" aria-label="打开实验目录" aria-controls="experimentSidebar" aria-expanded="false">☰</button><div class="tbl"><h2 id="et">加载中…</h2><p id="eb2">正在初始化实验室…</p></div>
     <div class="ac"><button class="bt" id="bp">⏸ 暂停</button><button class="bt" id="br2">↺ 重置</button><button class="bt" id="bs">💾 存档</button><button class="bt" id="bd">📂 档案</button></div>
   </header>
-  
+  <div class="pz-banner" id="demoBanner" hidden>🧒 这个实验有小学演示版（家长带做的家庭版，约 10 分钟）：<a id="demoBannerLink" href="./primary-zone.html">去看演示版 →</a></div>
   
   
   <section class="sw" id="sw" aria-label="物理化学实时动态图示"><div class="simulation-status" aria-live="polite"><span class="simulation-status__pulse"></span><span>实时动态图示</span><b id="simulationStatus">正在启动</b><small>MODEL SIMULATION · NOT MEASURED DATA</small></div><canvas id="cv" aria-label="当前实验的实时模拟动画或参数曲线"></canvas></section>
@@ -94,6 +97,7 @@
 </aside>
 <div class="ts" id="ts"></div><div class="eb" id="eb3"></div>
 <script>window.EXP=[];window.P=function(k,l,mn,mx,s,v,u){return{key:k,label:l,min:mn,max:mx,step:s,value:v,unit:u||""};};window.F=function(v,n){n=n===undefined?2:n;if(!isFinite(v))return "—";if(Math.abs(v)>=1e6||(Math.abs(v)<1e-3&&v!==0))return Number(v).toExponential(2);return Number(v).toFixed(n);};</script>
+<script src="./assets/js/primary-demos.js?v=20261124-primary-zone-v1"></script>
 <script src="./assets/js/legacy-app.js?v=20261021-catalogue-restore-v2"></script>
 <script src="./assets/js/experiment-catalogue.js?v=20261021-catalogue-restore-v2"></script>
   <script src="./assets/js/workspace-v5.js?v=20261021-ui-restoration-v1"></script>

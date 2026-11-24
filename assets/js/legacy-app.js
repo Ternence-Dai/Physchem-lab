@@ -387,9 +387,26 @@ function selectExp(id){
   ST=cur.init?cur.init(P):{};
   paused=false;
   E('et').textContent=cur.name;E('eb2').textContent=cur.brief;
+  updateDemoBanner();
   buildParams();buildPanel();renderList();refreshTutor(true);syncSimulationStatus();
   if(reducedMotion&&started)renderCurrentFrame();
   setTimeout(resize,30);setTimeout(resize,200);
+}
+
+/* 小学演示专区：当前实验若有降阶演示版，显示横幅链到专区对应条目。 */
+function updateDemoBanner(){
+  var banner=E('demoBanner');if(!banner||!cur)return;
+  var has=false;
+  if(window.PRIMARY_DEMOS){for(var i=0;i<window.PRIMARY_DEMOS.length;i++)if(window.PRIMARY_DEMOS[i].id===cur.id){has=true;break;}}
+  banner.hidden=!has;
+  if(has){var link=E('demoBannerLink');if(link)link.href='./primary-zone.html#demo-'+cur.id;}
+}
+
+/* 支持从演示专区深链打开原实验：index.html#exp=<id>，无效 id 回退到 p1。 */
+function initialExperimentId(){
+  var m=/[#&]exp=([A-Za-z0-9]+)/.exec(location.hash||'');
+  if(m){for(var i=0;i<EXP.length;i++)if(EXP[i].id===m[1])return m[1];}
+  return 'p1';
 }
 
 function buildParams(){
@@ -485,7 +502,7 @@ function boot(){
   if(cv&&!ctx){try{ctx=cv.getContext('2d');}catch(e){ctx=null;}}
   if(!cv||!sw||!ctx){requestAnimationFrame(boot);return;}
   if(!resize()){requestAnimationFrame(boot);return;}
-  try{renderList();updateSI();renderD();selectExp('p1');}catch(e){SE('初始化失败: '+e.message);console.error(e);return;}
+  try{renderList();updateSI();renderD();selectExp(initialExperimentId());}catch(e){SE('初始化失败: '+e.message);console.error(e);return;}
   setTimeout(resize,50);setTimeout(resize,250);setTimeout(resize,600);setTimeout(resize,1200);
   started=true;syncSimulationStatus();
   if(reducedMotion)renderCurrentFrame();else scheduleAnimationFrame();
