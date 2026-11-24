@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="./assets/css/workspace-v5.css?v=20261022-live-context-metrics-v1">
   <link rel="stylesheet" href="./assets/css/experiment-notebook-v9.css?v=20261021-ui-restoration-v1">
 <link rel="stylesheet" href="./assets/css/physchem-lab-workspace.css?v=20261021-ui-restoration-v1">
-<style>.skip-link{position:fixed;top:12px;left:16px;z-index:10000;transform:translateY(-180%);padding:12px 16px;border:2px solid #f59e0b;border-radius:9px;background:#fff;color:#14202b;font-weight:700;text-decoration:none;box-shadow:0 8px 24px rgba(0,0,0,.24)}.skip-link:focus{transform:translateY(0);outline:3px solid #f59e0b;outline-offset:3px}</style>
+<style>.skip-link{position:fixed;top:12px;left:16px;z-index:10000;transform:translateY(-180%);padding:12px 16px;border:2px solid #f59e0b;border-radius:9px;background:#fff;color:#14202b;font-weight:700;text-decoration:none;box-shadow:0 8px 24px rgba(0,0,0,.24)}.skip-link:focus{transform:translateY(0);outline:3px solid #f59e0b;outline-offset:3px}.curve-chart{position:absolute;inset:0;z-index:1}</style>
 <link rel="stylesheet" href="./assets/css/physchem-control-room-v2.css?v=20261022-instrument-workbench-v4">
 <link rel="stylesheet" href="./assets/css/instrument-workbench-v3.css?v=20261022-instrument-workbench-v3">
 <link rel="stylesheet" href="./assets/css/reference-platform-v4.css?v=20261022-reference-v5">
@@ -46,7 +46,7 @@
   <div class="pz-banner" id="demoBanner" hidden>🧒 这个实验有小学演示版（家长带做的家庭版，约 10 分钟）：<a id="demoBannerLink" href="./primary-zone.html">去看演示版 →</a></div>
   
   
-  <section class="sw" id="sw" aria-label="物理化学实时动态图示"><div class="simulation-status" aria-live="polite"><span class="simulation-status__pulse"></span><span>实时动态图示</span><b id="simulationStatus">正在启动</b><small>MODEL SIMULATION · NOT MEASURED DATA</small></div><canvas id="cv" aria-label="当前实验的实时模拟动画或参数曲线"></canvas></section>
+  <section class="sw" id="sw" aria-label="物理化学实时动态图示"><div class="simulation-status" aria-live="polite"><span class="simulation-status__pulse"></span><span>实时动态图示</span><b id="simulationStatus">正在启动</b><small>MODEL SIMULATION · NOT MEASURED DATA</small></div><canvas id="cv" aria-label="当前实验的实时模拟动画或参数曲线"></canvas><div id="curveChart" class="curve-chart" role="img" aria-label="当前实验的参数曲线" style="display:none"></div></section>
   <section class="bt2" aria-label="实验参数控制、公式计算与原理说明">
     <div class="pnl p1"><h3>⚙️ 物理变量控制台</h3><div id="pb"></div></div>
     <div class="pnl p2"><h3>📐 公式与实时计算</h3><div id="fb"></div></div>
@@ -98,6 +98,7 @@
 <div class="ts" id="ts"></div><div class="eb" id="eb3"></div>
 <script>window.EXP=[];window.P=function(k,l,mn,mx,s,v,u){return{key:k,label:l,min:mn,max:mx,step:s,value:v,unit:u||""};};window.F=function(v,n){n=n===undefined?2:n;if(!isFinite(v))return "—";if(Math.abs(v)>=1e6||(Math.abs(v)<1e-3&&v!==0))return Number(v).toExponential(2);return Number(v).toFixed(n);};</script>
 <script src="./assets/js/primary-demos.js?v=20261124-primary-zone-v1"></script>
+<script src="./assets/js/vendor/echarts.min.js"></script>
 <script src="./assets/js/legacy-app.js?v=20261021-catalogue-restore-v2"></script>
 <script src="./assets/js/experiment-catalogue.js?v=20261021-catalogue-restore-v2"></script>
   <script src="./assets/js/workspace-v5.js?v=20261021-ui-restoration-v1"></script>

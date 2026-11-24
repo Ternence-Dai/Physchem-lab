@@ -17,6 +17,18 @@ window.PHYS_DRAW={clamp:C,roundedRect:rr,pill:pl,label:lb,spring:dSpr,perimeterP
 var EXP=window.EXP||(window.EXP=[]);
 
 /* ============ 引擎渲染器 ============ */
+/* 曲线采样（单一事实源）：在 xR 上等距取 N=300 共 301 个点，fn 非有限值记为
+ * null 断点。canvas 回退渲染与 ECharts 渲染共用同一点列，数值不做任何加工。 */
+function curveSeriesData(g,p,t){
+  var N=300,out=[];
+  for(var k=0;k<=N;k++){
+    var xv=g.xR[0]+(g.xR[1]-g.xR[0])*k/N;
+    var yv=g.fn(p,xv,t||0);
+    out.push([xv,Number.isFinite(yv)?yv:null]);
+  }
+  return out;
+}
+window.__physchemCurveSeriesData=curveSeriesData;
 function drawCurve(c,W,H,p,st,g){
   var padL=64,padR=24,padT=32,padB=44;
   var gw=W-padL-padR,gh=H-padT-padB;
@@ -30,13 +42,13 @@ function drawCurve(c,W,H,p,st,g){
   c.strokeStyle='rgba(34,211,238,.5)';c.lineWidth=2;
   c.beginPath();c.moveTo(padL,padT);c.lineTo(padL,padT+gh);c.lineTo(padL+gw,padT+gh);c.stroke();
   var col=g.col||'#a78bfa';
+  var data=curveSeriesData(g,p,st.t||0);
   c.beginPath();
-  var N=300,hasPrev=false;
-  for(var k=0;k<=N;k++){
-    var xv=xR[0]+(xR[1]-xR[0])*k/N;
-    var yv=g.fn(p,xv,st.t||0);
-    if(!Number.isFinite(yv)){hasPrev=false;continue;}
-    var pxx=x2p(xv),pyy=y2p(yv);
+  var hasPrev=false;
+  for(var k=0;k<data.length;k++){
+    var pt=data[k];
+    if(pt[1]===null){hasPrev=false;continue;}
+    var pxx=x2p(pt[0]),pyy=y2p(pt[1]);
     if(hasPrev)c.lineTo(pxx,pyy);else c.moveTo(pxx,pyy);
     hasPrev=true;
   }
@@ -51,8 +63,54 @@ function drawCurve(c,W,H,p,st,g){
   lb(c,g.xL||'x',padL+gw/2,padT+gh+30,'#22d3ee',11.5,'center');
   lb(c,g.yL||'y',padL-40,padT+10,'#22d3ee',11.5,'center');
 }
+/* ============ 曲线类实验的 ECharts 渲染（6.1.0，本地 vendor 文件，零 CDN）============
+ * 只替换渲染层：点列来自 curveSeriesData，与 canvas 回退完全同源；坐标范围、
+ * 刻度数、轴标题、曲线颜色与标记点语义均按曲线定义 g 原样映射。ECharts 未能
+ * 加载时 drawCurrentFrame 自动回退到 canvas 的 drawCurve，曲线始终可见。 */
+var curveChart=null,curveChartSig='';
+function curveOverlayEl(){return E('curveChart');}
+function hideCurveChart(){
+  var host=curveOverlayEl();if(host)host.style.display='none';
+  if(cv)cv.style.visibility='';
+  curveChartSig='';
+}
+function renderCurveChart(){
+  var host=curveOverlayEl();if(!host||!cur||!cur.curve)return false;
+  var g=cur.curve;
+  var sig=cur.id+'|'+JSON.stringify(P);
+  if(host.style.display==='none'){host.style.display='block';if(cv)cv.style.visibility='hidden';}
+  if(!curveChart)curveChart=window.echarts.init(host);
+  if(sig===curveChartSig)return true;
+  var col=g.col||'#a78bfa';
+  var data=curveSeriesData(g,P,ST.t||0);
+  var series=[
+    {type:'line',data:data,showSymbol:false,connectNulls:false,silent:true,z:1,lineStyle:{color:col,width:8,opacity:0.25}},
+    {type:'line',data:data,showSymbol:false,connectNulls:false,z:2,lineStyle:{color:col,width:2.4},itemStyle:{color:col},emphasis:{focus:'series'}}
+  ];
+  if(g.mk&&g.mk.length){
+    var pts=[];
+    for(var m=0;m<g.mk.length;m++){
+      var mk=g.mk[m],markerX=typeof mk.x==='function'?mk.x(P):mk.x,myValue=g.fn(P,markerX,ST.t||0);
+      if(!Number.isFinite(markerX)||!Number.isFinite(myValue))continue;
+      pts.push({coord:[markerX,myValue],value:myValue,symbol:'circle',symbolSize:10,itemStyle:{color:mk.c||'#fbbf24'},label:{show:true,formatter:mk.l||'',color:mk.c||'#fbbf24',fontSize:11,position:'top',fontFamily:'Menlo,Consolas,monospace'}});
+    }
+    if(pts.length)series[1].markPoint={data:pts};
+  }
+  curveChart.setOption({
+    animation:false,
+    textStyle:{fontFamily:'Menlo,Consolas,monospace'},
+    grid:{left:64,right:24,top:32,bottom:44},
+    tooltip:{trigger:'axis',backgroundColor:'#0a1626',borderColor:'#2b465d',textStyle:{color:'#dbe7f3',fontSize:11},formatter:function(ps){var p=Array.isArray(ps)?ps[0]:ps;if(!p||p.value[1]===null||p.value[1]===undefined)return '无有效值';return (g.xL||'x')+'：'+F(p.value[0],3)+'<br/>'+(g.yL||'y')+'：'+F(p.value[1],4);}},
+    xAxis:{type:'value',min:g.xR[0],max:g.xR[1],splitNumber:g.xT||8,name:g.xL||'x',nameLocation:'middle',nameGap:30,nameTextStyle:{color:'#22d3ee',fontSize:11.5},axisLabel:{color:'#5a6d87',fontSize:10,formatter:function(v){return F(v,1);}},axisLine:{lineStyle:{color:'rgba(34,211,238,.5)'}},splitLine:{lineStyle:{color:'rgba(120,160,220,.07)'}}},
+    yAxis:{type:'value',min:g.yR[0],max:g.yR[1],splitNumber:g.yT||6,name:g.yL||'y',nameTextStyle:{color:'#22d3ee',fontSize:11.5},axisLabel:{color:'#5a6d87',fontSize:10,formatter:function(v){return F(v,1);}},axisLine:{show:false},splitLine:{lineStyle:{color:'rgba(120,160,220,.07)'}}},
+    series:series
+  },{notMerge:true});
+  curveChartSig=sig;
+  host.setAttribute('aria-label',cur.name+' 参数曲线');
+  return true;
+}
 function mkCurve(g){
-  return {id:g.id,name:g.name,cat:g.cat,tags:g.tags,brief:g.brief,params:g.p,formulas:g.f,
+  return {id:g.id,name:g.name,cat:g.cat,tags:g.tags,brief:g.brief,params:g.p,formulas:g.f,curve:g,
     resetOnChange:!!g.rc,init:function(){return{t:0};},step:function(p,dt,st){st.t=(st.t||0)+dt;},
     draw:function(c,W,H,p,st){drawCurve(c,W,H,p,st,g);},readout:g.ro,tutor:g.tt,video:g.mv||null};
 }
@@ -322,6 +380,7 @@ function resize(){
   // Assigning canvas.width/height clears its bitmap. Repaint immediately after every container resize,
   // including animated mode, so a throttled or paused animation frame cannot leave a blank instrument.
   if(started)renderCurrentFrame();
+  if(curveChart){var curveHost=curveOverlayEl();if(curveHost&&curveHost.style.display!=='none')curveChart.resize();}
   return true;
 }
 
@@ -463,6 +522,11 @@ function drawCurrentFrame(ts,dt,advance){
   if(advance&&!paused&&!reducedMotion&&cur.step){
     try{cur.step(P,dt,ST);}catch(e){window.__physchemStepError={experimentId:cur.id,message:String(e&&e.message||e)};}
   }
+  if(cur.curve&&window.echarts&&renderCurveChart()){
+    if(!advance||ts-lastRO>110){lastRO=ts;updateRO();}
+    return;
+  }
+  hideCurveChart();
   ctx.clearRect(0,0,W,H);
   try{cur.draw(ctx,W,H,P,ST);window.__physchemDrawError=null;}
   catch(e){window.__physchemDrawError={experimentId:cur.id,message:String(e&&e.message||e)};}

@@ -21,6 +21,7 @@ const PRECACHE = [
   './assets/css/archive-comparison-v1.css',
   './assets/css/readability-accessibility-v10.css',
   './assets/css/physchem-authoritative-control-room.css',
+  './assets/js/vendor/echarts.min.js',
   './assets/js/legacy-app.js',
   './assets/js/primary-demos.js',
   './assets/css/primary-zone.css',
