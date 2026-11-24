@@ -65,7 +65,10 @@ function splitTopLevel(body) {
 
 function parseCatalogue(text) {
   const models = [];
-  const pattern = /\{id\s*:\s*['"]([^'"]+)['"]\s*,\s*name\s*:\s*['"]([^'"]+)['"]/g;
+  // Entries may carry extra fields between id and name (e.g. the Manim
+  // explainer-video wiring adds mv:/video: there), so do not require
+  // name to immediately follow id.
+  const pattern = /\{id\s*:\s*['"]([^'"]+)['"]\s*,[^{}]*?name\s*:\s*['"]([^'"]+)['"]/g;
   let match;
   while ((match = pattern.exec(text))) {
     const objectText = extractBalanced(text, match.index, '{', '}');

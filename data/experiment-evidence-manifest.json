@@ -4,7 +4,7 @@
   "warning": "This is an evidence-gap register generated from the current catalogue. Candidate references are research starting points only; no item-level formula citation, assumption review, laboratory benchmark or experimental-data validation is claimed.",
   "sourceCatalogue": {
     "path": "assets/js/experiment-catalogue.js",
-    "gitBlobSha": "643ce227a214eea776c0e83849bc27d85ba930a5",
+    "gitBlobSha": "9f6e0b2fe1ae1f0450cc543d76392de09439f030",
     "experimentCount": 108
   },
   "statusDefinitions": {
@@ -6564,6 +6564,12 @@
       "change": "Second exact item-level formula source tranche for kinematics experiments m1-m8.",
       "status": "8 formula families mapped to exact OpenStax University Physics Volume 1 sections; 8 model assumption sets documented.",
       "note": "Formula provenance only; no analytical reference vectors or experimental datasets are claimed for m1-m8 by this tranche."
+    },
+    {
+      "date": "2026-11-24",
+      "change": "Re-sync sourceCatalogue gitBlobSha after the Manim explainer-video wiring changed the catalogue source.",
+      "status": "Catalogue diff audited line by line: the only changes since the previously pinned catalogue are 17 added video fields (mv on m1-m15, video on p2 and p3) pointing at assets/media/ explainer MP4s. No experiment name, category, tag, formula or parameter content changed.",
+      "note": "Hash re-sync only; no evidence record, status or conclusion in this register was added, removed or altered."
     }
   ]
 }
