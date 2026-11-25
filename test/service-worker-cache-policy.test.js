@@ -5,7 +5,7 @@ import { readFile } from 'node:fs/promises';
 const worker = await readFile(new URL('../service-worker.js', import.meta.url), 'utf8');
 
 test('Physchem PWA invalidates legacy broad cache', () => {
-  assert.match(worker, /const CACHE = 'physchem-v2'/);
+  assert.match(worker, /const CACHE = 'physchem-v5'/);
 });
 
 test('API and authenticated requests bypass Cache Storage', () => {

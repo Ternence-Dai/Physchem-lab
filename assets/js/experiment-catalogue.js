@@ -429,7 +429,52 @@ var C1=[
  ro:function(p){var r=p.a*Math.PI/180;var s=p.n1*Math.sin(r)/p.n2;var t2=Math.abs(s)<=1?Math.asin(s)*180/Math.PI:NaN;
    var cr=p.n1>p.n2?Math.asin(p.n2/p.n1)*180/Math.PI:NaN;
    return[{k:'入射角 θ₁',v:p.a+'°'},{k:'折射角 θ₂',v:isFinite(t2)?F(t2,1)+'°':'全反射'},{k:'n₁/n₂',v:F(p.n1/p.n2,2)},{k:'n₂/n₁',v:F(p.n2/p.n1,2)},{k:'临界角',v:isFinite(cr)?F(cr,1)+'°':'无'},{k:'光速比',v:F(p.n2/p.n1,2)}];},
- tt:function(p){var r=p.a*Math.PI/180;var s=p.n1*Math.sin(r)/p.n2;return'【模型】斯涅尔定律 n₁sinθ₁=n₂sinθ₂。\n\n【推演】\n· n₁='+p.n1+', n₂='+p.n2+'\n· 入射角='+p.a+'°\n· 折射角='+(Math.abs(s)<=1?F(Math.asin(s)*180/Math.PI,1)+'°':'发生全反射')+'\n\n【结论】光从光密射向光疏且入射角大于临界角时全反射——光纤原理。';}},
+ tt:function(p){var r=p.a*Math.PI/180;var s=p.n1*Math.sin(r)/p.n2;return'【模型】斯涅尔定律 n₁sinθ₁=n₂sinθ₂。\n\n【推演】\n· n₁='+p.n1+', n₂='+p.n2+'\n· 入射角='+p.a+'°\n· 折射角='+(Math.abs(s)<=1?F(Math.asin(s)*180/Math.PI,1)+'°':'发生全反射')+'\n\n【结论】光从光密射向光疏且入射角大于临界角时全反射——光纤原理。';},
+ draw:function(c,W,H,p){
+   var cx=W*0.52,cy=H*0.57,span=Math.min(W*0.30,210),a=p.a*Math.PI/180;
+   var ratio=p.n1*Math.sin(a)/p.n2,critical=Math.abs(ratio)>1;
+   var refracted=critical?0:Math.asin(Math.max(-1,Math.min(1,ratio)));
+   var normal=span*0.78;
+   c.save();
+   c.fillStyle='rgba(24,43,68,.32)';c.fillRect(24,34,W-48,cy-34);
+   c.fillStyle='rgba(18,64,78,.22)';c.fillRect(24,cy,W-48,H-cy-44);
+   c.strokeStyle='rgba(148,190,220,.72)';c.lineWidth=2;
+   c.beginPath();c.moveTo(24,cy);c.lineTo(W-24,cy);c.stroke();
+   c.save();c.setLineDash([6,6]);c.strokeStyle='rgba(148,163,184,.7)';c.lineWidth=1.5;
+   c.beginPath();c.moveTo(cx,42);c.lineTo(cx,H-42);c.stroke();c.restore();
+   c.font='12px system-ui,sans-serif';c.textAlign='left';c.textBaseline='alphabetic';
+   c.fillStyle='#fbbf24';c.fillText('介质 1 · n₁ = '+F(p.n1,2),38,58);
+   c.fillStyle='#67e8f9';c.fillText('介质 2 · n₂ = '+F(p.n2,2),38,cy+25);
+   function ray(x1,y1,x2,y2,color){
+     var angle=Math.atan2(y2-y1,x2-x1),head=12;
+     c.strokeStyle=color;c.fillStyle=color;c.lineWidth=4;c.lineCap='round';
+     c.beginPath();c.moveTo(x1,y1);c.lineTo(x2,y2);c.stroke();
+     c.beginPath();c.moveTo(x2,y2);
+     c.lineTo(x2-head*Math.cos(angle-0.48),y2-head*Math.sin(angle-0.48));
+     c.lineTo(x2-head*Math.cos(angle+0.48),y2-head*Math.sin(angle+0.48));
+     c.closePath();c.fill();
+   }
+   var sx=cx-span*Math.sin(a),sy=cy-span*Math.cos(a);
+   ray(sx,sy,cx,cy,'#fbbf24');
+   if(critical){
+     ray(cx,cy,cx+span*Math.sin(a),cy-span*Math.cos(a),'#fb7185');
+   }else{
+     ray(cx,cy,cx+span*Math.sin(refracted),cy+span*Math.cos(refracted),'#67e8f9');
+   }
+   c.strokeStyle='#fbbf24';c.lineWidth=2;c.beginPath();c.arc(cx,cy,34,-Math.PI/2-a,-Math.PI/2,false);c.stroke();
+   c.fillStyle='#fde68a';c.font='bold 13px system-ui,sans-serif';c.textAlign='left';
+   c.fillText('θ₁ '+F(p.a,1)+'°',cx-86,cy-45);
+   if(!critical){
+     c.strokeStyle='#67e8f9';c.beginPath();c.arc(cx,cy,34,Math.PI/2-refracted,Math.PI/2,false);c.stroke();
+     c.fillStyle='#a5f3fc';c.fillText('θ₂ '+F(refracted*180/Math.PI,1)+'°',cx+42,cy+53);
+   }else{
+     c.fillStyle='#fda4af';c.fillText('全反射 · 无实数折射角',cx+28,cy-48);
+   }
+   c.fillStyle='rgba(226,232,240,.85)';c.font='12px system-ui,sans-serif';c.textAlign='center';
+   c.fillText('界面',W-55,cy-10);
+   c.fillText(critical?'入射光与反射光':'入射光与折射光',W/2,H-24);
+   c.restore();
+ }},
 
 {id:'o2',name:'杨氏双缝干涉',cat:'物理',tags:['光学','干涉'],br:'两束相干光叠加产生明暗相间的干涉条纹。',
  p:[P('lam','波长 λ',400,750,10,550,'nm'),P('d','缝间距 d',0.1,1,0.02,0.3,'mm'),P('D','屏距离 D',0.5,3,0.1,1.5,'m')],

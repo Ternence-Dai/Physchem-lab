@@ -298,21 +298,37 @@ const fs = require('node:fs');
       }
       const renderError = await page.evaluate(() => window.__physchemDrawError || window.__physchemStepError || null);
       if (renderError) throw new Error(`${label}: renderer error: ${renderError.message}`);
-      const result = await page.locator('#cv').evaluate(canvas => {
-        const context = canvas.getContext('2d');
-        if (!context || canvas.width < 100 || canvas.height < 100) return { pixels: 0, colored: 0 };
-        const width = Math.min(canvas.width, 900);
-        const height = Math.min(canvas.height, 520);
-        const pixels = context.getImageData(0, 0, width, height).data;
-        let visible = 0;
-        let colored = 0;
-        for (let i = 0; i < pixels.length; i += 4) {
-          if (pixels[i + 3] > 0) visible++;
-          const max = Math.max(pixels[i], pixels[i + 1], pixels[i + 2]);
-          const min = Math.min(pixels[i], pixels[i + 1], pixels[i + 2]);
-          if (pixels[i + 3] > 0 && max - min > 35) colored++;
-        }
-        return { pixels: visible, colored };
+      const result = await page.evaluate(() => {
+        const baseCanvas = document.querySelector('#cv');
+        const chartHost = document.querySelector('#curveChart');
+        const chartIsVisible = !!chartHost &&
+          getComputedStyle(chartHost).display !== 'none' &&
+          chartHost.getBoundingClientRect().width >= 100 &&
+          chartHost.getBoundingClientRect().height >= 100;
+        // Curve experiments use the local ECharts overlay when available;
+        // physical diagrams and the offline fallback use #cv. Inspect the
+        // active renderer rather than treating an intentionally hidden canvas
+        // as a blank experiment.
+        const canvases = chartIsVisible
+          ? [...chartHost.querySelectorAll('canvas')]
+          : (baseCanvas ? [baseCanvas] : []);
+        const samples = canvases.map(canvas => {
+          const context = canvas.getContext('2d');
+          if (!context || canvas.width < 100 || canvas.height < 100) return { pixels: 0, colored: 0 };
+          const width = Math.min(canvas.width, 900);
+          const height = Math.min(canvas.height, 520);
+          const data = context.getImageData(0, 0, width, height).data;
+          let visible = 0;
+          let colored = 0;
+          for (let i = 0; i < data.length; i += 4) {
+            if (data[i + 3] > 0) visible++;
+            const max = Math.max(data[i], data[i + 1], data[i + 2]);
+            const min = Math.min(data[i], data[i + 1], data[i + 2]);
+            if (data[i + 3] > 0 && max - min > 35) colored++;
+          }
+          return { pixels: visible, colored };
+        }).sort((a, b) => b.colored - a.colored);
+        return { ...(samples[0] || { pixels: 0, colored: 0 }), renderer: chartIsVisible ? 'echarts' : 'canvas' };
       });
       if (result.pixels < 80 || result.colored < 20) {
         throw new Error(`${label}: canvas appears blank or has no colored model drawing (${JSON.stringify(result)})`);

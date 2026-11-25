@@ -52,3 +52,8 @@ p1–p8 已增加逐输出字段的闭式解析参考向量，CI 对照公式推
 
 - **开发者：** 戴煜
 - **联系方式：** [ternence.dai@outlook.com](mailto:ternence.dai@outlook.com)
+
+
+## 第三批振动、碰撞、能量与动力学公式溯源
+
+m9–m15 已补充 OpenStax 章节级公式引用与模型假设，特别标注碰撞模型未求解终态、功率输入的同向力条件，以及 45° 斜抛最优条件。详见 [实验科学证据登记册](docs/EXPERIMENT_EVIDENCE_REGISTER.md)。

@@ -159,9 +159,11 @@ assert.ok(!pageHtml.includes('100个物理化学趣味实验') && !pageHtml.incl
   'the page must not display a stale hard-coded 100-experiment total');
 
 
-assert.ok(pageHtml.includes('experiment-catalogue.js?v=20261021-catalogue-restore-v2') &&
-          pageHtml.includes('legacy-app.js?v=20261021-catalogue-restore-v2'),
-  'catalogue and simulation scripts must use fresh cache-busting versions after restoration');
+const catalogueScriptVersion = pageHtml.match(/experiment-catalogue\.js\?v=([A-Za-z0-9._-]+)/)?.[1];
+const simulationScriptVersion = pageHtml.match(/legacy-app\.js\?v=([A-Za-z0-9._-]+)/)?.[1];
+assert.ok(catalogueScriptVersion && simulationScriptVersion,
+  'catalogue and simulation scripts must each carry a cache-busting version');
+
 assert.ok(pageHtml.includes('id="simulationStatus"') &&
           pageHtml.includes('实时动态图示') &&
           app.includes('function syncSimulationStatus()') &&
@@ -370,9 +372,10 @@ console.log('PhysChem experiment archive parameter-restore checks passed.');
 
 
 // Execute the complete catalogue in script order with the same factory contract as the browser.
-assert.ok(pageHtml.indexOf('legacy-app.js?v=20261021-catalogue-restore-v2') <
-          pageHtml.indexOf('experiment-catalogue.js?v=20261021-catalogue-restore-v2'),
-  'the engine must load before the catalogue because the catalogue uses its model factories');
+const engineScriptIndex = pageHtml.search(/<script[^>]+src=["'][^"']*legacy-app\.js\?v=[^"']+["']/);
+const catalogueScriptIndex = pageHtml.search(/<script[^>]+src=["'][^"']*experiment-catalogue\.js\?v=[^"']+["']/);
+assert.ok(engineScriptIndex >= 0 && catalogueScriptIndex > engineScriptIndex,
+  'the cache-busted engine must load before the cache-busted catalogue because the catalogue uses its model factories');
 assert.ok(app.includes('window.mkCurve=mkCurve') &&
           app.includes('window.mkMotion=mkMotion') &&
           app.includes('window.mkPart=mkPart'),
@@ -383,7 +386,7 @@ const runtimeContext={
   window:runtimeWindow,EXP:runtimeModels,
   P:(key,label,min,max,step,value,unit)=>({key,label,min,max,step,value,unit:unit||''}),
   F:(value,digits=2)=>Number(value).toFixed(digits),
-  mkCurve:model=>({id:model.id,name:model.name,cat:model.cat}),
+  mkCurve:model=>({id:model.id,name:model.name,cat:model.cat,draw:model.draw,curve:typeof model.draw==='function'?null:model}),
   mkMotion:model=>({id:model.id,name:model.name,cat:model.cat}),
   mkPart:model=>({id:model.id,name:model.name,cat:model.cat}),
   Math,Number,isFinite
@@ -395,4 +398,10 @@ assert.equal(new Set(runtimeModels.map(model=>model.id)).size,108,
   'the runtime catalogue must contain 108 unique experiment IDs');
 assert.ok(runtimeModels.every(model=>model.id&&model.name&&model.cat),
   'every runtime experiment must expose its visible directory fields');
+assert.ok(app.includes("if(typeof g.draw==='function')return g.draw(c,W,H,p,st);") &&
+          app.includes("curve:typeof g.draw==='function'?null:g,"),
+  'curve factories must preserve model-specific renderers and bypass ECharts routing for physical diagrams');
+const snellModel=runtimeModels.find(model=>model.id==='o1');
+assert.equal(typeof snellModel?.draw,'function',
+  'the Snell refraction experiment must provide a canvas renderer, not leave the simulation canvas blank');
 console.log('PhysChem runtime catalogue registration passed: ' + runtimeModels.length + ' experiments.');
