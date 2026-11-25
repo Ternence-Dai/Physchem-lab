@@ -4,7 +4,7 @@
   "warning": "This is an evidence-gap register generated from the current catalogue. Candidate references are research starting points only; no item-level formula citation, assumption review, laboratory benchmark or experimental-data validation is claimed.",
   "sourceCatalogue": {
     "path": "assets/js/experiment-catalogue.js",
-    "gitBlobSha": "9f6e0b2fe1ae1f0450cc543d76392de09439f030",
+    "gitBlobSha": "5b9220da6a9e274ce3d96a4134eb845b1fcf9c9d",
     "experimentCount": 108
   },
   "statusDefinitions": {
@@ -6779,6 +6779,12 @@
       "change": "Third exact item-level source tranche for oscillation, collisions, work/energy and Newtonian dynamics m9-m15.",
       "status": "7 formula families mapped to OpenStax University Physics Volume 1 sections; 7 item-specific assumption sets documented.",
       "note": "m11 only reports initial momentum/energy and does not implement a final-state collision solver; m12 assumes force parallel to displacement; m15's 45-degree optimum is same-level/no-drag only."
+    },
+    {
+      "date": "2026-11-25",
+      "change": "Add a visible Snell-law ray-diagram renderer and synchronize the runtime cache and evidence-manifest source hash.",
+      "status": "The o1 refraction experiment now draws incident, refracted, and total-internal-reflection rays; the catalogue source hash is synchronized.",
+      "note": "This is a visual-model completeness fix. Formula provenance remains based on the existing Snell-law model; no new experimental validation or measured data is claimed."
     }
   ]
 }
