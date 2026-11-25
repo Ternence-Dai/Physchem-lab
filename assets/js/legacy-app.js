@@ -112,7 +112,12 @@ function renderCurveChart(){
 function mkCurve(g){
   return {id:g.id,name:g.name,cat:g.cat,tags:g.tags,brief:g.brief,params:g.p,formulas:g.f,curve:g,
     resetOnChange:!!g.rc,init:function(){return{t:0};},step:function(p,dt,st){st.t=(st.t||0)+dt;},
-    draw:function(c,W,H,p,st){drawCurve(c,W,H,p,st,g);},readout:g.ro,tutor:g.tt,video:g.mv||null};
+    draw:function(c,W,H,p,st){
+      // Curve models may provide a physical diagram (for example, Snell-law rays).
+      // Preserve that renderer; otherwise use the shared curve plot.
+      if(typeof g.draw==='function')return g.draw(c,W,H,p,st);
+      drawCurve(c,W,H,p,st,g);
+    },readout:g.ro,tutor:g.tt,video:g.mv||null};
 }
 function mkMotion(g){
   return {id:g.id,name:g.name,cat:g.cat,tags:g.tags,brief:g.brief,params:g.p,formulas:g.f,resetOnChange:!!g.rc,
