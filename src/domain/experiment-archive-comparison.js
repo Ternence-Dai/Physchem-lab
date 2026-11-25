@@ -76,6 +76,53 @@ function numericValueAndUnit(raw) {
   return { value, unit: match[2].trim() };
 }
 
+const SAFE_READOUT_UNITS = Object.freeze({
+  Pa: Object.freeze({ dimension: "pressure", scale: 1, offset: 0 }),
+  kPa: Object.freeze({ dimension: "pressure", scale: 1000, offset: 0 }),
+  MPa: Object.freeze({ dimension: "pressure", scale: 1_000_000, offset: 0 }),
+  bar: Object.freeze({ dimension: "pressure", scale: 100_000, offset: 0 }),
+  K: Object.freeze({ dimension: "temperature", scale: 1, offset: 0 }),
+  "°C": Object.freeze({ dimension: "temperature", scale: 1, offset: 273.15 }),
+  V: Object.freeze({ dimension: "voltage", scale: 1, offset: 0 }),
+  mV: Object.freeze({ dimension: "voltage", scale: 0.001, offset: 0 }),
+  A: Object.freeze({ dimension: "current", scale: 1, offset: 0 }),
+  mA: Object.freeze({ dimension: "current", scale: 0.001, offset: 0 }),
+  W: Object.freeze({ dimension: "power", scale: 1, offset: 0 }),
+  kW: Object.freeze({ dimension: "power", scale: 1000, offset: 0 }),
+  s: Object.freeze({ dimension: "time", scale: 1, offset: 0 }),
+  min: Object.freeze({ dimension: "time", scale: 60, offset: 0 }),
+  h: Object.freeze({ dimension: "time", scale: 3600, offset: 0 })
+});
+
+function compareReadoutValues(left, right) {
+  if (left.unit === right.unit) {
+    const delta = right.value - left.value;
+    if (!Number.isFinite(delta)) {
+      return { comparable: false, delta: null, unit: "", converted: false, reason: "差值超出数值范围，无法可靠比较" };
+    }
+    return { comparable: true, delta, unit: left.unit, converted: false, reason: "" };
+  }
+  const leftDefinition = SAFE_READOUT_UNITS[left.unit];
+  const rightDefinition = SAFE_READOUT_UNITS[right.unit];
+  if (!leftDefinition || !rightDefinition || leftDefinition.dimension !== rightDefinition.dimension) {
+    return { comparable: false, delta: null, unit: "", converted: false, reason: "单位不同且不在受控换算表内，不自动换算" };
+  }
+  const rightInLeftUnit = (
+    right.value * rightDefinition.scale + rightDefinition.offset - leftDefinition.offset
+  ) / leftDefinition.scale;
+  const delta = rightInLeftUnit - left.value;
+  if (!Number.isFinite(delta)) {
+    return { comparable: false, delta: null, unit: "", converted: false, reason: "换算结果超出数值范围，无法可靠比较" };
+  }
+  return {
+    comparable: true,
+    delta,
+    unit: left.unit,
+    converted: true,
+    reason: `右侧单位 ${right.unit} 已按受控换算表转换为左侧单位 ${left.unit}`
+  };
+}
+
 function isSafeSnapshotObject(value, { maxDepth = 64, maxNodes = 10000 } = {}) {
   const active = new WeakSet();
   let nodes = 0;
@@ -237,20 +284,20 @@ export function compareExperimentArchiveSnapshots(left, right) {
     const rightValue = hasRight ? rightReadouts.get(label) : null;
     const leftParsed = hasLeft ? numericValueAndUnit(leftValue) : null;
     const rightParsed = hasRight ? numericValueAndUnit(rightValue) : null;
-    const sameUnit = !!leftParsed && !!rightParsed && leftParsed.unit === rightParsed.unit;
-    const candidateDelta = sameUnit ? rightParsed.value - leftParsed.value : null;
-    const finiteDelta = sameUnit && Number.isFinite(candidateDelta);
+    const comparison = leftParsed && rightParsed
+      ? compareReadoutValues(leftParsed, rightParsed)
+      : { comparable: false, delta: null, unit: "", converted: false, reason: "" };
     return {
       label,
       leftValue,
       rightValue,
-      unit: finiteDelta ? leftParsed.unit : "",
-      delta: finiteDelta ? candidateDelta : null,
-      comparable: finiteDelta,
+      unit: comparison.comparable ? comparison.unit : "",
+      delta: comparison.comparable ? comparison.delta : null,
+      comparable: comparison.comparable,
+      converted: comparison.converted,
       reason: !hasLeft || !hasRight ? "仅一份档案记录此结果" :
         !leftParsed || !rightParsed ? "非纯数值结果，不计算差值" :
-        !sameUnit ? "单位不同，不自动换算" :
-        !finiteDelta ? "差值超出数值范围，无法可靠比较" : ""
+        comparison.reason
     };
   });
 
