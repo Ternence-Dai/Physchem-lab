@@ -16,8 +16,16 @@ for (const wavelength of [1, 10, 100, 580, 1000, 3000]) {
 const peak = fn({T:5000}, 579.55);
 assert.ok(peak > 0.999 && peak < 1.01, `expected near-unity peak, got ${peak}`);
 assert.equal(fn({T:0}, 500), 0, 'non-positive temperature must be rejected');
-assert.match(html, /var N=300,hasPrev=false/,
-  'curve renderer must reset path continuity around invalid samples');
-assert.match(html, /if\(!Number\.isFinite\(yv\)\)\{hasPrev=false;continue;\}/,
-  'invalid curve values must break the plotted path');
+// The ECharts refactor (3ee6146) moved sampling into curveSeriesData as the
+// single source of truth shared by the canvas fallback and ECharts: N=300
+// samples, non-finite values become null breakpoints at sampling time, and
+// drawCurve breaks path continuity on those null points. The invariant these
+// assertions protect is unchanged — invalid samples must never be plotted as
+// a continuous line — only its location in the code moved.
+assert.match(html, /var N=300,out=\[\];/,
+  'curve sampling must keep N=300 samples in curveSeriesData');
+assert.match(html, /Number\.isFinite\(yv\)\?yv:null/,
+  'non-finite curve samples must become null breakpoints at sampling time');
+assert.match(html, /if\(pt\[1\]===null\)\{hasPrev=false;continue;\}/,
+  'invalid curve values must break the plotted path in the canvas renderer');
 console.log('Blackbody spectrum regression checks passed.');
