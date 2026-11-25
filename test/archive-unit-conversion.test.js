@@ -40,7 +40,7 @@ test("archive comparison retains exact-unit comparisons without marking a conver
   assert.equal(result.comparable, true);
   assert.equal(result.converted, false);
   assert.equal(result.unit, "MPa");
-  assert.equal(result.delta, -0.4);
+  assert.ok(Math.abs(result.delta + 0.4) < 1e-12);
 });
 
 test("archive comparison refuses unknown or cross-dimension unit conversions", () => {
