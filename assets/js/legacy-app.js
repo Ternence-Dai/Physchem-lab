@@ -708,7 +708,7 @@ function drawCurrentFrame(ts,dt,advance){
   try{cur.draw(ctx,W,H,P,ST);window.__physchemDrawError=null;}
   catch(e){window.__physchemDrawError={experimentId:cur.id,message:String(e&&e.message||e)};}
   ctx.save();ctx.font='11px Menlo,Consolas,monospace';ctx.fillStyle='rgba(125,143,171,.55)';ctx.textAlign='right';ctx.textBaseline='bottom';
-  ctx.fillText('PhysChem Lab · Ternence Dai',W-16,H-12);ctx.restore();
+  ctx.fillText('PhysChem Lab · 戴煜',W-16,H-12);ctx.restore();
   if(!advance||ts-lastRO>110){lastRO=ts;updateRO();}
 }
 function renderCurrentFrame(){
