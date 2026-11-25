@@ -89,11 +89,25 @@ async function verifyElectronZip(zipPath, version, zipName) {
   if (actual !== expected) throw new Error('Electron ZIP SHA-256 mismatch');
 }
 
+function powershellLiteral(value) {
+  return "'" + String(value).replace(/'/g, "''") + "'";
+}
+
+function runPowerShell(script) {
+  execFileSync('powershell', ['-NoProfile', '-NonInteractive', '-Command', script], { stdio: 'inherit' });
+}
+
 function extractZip(zipPath, destDir) {
   fs.mkdirSync(destDir, { recursive: true });
   if (process.platform === 'win32') {
-    execFileSync('powershell', ['-NoProfile', '-Command',
-      `Expand-Archive -LiteralPath '${zipPath}' -DestinationPath '${destDir}' -Force`], { stdio: 'inherit' });
+    // Expand-Archive on some PowerShell 7 runner images resolves a non-existent
+    // three-argument .NET overload and can leave an empty destination behind.
+    // Use the stable two-argument .NET ZipFile API and then verify the payload.
+    runPowerShell(
+      'Add-Type -AssemblyName System.IO.Compression.FileSystem; ' +
+      '[System.IO.Compression.ZipFile]::ExtractToDirectory(' +
+      powershellLiteral(zipPath) + ', ' + powershellLiteral(destDir) + ')'
+    );
   } else {
     execFileSync('unzip', ['-o', '-q', zipPath, '-d', destDir], { stdio: 'inherit' });
   }
@@ -102,10 +116,18 @@ function extractZip(zipPath, destDir) {
 function zipFolder(folder, zipPath) {
   if (fs.existsSync(zipPath)) fs.rmSync(zipPath);
   if (process.platform === 'win32') {
-    execFileSync('powershell', ['-NoProfile', '-Command',
-      `Compress-Archive -Path '${folder}\\*' -DestinationPath '${zipPath}' -Force`], { stdio: 'inherit' });
+    // Avoid the PowerShell Archive module's runner-version-dependent overloads.
+    runPowerShell(
+      'Add-Type -AssemblyName System.IO.Compression.FileSystem; ' +
+      '[System.IO.Compression.ZipFile]::CreateFromDirectory(' +
+      powershellLiteral(folder) + ', ' + powershellLiteral(zipPath) +
+      ', [System.IO.Compression.CompressionLevel]::Optimal, $false)'
+    );
   } else {
     execFileSync('zip', ['-r', '-q', zipPath, '.'], { cwd: folder, stdio: 'inherit' });
+  }
+  if (!fs.existsSync(zipPath) || fs.statSync(zipPath).size < 1024 * 1024) {
+    throw new Error('Windows package ZIP is missing or implausibly small: ' + zipPath);
   }
 }
 
@@ -154,7 +176,19 @@ function copyInto(src, destDir) {
 
   const exeSrc = path.join(stage, 'electron.exe');
   const exeDest = path.join(stage, APP_NAME + '.exe');
-  if (fs.existsSync(exeSrc)) fs.renameSync(exeSrc, exeDest);
+  if (!fs.existsSync(exeSrc)) {
+    throw new Error('Verified Electron runtime did not extract electron.exe into the package root');
+  }
+  fs.renameSync(exeSrc, exeDest);
+
+  const requiredFiles = [
+    exeDest,
+    path.join(appDir, 'main.cjs'),
+    path.join(webDir, 'index.html')
+  ];
+  for (const file of requiredFiles) {
+    if (!fs.existsSync(file)) throw new Error('Required desktop package file is missing: ' + file);
+  }
 
   const outZip = path.join(REPO_ROOT, CONFIG.zipName);
   const packDir = path.join(BUILD_DIR, 'pack');
