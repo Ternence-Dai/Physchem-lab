@@ -173,6 +173,132 @@ var cv,ctx,sw,resizeObserver=null;
 var W=800,H=500;
 var cur=null,P={},ST={};
 var paused=false;
+/* ---------------- 本地错误事件账（第四波 #4 范式复制） ----------------
+ * 档案加载损坏、导入被拒、保存失败等失败路径在此留一条结构化事件
+ * （kind + 时间 + 白名单 context 摘要 + 指纹），只存本地独立键，
+ * 可经档案抽屉的「导出错误日志」导出、随报障附带。隐私靠结构：
+ * context 只走白名单键（阶段、错误类名、条数、字节数等），实验
+ * 名称与观察备注等用户文本没有任何键可以借道进入事件。记账尽力
+ * 而为：recordErrorEvent 全吞异常、失败返回 false，原失败行为
+ * （锁定/拒绝/降级）一字不变。领域模块不可用时走字面量 fallback
+ * 构造（与领域层同一事件形状、同一指纹公式），因为「领域模块
+ * 加载失败」本身正是要记录的失败之一。
+ * 注意：本段刻意放在存档持久化段（SAVE_KEY 起）之外——校验器与
+ * 故障测试抽取该段时 recordErrorEvent 不存在，各接入点以 typeof
+ * 守卫跳过记账，既有写入计数断言不受污染。 */
+var ERROR_EVENT_LOG_KEY='physchem-error-events-v1';
+var ERROR_EVENT_LOG_FALLBACK_MAX=200;
+var ERROR_EVENT_CONTEXT_KEYS=['stage','errorName','storageKind','rowCount','fileSizeBytes','preserved','fallback'];
+function sanitizeErrorEventContextFallback(context){
+  var clean={};
+  if(!context||typeof context!=='object'||Array.isArray(context))return clean;
+  for(var i=0;i<ERROR_EVENT_CONTEXT_KEYS.length;i++){
+    var key=ERROR_EVENT_CONTEXT_KEYS[i];
+    if(!Object.prototype.hasOwnProperty.call(context,key))continue;
+    var value=context[key];
+    if(typeof value==='string')clean[key]=value.slice(0,64);
+    else if(typeof value==='number'&&isFinite(value))clean[key]=value;
+    else if(typeof value==='boolean')clean[key]=value;
+  }
+  return clean;
+}
+function buildErrorEventFallback(kind,message,context,at){
+  var clean=sanitizeErrorEventContextFallback(context);
+  var fingerprint=[kind,clean.errorName||'',clean.stage||''].map(function(part){return String(part).toLowerCase();}).join('|');
+  var hash=5381;
+  for(var i=0;i<fingerprint.length;i++)hash=((hash<<5)+hash+fingerprint.charCodeAt(i))>>>0;
+  return {
+    id:'err-'+hash.toString(16)+'-'+String(Date.parse(at)||0),
+    at:at,lastAt:at,kind:kind,
+    message:String(message||'').slice(0,240),
+    fingerprint:fingerprint,
+    count:1,
+    context:clean
+  };
+}
+function recordErrorEvent(kind,error,context){
+  try{
+    var at=new Date().toISOString();
+    var detail={};
+    if(context&&typeof context==='object'){
+      for(var key in context)if(Object.prototype.hasOwnProperty.call(context,key))detail[key]=context[key];
+    }
+    if(error&&error.name&&detail.errorName===undefined)detail.errorName=String(error.name);
+    var message=error&&error.message?String(error.message):String(kind);
+    var events=[];
+    try{
+      var raw=localStorage.getItem(ERROR_EVENT_LOG_KEY);
+      if(raw!==null){var parsed=JSON.parse(raw);if(Array.isArray(parsed))events=parsed;}
+    }catch(_){events=[];}
+    var next;
+    var domain=(typeof window!=='undefined'&&window)?window.PHYS_DOMAIN:null;
+    if(domain&&typeof domain.appendErrorEvent==='function'){
+      next=domain.appendErrorEvent(events,{kind:kind,message:message,context:detail},at);
+    }else{
+      var event=buildErrorEventFallback(kind,message,detail,at);
+      var index=-1;
+      for(var i=0;i<events.length;i++){
+        if(events[i]&&events[i].fingerprint===event.fingerprint){index=i;break;}
+      }
+      if(index>=0){
+        var merged={};
+        for(var mk in events[index])if(Object.prototype.hasOwnProperty.call(events[index],mk))merged[mk]=events[index][mk];
+        merged.lastAt=at;
+        merged.message=event.message||merged.message;
+        merged.count=(typeof events[index].count==='number'?events[index].count:1)+1;
+        next=events.slice(0,index).concat([merged],events.slice(index+1));
+      }else{
+        next=events.concat([event]);
+      }
+      if(next.length>ERROR_EVENT_LOG_FALLBACK_MAX)next=next.slice(next.length-ERROR_EVENT_LOG_FALLBACK_MAX);
+    }
+    localStorage.setItem(ERROR_EVENT_LOG_KEY,JSON.stringify(next));
+    return true;
+  }catch(_){
+    return false;
+  }
+}
+function exportErrorLog(){
+  var events=[];
+  try{
+    var raw=localStorage.getItem(ERROR_EVENT_LOG_KEY);
+    if(raw!==null){var parsed=JSON.parse(raw);if(Array.isArray(parsed))events=parsed;}
+  }catch(error){
+    toast('错误日志读取失败：'+(error&&error.message?error.message:'浏览器存储不可用'));
+    return false;
+  }
+  if(!events.length){toast('暂无错误记录。');return false;}
+  try{
+    var exportedAt=new Date().toISOString();
+    var domain=(typeof window!=='undefined'&&window)?window.PHYS_DOMAIN:null;
+    var payload=domain&&typeof domain.buildErrorLogExport==='function'
+      ?domain.buildErrorLogExport(events,exportedAt)
+      :{
+        schemaVersion:1,
+        exportedAt:exportedAt,
+        storage:'local-browser-error-log',
+        eventCount:events.length,
+        totalOccurrences:events.reduce(function(sum,entry){return sum+(entry&&Number.isInteger(entry.count)?entry.count:1);},0),
+        groups:[],
+        events:events
+      };
+    var blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json;charset=utf-8'});
+    var url=URL.createObjectURL(blob);
+    var link=document.createElement('a');
+    link.href=url;
+    link.download='physchem-error-log-'+exportedAt.slice(0,10)+'.json';
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    deferArchiveObjectUrlRelease(url);
+    toast('错误日志已导出，可随问题反馈一并发送');
+    return true;
+  }catch(error){
+    recordErrorEvent('export_failed',error,{stage:'error-log-export'});
+    toast('错误日志导出失败：'+(error&&error.message?error.message:'浏览器存储不可用'));
+    return false;
+  }
+}
 var SAVE_KEY='physchem_lab_saved_experiments_v1';
 var ARCHIVE_MODEL_VERSION='physchem-engine-v2';
 var saves=[];
@@ -237,6 +363,7 @@ try{
 }catch(readError){
   archiveReadFailed=true;
   storageRecoveryRequired=true;
+  if(typeof recordErrorEvent==='function')recordErrorEvent('recovery_locked',readError,{stage:'archive-read',preserved:false});
   console.warn('无法读取实验档案缓存，已暂停覆盖写入；请导出恢复记录或导入有效备份',readError);
 }
 if(!archiveReadFailed){
@@ -246,12 +373,17 @@ if(!archiveReadFailed){
     saves=restored;
   }catch(e){
     storageRecoveryRequired=true;
+    // Privacy: a JSON.parse SyntaxError message can embed a snippet of
+    // the raw archive bytes, so this path records only the error class
+    // name with a static message — never the caught error's own text.
+    if(typeof recordErrorEvent==='function')recordErrorEvent('recovery_locked',{name:e&&e.name?String(e.name):'Error',message:'实验存档读取失败，已启用恢复保护'},{stage:'archive-load',preserved:archiveRawValue!==null,fileSizeBytes:typeof rawSaved==='string'?rawSaved.length:0});
     console.warn('实验存档读取失败，已暂停覆盖写入；请导出原始存档或导入有效备份',e);
   }
 }
 function persistExperimentSaves(nextSaves){
   if(storageRecoveryRequired)return false;
   if(!isValidExperimentSaveList(nextSaves)){
+    if(typeof recordErrorEvent==='function')recordErrorEvent('save_failed',null,{stage:'archive-validate',errorName:'ValidationError',rowCount:Array.isArray(nextSaves)?nextSaves.length:0});
     console.warn('拒绝写入结构无效的实验存档；原有存档保持不变');
     return false;
   }
@@ -264,6 +396,7 @@ function persistExperimentSaves(nextSaves){
     return true;
   }catch(e){
     storageRecoveryRequired=true;
+    if(typeof recordErrorEvent==='function')recordErrorEvent('save_failed',e,{stage:'archive-write',rowCount:nextSaves.length});
     console.warn('实验存档写入失败，已启用恢复保护',e);
     return false;
   }
@@ -298,6 +431,7 @@ function restoreExperimentArchive(input){
     return true;
   }catch(e){
     storageRecoveryRequired=true;
+    if(typeof recordErrorEvent==='function')recordErrorEvent('storage_fault',e,{stage:'archive-restore-write',rowCount:Array.isArray(candidate)?candidate.length:0});
     console.warn('实验档案恢复写入失败，恢复保护仍保持启用',e);
     return false;
   }
@@ -308,19 +442,26 @@ function deferArchiveObjectUrlRelease(url){
   setTimeout(function(){URL.revokeObjectURL(url);},1000);
 }
 function exportExperimentArchive(){
-  var payload=buildExperimentArchiveBackup();
-  var blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
-  var url=URL.createObjectURL(blob);
-  var link=document.createElement('a');
-  link.href=url;
-  link.download=storageRecoveryRequired
-    ? 'PhysChem_原始存档恢复包_'+new Date().toISOString().slice(0,10)+'.json'
-    : 'PhysChem_实验档案备份_'+new Date().toISOString().slice(0,10)+'.json';
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-  deferArchiveObjectUrlRelease(url);
-  toast(storageRecoveryRequired?'已导出原始存档恢复包；请妥善保管并检查内容。':'实验档案备份已导出');
+  try{
+    var payload=buildExperimentArchiveBackup();
+    var blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+    var url=URL.createObjectURL(blob);
+    var link=document.createElement('a');
+    link.href=url;
+    link.download=storageRecoveryRequired
+      ? 'PhysChem_原始存档恢复包_'+new Date().toISOString().slice(0,10)+'.json'
+      : 'PhysChem_实验档案备份_'+new Date().toISOString().slice(0,10)+'.json';
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    deferArchiveObjectUrlRelease(url);
+    toast(storageRecoveryRequired?'已导出原始存档恢复包；请妥善保管并检查内容。':'实验档案备份已导出');
+  }catch(error){
+    // Record-and-rethrow: the failure surfaces exactly as before,
+    // only now it also lands in the local error event log.
+    if(typeof recordErrorEvent==='function')recordErrorEvent('export_failed',error,{stage:'archive-export'});
+    throw error;
+  }
 }
 function syncArchiveRecoveryUI(){
   var status=E('archiveRecoveryStatus');
@@ -337,6 +478,7 @@ function importExperimentArchiveFile(input){
   var file=input&&input.files&&input.files[0];
   if(!file)return;
   if(file.size>1024*1024){
+    if(typeof recordErrorEvent==='function')recordErrorEvent('import_rejected',null,{stage:'import-size',errorName:'FileTooLarge',fileSizeBytes:file.size});
     toast('档案备份超过 1 MB，已拒绝导入');
     input.value='';
     return;
@@ -351,10 +493,14 @@ function importExperimentArchiveFile(input){
       renderD();
       toast('实验档案已验证并恢复 ✓');
     }catch(error){
+      // Privacy: same JSON.parse snippet concern as the load path —
+      // record the error class name with a static message only.
+      if(typeof recordErrorEvent==='function')recordErrorEvent('import_rejected',{name:error&&error.name?String(error.name):'Error',message:'档案恢复失败；原有存档保持不变'},{stage:error&&error.name==='SyntaxError'?'import-parse':'import-restore',fileSizeBytes:file.size});
       toast('档案恢复失败：'+error.message+'；原有存档保持不变');
     }finally{input.value='';}
   };
   reader.onerror=function(){
+    if(typeof recordErrorEvent==='function')recordErrorEvent('import_rejected',null,{stage:'import-read',errorName:'FileReadError',fileSizeBytes:file.size});
     toast('无法读取档案文件；原有存档保持不变');
     input.value='';
   };
@@ -607,6 +753,8 @@ function bindUI(){
   }
   var archiveExport=E('archiveExport');
   if(archiveExport)archiveExport.onclick=exportExperimentArchive;
+  var errorLogExport=E('archiveErrorLogExport');
+  if(errorLogExport)errorLogExport.onclick=exportErrorLog;
   var archiveImport=E('archiveImport');
   if(archiveImport)archiveImport.onchange=function(){importExperimentArchiveFile(this);};
   syncArchiveRecoveryUI();
@@ -936,6 +1084,6 @@ function renderD(){
 var tT=null;
 function toast(m){var t=E('ts');if(!t)return;t.textContent=m;t.className='ts on';clearTimeout(tT);tT=setTimeout(function(){t.className='ts';},1800);}
 
-async function main(){try{window.PHYS_DOMAIN=await import('../../src/domain/index.js');}catch(e){console.error('科学计算核心加载失败',e);toast('科学计算核心加载失败，请刷新或检查部署');return;}bindUI();boot();}
+async function main(){try{window.PHYS_DOMAIN=await import('../../src/domain/index.js');}catch(e){console.error('科学计算核心加载失败',e);if(typeof recordErrorEvent==='function')recordErrorEvent('domain_unavailable',e,{stage:'domain-load'});toast('科学计算核心加载失败，请刷新或检查部署');return;}bindUI();boot();}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',main);else main();
 })();
