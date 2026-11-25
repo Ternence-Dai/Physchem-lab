@@ -47,3 +47,8 @@ p1–p8 已增加逐输出字段的闭式解析参考向量，CI 对照公式推
 ## 第二批运动学公式溯源
 
 自由落体、竖直上抛/下抛、圆周、平抛、斜抛、匀速与匀加速直线运动（m1–m8）已补充 OpenStax 精确章节引用和逐项假设。公式出处不等于实验验证。详见 [科学证据登记册](docs/EXPERIMENT_EVIDENCE_REGISTER.md)。
+
+## 开发者信息
+
+- **开发者：** 戴煜
+- **联系方式：** [ternence.dai@outlook.com](mailto:ternence.dai@outlook.com)
