@@ -96,7 +96,11 @@ const SAFE_READOUT_UNITS = Object.freeze({
 
 function compareReadoutValues(left, right) {
   if (left.unit === right.unit) {
-    return { comparable: true, delta: right.value - left.value, unit: left.unit, converted: false, reason: "" };
+    const delta = right.value - left.value;
+    if (!Number.isFinite(delta)) {
+      return { comparable: false, delta: null, unit: "", converted: false, reason: "差值超出数值范围，无法可靠比较" };
+    }
+    return { comparable: true, delta, unit: left.unit, converted: false, reason: "" };
   }
   const leftDefinition = SAFE_READOUT_UNITS[left.unit];
   const rightDefinition = SAFE_READOUT_UNITS[right.unit];
