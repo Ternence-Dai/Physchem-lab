@@ -7,5 +7,9 @@
     "check": "node scripts/check-js-syntax.cjs && node scripts/validate-nist-reference.cjs && node scripts/validate-nernst.cjs && node scripts/validate-flagship-experiments.cjs && node scripts/validate-flagship-reference-vectors.mjs && node scripts/validate-experiment-evidence.cjs && node scripts/validate-primary-demos.cjs",
     "verify": "node scripts/verify.cjs",
     "verify:full": "node scripts/verify.cjs --full"
+  },
+  "author": {
+    "name": "戴煜",
+    "email": "ternence.dai@outlook.com"
   }
 }
