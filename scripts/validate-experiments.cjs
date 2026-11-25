@@ -372,8 +372,8 @@ console.log('PhysChem experiment archive parameter-restore checks passed.');
 
 
 // Execute the complete catalogue in script order with the same factory contract as the browser.
-const engineScriptIndex = pageHtml.search(/<script[^>]+src=["'][^"']*legacy-app\\.js\\?v=[^"']+["']/);
-const catalogueScriptIndex = pageHtml.search(/<script[^>]+src=["'][^"']*experiment-catalogue\\.js\\?v=[^"']+["']/);
+const engineScriptIndex = pageHtml.search(/<script[^>]+src=["'][^"']*legacy-app\.js\\?v=[^"']+["']/);
+const catalogueScriptIndex = pageHtml.search(/<script[^>]+src=["'][^"']*experiment-catalogue\.js\\?v=[^"']+["']/);
 assert.ok(engineScriptIndex >= 0 && catalogueScriptIndex > engineScriptIndex,
   'the cache-busted engine must load before the cache-busted catalogue because the catalogue uses its model factories');
 assert.ok(app.includes('window.mkCurve=mkCurve') &&
@@ -398,6 +398,8 @@ assert.equal(new Set(runtimeModels.map(model=>model.id)).size,108,
   'the runtime catalogue must contain 108 unique experiment IDs');
 assert.ok(runtimeModels.every(model=>model.id&&model.name&&model.cat),
   'every runtime experiment must expose its visible directory fields');
+assert.ok(app.includes("if(typeof g.draw==='function')return g.draw(c,W,H,p,st);"),
+  'curve factories must preserve a model-specific physics diagram renderer when one is supplied');
 const snellModel=runtimeModels.find(model=>model.id==='o1');
 assert.equal(typeof snellModel?.draw,'function',
   'the Snell refraction experiment must provide a canvas renderer, not leave the simulation canvas blank');
