@@ -72,7 +72,7 @@ assert.ok(app.includes("event.target.closest('[data-delete-save]')") &&
           app.includes('saves.length>=30'),
   'archive UI must expose delegated per-record deletion and enforce its capacity');
 assert.ok(html.includes('最多保留 30 份实验档案') &&
-          /legacy-app\\.js\\?v=[A-Za-z0-9._-]+/.test(html),
+          /legacy-app\.js\?v=[A-Za-z0-9._-]+/.test(html),
   'archive capacity must be visible and the main runtime must carry a cache-busting version');
 assert.ok(css.includes('.archive-capacity-note') &&
           css.includes('.w9-archive-delete') &&
