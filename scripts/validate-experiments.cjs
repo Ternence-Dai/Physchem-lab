@@ -159,9 +159,13 @@ assert.ok(!pageHtml.includes('100个物理化学趣味实验') && !pageHtml.incl
   'the page must not display a stale hard-coded 100-experiment total');
 
 
-assert.ok(pageHtml.includes('experiment-catalogue.js?v=20261021-catalogue-restore-v2') &&
-          pageHtml.includes('legacy-app.js?v=20261021-catalogue-restore-v2'),
-  'catalogue and simulation scripts must use fresh cache-busting versions after restoration');
+const catalogueScriptVersion = pageHtml.match(/experiment-catalogue\.js\?v=([A-Za-z0-9._-]+)/)?.[1];
+const simulationScriptVersion = pageHtml.match(/legacy-app\.js\?v=([A-Za-z0-9._-]+)/)?.[1];
+assert.ok(catalogueScriptVersion && simulationScriptVersion &&
+          catalogueScriptVersion !== '20261021-catalogue-restore-v2' &&
+          simulationScriptVersion !== '20261021-catalogue-restore-v2',
+  'catalogue and simulation scripts must each carry a current cache-busting version');
+
 assert.ok(pageHtml.includes('id="simulationStatus"') &&
           pageHtml.includes('实时动态图示') &&
           app.includes('function syncSimulationStatus()') &&
