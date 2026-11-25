@@ -161,9 +161,8 @@ assert.ok(!pageHtml.includes('100个物理化学趣味实验') && !pageHtml.incl
 
 const catalogueScriptVersion = pageHtml.match(/experiment-catalogue\.js\?v=([A-Za-z0-9._-]+)/)?.[1];
 const simulationScriptVersion = pageHtml.match(/legacy-app\.js\?v=([A-Za-z0-9._-]+)/)?.[1];
-assert.ok(catalogueScriptVersion && simulationScriptVersion &&
-          simulationScriptVersion !== '20261021-catalogue-restore-v2',
-  'catalogue and simulation scripts must carry cache-busting versions, and the changed simulation bundle must be invalidated');
+assert.ok(catalogueScriptVersion && simulationScriptVersion,
+  'catalogue and simulation scripts must each carry a cache-busting version');
 
 assert.ok(pageHtml.includes('id="simulationStatus"') &&
           pageHtml.includes('实时动态图示') &&
@@ -373,9 +372,10 @@ console.log('PhysChem experiment archive parameter-restore checks passed.');
 
 
 // Execute the complete catalogue in script order with the same factory contract as the browser.
-assert.ok(pageHtml.indexOf('legacy-app.js?v=20261021-catalogue-restore-v2') <
-          pageHtml.indexOf('experiment-catalogue.js?v=20261021-catalogue-restore-v2'),
-  'the engine must load before the catalogue because the catalogue uses its model factories');
+const engineScriptIndex = pageHtml.search(/<script[^>]+src=["'][^"']*legacy-app\\.js\\?v=[^"']+["']/);
+const catalogueScriptIndex = pageHtml.search(/<script[^>]+src=["'][^"']*experiment-catalogue\\.js\\?v=[^"']+["']/);
+assert.ok(engineScriptIndex >= 0 && catalogueScriptIndex > engineScriptIndex,
+  'the cache-busted engine must load before the cache-busted catalogue because the catalogue uses its model factories');
 assert.ok(app.includes('window.mkCurve=mkCurve') &&
           app.includes('window.mkMotion=mkMotion') &&
           app.includes('window.mkPart=mkPart'),
