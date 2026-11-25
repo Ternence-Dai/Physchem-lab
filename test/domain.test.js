@@ -283,7 +283,7 @@ test("experiment archive comparison requires the same stable experiment and mode
    "comparison must not mutate or rewrite historical snapshots");
 });
 
-test("experiment archive comparison never converts different units or fabricates non-numeric deltas",()=>{
+test("experiment archive comparison converts only allowlisted units and preserves non-numeric safeguards",()=>{
  const base={
   experimentId:"titration",experimentSnapshotVersion:1,
   modelVersion:"physchem-engine-v2",snapshotAt:"2026-10-23T01:00:00.000Z",
@@ -297,9 +297,11 @@ test("experiment archive comparison never converts different units or fabricates
  const result=compareExperimentArchiveSnapshots(base,next);
  const temperature=result.readouts.find(row=>row.label==="温度");
  const observation=result.readouts.find(row=>row.label==="观察现象");
- assert.equal(temperature.comparable,false);
- assert.equal(temperature.delta,null);
- assert.match(temperature.reason,/单位不同/);
+ assert.equal(temperature.comparable,true);
+ assert.equal(temperature.converted,true);
+ assert.equal(temperature.unit,"°C");
+ assert.ok(Math.abs(temperature.delta)<1e-10);
+ assert.match(temperature.reason,/已按受控换算表转换/);
  assert.equal(observation.comparable,false);
  assert.equal(observation.delta,null);
  assert.match(observation.reason,/非纯数值/);
