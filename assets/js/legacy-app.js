@@ -307,6 +307,19 @@ var archiveCompareVisible=false;
 var storageRecoveryRequired=false;
 var archiveRawValue=null;
 var archiveReadFailed=false;
+// Load trace (migration registry spec: every read reports what it
+// loaded). migratedFrom stays null — the registered chain has no
+// transformation steps, generations coexist by validation. The
+// domain layer (src/domain/index.js) owns the registry and the
+// inspection pipeline; this segment runs synchronously before the
+// domain module can load, so startup keeps the validators below
+// (cross-checked against the registry in tests) and only the
+// generation reporting lives here.
+var archiveLoadTrace=null;
+function experimentArchiveLoadedVersion(rows){
+  if(!rows.length)return 1;
+  return rows.some(function(item){return item.experimentSnapshotVersion===1;})?1:0;
+}
 function isValidExperimentSave(item){
   if(!item||typeof item!=='object'||Array.isArray(item))return false;
   var allowedFields=['name','time','params','note','readouts','formulaSnapshot','tutorSnapshot','experimentId','modelVersion','experimentSnapshotVersion','snapshotAt'];
@@ -371,6 +384,7 @@ if(!archiveReadFailed){
     var restored=JSON.parse(rawSaved||'[]');
     if(!isValidExperimentSaveList(restored))throw new TypeError('实验存档内容或结构无效');
     saves=restored;
+    archiveLoadTrace={loadedVersion:experimentArchiveLoadedVersion(restored),migratedFrom:null,source:'stored'};
   }catch(e){
     storageRecoveryRequired=true;
     // Privacy: a JSON.parse SyntaxError message can embed a snippet of
@@ -416,11 +430,27 @@ function buildExperimentArchiveBackup(){
 }
 function restoreExperimentArchive(input){
   var candidate=input;
-  if(candidate&&!Array.isArray(candidate)&&candidate.format==='physchem-lab-archive-recovery'){
-    if(candidate.version!==1||candidate.storageKey!==SAVE_KEY||typeof candidate.rawValue!=='string')return false;
-    try{candidate=JSON.parse(candidate.rawValue);}catch(e){return false;}
+  // Restore runs after boot, so it goes through the domain-layer
+  // inspection pipeline (migration registry) whenever the domain
+  // module is loaded; the segment-local checks below are the
+  // fallback for when it is not (same verdicts, cross-checked).
+  var domainApi=(typeof window!=='undefined'&&window.PHYS_DOMAIN)||null;
+  var pendingTrace=null;
+  if(domainApi&&typeof domainApi.inspectExperimentArchive==='function'){
+    var inspected=domainApi.inspectExperimentArchive(input,{storageKey:SAVE_KEY});
+    if(!inspected||!inspected.ok)return false;
+    candidate=inspected.rows;
+    pendingTrace={loadedVersion:inspected.loadedVersion,migratedFrom:inspected.migratedFrom,source:inspected.source};
+  }else{
+    var traceSource='list';
+    if(candidate&&!Array.isArray(candidate)&&candidate.format==='physchem-lab-archive-recovery'){
+      if(candidate.version!==1||candidate.storageKey!==SAVE_KEY||typeof candidate.rawValue!=='string')return false;
+      try{candidate=JSON.parse(candidate.rawValue);}catch(e){return false;}
+      traceSource='envelope';
+    }
+    if(!isValidExperimentSaveList(candidate))return false;
+    pendingTrace={loadedVersion:experimentArchiveLoadedVersion(candidate),migratedFrom:null,source:traceSource};
   }
-  if(!isValidExperimentSaveList(candidate))return false;
   try{
     var serialized=JSON.stringify(candidate);
     localStorage.setItem(SAVE_KEY,serialized);
@@ -428,6 +458,7 @@ function restoreExperimentArchive(input){
     archiveRawValue=serialized;
     archiveReadFailed=false;
     storageRecoveryRequired=false;
+    archiveLoadTrace=pendingTrace;
     return true;
   }catch(e){
     storageRecoveryRequired=true;

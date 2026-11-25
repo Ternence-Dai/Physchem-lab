@@ -450,3 +450,211 @@ export function buildErrorLogExport(events, exportedAt) {
     events: clean
   };
 }
+
+/* ------------------------------------------------------------------
+ * Experiment archive migration registry (wave 4, item 2 — pattern
+ * from data-migration-registry-spec-v1, pilots EKPO 906e9468 and
+ * Health 7de0ec68).
+ *
+ * PhysChem's archive differs from the spec's root-object repos: the
+ * stored value is a bare JSON array of experiment records, and the
+ * version lives inside each record — `experimentSnapshotVersion`.
+ * Two record generations coexist:
+ *   version 0 (legacy): parameter-only records with no
+ *     `experimentSnapshotVersion` field (pre-metadata archives);
+ *   version 1 (current): reproducibility snapshots carrying
+ *     `experimentSnapshotVersion: 1` plus `snapshotAt`, readouts,
+ *     formula and tutor snapshots.
+ * Generations are NOT transformed into each other: a legacy record
+ * has no snapshot timestamp or readouts, and fabricating them would
+ * invent data. The registered chain is therefore legitimately
+ * empty — legacy rows are probed by shape, current rows are
+ * validated, and both load side by side. What this registry adds
+ * over the previously scattered UI checks is a single domain-layer
+ * home for the version constants, the legacy probe, the inspection
+ * pipeline every read path can share, and the load trace
+ * ({ loadedVersion, migratedFrom }) the spec requires.
+ *
+ * Deliberate deviations, with reasons:
+ * - No root-level schemaVersion: the healthy export format is a
+ *   bare array (pinned by scripts/validate-storage-recovery.cjs)
+ *   and every existing user backup is a bare array; wrapping the
+ *   root in an envelope would break both. The in-data version is
+ *   the per-record field above.
+ * - The storage key `physchem_lab_saved_experiments_v1` keeps its
+ *   historical `_v1` suffix: key names are frozen (spec §2) and no
+ *   code parses the suffix to infer a version — the record field
+ *   is the only version source.
+ * - The startup load in assets/js/legacy-app.js runs synchronously
+ *   while the page script is evaluated, before this module can be
+ *   imported, so that one path keeps its segment-local validators
+ *   (they mirror the rules below and are cross-checked against
+ *   this registry by test/archive-migration-registry.test.js).
+ *   The import/restore path, which runs after boot, goes through
+ *   inspectExperimentArchive whenever the domain module is loaded.
+ * ------------------------------------------------------------------ */
+
+export const EXPERIMENT_ARCHIVE_BASELINE_VERSION = 0;
+export const EXPERIMENT_ARCHIVE_CURRENT_VERSION = 1;
+export const EXPERIMENT_ARCHIVE_RECOVERY_FORMAT = "physchem-lab-archive-recovery";
+export const EXPERIMENT_ARCHIVE_RECOVERY_ENVELOPE_VERSION = 1;
+export const EXPERIMENT_ARCHIVE_MAX_RECORDS = 30;
+
+// Registered transformation steps, oldest first. Empty by design
+// (see the header): generations coexist by validation, never by
+// rewriting a legacy record into a snapshot.
+export const EXPERIMENT_ARCHIVE_MIGRATIONS = Object.freeze([]);
+
+// Registry self-check (spec §3.6): chain steps, when any exist,
+// must be consecutive { from, to: from + 1, apply, note } entries
+// ending at the current version.
+export function validateExperimentArchiveRegistry() {
+  if (!Number.isSafeInteger(EXPERIMENT_ARCHIVE_BASELINE_VERSION) ||
+      !Number.isSafeInteger(EXPERIMENT_ARCHIVE_CURRENT_VERSION) ||
+      EXPERIMENT_ARCHIVE_CURRENT_VERSION <= EXPERIMENT_ARCHIVE_BASELINE_VERSION) {
+    throw new TypeError("archive registry versions must be increasing integers");
+  }
+  if (EXPERIMENT_ARCHIVE_RECOVERY_ENVELOPE_VERSION !== EXPERIMENT_ARCHIVE_CURRENT_VERSION) {
+    throw new TypeError("recovery envelope version must equal the current archive version");
+  }
+  let expectedFrom = EXPERIMENT_ARCHIVE_BASELINE_VERSION;
+  for (const step of EXPERIMENT_ARCHIVE_MIGRATIONS) {
+    if (!step || step.from !== expectedFrom || step.to !== step.from + 1 ||
+        typeof step.apply !== "function" || typeof step.note !== "string" || !step.note) {
+      throw new TypeError("archive migration chain is not consecutive from the baseline");
+    }
+    expectedFrom = step.to;
+  }
+  if (EXPERIMENT_ARCHIVE_MIGRATIONS.length &&
+      expectedFrom !== EXPERIMENT_ARCHIVE_CURRENT_VERSION) {
+    throw new TypeError("archive migration chain must end at the current version");
+  }
+  return true;
+}
+
+const EXPERIMENT_ARCHIVE_ROW_FIELDS = Object.freeze([
+  "name", "time", "params", "note", "readouts", "formulaSnapshot",
+  "tutorSnapshot", "experimentId", "modelVersion",
+  "experimentSnapshotVersion", "snapshotAt"
+]);
+
+// One archive record at either registered generation. Mirrors the
+// UI segment validator rule for rule; the cross-check test pins
+// the two implementations to identical verdicts on shared fixtures.
+export function isValidExperimentArchiveRow(row) {
+  if (!row || typeof row !== "object" || Array.isArray(row)) return false;
+  if (Object.keys(row).some(key => !EXPERIMENT_ARCHIVE_ROW_FIELDS.includes(key))) return false;
+  if (typeof row.name !== "string" || !row.name.trim() || row.name.length > 160) return false;
+  if (typeof row.time !== "string" || !row.time.trim() || row.time.length > 80) return false;
+  if (row.experimentId !== undefined &&
+      (typeof row.experimentId !== "string" || !row.experimentId.trim() || row.experimentId.length > 80)) return false;
+  if (row.modelVersion !== undefined &&
+      (typeof row.modelVersion !== "string" || !row.modelVersion.trim() || row.modelVersion.length > 80)) return false;
+  if (row.experimentSnapshotVersion !== undefined && row.experimentSnapshotVersion !== 1) return false;
+  if (row.experimentSnapshotVersion === 1 && (!row.experimentId || row.snapshotAt === undefined)) return false;
+  if (row.snapshotAt !== undefined && row.experimentSnapshotVersion !== 1) return false;
+  if (row.snapshotAt !== undefined && (typeof row.snapshotAt !== "string" ||
+      !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(row.snapshotAt) ||
+      !Number.isFinite(Date.parse(row.snapshotAt)) ||
+      new Date(Date.parse(row.snapshotAt)).toISOString() !== row.snapshotAt)) return false;
+  if (row.note !== undefined && (typeof row.note !== "string" || row.note.length > 1200 ||
+      /[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/.test(row.note))) return false;
+  if (row.readouts !== undefined && (!Array.isArray(row.readouts) || row.readouts.length > 30 ||
+      !row.readouts.every(entry =>
+        !!entry && typeof entry === "object" && !Array.isArray(entry) &&
+        typeof entry.label === "string" && entry.label.trim().length > 0 && entry.label.length <= 120 &&
+        typeof entry.value === "string" && entry.value.length <= 180))) return false;
+  if (row.formulaSnapshot !== undefined && (!Array.isArray(row.formulaSnapshot) ||
+      row.formulaSnapshot.length > 20 || !row.formulaSnapshot.every(entry =>
+        typeof entry === "string" && entry.length > 0 && entry.length <= 300))) return false;
+  if (row.tutorSnapshot !== undefined &&
+      (typeof row.tutorSnapshot !== "string" || row.tutorSnapshot.length > 2400)) return false;
+  if (!row.params || typeof row.params !== "object" || Array.isArray(row.params)) return false;
+  const keys = Object.keys(row.params);
+  if (keys.length < 1 || keys.length > 30) return false;
+  return keys.every(key =>
+    /^[A-Za-z][A-Za-z0-9_]*$/.test(key) && Number.isFinite(row.params[key]));
+}
+
+// The legacy probe (spec §4 step 2): a version-0 record is a valid
+// archive record that simply predates snapshot metadata. Shape
+// mismatch is not "legacy" — it is invalid, and callers reject it.
+export function isLegacyExperimentArchiveRow(row) {
+  return !!row && typeof row === "object" && !Array.isArray(row) &&
+    row.experimentSnapshotVersion === undefined && isValidExperimentArchiveRow(row);
+}
+
+// Which registered generation a record belongs to, or why it
+// cannot be read at all. An integer snapshot version above the
+// current one is reported distinctly so callers can say "from a
+// newer version" instead of guessing at its shape (spec §4 step 2).
+export function classifyExperimentArchiveRow(row) {
+  if (!row || typeof row !== "object" || Array.isArray(row)) return { ok: false, error: "invalid-shape" };
+  const version = row.experimentSnapshotVersion;
+  if (version !== undefined) {
+    if (Number.isSafeInteger(version) && version > EXPERIMENT_ARCHIVE_CURRENT_VERSION) {
+      return { ok: false, error: "unsupported-version", version };
+    }
+    if (version !== EXPERIMENT_ARCHIVE_CURRENT_VERSION) return { ok: false, error: "invalid-shape" };
+  }
+  if (!isValidExperimentArchiveRow(row)) return { ok: false, error: "invalid-shape" };
+  return { ok: true, version: version === undefined ? EXPERIMENT_ARCHIVE_BASELINE_VERSION : version };
+}
+
+function inspectExperimentArchiveRows(rows) {
+  if (!Array.isArray(rows) || rows.length > EXPERIMENT_ARCHIVE_MAX_RECORDS) {
+    return { ok: false, error: "invalid-shape" };
+  }
+  for (const row of rows) {
+    const verdict = classifyExperimentArchiveRow(row);
+    if (!verdict.ok) return verdict;
+  }
+  const identities = Object.create(null);
+  for (const row of rows) {
+    if (row.experimentSnapshotVersion !== 1 || !row.experimentId || !row.snapshotAt) continue;
+    const parameters = Object.keys(row.params).sort().map(key => [key, row.params[key]]);
+    const identity = JSON.stringify([row.experimentId, row.snapshotAt, parameters]);
+    if (identities[identity]) return { ok: false, error: "invalid-shape" };
+    identities[identity] = true;
+  }
+  const loadedVersion = rows.length === 0
+    ? EXPERIMENT_ARCHIVE_CURRENT_VERSION
+    : Math.max(...rows.map(row =>
+        row.experimentSnapshotVersion === undefined
+          ? EXPERIMENT_ARCHIVE_BASELINE_VERSION
+          : row.experimentSnapshotVersion));
+  // migratedFrom is always null: the chain is empty, so a load
+  // never rewrites data — the trace records what was read, and a
+  // future registered step will start reporting real migrations.
+  return { ok: true, rows, loadedVersion, migratedFrom: null };
+}
+
+// The single inspection pipeline for parsed archive candidates
+// (spec §4): a bare record list, or a recovery envelope whose
+// embedded raw archive is parsed and inspected the same way.
+// Pure — the input is never mutated. Returns
+// { ok: true, rows, loadedVersion, migratedFrom, source } or
+// { ok: false, error } with error one of 'invalid-shape',
+// 'unsupported-version', 'invalid-envelope'.
+export function inspectExperimentArchive(input, options) {
+  const storageKey = options && typeof options.storageKey === "string" ? options.storageKey : null;
+  let candidate = input;
+  let source = "list";
+  if (candidate && !Array.isArray(candidate) && candidate.format === EXPERIMENT_ARCHIVE_RECOVERY_FORMAT) {
+    const version = candidate.version;
+    if (Number.isSafeInteger(version) && version > EXPERIMENT_ARCHIVE_RECOVERY_ENVELOPE_VERSION) {
+      return { ok: false, error: "unsupported-version", version };
+    }
+    if (version !== EXPERIMENT_ARCHIVE_RECOVERY_ENVELOPE_VERSION ||
+        (storageKey !== null && candidate.storageKey !== storageKey) ||
+        typeof candidate.rawValue !== "string") {
+      return { ok: false, error: "invalid-envelope" };
+    }
+    try { candidate = JSON.parse(candidate.rawValue); }
+    catch { return { ok: false, error: "invalid-envelope" }; }
+    source = "envelope";
+  }
+  const inspected = inspectExperimentArchiveRows(candidate);
+  if (!inspected.ok) return inspected;
+  return { ...inspected, source };
+}
