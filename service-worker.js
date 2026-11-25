@@ -2,7 +2,7 @@
 
 // Physchem Lab PWA: cache public application assets only. Experiment runs,
 // measurements, notebook content and future instrument/API payloads are network-only.
-const CACHE = 'physchem-v2';
+const CACHE = 'physchem-v3';
 const PRECACHE = [
   './',
   './index.html',
