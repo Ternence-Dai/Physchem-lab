@@ -201,8 +201,10 @@ const comparisonHelper = fs.readFileSync('src/domain/experiment-archive-comparis
 assert.ok(comparisonHelper.includes('compareExperimentArchiveSnapshots') &&
           comparisonHelper.includes('left.modelVersion !== right.modelVersion') &&
           comparisonHelper.includes('left.experimentId !== right.experimentId') &&
-          comparisonHelper.includes('leftParsed.unit === rightParsed.unit'),
-  'archive comparison must require the same experiment and model version and compare only exactly matching units');
+          comparisonHelper.includes('SAFE_READOUT_UNITS') &&
+          comparisonHelper.includes('leftDefinition.dimension !== rightDefinition.dimension') &&
+          comparisonHelper.includes('单位不同且不在受控换算表内，不自动换算'),
+  'archive comparison must require the same experiment and model version and convert only explicitly allowlisted units within the same dimension');
 assert.ok(app.includes('data-compare-save') &&
           app.includes('archiveCompareVisible') &&
           app.includes('compareExperimentArchiveSnapshots') &&
