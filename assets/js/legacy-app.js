@@ -110,7 +110,7 @@ function renderCurveChart(){
   return true;
 }
 function mkCurve(g){
-  return {id:g.id,name:g.name,cat:g.cat,tags:g.tags,brief:g.brief,params:g.p,formulas:g.f,curve:g,
+  return {id:g.id,name:g.name,cat:g.cat,tags:g.tags,brief:g.brief,params:g.p,formulas:g.f,curve:typeof g.draw==='function'?null:g,
     resetOnChange:!!g.rc,init:function(){return{t:0};},step:function(p,dt,st){st.t=(st.t||0)+dt;},
     draw:function(c,W,H,p,st){
       // Curve models may provide a physical diagram (for example, Snell-law rays).
