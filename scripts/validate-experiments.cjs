@@ -162,9 +162,8 @@ assert.ok(!pageHtml.includes('100个物理化学趣味实验') && !pageHtml.incl
 const catalogueScriptVersion = pageHtml.match(/experiment-catalogue\.js\?v=([A-Za-z0-9._-]+)/)?.[1];
 const simulationScriptVersion = pageHtml.match(/legacy-app\.js\?v=([A-Za-z0-9._-]+)/)?.[1];
 assert.ok(catalogueScriptVersion && simulationScriptVersion &&
-          catalogueScriptVersion !== '20261021-catalogue-restore-v2' &&
           simulationScriptVersion !== '20261021-catalogue-restore-v2',
-  'catalogue and simulation scripts must each carry a current cache-busting version');
+  'catalogue and simulation scripts must carry cache-busting versions, and the changed simulation bundle must be invalidated');
 
 assert.ok(pageHtml.includes('id="simulationStatus"') &&
           pageHtml.includes('实时动态图示') &&
