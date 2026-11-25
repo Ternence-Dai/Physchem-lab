@@ -386,7 +386,7 @@ const runtimeContext={
   window:runtimeWindow,EXP:runtimeModels,
   P:(key,label,min,max,step,value,unit)=>({key,label,min,max,step,value,unit:unit||''}),
   F:(value,digits=2)=>Number(value).toFixed(digits),
-  mkCurve:model=>({id:model.id,name:model.name,cat:model.cat}),
+  mkCurve:model=>({id:model.id,name:model.name,cat:model.cat,draw:model.draw,curve:typeof model.draw==='function'?null:model}),
   mkMotion:model=>({id:model.id,name:model.name,cat:model.cat}),
   mkPart:model=>({id:model.id,name:model.name,cat:model.cat}),
   Math,Number,isFinite
