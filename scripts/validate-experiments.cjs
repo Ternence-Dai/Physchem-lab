@@ -372,8 +372,8 @@ console.log('PhysChem experiment archive parameter-restore checks passed.');
 
 
 // Execute the complete catalogue in script order with the same factory contract as the browser.
-const engineScriptIndex = pageHtml.search(/<script[^>]+src=["'][^"']*legacy-app\.js\\?v=[^"']+["']/);
-const catalogueScriptIndex = pageHtml.search(/<script[^>]+src=["'][^"']*experiment-catalogue\.js\\?v=[^"']+["']/);
+const engineScriptIndex = pageHtml.search(/<script[^>]+src=["'][^"']*legacy-app\.js\?v=[^"']+["']/);
+const catalogueScriptIndex = pageHtml.search(/<script[^>]+src=["'][^"']*experiment-catalogue\.js\?v=[^"']+["']/);
 assert.ok(engineScriptIndex >= 0 && catalogueScriptIndex > engineScriptIndex,
   'the cache-busted engine must load before the cache-busted catalogue because the catalogue uses its model factories');
 assert.ok(app.includes('window.mkCurve=mkCurve') &&
