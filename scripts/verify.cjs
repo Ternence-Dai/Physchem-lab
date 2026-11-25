@@ -26,12 +26,15 @@
 //
 // Every run writes a machine-readable summary to artifacts/verify-report.json
 // ({name, status, durationMs} per step) for downstream consumers such as the
-// release reconciliation ledger (wave 4, item 3). Exit code is 0 only when
-// no step failed.
+// release reconciliation ledger (wave 4, item 3). The report also carries a
+// git field ({head, dirty, source}, see verify-git-info.cjs) so consumers
+// can pin the verdict to an exact commit instead of inferring it from
+// generatedAt. Exit code is 0 only when no step failed.
 
 const fs = require('node:fs');
 const path = require('node:path');
 const { spawnSync } = require('node:child_process');
+const { resolveGitInfo } = require('./verify-git-info.cjs');
 
 const root = path.resolve(__dirname, '..');
 const scriptsDir = path.join(root, 'scripts');
@@ -128,6 +131,7 @@ const report = {
   gate: 'verify',
   tier: full ? 'full' : 'quick',
   generatedAt: new Date().toISOString(),
+  git: resolveGitInfo(root),
   ok: failed.length === 0,
   steps
 };
