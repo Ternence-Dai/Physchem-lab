@@ -161,11 +161,20 @@ function loadWiredStore(raw, options = {}) {
       if (file.__readError) { if (this.onerror) this.onerror(); return; }
       if (this.onload) this.onload({ target: { result: file.__text } });
     }
+    // Mirrors the real FileReader: result lands on the reader and
+    // the load event's target is the reader itself.
+    readAsArrayBuffer(file) {
+      if (file.__readError) { if (this.onerror) this.onerror(); return; }
+      this.result = new TextEncoder().encode(file.__text || '').buffer;
+      if (this.onload) this.onload({ target: this });
+    }
   }
   const sandbox = {
     localStorage: storage,
     console: silentConsole,
     JSON,
+    TextEncoder,
+    TextDecoder,
     window: options.domain ? { PHYS_DOMAIN: domain } : {},
     toast: (m) => toasts.push(m),
     E: () => null,

@@ -658,3 +658,186 @@ export function inspectExperimentArchive(input, options) {
   if (!inspected.ok) return inspected;
   return { ...inspected, source };
 }
+
+/* ------------------------------------------------------------------
+ * Unified backup envelope (wave 6, item 3 — replicated from the
+ * Human-Digital-Twin-Health pilot, adapted to this repository's
+ * bare-array archive).
+ *
+ * One fixed container for a full backup, independent of the
+ * delivery channel: a manifest plus the datasets themselves, each
+ * dataset kept in exactly the shape its existing exporter already
+ * produces. This repository's healthy export is the bare record
+ * array itself, so the envelope's single dataset ("archive") is
+ * that array, unchanged — existing user backups (bare arrays, and
+ * the physchem-lab-archive-recovery raw packet) keep importing
+ * through inspectExperimentArchive exactly as before; the envelope
+ * is an additional wrapper, never a replacement format. The
+ * wrapper is what the age-encrypted export encrypts, and what the
+ * import path pre-checks before the rows reach
+ * inspectExperimentArchive above.
+ *
+ * Manifest discipline mirrors this registry: the envelope carries
+ * its own schemaVersion, exportedBy and exportedAt, and lists the
+ * archive dataset with its registry version and record count. The
+ * dataset version is the archive's loadedVersion as the registry
+ * defines it — the highest per-record generation present (legacy
+ * records count as the baseline 0), or the current version for an
+ * empty archive. Judgements:
+ * - An envelope whose schemaVersion is not BACKUP_ENVELOPE_VERSION
+ *   is rejected explicitly (a higher version is never guessed at).
+ * - A listed dataset missing from the payload, an unlisted dataset
+ *   present in the payload, a dataset version above this registry's
+ *   current version (or one that does not match the payload's own
+ *   computed generation), or a record count that does not match
+ *   the array all reject the whole envelope before any row is
+ *   inspected or restored.
+ * - The passphrase for the encrypted form never enters this layer:
+ *   the envelope is plaintext by construction, and encryption
+ *   happens in the UI layer around the serialized envelope.
+ * ------------------------------------------------------------------ */
+
+export const BACKUP_ENVELOPE_VERSION = 1;
+export const BACKUP_ENVELOPE_FORMAT = "physchem-backup-envelope";
+export const BACKUP_ENVELOPE_EXPORTED_BY = "Physchem-lab";
+export const ARCHIVE_DATASET_KEY = "archive";
+
+// First bytes of every age v1 file (binary form) and of the ASCII
+// armored form. The import path uses this to route a picked file to
+// the decrypt step before any JSON parsing is attempted.
+export const AGE_V1_HEADER = "age-encryption.org/v1";
+export const AGE_ARMOR_HEADER = "-----BEGIN AGE ENCRYPTED FILE-----";
+
+export function looksLikeAgeCiphertext(bytes) {
+  if (!bytes || typeof bytes.length !== "number") return false;
+  const view = bytes instanceof Uint8Array ? bytes : new Uint8Array(bytes);
+  const head = String.fromCharCode(...view.subarray(0, 36));
+  return head.startsWith(AGE_V1_HEADER) || head.startsWith(AGE_ARMOR_HEADER);
+}
+
+function isEnvelopeRecord(value) {
+  return !!value && typeof value === "object" && !Array.isArray(value);
+}
+
+// The archive dataset's registry version: the highest per-record
+// generation present (a record without experimentSnapshotVersion
+// is the legacy baseline), or the current version for an empty
+// archive — the same loadedVersion rule inspectExperimentArchive
+// reports. Returns null when a row's stamp is not a safe integer,
+// which callers treat as an invalid dataset rather than guessing.
+export function experimentArchiveDatasetVersion(rows) {
+  if (!Array.isArray(rows)) return null;
+  if (rows.length === 0) return EXPERIMENT_ARCHIVE_CURRENT_VERSION;
+  let version = EXPERIMENT_ARCHIVE_BASELINE_VERSION;
+  for (const row of rows) {
+    if (!row || typeof row !== "object" || Array.isArray(row)) return null;
+    const stamp = row.experimentSnapshotVersion;
+    if (stamp === undefined) continue;
+    if (!Number.isSafeInteger(stamp)) return null;
+    if (stamp > version) version = stamp;
+  }
+  return version;
+}
+
+export function buildUnifiedBackupEnvelope(rows, exportedAt) {
+  if (!Array.isArray(rows)) {
+    throw new TypeError("备份信封构建失败；实验档案不是记录数组。");
+  }
+  const version = experimentArchiveDatasetVersion(rows);
+  if (version === null) {
+    throw new TypeError("备份信封构建失败；实验档案中存在版本戳记无效的记录。");
+  }
+  return {
+    format: BACKUP_ENVELOPE_FORMAT,
+    manifest: {
+      schemaVersion: BACKUP_ENVELOPE_VERSION,
+      exportedBy: BACKUP_ENVELOPE_EXPORTED_BY,
+      exportedAt,
+      datasets: [
+        {
+          key: ARCHIVE_DATASET_KEY,
+          schemaVersion: version,
+          storage: "local-browser",
+          count: rows.length
+        }
+      ]
+    },
+    datasets: {
+      [ARCHIVE_DATASET_KEY]: rows
+    }
+  };
+}
+
+export function isUnifiedBackupEnvelope(payload) {
+  return isEnvelopeRecord(payload) &&
+    payload.format === BACKUP_ENVELOPE_FORMAT &&
+    isEnvelopeRecord(payload.manifest) &&
+    isEnvelopeRecord(payload.datasets);
+}
+
+// Pre-check an incoming unified envelope and return the archive
+// record array, ready for inspectExperimentArchive — the exact
+// same inspection a stored value or a bare-array backup goes
+// through. Every rejection is an explicit TypeError with
+// user-facing wording, raised before any record is inspected.
+export function parseUnifiedBackupEnvelope(payload) {
+  if (!isUnifiedBackupEnvelope(payload)) {
+    throw new TypeError("备份信封格式无效；需要统一备份信封（physchem-backup-envelope）。");
+  }
+  const manifest = payload.manifest;
+  if (manifest.schemaVersion !== BACKUP_ENVELOPE_VERSION) {
+    throw new TypeError("备份信封版本不受支持；需要信封 schemaVersion " + BACKUP_ENVELOPE_VERSION +
+      "，文件为 " + String(manifest.schemaVersion) + "。版本过高时请先升级应用再导入。");
+  }
+  if (!Array.isArray(manifest.datasets) || !manifest.datasets.length) {
+    throw new TypeError("备份信封清单无效；manifest.datasets 必须是非空数组。");
+  }
+  const listed = new Map();
+  for (const entry of manifest.datasets) {
+    if (!isEnvelopeRecord(entry) || typeof entry.key !== "string" || !entry.key) {
+      throw new TypeError("备份信封清单无效；数据集条目缺少 key。");
+    }
+    if (listed.has(entry.key)) {
+      throw new TypeError("备份信封清单无效；数据集 " + entry.key + " 被重复列出。");
+    }
+    listed.set(entry.key, entry);
+  }
+  for (const key of Object.keys(payload.datasets)) {
+    if (!listed.has(key)) {
+      throw new TypeError("备份信封完整性校验失败；数据集 " + key + " 未在清单中列出。");
+    }
+  }
+  for (const [key, entry] of listed) {
+    const dataset = payload.datasets[key];
+    if (dataset === undefined) {
+      throw new TypeError("备份信封完整性校验失败；清单列出的数据集 " + key + " 在文件中缺失。");
+    }
+    if (!Number.isSafeInteger(entry.schemaVersion)) {
+      throw new TypeError("备份信封清单无效；数据集 " + key + " 的 schemaVersion 不是整数。");
+    }
+    if (entry.schemaVersion > EXPERIMENT_ARCHIVE_CURRENT_VERSION) {
+      throw new TypeError("备份信封中数据集 " + key + " 的版本不受支持；需要数据版本不高于 " +
+        EXPERIMENT_ARCHIVE_CURRENT_VERSION + "，文件为 " + String(entry.schemaVersion) + "。");
+    }
+    if (!Array.isArray(dataset)) {
+      throw new TypeError("备份信封完整性校验失败；数据集 " + key + " 不是记录数组。");
+    }
+    const actualVersion = experimentArchiveDatasetVersion(dataset);
+    if (actualVersion === null) {
+      throw new TypeError("备份信封完整性校验失败；数据集 " + key + " 中存在版本戳记无效的记录。");
+    }
+    if (entry.schemaVersion !== actualVersion) {
+      throw new TypeError("备份信封完整性校验失败；数据集 " + key + " 清单版本 " +
+        String(entry.schemaVersion) + " 与数据自身版本 " + String(actualVersion) + " 不一致。");
+    }
+    if (entry.count !== dataset.length) {
+      throw new TypeError("备份信封完整性校验失败；数据集 " + key + " 清单计数 " +
+        String(entry.count) + " 与实际条目 " + String(dataset.length) + " 不一致。");
+    }
+  }
+  const rows = payload.datasets[ARCHIVE_DATASET_KEY];
+  if (rows === undefined) {
+    throw new TypeError("备份信封中缺少实验档案数据集（archive）。");
+  }
+  return rows;
+}

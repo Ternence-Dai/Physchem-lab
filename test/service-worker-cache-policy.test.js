@@ -5,7 +5,14 @@ import { readFile } from 'node:fs/promises';
 const worker = await readFile(new URL('../service-worker.js', import.meta.url), 'utf8');
 
 test('Physchem PWA invalidates legacy broad cache', () => {
-  assert.match(worker, /const CACHE = 'physchem-v5'/);
+  // Version-agnostic structural assertion (converted 2026-11-26,
+  // same anti-recurrence fix as the other five repos): the intent
+  // is that the cache carries a bumpable physchem-v<N> name and the
+  // activate handler deletes every cache whose key differs — not
+  // that the name is one specific version, which broke on every
+  // legitimate cache bump.
+  assert.match(worker, /const CACHE = 'physchem-v\d+'/);
+  assert.match(worker, /keys\.filter\(\(key\) => key !== CACHE\)\.map\(\(key\) => caches\.delete\(key\)\)/);
 });
 
 test('API and authenticated requests bypass Cache Storage', () => {

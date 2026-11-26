@@ -499,6 +499,129 @@ function exportExperimentArchive(){
     throw error;
   }
 }
+/* -------- 口令加密备份（第六波 #3 推广：统一信封 + age） --------
+ * The encrypted export wraps the domain layer's unified backup
+ * envelope (the archive record array as its single dataset) in the
+ * age file format (passphrase / scrypt mode), using the vendored
+ * age-encryption bundle (FiloSottile/typage, BSD-3,
+ * assets/js/vendor/). The bundle is a classic script loaded on
+ * demand only when the user actually encrypts or decrypts — it is
+ * not part of the first screen and not in the service-worker
+ * precache. The resulting .age file is a standard age file: it can
+ * be decrypted with the official age CLI on any machine, without
+ * this application.
+ * Plaintext behavior is unchanged: the healthy plaintext export is
+ * still the bare record array, the recovery packet still carries
+ * the raw stored bytes, and both keep importing through
+ * restoreExperimentArchive exactly as before. The encrypted export
+ * is refused while recovery protection is active — the raw
+ * recovery packet is the channel for unreadable bytes, and data
+ * that cannot be read is never sealed into an envelope.
+ * Passphrase discipline: the passphrase exists only in a local
+ * variable for the duration of the call. It is never written to
+ * localStorage, never put into an error event, and never sent
+ * anywhere; the error paths below record only stage and error
+ * class, with static messages. */
+var physchemAgeEncryptionLoadPromise=null;
+function loadPhyschemAgeEncryption(){
+  if(window.age&&typeof window.age.Encrypter==='function')return Promise.resolve(window.age);
+  if(physchemAgeEncryptionLoadPromise)return physchemAgeEncryptionLoadPromise;
+  physchemAgeEncryptionLoadPromise=new Promise(function(resolve,reject){
+    var script=document.createElement('script');
+    script.src='assets/js/vendor/age-encryption.js';
+    script.onload=function(){
+      if(window.age&&typeof window.age.Encrypter==='function')resolve(window.age);
+      else reject(new Error('age 加密组件加载后不可用'));
+    };
+    script.onerror=function(){reject(new Error('age 加密组件加载失败'));};
+    document.head.appendChild(script);
+  });
+  return physchemAgeEncryptionLoadPromise;
+}
+function exportEncryptedArchive(){
+  if(storageRecoveryRequired){
+    toast('存档处于恢复保护状态，已阻止加密导出；请先导出原始恢复包，或导入有效备份解除锁定后再导出');
+    return;
+  }
+  var domainApi=(typeof window!=='undefined'&&window.PHYS_DOMAIN)||null;
+  if(!domainApi||typeof domainApi.buildUnifiedBackupEnvelope!=='function'){
+    toast('备份信封模块尚未加载完成，请稍候再试');
+    return;
+  }
+  if(!window.confirm('口令加密导出使用 age 标准格式（口令模式）。\n\n请注意：口令一旦丢失，备份将永久无法恢复，任何人都无法帮你解密。导出的 .age 文件也可以用标准 age 命令行工具独立解密，不依赖本应用。\n\n继续吗？'))return;
+  var passphrase=window.prompt('请设置备份口令（至少 8 个字符，请牢记，丢失无法恢复）：');
+  if(!passphrase)return;
+  if(passphrase.length<8){passphrase=null;toast('口令至少需要 8 个字符，已取消加密导出');return;}
+  var confirmation=window.prompt('请再次输入相同口令以确认：');
+  if(confirmation!==passphrase){passphrase=null;toast('两次输入的口令不一致，已取消加密导出');return;}
+  var rows=buildExperimentArchiveBackup();
+  var envelope;
+  try{
+    envelope=domainApi.buildUnifiedBackupEnvelope(rows,new Date().toISOString());
+  }catch(error){
+    passphrase=null;
+    if(typeof recordErrorEvent==='function')recordErrorEvent('export_failed',error,{stage:'encrypted-export-envelope'});
+    toast('加密导出失败：'+(error&&error.message?error.message:'未知错误'));
+    return;
+  }
+  loadPhyschemAgeEncryption().then(function(age){
+    var encrypter=new age.Encrypter();
+    encrypter.setPassphrase(passphrase);
+    passphrase=null;
+    return encrypter.encrypt(JSON.stringify(envelope));
+  }).then(function(ciphertext){
+    var blob=new Blob([ciphertext],{type:'application/octet-stream'});
+    var url=URL.createObjectURL(blob);
+    var link=document.createElement('a');
+    link.href=url;
+    link.download='physchem-archive-backup-'+new Date().toISOString().slice(0,10)+'.age';
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    deferArchiveObjectUrlRelease(url);
+    toast('已导出 '+rows.length+' 份实验档案的口令加密备份（.age）。请牢记口令；口令丢失将无法恢复数据。');
+  }).catch(function(error){
+    passphrase=null;
+    if(typeof recordErrorEvent==='function')recordErrorEvent('export_failed',error,{stage:'encrypted-export'});
+    toast('加密导出失败：'+(error&&error.message?error.message:'未知错误'));
+  });
+}
+// Decrypt-then-restore continuation for .age imports. Runs only
+// after the synchronous import path has recognized age ciphertext;
+// a wrong passphrase rejects here, before anything is parsed,
+// inspected or written.
+async function importEncryptedArchiveBytes(input,file,fileBytes){
+  try{
+    var passphrase=window.prompt('该文件是口令加密备份（.age），请输入导出时设置的口令：');
+    if(!passphrase){toast('已取消导入；原有存档保持不变');return;}
+    var text;
+    try{
+      var age=await loadPhyschemAgeEncryption();
+      var decrypter=new age.Decrypter();
+      decrypter.addPassphrase(passphrase);
+      passphrase=null;
+      text=await decrypter.decrypt(fileBytes,'text');
+    }catch(decryptError){
+      passphrase=null;
+      if(typeof recordErrorEvent==='function')recordErrorEvent('import_rejected',null,{stage:'import-decrypt',errorName:'DecryptionError',fileSizeBytes:file.size});
+      toast('导入失败：口令错误或加密备份已损坏；原有存档保持不变');
+      return;
+    }
+    var parsed=JSON.parse(text);
+    var domainApi=(typeof window!=='undefined'&&window.PHYS_DOMAIN)||null;
+    if(domainApi&&typeof domainApi.isUnifiedBackupEnvelope==='function'&&domainApi.isUnifiedBackupEnvelope(parsed)){
+      parsed=domainApi.parseUnifiedBackupEnvelope(parsed);
+    }
+    if(!restoreExperimentArchive(parsed))throw new Error('档案结构无效或浏览器存储仍不可写');
+    syncArchiveRecoveryUI();
+    updateSI();
+    renderD();
+    toast('实验档案已验证并恢复 ✓');
+  }catch(error){
+    if(typeof recordErrorEvent==='function')recordErrorEvent('import_rejected',{name:error&&error.name?String(error.name):'Error',message:'档案恢复失败；原有存档保持不变'},{stage:error&&error.name==='SyntaxError'?'import-parse':'import-restore',fileSizeBytes:file.size});
+    toast('档案恢复失败：'+error.message+'；原有存档保持不变');
+  }finally{input.value='';}
+}
 function syncArchiveRecoveryUI(){
   var status=E('archiveRecoveryStatus');
   if(status){
@@ -521,8 +644,32 @@ function importExperimentArchiveFile(input){
   }
   var reader=new FileReader();
   reader.onload=function(event){
+    var result=(event&&event.target&&event.target.result)||reader.result;
+    var fileBytes=new Uint8Array(result);
+    // age ciphertext routes to the async decrypt continuation
+    // before any JSON parsing is attempted; everything else keeps
+    // the established synchronous parse-and-restore path below.
+    var domainApi=(typeof window!=='undefined'&&window.PHYS_DOMAIN)||null;
+    var isAgeFile=domainApi&&typeof domainApi.looksLikeAgeCiphertext==='function'
+      ? domainApi.looksLikeAgeCiphertext(fileBytes)
+      : (function(){
+          var head=String.fromCharCode.apply(null,[].slice.call(fileBytes.subarray(0,36)));
+          return head.indexOf('age-encryption.org/v1')===0||head.indexOf('-----BEGIN AGE ENCRYPTED FILE-----')===0;
+        })();
+    if(isAgeFile){
+      importEncryptedArchiveBytes(input,file,fileBytes);
+      return;
+    }
     try{
-      var parsed=JSON.parse(event.target.result);
+      var parsed=JSON.parse(new TextDecoder().decode(fileBytes));
+      // Unified backup envelope (wave 6): the domain pre-checks the
+      // manifest (version gate + dataset counts) and hands back the
+      // bare record array, which then faces the exact same restore
+      // pipeline as a plaintext backup. Bare arrays and the raw
+      // recovery packet are not envelopes and pass through as-is.
+      if(domainApi&&typeof domainApi.isUnifiedBackupEnvelope==='function'&&domainApi.isUnifiedBackupEnvelope(parsed)){
+        parsed=domainApi.parseUnifiedBackupEnvelope(parsed);
+      }
       if(!restoreExperimentArchive(parsed))throw new Error('档案结构无效或浏览器存储仍不可写');
       syncArchiveRecoveryUI();
       updateSI();
@@ -540,7 +687,7 @@ function importExperimentArchiveFile(input){
     toast('无法读取档案文件；原有存档保持不变');
     input.value='';
   };
-  reader.readAsText(file);
+  reader.readAsArrayBuffer(file);
 }
 var typer=null;
 var started=false;
@@ -789,6 +936,8 @@ function bindUI(){
   }
   var archiveExport=E('archiveExport');
   if(archiveExport)archiveExport.onclick=exportExperimentArchive;
+  var archiveExportAge=E('archiveExportAge');
+  if(archiveExportAge)archiveExportAge.onclick=exportEncryptedArchive;
   var errorLogExport=E('archiveErrorLogExport');
   if(errorLogExport)errorLogExport.onclick=exportErrorLog;
   var archiveImport=E('archiveImport');
