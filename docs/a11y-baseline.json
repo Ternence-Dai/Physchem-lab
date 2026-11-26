@@ -1,0 +1,66 @@
+{
+  "scope": "axe 结构规则子集 (jsdom, no layout/rendering)",
+  "tool": {
+    "name": "axe-core",
+    "version": "4.14.1",
+    "license": "MPL-2.0 (unmodified, test tool only)"
+  },
+  "dom": {
+    "name": "jsdom",
+    "version": "31.0.1",
+    "license": "MIT (plus W3C/Unicode data notices)"
+  },
+  "generatedAt": "2026-11-26T05:09:41.319Z",
+  "runTags": [
+    "wcag2a",
+    "wcag2aa",
+    "wcag21a",
+    "wcag21aa"
+  ],
+  "disabledRules": [
+    {
+      "id": "color-contrast",
+      "reason": "jsdom has no rendering engine: computed colours come from a partial CSS cascade with no layout or painting, so contrast ratios are not trustworthy. Needs a real browser."
+    },
+    {
+      "id": "color-contrast-enhanced",
+      "reason": "Same jsdom limitation as color-contrast (AAA variant of the same check)."
+    },
+    {
+      "id": "link-in-text-block",
+      "reason": "Distinguishing links from surrounding text depends on computed colour/underline rendering that jsdom cannot reproduce faithfully."
+    },
+    {
+      "id": "css-orientation-lock",
+      "reason": "Depends on media-query evaluation against a real viewport/device orientation; jsdom reports a fixed dummy viewport."
+    }
+  ],
+  "viewsAudited": [
+    "initial"
+  ],
+  "counts": {
+    "total": 1,
+    "byRule": {
+      "aria-valid-attr-value": 1
+    },
+    "byImpact": {
+      "critical": 1
+    }
+  },
+  "violations": [
+    {
+      "rule": "aria-valid-attr-value",
+      "impact": "critical",
+      "help": "ARIA attributes must conform to valid values",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/aria-valid-attr-value?application=axeAPI",
+      "target": [
+        ".w5-command-trigger"
+      ],
+      "html": "<button type=\"button\" class=\"w5-command-trigger\" aria-haspopup=\"search\" aria-expanded=\"false\">⌕ 实验检索  Ctrl K</button>",
+      "failureSummary": "Fix all of the following:",
+      "views": [
+        "initial"
+      ]
+    }
+  ]
+}
