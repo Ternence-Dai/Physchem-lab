@@ -2,7 +2,7 @@ name: Reference UI and domain regression
 
 on:
   push:
-    branches: [main]
+    branches: [main, rebuild/platform-v2]
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -31,6 +31,38 @@ jobs:
         run: npx playwright install --with-deps chromium
       - name: Run JavaScript syntax and static checks
         run: npm run check
+      - name: Validate blackbody spectrum numerics
+        run: node scripts/validate-blackbody.cjs
+      - name: Smoke-test experiment models
+        run: node scripts/validate-experiments.cjs
+      - name: Validate experiment archive recovery
+        run: node scripts/validate-storage-recovery.cjs
+      - name: Validate archive capacity and explicit deletion
+        run: node scripts/validate-archive-capacity.cjs
+      - name: Validate readable typography and focus states
+        run: node scripts/validate-readability.cjs
+      - name: Parse embedded JavaScript
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const os = require('node:os');
+          const path = require('node:path');
+          const { execFileSync } = require('node:child_process');
+          const html = fs.readFileSync('index.html', 'utf8') + '<script>' + fs.readFileSync('assets/js/legacy-app.js', 'utf8') + String.fromCharCode(60,47,115,99,114,105,112,116,62);
+          const scripts = [...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script\s*>/gi)];
+          const executable = scripts.filter(([, attrs]) => {
+            const type = (attrs.match(/\btype=["']([^"']+)["']/i) || [])[1] || '';
+            return !type || /^(module|text\/javascript|application\/javascript)$/i.test(type);
+          });
+          if (!executable.length) throw new Error('No inline executable JavaScript found');
+          const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'inline-js-'));
+          executable.forEach(([, , source], index) => {
+            const file = path.join(dir, `script-${index + 1}.js`);
+            fs.writeFileSync(file, source);
+            execFileSync(process.execPath, ['--check', file], { stdio: 'inherit' });
+          });
+          console.log(`Syntax OK: ${executable.length} inline script(s)`);
+          NODE
       - name: Run domain regression tests
         run: npm test
       - name: Start local application server
