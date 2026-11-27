@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
+const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
 
 const worker = await readFile(new URL('../service-worker.js', import.meta.url), 'utf8');
 
@@ -30,4 +31,25 @@ test('only public static responses may be stored', () => {
 test('navigation remains network-first with offline app-shell fallback', () => {
   assert.match(worker, /request\.mode === 'navigate'/);
   assert.match(worker, /fetch\(request\)\.catch\(\(\) => caches\.match\('\.\/index\.html'/);
+});
+
+test('versioned page assets use exact cache keys and awaited cache persistence', () => {
+  const cacheName = worker.match(/const CACHE = '([^']+)'/);
+  assert.ok(cacheName);
+  assert.equal(cacheName[1], 'physchem-v7');
+  assert.match(worker, /caches\\.match\\(request\\)\\.then/);
+  assert.doesNotMatch(worker, /caches\\.match\\(request, \\{\\s*ignoreSearch:\\s*true/);
+  assert.match(worker, /await cache\\.put\\(request, response\\.clone\\(\\)\\)/);
+  assert.match(worker, /Cache quota\\/write failures must not discard a valid response/);
+
+  const precacheBlock = worker.match(/const PRECACHE = \\[([\\s\\S]*?)\\];/);
+  assert.ok(precacheBlock, 'service worker must declare PRECACHE');
+  const precached = new Set([...precacheBlock[1].matchAll(/'([^']+)'/g)].map((entry) => entry[1]));
+  const pageAssets = [...html.matchAll(/(?:src|href)="(\\.\\/[^\"]+)"/g)].map((entry) => entry[1]);
+  assert.ok(pageAssets.length > 0, 'index.html must reference local assets');
+  for (const asset of pageAssets) {
+    if (/\\.(?:css|js|mjs|svg|png|webp|ico|woff2?|webmanifest)(?:\\?|$)/i.test(asset)) {
+      assert.ok(precached.has(asset), 'page asset must be precached exactly: ' + asset);
+    }
+  }
 });
