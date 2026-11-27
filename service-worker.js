@@ -2,7 +2,7 @@
 
 // Physchem Lab PWA: cache public application assets only. Experiment runs,
 // measurements, notebook content and future instrument/API payloads are network-only.
-const CACHE = 'physchem-v6';
+const CACHE = 'physchem-v7';
 const PRECACHE = [
   './',
   './index.html',
@@ -10,26 +10,26 @@ const PRECACHE = [
   './icons/icon.svg',
   './icons/maskable.svg',
   './assets/css/legacy-app.css',
-  './assets/css/product-system.css',
-  './assets/css/workspace-v5.css',
-  './assets/css/experiment-notebook-v9.css',
-  './assets/css/physchem-lab-workspace.css',
-  './assets/css/physchem-control-room-v2.css',
-  './assets/css/instrument-workbench-v3.css',
-  './assets/css/reference-platform-v4.css',
-  './assets/css/nist-webbook-reference-v1.css',
-  './assets/css/archive-comparison-v1.css',
-  './assets/css/readability-accessibility-v10.css',
-  './assets/css/physchem-authoritative-control-room.css',
+  './assets/css/product-system.css?v=20261021-ui-restoration-v1',
+  './assets/css/workspace-v5.css?v=20261022-live-context-metrics-v1',
+  './assets/css/experiment-notebook-v9.css?v=20261021-ui-restoration-v1',
+  './assets/css/physchem-lab-workspace.css?v=20261021-ui-restoration-v1',
+  './assets/css/physchem-control-room-v2.css?v=20261022-instrument-workbench-v4',
+  './assets/css/instrument-workbench-v3.css?v=20261022-instrument-workbench-v3',
+  './assets/css/reference-platform-v4.css?v=20261022-reference-v5',
+  './assets/css/nist-webbook-reference-v1.css?v=20261022-nist-webbook-v1',
+  './assets/css/archive-comparison-v1.css?v=20261023-archive-compare-v2',
+  './assets/css/readability-accessibility-v10.css?v=20261021-ui-v2',
+  './assets/css/physchem-authoritative-control-room.css?v=20261024-instrument-room-v1',
   './assets/js/vendor/echarts.min.js',
-  './assets/js/legacy-app.js',
-  './assets/js/primary-demos.js',
-  './assets/css/primary-zone.css',
+  './assets/js/legacy-app.js?v=20261126-backup-envelope-v1',
+  './assets/js/primary-demos.js?v=20261124-primary-zone-v1',
+  './assets/css/primary-zone.css?v=20261124-primary-zone-v1',
   './primary-zone.html',
-  './assets/js/experiment-catalogue.js',
-  './assets/js/workspace-v5.js',
-  './assets/js/workspace-v5-context.js',
-  './assets/js/nist-webbook-reference-v1.js'
+  './assets/js/experiment-catalogue.js?v=20261125-snell-ray-diagram-v1',
+  './assets/js/workspace-v5.js?v=20261021-ui-restoration-v1',
+  './assets/js/workspace-v5-context.js?v=20261022-context-mount-v3',
+  './assets/js/nist-webbook-reference-v1.js?v=20261022-nist-webbook-v1'
 ];
 
 const STATIC_ASSET_PATH = /\.(?:css|js|mjs|svg|png|webp|ico|woff2?|webmanifest)$/i;
@@ -78,12 +78,18 @@ self.addEventListener('fetch', (event) => {
   if (!isCacheableStaticRequest(request)) return;
 
   event.respondWith(
-    caches.match(request, { ignoreSearch: true }).then((cached) => {
+    caches.match(request).then((cached) => {
       if (cached) return cached;
-      return fetch(request).then((response) => {
+      return fetch(request).then(async (response) => {
         if (isPublicCacheableResponse(response)) {
-          const copy = response.clone();
-          caches.open(CACHE).then((cache) => cache.put(request, copy));
+          try {
+            // Await persistence so an immediate offline transition cannot race
+            // a detached cache write. Keep valid network data on quota failure.
+            const cache = await caches.open(CACHE);
+            await cache.put(request, response.clone());
+          } catch {
+            // Cache quota/write failures must not discard a valid response.
+          }
         }
         return response;
       });
