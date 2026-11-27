@@ -38,3 +38,10 @@ test('Physchem continues to bypass API and authenticated requests', () => {
   assert.match(worker, /request\.headers\.has\('authorization'\)/);
   assert.match(worker, /if \(!isCacheableStaticRequest\(request\)\) return/);
 });
+
+
+test('offline navigation restores the requested cached static page before the app shell', () => {
+  assert.match(worker, /caches\.match\(request, \{ ignoreSearch: true \}\)\.then/);
+  assert.match(worker, /cached \|\| caches\.match\('\.\/index\.html', \{ ignoreSearch: true \}\)/);
+  assert.ok(worker.includes("'./primary-zone.html'"), 'primary-zone must remain in the install precache');
+});
