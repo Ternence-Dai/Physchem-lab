@@ -71,7 +71,11 @@ self.addEventListener('fetch', (event) => {
   const request = event.request;
   if (request.mode === 'navigate') {
     event.respondWith(
-      fetch(request).catch(() => caches.match('./index.html', { ignoreSearch: true }))
+      fetch(request).catch(() =>
+        caches.match(request, { ignoreSearch: true }).then((cached) =>
+          cached || caches.match('./index.html', { ignoreSearch: true })
+        )
+      )
     );
     return;
   }
