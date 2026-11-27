@@ -9,7 +9,7 @@ test('Physchem PWA invalidates the legacy cache namespace', () => {
   const cacheMatch = worker.match(/const CACHE = '([^']+)'/);
   assert.ok(cacheMatch, 'service worker must declare a CACHE constant');
   assert.equal(cacheMatch[1], 'physchem-v7');
-  assert.match(worker, /keys\.filter\(\(key\) => key !== CACHE\)/);
+  assert.match(worker, /keys\.filter\(\(key\) => key\.startsWith\('physchem-'\) && key !== CACHE\)/);
 });
 
 test('Physchem page assets use exact query-versioned cache keys', () => {
